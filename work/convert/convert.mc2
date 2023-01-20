@@ -1,0 +1,3 @@
+r cel buttons.cel 1
+m setcolorkey 0 0 0 1
+w png buttons.png 1

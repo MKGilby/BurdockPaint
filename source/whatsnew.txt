@@ -1,0 +1,32 @@
+Todo:
+- Add cursor to DrawArea.
+- Plan button layout on Controls. (what is on screen, and what is behind popups)
+- Add buttons to Controls.
+- Add Tools and Inks from old version.
+
+
+2023.01.20
+- Added ZIndex to TMouseObject.
+- Added TMouseObjects.Sort to sort objects by ZIndex. (Could be better if Add
+  would insert the object to it's proper place)
+- DrawArea added.
+- DrawArea is rendered to PrimaryWindow directly.
+- Panning with right mouse buttons works.
+- Zooming with mouse wheel works.
+- Panning with arrow or WSAD keys works.
+
+
+2023.01.19
+- Palette and Image class added.
+- Saving temporary image at exit.
+- Loading temporary image at startup or creating a new empty one if file not found.
+- Comments added on TBDImage class definition.
+
+2023.01.17
+- Bottom controls panel appears with one clickable button.
+- Clicking the button will select or unselect it.
+
+2023.01.13
+- Restarted with SDL2.
+- Window appears with a static infobar.
+

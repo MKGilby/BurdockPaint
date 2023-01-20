@@ -1,0 +1,5440 @@
+(..system..) Starting Application. 2023. 01. 20. 14:37:15
+(..system..) (Status) [Warning] {Error} <Debug>
+(uses) Logger.pas, version 1.14
+(uses) QuickSortUnit.pas, version 1.01
+(uses) Lists.pas, version 3.18
+(uses) AnimationDataUnit.pas, version 1.08
+(uses) FontDataUnit.pas, version 1.00
+(uses) MKToolbox.pas, version 3.47
+(uses) MKStream.pas, version 3.01
+(uses) ARGBImageUnit.pas, version 1.22
+(uses) mk_sdl2.pas, version 1.08
+(uses) StackUnit.pas, version 1.02
+(uses) MKMouse2.pas, version 1.03
+(uses) MKINIFile.pas, version 2.17
+(uses) vcc_Container2.pas, version 1.00
+(uses) Font2Unit.pas, version 1.06
+(uses) vcc_ButtonLogic.pas, version 1.00
+(uses) FontList2Unit.pas, version 1.02
+(uses) vcc_ARGBButton.pas, version 1.00
+(uses) Mask2Unit.pas, version 1.01
+(uses) MusicUnit.pas, version 1.02
+(uses) MusicListUnit.pas, version 1.01
+(uses) WaveUnit.pas, version 1.02
+(uses) WaveListUnit.pas, version 1.00
+(uses) Animation2Unit.pas, version 1.06
+(uses) MediaManagerUnit.pas, version 1.08
+(uses) MyZStreamUnit.pas, version 1.02
+(uses) MKRFont2Unit.pas, version 1.01
+Minimum logging level set to ALL
+() Loading and creating assets...
+()   Loading fonts...
+<MKStream.pas, TMKStreamOpener.OpenStream> OpenStream('system.mkr')
+<MKStream.pas, TMKStreamOpener.OpenStream> Check in cache (system.mkr)
+<MKStream.pas, TMKStreamOpener.OpenStream> OpenStream('system.mkr')
+<MKStream.pas, TMKStreamOpener.OpenStream> Check in cache (system.mkr)
+<MKStream.pas, TMKStreamOpener.OpenStream> OpenStream('system.mkr')
+<MKStream.pas, TMKStreamOpener.OpenStream> Check in cache (system.mkr)
+<MKStream.pas, TMKStreamOpener.OpenStream> OpenStream('system.mkr')
+<MKStream.pas, TMKStreamOpener.OpenStream> Check in cache (system.mkr)
+<MKStream.pas, TMKStreamOpener.OpenStream> OpenStream('system.mkr')
+<MKStream.pas, TMKStreamOpener.OpenStream> Check in cache (system.mkr)
+()   Creating button gfx...
+()   Creating information bar...
+()   Creating message queue...
+()   Creating main image...
+<MKStream.pas, TMKStreamOpener.OpenStream> OpenStream('ntsc.col')
+<MKStream.pas, TMKStreamOpener.OpenStream> Check in cache (ntsc.col)
+< Trace > 2802
+() Loading settings...
+<MKStream.pas, TMKStreamOpener.FileExists> Check in cache (BurdockPaint.ini)
+<MKStream.pas, TMKStreamOpener.OpenStream> OpenStream('BurdockPaint.ini')
+<MKStream.pas, TMKStreamOpener.OpenStream> Check in cache (BurdockPaint.ini)
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonDown
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonUp
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseButtonDown
+<> HandleEvent with object Controls
+<> Event: MouseButtonDown
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseButtonUp
+<> HandleEvent with object Controls
+<> Event: MouseButtonUp
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonDown
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonUp
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonDown
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonUp
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonDown
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonUp
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonDown
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonUp
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseButtonDown
+<> HandleEvent with object Controls
+<> Event: MouseButtonDown
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseButtonUp
+<> HandleEvent with object Controls
+<> Event: MouseButtonUp
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonDown
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonUp
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseDown
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonDown
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseUp
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonUp
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> Event: MouseMotion
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+< Trace > KeyDown
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > KeyUp
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+< Trace > KeyDown
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object TEST
+<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+< Trace > Event not handled by any objects.
+< Trace > false
+<MKStream.pas, TMKStreamOpener.FileExists> Check in cache (BurdockPaint.ini)
+<MKStream.pas, TMKStreamOpener.OpenStream> OpenStream('BurdockPaint.ini')
+<MKStream.pas, TMKStreamOpener.OpenStream> Check in cache (BurdockPaint.ini)
+< Trace > 772
+< Trace > 9
+(..system..) Terminating Application. 2023. 01. 20. 14:38:01
