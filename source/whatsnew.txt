@@ -1,5 +1,4 @@
 Todo:
-- Add cursor to DrawArea.
 - Plan button layout on Controls. (what is on screen, and what is behind popups)
 - Add buttons to Controls.
 - Add Tools and Inks from old version.
@@ -14,6 +13,7 @@ Todo:
 - Panning with right mouse buttons works.
 - Zooming with mouse wheel works.
 - Panning with arrow or WSAD keys works.
+- Cursor added to DrawArea.
 
 
 2023.01.19

@@ -99,8 +99,8 @@ begin
   end;}
 //  PutTexture(0,0,fTexture);
   MainImage.RenderToScreen(0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
-{  if SDL_ShowCursor(SDL_QUERY)=SDL_DISABLE then
-    Cursor.Draw(fCursorX,fCursorY,fZoomLevel);}
+  if SDL_ShowCursor(SDL_QUERY)=SDL_DISABLE then
+    Cursor.Draw(fCursorX,fCursorY,fZoomLevel);
   if fPanDir<>0 then begin
     if (fPanFase=0) or ((fPanFase>20) and (fPanFase mod 2=0)) then begin
       case fPanDir of

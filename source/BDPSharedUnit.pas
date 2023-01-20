@@ -5,7 +5,7 @@ unit BDPSharedUnit;
 interface
 
 uses MediaManagerUnit, mk_sdl2, ARGBImageUnit, BDPInfoBarUnit, BDPImageUnit,
-  BDPSettingsUnit, BDPMessageUnit;
+  BDPSettingsUnit, BDPMessageUnit, BDPCursorUnit;
 
 type
   TSystemColor=record
@@ -39,6 +39,8 @@ var
   MainImage:TBDImage;
   Settings:TSettings;
   MessageQueue:TMessageQueue;
+  ActiveColorIndex:integer;
+  Cursor:TBDCursor;
 
   procedure LoadAssets;
   procedure FreeAssets;
@@ -117,6 +119,8 @@ begin
   for i:=1 to 15 do
     MainImage.Circle(i*20,random(160)+20,random(10)+15,i);
   if FileExists(TEMPIMAGEFILE) then MainImage.LoadFromFile(TEMPIMAGEFILE);
+  Log.LogStatus('  Creating cursor...');
+  Cursor:=TBDCursor.Create;
   Log.LogStatus('Loading settings...');
   Settings:=TSettings.Create;
   Settings.LoadFromFile(SETTINGSFILE);
@@ -128,6 +132,7 @@ begin
     Settings.SaveToFile(SETTINGSFILE);
     FreeAndNil(Settings);
   end;
+  if Assigned(Cursor) then FreeAndNil(Cursor);
   if Assigned(MainImage) then begin
     MainImage.SaveToFile(TEMPIMAGEFILE);
     FreeAndNil(MainImage);
