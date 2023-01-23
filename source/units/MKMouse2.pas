@@ -214,6 +214,8 @@ end;
 procedure TMouseObjects.Sort;
 var i,j:integer;
 begin
+  // Sort ascending, the events are distributed from the last to the first object.
+  // So bigger Zindex means getting the event earlier.
   // Yep, it's only a quick bubblesort solution.
   // I will improve it if there will be speed problems.
   for i:=0 to Count-2 do

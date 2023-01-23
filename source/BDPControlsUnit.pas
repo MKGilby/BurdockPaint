@@ -58,6 +58,7 @@ begin
   fFilledButton.OnClick:=FilledButtonClick;
   fFilledButton.ParentX:=fLeft;
   fFilledButton.ParentY:=fTop;
+  fFilledButton.ZIndex:=15;
   AddChild(fFilledButton);
   fVisible:=true;
   OnMouseEnter:=MouseEnter;

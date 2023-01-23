@@ -3,6 +3,10 @@ Todo:
 - Add buttons to Controls.
 - Add Tools and Inks from old version.
 
+2023.01.23
+- Cursor drawing optimized. (Removed setting color before every draw by
+  calling direct SDL2 procedures instead of MK_SDL2 wrapped ones.)
+- Added comment in MKMouse2 about ZIndex. (To be sure.)
 
 2023.01.20
 - Added ZIndex to TMouseObject.

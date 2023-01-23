@@ -55,7 +55,7 @@ begin
   fDrawArea.ZIndex:=0;
   MouseObjects.Add(fDrawArea);
   fControls:=TBDControls.Create;
-  fControls.ZIndex:=1;
+  fControls.ZIndex:=10;
   MouseObjects.Add(fControls);
   MouseObjects.Sort;
 end;
