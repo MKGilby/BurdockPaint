@@ -24,16 +24,12 @@ begin
   case zoomlevel of
     1:begin
         SDL_SetRenderDrawColor(PrimaryWindow.Renderer,SystemColors[3].R,SystemColors[3].G,SystemColors[3].B,255);
-//        Bar(x-4,y,2,1,SystemColors[3].R,SystemColors[3].G,SystemColors[3].B);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x-4,y);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x-3,y);
-//        Bar(x,y-4,1,2,SystemColors[3].R,SystemColors[3].G,SystemColors[3].B);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x,y-4);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x,y-3);
-//        Bar(x+3,y,2,1,SystemColors[3].R,SystemColors[3].G,SystemColors[3].B);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x+3,y);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x+4,y);
-//        Bar(x,y+3,1,2,SystemColors[3].R,SystemColors[3].G,SystemColors[3].B);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x,y+3);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x,y+4);
         SDL_SetRenderDrawColor(PrimaryWindow.Renderer,SystemColors[0].R,SystemColors[0].G,SystemColors[0].B,255);
@@ -97,14 +93,6 @@ begin
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.y:=y+8;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
-{        Bar(x-16,y,8,4,SystemColors[3].R,SystemColors[3].G,SystemColors[3].B);
-        Bar(x,y-16,4,8,SystemColors[3].R,SystemColors[3].G,SystemColors[3].B);
-        Bar(x+12,y,8,4,SystemColors[3].R,SystemColors[3].G,SystemColors[3].B);
-        Bar(x,y+12,4,8,SystemColors[3].R,SystemColors[3].G,SystemColors[3].B);
-        Bar(x-8,y,4,4,SystemColors[0].R,SystemColors[0].G,SystemColors[0].B);
-        Bar(x,y-8,4,4,SystemColors[0].R,SystemColors[0].G,SystemColors[0].B);
-        Bar(x+8,y,4,4,SystemColors[0].R,SystemColors[0].G,SystemColors[0].B);
-        Bar(x,y+8,4,4,SystemColors[0].R,SystemColors[0].G,SystemColors[0].B);}
         Bar(x,y,4,4,
           MainImage.Palette.ColorR[ActiveColorIndex],
           MainImage.Palette.ColorG[ActiveColorIndex],
@@ -132,14 +120,6 @@ begin
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.y:=y+16;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
-{        Bar(x-32,y,16,8,SystemColors[3].R,SystemColors[3].G,SystemColors[3].B);
-        Bar(x,y-32,8,16,SystemColors[3].R,SystemColors[3].G,SystemColors[3].B);
-        Bar(x+24,y,16,8,SystemColors[3].R,SystemColors[3].G,SystemColors[3].B);
-        Bar(x,y+24,8,16,SystemColors[3].R,SystemColors[3].G,SystemColors[3].B);
-        Bar(x-16,y,8,8,SystemColors[0].R,SystemColors[0].G,SystemColors[0].B);
-        Bar(x,y-16,8,8,SystemColors[0].R,SystemColors[0].G,SystemColors[0].B);
-        Bar(x+16,y,8,8,SystemColors[0].R,SystemColors[0].G,SystemColors[0].B);
-        Bar(x,y+16,8,8,SystemColors[0].R,SystemColors[0].G,SystemColors[0].B);}
         Bar(x,y,8,8,
           MainImage.Palette.ColorR[ActiveColorIndex],
           MainImage.Palette.ColorG[ActiveColorIndex],

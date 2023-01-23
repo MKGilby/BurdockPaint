@@ -8,26 +8,26 @@
       <Unit>
         <Filename Value="BurdockPaint.lpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="32" Y="3"/>
-        <UsageCount Value="60"/>
+        <CursorPos X="17" Y="3"/>
+        <UsageCount Value="63"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPMainUnit.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="30"/>
+        <TopLine Value="34"/>
         <CursorPos Y="58"/>
-        <UsageCount Value="60"/>
+        <UsageCount Value="63"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPSharedUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="9"/>
-        <TopLine Value="92"/>
-        <CursorPos X="47" Y="135"/>
-        <UsageCount Value="60"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="29"/>
+        <CursorPos X="3" Y="53"/>
+        <UsageCount Value="63"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -36,50 +36,54 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="15"/>
         <CursorPos X="26" Y="22"/>
-        <UsageCount Value="60"/>
+        <UsageCount Value="63"/>
       </Unit>
       <Unit>
         <Filename Value="BDPButtonUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="7"/>
         <TopLine Value="74"/>
         <CursorPos X="50" Y="103"/>
-        <UsageCount Value="55"/>
+        <UsageCount Value="58"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPControlsUnit.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="25"/>
-        <CursorPos X="26" Y="61"/>
-        <UsageCount Value="53"/>
+        <TopLine Value="22"/>
+        <CursorPos X="33" Y="49"/>
+        <UsageCount Value="56"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPPaletteUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="119"/>
-        <CursorPos Y="119"/>
-        <UsageCount Value="45"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="9"/>
+        <TopLine Value="74"/>
+        <CursorPos X="38" Y="97"/>
+        <UsageCount Value="48"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="BDPImageUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="3"/>
-        <TopLine Value="70"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="503"/>
         <CursorPos X="23" Y="93"/>
-        <UsageCount Value="44"/>
+        <FoldState Value=" T3lA0A3111331 PmcnG0("/>
+        <UsageCount Value="47"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPDrawAreaUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="6"/>
         <TopLine Value="80"/>
         <CursorPos X="5" Y="103"/>
-        <UsageCount Value="36"/>
+        <UsageCount Value="39"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -88,33 +92,36 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="94"/>
         <CursorPos Y="140"/>
-        <UsageCount Value="34"/>
+        <UsageCount Value="37"/>
       </Unit>
       <Unit>
         <Filename Value="BDPMessageUnit.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="57" Y="18"/>
-        <UsageCount Value="23"/>
+        <UsageCount Value="26"/>
       </Unit>
       <Unit>
         <Filename Value="BDPCursorUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="5"/>
-        <TopLine Value="107"/>
-        <CursorPos X="18" Y="134"/>
-        <UsageCount Value="22"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos Y="33"/>
+        <UsageCount Value="25"/>
+      </Unit>
+      <Unit>
+        <Filename Value="BDPToolsUnit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="3"/>
+        <CursorPos X="31" Y="216"/>
+        <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="units\mk_sdl2.pas"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="477"/>
         <CursorPos Y="492"/>
         <UsageCount Value="14"/>
-        <Loaded Value="True"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="units\ARGBImageUnit.pas"/>
@@ -180,11 +187,10 @@
       </Unit>
       <Unit>
         <Filename Value="units\MKMouse2.pas"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="191"/>
         <CursorPos Y="218"/>
         <UsageCount Value="18"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="units\vcc_Button2.pas"/>
@@ -256,127 +262,136 @@
         <UsageCount Value="10"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
+      <Unit>
+        <Filename Value="BDPInksUnit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="217"/>
+        <CursorPos X="19" Y="258"/>
+        <UsageCount Value="22"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="BDPDrawAreaUnit.pas"/>
-        <Caret Line="252" TopLine="226"/>
+        <Filename Value="BDPInksUnit.pas"/>
+        <Caret Line="231" Column="19" TopLine="207"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPInksUnit.pas"/>
+        <Caret Line="258" Column="19" TopLine="217"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPToolsUnit.pas"/>
+        <Caret Line="193" Column="25" TopLine="163"/>
       </Position>
       <Position>
         <Filename Value="BDPSharedUnit.pas"/>
-        <Caret Line="34" Column="24"/>
+        <Caret Line="131" Column="21" TopLine="104"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="17" Column="7" TopLine="4"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="94" Column="16" TopLine="78"/>
       </Position>
       <Position>
         <Filename Value="BDPSharedUnit.pas"/>
-        <Caret Line="41" Column="30" TopLine="22"/>
+        <Caret Line="132" Column="49" TopLine="108"/>
       </Position>
       <Position>
         <Filename Value="BDPSharedUnit.pas"/>
-        <Caret Line="8" Column="34"/>
+        <Caret Line="39"/>
       </Position>
       <Position>
         <Filename Value="BDPSharedUnit.pas"/>
-        <Caret Line="135" Column="59" TopLine="94"/>
+        <Caret Line="134" Column="13" TopLine="101"/>
       </Position>
       <Position>
         <Filename Value="BDPSharedUnit.pas"/>
-        <Caret Line="113" Column="41" TopLine="90"/>
+        <Caret Line="135" Column="19" TopLine="101"/>
       </Position>
       <Position>
-        <Filename Value="BDPDrawAreaUnit.pas"/>
-        <Caret Line="130" TopLine="101"/>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="123" Column="3" TopLine="84"/>
       </Position>
       <Position>
-        <Filename Value="BDPMainUnit.pas"/>
-        <Caret Line="72" Column="18" TopLine="40"/>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="129" Column="32" TopLine="93"/>
       </Position>
       <Position>
-        <Filename Value="BDPMainUnit.pas"/>
-        <Caret Line="26"/>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="34" Column="71" TopLine="16"/>
       </Position>
       <Position>
-        <Filename Value="BDPMainUnit.pas"/>
-        <Caret Line="86" Column="68" TopLine="45"/>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="165" TopLine="157"/>
       </Position>
       <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="12" Column="7"/>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="209" Column="40" TopLine="180"/>
       </Position>
       <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="26" Column="12" TopLine="9"/>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="31" Column="39"/>
       </Position>
       <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="17" Column="9"/>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="16" Column="6" TopLine="4"/>
       </Position>
       <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="26" Column="15" TopLine="2"/>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="73" Column="18" TopLine="69"/>
       </Position>
       <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="29" Column="41" TopLine="3"/>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="15" Column="6"/>
       </Position>
       <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="40" Column="33" TopLine="17"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="29" TopLine="6"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="39" Column="20" TopLine="13"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="40" Column="51" TopLine="13"/>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="57" TopLine="52"/>
       </Position>
       <Position>
         <Filename Value="BDPSharedUnit.pas"/>
-        <Caret Line="42" Column="9" TopLine="8"/>
+        <Caret Line="174" Column="47" TopLine="135"/>
       </Position>
       <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="46" Column="12" TopLine="23"/>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="42" TopLine="25"/>
       </Position>
       <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="48" Column="78" TopLine="21"/>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="218" TopLine="193"/>
       </Position>
       <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="52" Column="78" TopLine="37"/>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="43" Column="33"/>
       </Position>
       <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="77" Column="24" TopLine="32"/>
+        <Filename Value="BDPPaletteUnit.pas"/>
+        <Caret Line="30" TopLine="9"/>
       </Position>
       <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="53" Column="79" TopLine="39"/>
+        <Filename Value="BurdockPaint.lpr"/>
+        <Caret Line="3" Column="17"/>
       </Position>
       <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="57" Column="53" TopLine="30"/>
+        <Filename Value="BDPToolsUnit.pas"/>
+        <Caret Line="216" Column="31" TopLine="193"/>
       </Position>
       <Position>
-        <Filename Value="BDPDrawAreaUnit.pas"/>
-        <Caret Line="103" Column="31" TopLine="73"/>
+        <Filename Value="BDPToolsUnit.pas"/>
       </Position>
       <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="53" Column="20" TopLine="2"/>
+        <Filename Value="BDPSharedUnit.pas"/>
+        <Caret Line="42" Column="6"/>
       </Position>
       <Position>
-        <Filename Value="units\mk_sdl2.pas"/>
-        <Caret Line="131" Column="18" TopLine="109"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPCursorUnit.pas"/>
-        <Caret Line="55" Column="78" TopLine="32"/>
+        <Filename Value="BDPSharedUnit.pas"/>
+        <Caret Line="53" Column="3" TopLine="29"/>
       </Position>
     </JumpHistory>
     <RunParams>

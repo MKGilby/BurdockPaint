@@ -5,20 +5,26 @@ unit BDPSharedUnit;
 interface
 
 uses MediaManagerUnit, mk_sdl2, ARGBImageUnit, BDPInfoBarUnit, BDPImageUnit,
-  BDPSettingsUnit, BDPMessageUnit, BDPCursorUnit;
+  BDPSettingsUnit, BDPMessageUnit, BDPCursorUnit{, BDPToolsUnit}, BDPInksUnit,
+  BDPPaletteUnit;
 
 type
   TSystemColor=record
     r,g,b:byte;c32:uint32;
   end;
 
+  TColorCluster=record
+    startindex,endindex:integer;
+  end;
+
 const
   WINDOWWIDTH=1280;
-  WINDOWHEIGHT=768;
+  WINDOWHEIGHT=720;
   CONTROLSHEIGHT=96;
   NORMALBUTTONWIDTH=127;
   SMALLBUTTONWIDTH=27;
   MAXPALETTEENTRIES=2048;  // Palette color count hard limit
+  POSTPROCESSCOLOR=$FFF0;
 
   SYSTEMCOLORCOUNT=5;
   SYSTEMCOLORS:array[0..SYSTEMCOLORCOUNT-1] of TSystemColor=
@@ -27,27 +33,43 @@ const
        (r:154; g:154; b:154; c32:$ff9a9a9a),
        (r:215; g:215; b:215; c32:$ffc7c7c7),
        (r:215; g:  4; b:  4; c32:$ffc70404));
-
   TEMPIMAGEFILE='temp.bdp';
   SETTINGSFILE='BurdockPaint.ini';
+  SYSTEMPALETTEFILE='system.bdpp';
 
+  // Message typeID constants
   MSG_TOGGLECONTROLS=1;
 
 var
-  MM:TMediaManager;
-  InfoBar:TBDInfoBar;
-  MainImage:TBDImage;
-  Settings:TSettings;
-  MessageQueue:TMessageQueue;
-  ActiveColorIndex:integer;
-  Cursor:TBDCursor;
+  MM:TMediaManager;  // MediaManager to hold fonts and internal images
+  InfoBar:TBDInfoBar;  // The information bar on the top of the screen
+  MainImage:TBDImage;  // The image we are working on
+  OverlayImage:TBDImage;  // The image where the tools draw its things
+  Settings:TSettings;  // All settings in one place
+  MessageQueue:TMessageQueue;  // Messaging queue for classes who doesn't know each other
+  Cursor:TBDCursor;  // The cursor on drawing area
 
+//  Tools:TBDTools;  // All tools are loaded into this list
+//  ActiveTool:TBDTool;  // This is the selected tool
+
+  Inks:TBDInks;  // All inks are loaded into this list
+  ActiveInk:TBDInk;  // This is the selected ink
+
+  FillShapes:boolean;  // Fill shapes (if applicable?)
+
+  ActiveColorIndex:integer;  // The selected color index
+  ActiveCluster:TColorCluster;  // The selected color cluster
+  SystemPalette:TBDPalette;
+
+  // Load assets and create shared objects
   procedure LoadAssets;
+
+  // Free assets and shared objects
   procedure FreeAssets;
 
 implementation
 
-uses SysUtils, MKRFont2Unit, Logger;
+uses SysUtils, MKRFont2Unit, Logger, MKStream;
 
 procedure LoadSystemFont(pR,pG,pB:integer;pName:string);
 begin
@@ -89,8 +111,6 @@ begin
     end;
   fLeftImage.Bar(0,8,3,11,SystemColors[1].c32);
   fRightImage.Bar(5,8,3,11,SystemColors[1].c32);
-//  fLeftImage.SetColorkey(0,0,0);
-//  fRightImage.SetColorkey(0,0,0);
   MM.AddImage(fLeftImage,'ButtonLeft');
   MM.AddImage(fRightImage,'ButtonRight');
   // Don't free images, MM will do that!
@@ -107,6 +127,17 @@ begin
   LoadSystemFont($ee,$ee,$ee,'White');
   LoadSystemFont($ee,$aa,$cc,'Pinky');
   LoadSystemFont($5d,$5d,$5d,'DarkGray');
+  Log.LogStatus('  Loading system palette...');
+  SystemPalette:=TBDPalette.Create(5);
+  if MKStreamOpener.FileExists(SYSTEMPALETTEFILE) then
+    SystemPalette.LoadFromFile(SYSTEMPALETTEFILE)
+  else begin
+    SystemPalette.Colors[0]:=$ff040404;
+    SystemPalette.Colors[1]:=$ff5d5d5d;
+    SystemPalette.Colors[2]:=$ff9a9a9a;
+    SystemPalette.Colors[3]:=$ffc7c7c7;
+    SystemPalette.Colors[4]:=$ffc70404;
+  end;
   Log.LogStatus('  Creating button gfx...');
   CreateButtonGFX;
   Log.LogStatus('  Creating information bar...');
@@ -139,6 +170,10 @@ begin
   end;
   if Assigned(MessageQueue) then FreeAndNil(MessageQueue);
   if Assigned(InfoBar) then FreeAndNil(InfoBar);
+  if Assigned(SystemPalette) then begin
+    SystemPalette.SaveToFile(SYSTEMPALETTEFILE);
+    FreeAndNil(SystemPalette);
+  end;
   if Assigned(MM) then FreeAndNil(MM);
 end;
 
