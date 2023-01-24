@@ -4,15 +4,15 @@ unit BDPButtonUnit;
 
 interface
 
-uses vcc_ARGBButton, Font2Unit, ARGBImageUnit;
+uses vcc_ARGBButton, Font2Unit, ARGBImageUnit, BDPMessageUnit;
 
 type
 
   { TBDButton }
 
   TBDButton=class(TARGBButton)
-    constructor Create(iTarget:TARGBImage;iX,iY,iWidth:integer;iCaption,iAction,iHint:string;
-          iAssignedobject:TObject=nil); overload;
+    constructor Create(iTarget:TARGBImage;iX,iY,iWidth:integer;iCaption,iHint:string;
+          iClickMessage:TMessage;iAssignedobject:TObject=nil); overload;
     constructor Create(iTarget:TARGBImage); overload;
     destructor Destroy; override;
     procedure Draw; override;
@@ -23,9 +23,9 @@ type
     fParentX,fParentY:integer;
     fHint:string;
     fAssignedObject:TObject;
-    fAction:string;
     fLeftImage,fRightImage:TARGBImage;
     fFont2:TFont;
+    fMessage:TMessage;
   published
     property Hint:string read fHint write fHint;
     property AssignedObject:TObject read fAssignedObject write fAssignedObject;
@@ -40,7 +40,7 @@ uses BDPSharedUnit;
 { TBDButton }
 
 constructor TBDButton.Create(iTarget:TARGBImage; iX,iY,iWidth:integer;
-  iCaption,iAction,iHint:string; iAssignedobject:TObject);
+  iCaption,iHint:string; iClickMessage:TMessage; iAssignedobject:TObject);
 begin
   Create(iTarget);
   fLeft:=iX;
@@ -54,12 +54,12 @@ begin
   fCaption:=iCaption;
   fName:=fCaption;
   fHint:=iHint;
-  fAction:=iAction;
   fAssignedObject:=iAssignedobject;
   fLeftImage:=MM.Images.ItemByName['ButtonLeft'];
   fRightImage:=MM.Images.ItemByName['ButtonRight'];
   fParentX:=0;
   fParentY:=0;
+  fMessage:=iClickMessage;
 end;
 
 constructor TBDButton.Create(iTarget:TARGBImage);
@@ -78,12 +78,12 @@ end;
 
 procedure TBDButton.Draw;
 begin
-  fTarget.Bar(fLeft+8-fParentX,fTop-fParentY,fWidth-16,3,OverlayImage.Palette[1]);
+  fTarget.Bar(fLeft+8-fParentX,fTop-fParentY,fWidth-16,3,OverlayImage.Palette[2]);
   if fSelected then
-    fTarget.Bar(fLeft-fParentX+3,fTop-fParentY+3,fWidth-6,21,OverlayImage.Palette[3])
+    fTarget.Bar(fLeft-fParentX+3,fTop-fParentY+3,fWidth-6,21,OverlayImage.Palette[4])
   else
-    fTarget.Bar(fLeft-fParentX+3,fTop-fParentY+3,fWidth-6,21,OverlayImage.Palette[2]);
-  fTarget.Bar(fLeft-fParentX+8,fTop-fParentY+24,fWidth-16,3,OverlayImage.Palette[1]);
+    fTarget.Bar(fLeft-fParentX+3,fTop-fParentY+3,fWidth-6,21,OverlayImage.Palette[3]);
+  fTarget.Bar(fLeft-fParentX+8,fTop-fParentY+24,fWidth-16,3,OverlayImage.Palette[2]);
   fLeftImage.CopyTo(0,0,fLeftImage.Width,fLeftImage.Height,fLeft-fParentX,fTop-fParentY,fTarget,true);
   fRightImage.CopyTo(0,0,fRightImage.Width,fRightImage.Height,fLeft-fParentX+fWidth-8,fTop-fParentY,fTarget,true);
 //  Log.Trace(fCaption);
@@ -110,7 +110,7 @@ function TBDButton.Click(Sender:TObject; x,y,buttons:integer):boolean;
 begin
   case buttons of
     1:begin  // Left click
-//        if fAction<>'' then ActionList.Add(fAction);
+        if fMessage.TypeID<>MSG_NONE then MessageQueue.AddMessage(fMessage.TypeID,fMessage.DataString,fMessage.DataInt);
       end;
   end;
   Result:=true;

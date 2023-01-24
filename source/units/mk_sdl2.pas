@@ -380,6 +380,10 @@ var i:integer;EventHandled:boolean;
 begin
   while SDL_PollEvent(@event) > 0 do begin
     i:=0;EventHandled:=false;
+    if event.type_=SDL_MOUSEMOTION then begin
+      MouseX:=Event.Motion.X;
+      MouseY:=Event.Motion.Y;
+    end;
     while (i<length(EventHandlers)) do begin
       if EventHandlers[i](@event) then begin
         EventHandled:=true;

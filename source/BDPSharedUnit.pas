@@ -21,18 +21,25 @@ const
   WINDOWWIDTH=1280;
   WINDOWHEIGHT=720;
   CONTROLSHEIGHT=96;
+  TOOLBUTTONSLEFT=3;
+  TOOLBUTTONSTOP=6;
+  INKBUTTONSLEFT=643;
+  INKBUTTONSTOP=6;
   NORMALBUTTONWIDTH=127;
   SMALLBUTTONWIDTH=27;
   MAXPALETTEENTRIES=2048;  // Palette color count hard limit
   POSTPROCESSCOLOR=$FFF0;
 
-  VIBROCOLORS:array[0..11] of integer=(0,0,1,1,2,2,3,3,2,2,1,1);
+  VIBROCOLORS:array[0..11] of integer=(1,1,2,2,3,3,4,4,3,3,2,2);
   TEMPIMAGEFILE='temp.bdp';
   SETTINGSFILE='BurdockPaint.ini';
   SYSTEMPALETTEFILE='system.bdpp';
 
   // Message typeID constants
+  MSG_NONE=0;
   MSG_TOGGLECONTROLS=1;
+  MSG_ACTIVATETOOL=2;
+  MSG_ACTIVATEINK=3;
 
 var
   MM:TMediaManager;  // MediaManager to hold fonts and internal images
@@ -43,8 +50,8 @@ var
   MessageQueue:TMessageQueue;  // Messaging queue for classes who doesn't know each other
   Cursor:TBDCursor;  // The cursor on drawing area
 
-//  Tools:TBDTools;  // All tools are loaded into this list
-//  ActiveTool:TBDTool;  // This is the selected tool
+  Tools:TBDTools;  // All tools are loaded into this list
+  ActiveTool:TBDTool;  // This is the selected tool
 
   Inks:TBDInks;  // All inks are loaded into this list
   ActiveInk:TBDInk;  // This is the selected ink
@@ -77,13 +84,21 @@ end;
 
 procedure CreateButtonGFX;
 const
-  Arch='.....xxx'+
+{  Arch='.....xxx'+
        '...xxxxx'+
        '..xxxxxx'+
        '.xxxxxx '+
        '.xxxx   '+
        'xxxx    '+
        'xxxx    '+
+       'xxx     ';}
+  Arch='......xx'+
+       '......xx'+
+       '......xx'+
+       '...xxx  '+
+       '...xxx  '+
+       '...xxx  '+
+       'xxx     '+
        'xxx     ';
 var x,y:integer;c:uint32;fLeftImage,fRightImage:TARGBImage;
 begin
@@ -94,8 +109,8 @@ begin
   for y:=0 to 7 do
     for x:=0 to 7 do begin
       case Arch[x+y*8+1] of
-      '.':c:=OverlayImage.Palette[2];
-      'x':c:=OverlayImage.Palette[1];
+      '.':c:=OverlayImage.Palette[3];
+      'x':c:=OverlayImage.Palette[2];
       ' ':c:=0;
       end;
       fLeftImage.PutPixel(x,y,c);
@@ -103,8 +118,8 @@ begin
       fRightImage.PutPixel(7-x,y,c);
       fRightImage.PutPixel(7-x,26-y,c);
     end;
-  fLeftImage.Bar(0,8,3,11,OverlayImage.Palette[1]);
-  fRightImage.Bar(5,8,3,11,OverlayImage.Palette[1]);
+  fLeftImage.Bar(0,8,3,11,OverlayImage.Palette[2]);
+  fRightImage.Bar(5,8,3,11,OverlayImage.Palette[2]);
   MM.AddImage(fLeftImage,'ButtonLeft');
   MM.AddImage(fRightImage,'ButtonRight');
   // Don't free images, MM will do that!
@@ -131,20 +146,27 @@ begin
   if FileExists(TEMPIMAGEFILE) then MainImage.LoadFromFile(TEMPIMAGEFILE);
   Log.LogStatus('  Creating overlay image...');
   OverlayImage:=TBDImage.Create(320,200);
-  OverlayImage.Palette.Colors[0]:=$ff040404;
-  OverlayImage.Palette.Colors[1]:=$ff5d5d5d;
-  OverlayImage.Palette.Colors[2]:=$ff9a9a9a;
-  OverlayImage.Palette.Colors[3]:=$ffc7c7c7;
-  OverlayImage.Palette.Colors[4]:=$ffc70404;
+  OverlayImage.Palette.Colors[0]:=$00000000;
+  OverlayImage.Palette.Colors[1]:=$ff040404;
+  OverlayImage.Palette.Colors[2]:=$ff5d5d5d;
+  OverlayImage.Palette.Colors[3]:=$ff9a9a9a;
+  OverlayImage.Palette.Colors[4]:=$ffc7c7c7;
+  OverlayImage.Palette.Colors[5]:=$ffc70404;
+  OverlayImage.Bar(0,0,OverlayImage.Width,OverlayImage.Height,0);
   Log.LogStatus('  Creating information bar...');
   InfoBar:=TBDInfoBar.Create;
   Log.LogStatus('  Creating button gfx...');
   CreateButtonGFX;
   Log.LogStatus('  Creating cursor...');
   Cursor:=TBDCursor.Create;
+  Log.LogStatus('  Creating inks...');
+  Inks:=TBDInks.Create;
+  Log.LogStatus('  Creating tools...');
+  Tools:=TBDTools.Create;
   Log.LogStatus('Loading settings...');
   Settings:=TSettings.Create;
   Settings.LoadFromFile(SETTINGSFILE);
+//  ActiveInk:=Inks[Settings.ActiveInk];
 end;
 
 procedure FreeAssets;
@@ -153,6 +175,8 @@ begin
     Settings.SaveToFile(SETTINGSFILE);
     FreeAndNil(Settings);
   end;
+  if Assigned(Tools) then FreeAndNil(Tools);
+  if Assigned(Inks) then FreeAndNil(Inks);
   if Assigned(Cursor) then FreeAndNil(Cursor);
   if Assigned(OverlayImage) then FreeAndNil(OverlayImage);
   if Assigned(MainImage) then begin

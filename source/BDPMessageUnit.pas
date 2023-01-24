@@ -7,7 +7,8 @@ interface
 type
   TMessage=record
     TypeID:integer;
-    Data:string;
+    DataString:string;
+    DataInt:integer;
   end;
 
   { TMessageQueue }
@@ -15,7 +16,7 @@ type
   TMessageQueue=class
     constructor Create(iQueueSize:integer);
     destructor Destroy; override;
-    procedure AddMessage(pTypeID:integer;pData:string='');
+    procedure AddMessage(pTypeID:integer;pDataString:string='';pDataInt:integer=-1);
     function HasNewMessage:boolean;
     function GetNextMessage:TMessage;
   private
@@ -41,11 +42,13 @@ begin
   inherited Destroy;
 end;
 
-procedure TMessageQueue.AddMessage(pTypeID:integer; pData:string);
+procedure TMessageQueue.AddMessage(pTypeID:integer; pDataString:string;
+  pDataInt:integer);
 begin
   if not((fInPTR=fOutPTR-1) or ((fInPtr=length(fMessages)-1) and (fOutPTR=0))) then begin
     fMessages[fInPTR].TypeID:=pTypeID;
-    fMessages[fInPTR].Data:=pData;
+    fMessages[fInPTR].DataString:=pDataString;
+    fMessages[fInPTR].DataInt:=pDataInt;
     inc(fInPTR);
     if fInPTR=length(fMessages) then fInPTR:=0;
   end else

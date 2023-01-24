@@ -77,13 +77,15 @@ begin
     SDL_RenderClear(fMainWindow.Renderer);
 
     MouseObjects.Draw;
-    InfoBar.ShowSimpleCoords(MouseX,MouseY,true);
-    InfoBar.Draw;
+//    InfoBar.ShowSimpleCoords(MouseX,MouseY,true);
+//    InfoBar.Draw;
     Flip;
     while MessageQueue.HasNewMessage do begin
       msg:=MessageQueue.GetNextMessage;
       case msg.TypeID of
         MSG_TOGGLECONTROLS:fControls.Visible:=not fControls.Visible;
+        MSG_ACTIVATETOOL:fControls.ActivateToolButton(msg.DataInt);
+        MSG_ACTIVATEINK:fControls.ActivateInkButton(msg.DataInt);
       end;
     end;
     HandleMessages;

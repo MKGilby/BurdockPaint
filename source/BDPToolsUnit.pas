@@ -12,6 +12,7 @@ type
     constructor Create; virtual;
     destructor Destroy; override;
     procedure Draw; virtual; // Draw helping lines, refresh infobar
+    procedure Clear; virtual;  // Clear helping lines!
     procedure Move(x,y:integer);
     function MouseDown({%H-}x,{%H-}y,{%H-}buttons:integer):boolean; virtual;
     function MouseMove({%H-}x,{%H-}y,{%H-}buttons:integer):boolean; virtual;
@@ -30,10 +31,13 @@ type
     constructor Create;
   end;
 
+  { TBDToolBox }
+
   TBDToolBox=class(TBDTool)
     constructor Create; override;
     function Click(x,y,button:integer):boolean; override;
     procedure Draw; override;
+    procedure Clear; override;
   private
     fSX,fSY:integer;
     fColorIndex:integer;
@@ -41,10 +45,13 @@ type
     procedure DrawRectangleWithInk(x1,y1,x2,y2:integer);
   end;
 
+  { TBDToolCircle }
+
   TBDToolCircle=class(TBDTool)
     constructor Create; override;
     function Click(x,y,button:integer):boolean; override;
     procedure Draw; override;
+    procedure Clear; override;
   private
     fSX,fSY:integer;
     fColorIndex:integer;
@@ -69,6 +76,8 @@ type
     procedure FloodFillWithPostProcessColor(x,y:integer);
   end;
 
+  { TBDToolFillTo }
+
   TBDToolFillTo=class(TBDTool)
     constructor Create; override;
     function Click(x,y,button:integer):boolean; override;
@@ -79,10 +88,13 @@ type
     procedure FillToWithPostProcessColor(x,y:integer);
   end;
 
+  { TBDToolLine }
+
   TBDToolLine=class(TBDTool)
     constructor Create; override;
     function Click(x,y,button:integer):boolean; override;
     procedure Draw; override;
+    procedure Clear; override;
   private
     fSX,fSY:integer;
     fColorIndex:integer;
@@ -116,6 +128,12 @@ procedure TBDTool.Draw;
 begin
   // Do nothing. Tools with only 1 click operations (Draw, Fill) does not need
   // additional drawing. They don't need to override this.
+end;
+
+procedure TBDTool.Clear;
+begin
+  // Do nothing. Tools with only 1 click operations (Draw, Fill) does not need
+  // additional clearing. They don't need to override this.
 end;
 
 procedure TBDTool.Move(x,y:integer);
@@ -223,6 +241,16 @@ begin
   end;
 end;
 
+procedure TBDToolBox.Clear;
+begin
+  case fState of
+    0:;
+    1:begin
+        OverlayImage.Rectangle(fSX,fSY,fX,fY,0);
+      end;
+  end;
+end;
+
 procedure TBDToolBox.DrawBarWithInk(x1,y1,x2,y2:integer);
 var
   i,j:integer;
@@ -315,6 +343,18 @@ begin
         InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
           'RADIUS='+inttostr(r)+' '+
           '('+inttostr(fX)+','+inttostr(fY)+') ');
+      end;
+  end;
+end;
+
+procedure TBDToolCircle.Clear;
+var r:integer;
+begin
+  case fState of
+    0:;
+    1:begin
+        r:=round(sqrt(sqr(fSX-fX)+sqr(fSY-fY)));
+        OverlayImage.Circle(fSX,fSY,r,0);
       end;
   end;
 end;
@@ -751,6 +791,15 @@ begin
           '('+inttostr(fX)+','+inttostr(fY)+') '+
           'DEG='+inttostr(d));
       end;
+  end;
+end;
+
+procedure TBDToolLine.Clear;
+var d:integer;
+begin
+  case fState of
+    0:;
+    1:OverlayImage.Line(fSX,fSY,fX,fY,0);
   end;
 end;
 

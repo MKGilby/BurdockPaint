@@ -147,12 +147,13 @@ var i:integer;
 begin
   fSoftDelete:=true;
   Result:=false;
+  Log.LogDebug('MouseObjects.HandeEvent starts...');
   case Event^.Type_ of
-    SDL_MOUSEBUTTONDOWN:Log.Trace('MouseDown');
-    SDL_MOUSEBUTTONUP:Log.Trace('MouseUp');
-    SDL_MOUSEMOTION:Log.Trace('MouseMotion');
-    SDL_KEYDOWN:Log.Trace('KeyDown');
-    SDL_KEYUP:Log.Trace('KeyUp');
+    SDL_MOUSEBUTTONDOWN:Log.LogDebug('MouseDown');
+    SDL_MOUSEBUTTONUP:Log.LogDebug('MouseUp');
+    SDL_MOUSEMOTION:Log.LogDebug('MouseMotion');
+    SDL_KEYDOWN:Log.LogDebug('KeyDown');
+    SDL_KEYUP:Log.LogDebug('KeyUp');
   end;
   if Count>0 then begin
 //    Log.Trace('s.HandleEvent');
@@ -270,7 +271,9 @@ end;
 
 function TMouseObject.IsOver(x,y:integer):boolean;
 begin
+//  Log.LogStatus(Format('%s.IsOver(%d,%d) Bounds: %d,%d,%d,%d',[name,x,y,fLeft,fTop,fLeft+fWidth,fTop+fHeight]));
   Result:=(x>=fLeft) and (x<fLeft+fWidth) and (y>=fTop) and (y<fTop+fHeight);
+//  if Result then Log.LogStatus('Result=true') else Log.LogStatus('Result=false');
 end;
 
 function TMouseObject.HandleEvent(Event:PSDL_Event):boolean;
@@ -307,13 +310,13 @@ begin
       if IsOver(nx,ny) then begin
         if Assigned(OnMouseMove) then Result:=OnMouseMove(Self,nx,ny);
         if not over then begin
-          Result:=false;
+          //Result:=false;     // don't know why this is here
           if Assigned(OnMouseEnter) then OnMouseEnter(Self,nx,ny);
           over:=true;
         end;
       end else
         if over then begin
-          Result:=false;
+          //Result:=false;     // don't know why this is here
           if Assigned(OnMouseLeave) then OnMouseLeave(Self,nx,ny);
           over:=false;
         end;
@@ -328,6 +331,10 @@ begin
       if Assigned(OnKeyUp) then Result:=OnKeyUp(Self,Event.Key.keysym.scancode);
     end;
   end;
+  if result then
+    Log.LogDebug('HandleEvent result is true.')
+  else
+    Log.LogDebug('HandleEvent result is false.');
 end;
 
 procedure TMouseObject.fSetWidth(value:integer);

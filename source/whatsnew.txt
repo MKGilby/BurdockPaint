@@ -4,12 +4,18 @@ Todo:
 - Add buttons to Controls.
 - Add Tools and Inks from old version.
 
+2023.01.24
+- Added tool and ink buttons.
+- Clicking them changes the selection.
+- Bugfix in TContainer.HandleEvent.
+- Bugfix in TMouseObject.HandleEvent.
+
 2023.01.23
 - Cursor drawing optimized. (Removed setting color before every draw by
   calling direct SDL2 procedures instead of MK_SDL2 wrapped ones.)
 - Added comment in MKMouse2 about ZIndex. (To be sure.)
 - Added Inks.
-- Added Tools, not yet compiling.
+- Added Tools.
 - Added overlay image (not using it yet).
 - Added Vibrocolors array.
 

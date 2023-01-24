@@ -40,7 +40,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, sdl2;
+uses SysUtils, BDPSharedUnit, sdl2, BDPInfoBarUnit;
 
 { TBDDrawArea }
 
@@ -85,11 +85,14 @@ end;
 
 procedure TBDDrawArea.Draw;
 //var atm:TBDFrame;
+var mx,my:integer;
 begin
 //  atm:=Image.WorkFrame;  // This clears junk on workframe (drawlines, etc.)
 
 // Maybe we should put drawline drawing here?
-//  ActiveTool.Draw;
+//  mx:=MouseXToFrame(MouseX);
+//  my:=MouseYToFrame(MouseY);
+//  InfoBar.ShowSimpleCoords(mx,my,(mx>=0) and (mx<MainImage.Width) and (my>=0) and (my<MainImage.Height));
 
 {  if MainImage.Changed then begin
     MainImage.Changed:=false;
@@ -99,6 +102,10 @@ begin
   end;}
 //  PutTexture(0,0,fTexture);
   MainImage.RenderToScreen(0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
+  InfoBar.Draw;
+  ActiveTool.Draw;
+  OverlayImage.RenderToScreenAsOverlay(0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
+  ActiveTool.Clear;
   if SDL_ShowCursor(SDL_QUERY)=SDL_DISABLE then
     Cursor.Draw(fCursorX,fCursorY,fZoomLevel);
   if fPanDir<>0 then begin
@@ -126,6 +133,7 @@ begin
   fMousePanning:=0;  // To stop panning if you press other button
   mx:=MouseXToFrame(x);
   my:=MouseYToFrame(y);
+  InfoBar.ShowSimpleCoords(mx,my,(mx>=0) and (mx<MainImage.Width) and (my>=0) and (my<MainImage.Height));
 //  Log.Trace(Format('mx=%d, my=%d, buttons=%d',[mx,my,buttons]));
   Result:=false;
 //  Result:=ActiveTool.MouseDown(mx,my,buttons);

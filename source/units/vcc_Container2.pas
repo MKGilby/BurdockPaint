@@ -170,7 +170,7 @@ begin
       Result:=fChilds[i].HandleEvent(Event);
     end;
   end;
-  inherited HandleEvent(Event);
+  if not Result then Result:=inherited HandleEvent(Event);
 {  case Event^.Type_ of
     SDL_MOUSEBUTTONDOWN:with Event^.Button do begin
       if IsOver(nx,ny) and Assigned(OnMouseDown) then begin
