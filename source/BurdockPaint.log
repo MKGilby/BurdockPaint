@@ -1,4 +1,4 @@
-(..system..) Starting Application. 2023. 01. 24. 10:28:14
+(..system..) Starting Application. 2023. 01. 24. 11:06:12
 (..system..) (Status) [Warning] {Error} <Debug>
 (uses) Logger.pas, version 1.14
 (uses) QuickSortUnit.pas, version 1.01
@@ -43,7 +43,7 @@ Minimum logging level set to ALL
 ()   Creating main image...
 <MKStream.pas, TMKStreamOpener.OpenStream> OpenStream('ntsc.col')
 <MKStream.pas, TMKStreamOpener.OpenStream> Check in cache (ntsc.col)
-< Trace > 2802
+< Trace > 2800
 ()   Creating overlay image...
 ()   Creating information bar...
 ()   Creating button gfx...
@@ -91,72 +91,6 @@ Minimum logging level set to ALL
 < Trace > Event not handled by any objects.
 < Trace > false
 <> MouseObjects.HandeEvent starts...
-<> MouseMotion
-< Trace > Passing event to object number 1 (Controls)
-<> HandleEvent with object H GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object H GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object FILL
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object SEP.
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object CIRCLE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object LINE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object BOX
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object DRAW
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object Controls
-<> Event: MouseMotion
-<> HandleEvent result is false.
-< Trace > Passing event to object number 0 (DrawArea)
-<> HandleEvent with object DrawArea
-<> Event: MouseMotion
-<> HandleEvent result is true.
-< Trace > Event handled by object number 0 (DrawArea)
-< Trace > true
-<> MouseObjects.HandeEvent starts...
-< Trace > Passing event to object number 1 (Controls)
-<> HandleEvent with object Controls
-<> HandleEvent result is false.
-< Trace > Passing event to object number 0 (DrawArea)
-<> HandleEvent with object DrawArea
-<> HandleEvent result is false.
-< Trace > Event not handled by any objects.
-< Trace > false
-<> MouseObjects.HandeEvent starts...
-< Trace > Passing event to object number 1 (Controls)
-<> HandleEvent with object Controls
-<> HandleEvent result is false.
-< Trace > Passing event to object number 0 (DrawArea)
-<> HandleEvent with object DrawArea
-<> HandleEvent result is false.
-< Trace > Event not handled by any objects.
-< Trace > false
-<> MouseObjects.HandeEvent starts...
 < Trace > Passing event to object number 1 (Controls)
 <> HandleEvent with object Controls
 <> HandleEvent result is false.
@@ -494,12 +428,8 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
-<> HandleEvent result is false.
-< Trace > Passing event to object number 0 (DrawArea)
-<> HandleEvent with object DrawArea
-<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 0 (DrawArea)
+< Trace > Event handled by object number 1 (Controls)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -542,12 +472,228 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
 <> HandleEvent result is false.
-< Trace > Passing event to object number 0 (DrawArea)
-<> HandleEvent with object DrawArea
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
 <> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 0 (DrawArea)
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 1 (Controls)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -956,30 +1102,6 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object L GRAD
 <> Event: MouseButtonDown
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseButtonDown
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseButtonDown
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseButtonDown
-<> HandleEvent result is false.
-<> HandleEvent with object FILL
-<> Event: MouseButtonDown
-<> HandleEvent result is false.
-<> HandleEvent with object SEP.
-<> Event: MouseButtonDown
-<> HandleEvent result is false.
-<> HandleEvent with object CIRCLE
-<> Event: MouseButtonDown
-<> HandleEvent result is false.
-<> HandleEvent with object LINE
-<> Event: MouseButtonDown
-<> HandleEvent result is false.
-<> HandleEvent with object BOX
-<> Event: MouseButtonDown
 <> HandleEvent result is true.
 < Trace > Event handled by object number 1 (Controls)
 < Trace > true
@@ -994,206 +1116,6 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object L GRAD
 <> Event: MouseButtonUp
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseButtonUp
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseButtonUp
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseButtonUp
-<> HandleEvent result is false.
-<> HandleEvent with object FILL
-<> Event: MouseButtonUp
-<> HandleEvent result is false.
-<> HandleEvent with object SEP.
-<> Event: MouseButtonUp
-<> HandleEvent result is false.
-<> HandleEvent with object CIRCLE
-<> Event: MouseButtonUp
-<> HandleEvent result is false.
-<> HandleEvent with object LINE
-<> Event: MouseButtonUp
-<> HandleEvent result is false.
-<> HandleEvent with object BOX
-<> Event: MouseButtonUp
-<> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
-< Trace > true
-<> MouseObjects.HandeEvent starts...
-<> MouseMotion
-< Trace > Passing event to object number 1 (Controls)
-<> HandleEvent with object H GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object H GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object FILL
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object SEP.
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object CIRCLE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object LINE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object BOX
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object DRAW
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object Controls
-<> Event: MouseMotion
-<> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
-< Trace > true
-<> MouseObjects.HandeEvent starts...
-<> MouseMotion
-< Trace > Passing event to object number 1 (Controls)
-<> HandleEvent with object H GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object H GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object FILL
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object SEP.
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object CIRCLE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object LINE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object BOX
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object DRAW
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object Controls
-<> Event: MouseMotion
-<> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
-< Trace > true
-<> MouseObjects.HandeEvent starts...
-<> MouseMotion
-< Trace > Passing event to object number 1 (Controls)
-<> HandleEvent with object H GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object H GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object FILL
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object SEP.
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object CIRCLE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object LINE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object BOX
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object DRAW
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object Controls
-<> Event: MouseMotion
-<> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
-< Trace > true
-<> MouseObjects.HandeEvent starts...
-<> MouseMotion
-< Trace > Passing event to object number 1 (Controls)
-<> HandleEvent with object H GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object H GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object FILL
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object SEP.
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object CIRCLE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object LINE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object BOX
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object DRAW
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object Controls
-<> Event: MouseMotion
 <> HandleEvent result is true.
 < Trace > Event handled by object number 1 (Controls)
 < Trace > true
@@ -2358,8 +2280,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -2402,8 +2328,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -2446,8 +2376,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -2490,8 +2424,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -2534,8 +2472,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -2578,8 +2520,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -2622,8 +2568,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -2666,8 +2616,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -2710,8 +2664,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -2754,8 +2712,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -2798,8 +2760,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -2842,8 +2808,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -2886,8 +2856,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -2930,8 +2904,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -2974,8 +2952,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -3018,8 +3000,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -3062,8 +3048,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -3106,8 +3096,3180 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseDown
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonDown
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseUp
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonUp
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseDown
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonDown
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseUp
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonUp
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -3733,21 +6895,6 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object H GRAD
 <> Event: MouseButtonDown
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseButtonDown
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseButtonDown
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseButtonDown
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseButtonDown
-<> HandleEvent result is false.
-<> HandleEvent with object FILL
-<> Event: MouseButtonDown
 <> HandleEvent result is true.
 < Trace > Event handled by object number 1 (Controls)
 < Trace > true
@@ -3759,23 +6906,2000 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object H GRAD
 <> Event: MouseButtonUp
+<> HandleEvent result is true.
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
 <> HandleEvent result is false.
 <> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 1 (Controls)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseDown
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonDown
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseMotion
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object H GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object L GRAD
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object OPAQUE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object FILL
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object SEP.
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object CIRCLE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object LINE
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object BOX
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object DRAW
+<> Event: MouseMotion
+<> HandleEvent result is false.
+<> HandleEvent with object Controls
+<> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseUp
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
 <> Event: MouseButtonUp
 <> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseButtonUp
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseButtonUp
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseButtonUp
-<> HandleEvent result is false.
-<> HandleEvent with object FILL
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
 <> Event: MouseButtonUp
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseDown
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonDown
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonDown
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
+< Trace > true
+<> MouseObjects.HandeEvent starts...
+<> MouseUp
+< Trace > Passing event to object number 1 (Controls)
+<> HandleEvent with object Controls
+<> Event: MouseButtonUp
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseButtonUp
+<> HandleEvent result is true.
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -3818,8 +8942,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -3862,8 +8990,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -3906,8 +9038,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -3950,8 +9086,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -3994,8 +9134,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -4038,8 +9182,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -4082,8 +9230,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -4126,8 +9278,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -4170,8 +9326,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -4214,8 +9374,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
+<> HandleEvent result is false.
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
+<> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> MouseMotion
@@ -4258,52 +9422,12 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 <> HandleEvent with object Controls
 <> Event: MouseMotion
-<> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
-< Trace > true
-<> MouseObjects.HandeEvent starts...
-<> MouseMotion
-< Trace > Passing event to object number 1 (Controls)
-<> HandleEvent with object H GRAD
-<> Event: MouseMotion
 <> HandleEvent result is false.
-<> HandleEvent with object H GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object FILL
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object SEP.
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object CIRCLE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object LINE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object BOX
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object DRAW
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object Controls
+< Trace > Passing event to object number 0 (DrawArea)
+<> HandleEvent with object DrawArea
 <> Event: MouseMotion
 <> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
+< Trace > Event handled by object number 0 (DrawArea)
 < Trace > true
 <> MouseObjects.HandeEvent starts...
 <> KeyDown
@@ -4339,50 +9463,6 @@ Minimum logging level set to ALL
 <> HandleEvent result is false.
 < Trace > Event not handled by any objects.
 < Trace > false
-<> MouseObjects.HandeEvent starts...
-<> MouseMotion
-< Trace > Passing event to object number 1 (Controls)
-<> HandleEvent with object H GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object H GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object L GRAD
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object OPAQUE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object FILL
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object SEP.
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object CIRCLE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object LINE
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object BOX
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object DRAW
-<> Event: MouseMotion
-<> HandleEvent result is false.
-<> HandleEvent with object Controls
-<> Event: MouseMotion
-<> HandleEvent result is true.
-< Trace > Event handled by object number 1 (Controls)
-< Trace > true
 <MKStream.pas, TMKStreamOpener.FileExists> Check in cache (BurdockPaint.ini)
 <MKStream.pas, TMKStreamOpener.OpenStream> OpenStream('BurdockPaint.ini')
 <MKStream.pas, TMKStreamOpener.OpenStream> Check in cache (BurdockPaint.ini)
@@ -4395,4 +9475,4 @@ Minimum logging level set to ALL
 < Trace > Destroying SEP....
 < Trace > 772
 < Trace > 9
-(..system..) Terminating Application. 2023. 01. 24. 10:28:30
+(..system..) Terminating Application. 2023. 01. 24. 11:06:29

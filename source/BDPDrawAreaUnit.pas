@@ -136,11 +136,11 @@ begin
   InfoBar.ShowSimpleCoords(mx,my,(mx>=0) and (mx<MainImage.Width) and (my>=0) and (my<MainImage.Height));
 //  Log.Trace(Format('mx=%d, my=%d, buttons=%d',[mx,my,buttons]));
   Result:=false;
-//  Result:=ActiveTool.MouseDown(mx,my,buttons);
+  Result:=ActiveTool.MouseDown(mx,my,buttons);
 //  Log.Trace('1');
   if not Result then begin
 //    Log.Trace('2');
-//    Result:=ActiveTool.Click(mx,my,buttons);
+    Result:=ActiveTool.Click(mx,my,buttons);
 //    Log.Trace('3');
     if not Result then begin
 //      Log.Trace('4');
@@ -153,36 +153,35 @@ begin
             fPanY2:=fZoomTop;
          end;
       end;
+      Result:=true;
 //      Log.Trace('5');
-//      if not result then Result:=inherited ;
-//      Log.Trace('6');
     end;
   end;
 end;
 
 function TBDDrawArea.MouseUp(Sender:TObject; x,y,buttons:integer):boolean;
 begin
-//  Result:=ActiveTool.MouseUp(MouseXToFrame(x),MouseYToFrame(y),buttons);
-  Result:=false;
+  Result:=ActiveTool.MouseUp(MouseXToFrame(x),MouseYToFrame(y),buttons);
   if not Result then begin
     if buttons=3 then begin   // Right button
       if fMousePanning=1 then MessageQueue.AddMessage(MSG_TOGGLECONTROLS);
       fMousePanning:=0;
     end;
-//    Result:=inherited ;
+    Result:=true;
   end;
 end;
 
 function TBDDrawArea.MouseMove(Sender:TObject; x,y:integer):boolean;
+var buttons:integer;
 begin
+  buttons:=SDL_GetMouseState(nil,nil);
   fCursorX:=x;
   fCursorY:=y;
   fFrameX:=MouseXToFrame(x);
   fFrameY:=MouseYToFrame(y);
-//  ActiveTool.Move(fFrameX,fFrameY);
+  ActiveTool.Move(fFrameX,fFrameY);
   InfoBar.ShowSimpleCoords(fFrameX,fFrameY,not((fFrameX<0) or (fFrameX>=MainImage.Width) or (fFrameY<0) or (fFrameY>=MainImage.Height)));
-//  Result:=ActiveTool.MouseMove(fFrameX,fFrameY,buttons);
-  Result:=false;
+  Result:=ActiveTool.MouseMove(fFrameX,fFrameY,buttons);
   if not Result then begin
     if fMousePanning=1 then fMousePanning:=2;
     if fMousePanning=2 then begin

@@ -1,14 +1,13 @@
 Todo:
-- Test overlay image.
 - Plan button layout on Controls. (what is on screen, and what is behind popups)
 - Add buttons to Controls.
-- Add Tools and Inks from old version.
 
 2023.01.24
 - Added tool and ink buttons.
 - Clicking them changes the selection.
 - Bugfix in TContainer.HandleEvent.
 - Bugfix in TMouseObject.HandleEvent.
+- Drawing with tools is working now, using the selected ink.
 
 2023.01.23
 - Cursor drawing optimized. (Removed setting color before every draw by
