@@ -214,7 +214,7 @@ begin
     1:begin
         inc(fColorIndex);
         if fColorIndex=length(VibroColors) then fColorIndex:=0;
-        Image.WorkFrame.Rectangle(fSX,fSY,fX,fY,VibroColors[fColorIndex]);
+        OverlayImage.Rectangle(fSX,fSY,fX,fY,VibroColors[fColorIndex]);
 
         InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
           'WI='+inttostr(abs(fSX-fX)+1)+' HE='+inttostr(abs(fSY-fY)+1)+' '+
@@ -231,7 +231,7 @@ begin
   if y1>y2 then begin i:=y1;y1:=y2;y2:=i;end;
   for j:=y1 to y2 do
     for i:=x1 to x2 do
-      Image.CurrentFrame.PutPixel(i,j,ActiveInk.GetColorIndexAt(i,j));
+      MainImage.PutPixel(i,j,ActiveInk.GetColorIndexAt(i,j));
 end;
 
 procedure TBDToolBox.DrawRectangleWithInk(x1,y1,x2,y2:integer);
@@ -241,12 +241,12 @@ begin
   if x1>x2 then begin i:=x1;x1:=x2;x2:=i;end;
   if y1>y2 then begin i:=y1;y1:=y2;y2:=i;end;
   for i:=y1 to y2 do begin
-    Image.CurrentFrame.PutPixel(x1,i,ActiveInk.GetColorIndexAt(x1,i));
-    Image.CurrentFrame.PutPixel(x2,i,ActiveInk.GetColorIndexAt(x2,i));
+    MainImage.PutPixel(x1,i,ActiveInk.GetColorIndexAt(x1,i));
+    MainImage.PutPixel(x2,i,ActiveInk.GetColorIndexAt(x2,i));
   end;
   for i:=x1+1 to x2-1 do begin
-    Image.CurrentFrame.PutPixel(i,y1,ActiveInk.GetColorIndexAt(i,y1));
-    Image.CurrentFrame.PutPixel(i,y2,ActiveInk.GetColorIndexAt(i,y2));
+    MainImage.PutPixel(i,y1,ActiveInk.GetColorIndexAt(i,y1));
+    MainImage.PutPixel(i,y2,ActiveInk.GetColorIndexAt(i,y2));
   end;
 end;
 
@@ -282,9 +282,9 @@ begin
               DrawCircleWithInk(fSX,fSY,r)
           end else begin
             if FillShapes then
-              Image.CurrentFrame.FilledCircle(fSX,fSY,r,POSTPROCESSCOLOR)
+              MainImage.FilledCircle(fSX,fSY,r,POSTPROCESSCOLOR)
             else
-              Image.CurrentFrame.Circle(fSX,fSY,r,POSTPROCESSCOLOR);
+              MainImage.Circle(fSX,fSY,r,POSTPROCESSCOLOR);
             ActiveInk.PostProcess;
           end;
           Result:=true;
@@ -310,7 +310,7 @@ begin
         if fColorIndex=length(VibroColors) then fColorIndex:=0;
         r:=round(sqrt(sqr(fSX-fX)+sqr(fSY-fY)));
 //        if abs(fSX-fX)>abs(fSY-fY) then r:=abs(fSX-fX) else r:=abs(fSY-fY);
-        Image.WorkFrame.Circle(fSX,fSY,r,VibroColors[fColorIndex]);
+        OverlayImage.Circle(fSX,fSY,r,VibroColors[fColorIndex]);
 
         InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
           'RADIUS='+inttostr(r)+' '+
@@ -324,14 +324,14 @@ procedure TBDToolCircle.DrawCircleWithInk(cx,cy,r:integer);
 
   procedure PutPixel8(x,y:integer);
   begin
-    Image.CurrentFrame.PutPixel(cx+x, cy+y, ActiveInk.GetColorIndexAt(cx+x, cy+y));
-    Image.CurrentFrame.PutPixel(cx-x, cy+y, ActiveInk.GetColorIndexAt(cx-x, cy+y));
-    Image.CurrentFrame.PutPixel(cx+x, cy-y, ActiveInk.GetColorIndexAt(cx+x, cy-y));
-    Image.CurrentFrame.PutPixel(cx-x, cy-y, ActiveInk.GetColorIndexAt(cx-x, cy-y));
-    Image.CurrentFrame.PutPixel(cx+y, cy+x, ActiveInk.GetColorIndexAt(cx+y, cy+x));
-    Image.CurrentFrame.PutPixel(cx-y, cy+x, ActiveInk.GetColorIndexAt(cx-y, cy+x));
-    Image.CurrentFrame.PutPixel(cx+y, cy-x, ActiveInk.GetColorIndexAt(cx+y, cy-x));
-    Image.CurrentFrame.PutPixel(cx-y, cy-x, ActiveInk.GetColorIndexAt(cx-y, cy-x));
+    MainImage.PutPixel(cx+x, cy+y, ActiveInk.GetColorIndexAt(cx+x, cy+y));
+    MainImage.PutPixel(cx-x, cy+y, ActiveInk.GetColorIndexAt(cx-x, cy+y));
+    MainImage.PutPixel(cx+x, cy-y, ActiveInk.GetColorIndexAt(cx+x, cy-y));
+    MainImage.PutPixel(cx-x, cy-y, ActiveInk.GetColorIndexAt(cx-x, cy-y));
+    MainImage.PutPixel(cx+y, cy+x, ActiveInk.GetColorIndexAt(cx+y, cy+x));
+    MainImage.PutPixel(cx-y, cy+x, ActiveInk.GetColorIndexAt(cx-y, cy+x));
+    MainImage.PutPixel(cx+y, cy-x, ActiveInk.GetColorIndexAt(cx+y, cy-x));
+    MainImage.PutPixel(cx-y, cy-x, ActiveInk.GetColorIndexAt(cx-y, cy-x));
   end;
 
 var x,y,d:integer;
@@ -362,12 +362,12 @@ procedure TBDToolCircle.DrawFilledCircleWithInk(cx,cy,r:integer);
   var i:integer;
   begin
     for i:=-x to +x do begin
-      Image.CurrentFrame.PutPixel(cx+i,cy+y,ActiveInk.GetColorIndexAt(cx+i,cy+y));
-      Image.CurrentFrame.PutPixel(cx+i,cy-y,ActiveInk.GetColorIndexAt(cx+i,cy-y));
+      MainImage.PutPixel(cx+i,cy+y,ActiveInk.GetColorIndexAt(cx+i,cy+y));
+      MainImage.PutPixel(cx+i,cy-y,ActiveInk.GetColorIndexAt(cx+i,cy-y));
     end;
     for i:=-y to +y do begin
-      Image.CurrentFrame.PutPixel(cx+i,cy+x,ActiveInk.GetColorIndexAt(cx+i,cy+x));
-      Image.CurrentFrame.PutPixel(cx+i,cy-x,ActiveInk.GetColorIndexAt(cx+i,cy-x));
+      MainImage.PutPixel(cx+i,cy+x,ActiveInk.GetColorIndexAt(cx+i,cy+x));
+      MainImage.PutPixel(cx+i,cy-x,ActiveInk.GetColorIndexAt(cx+i,cy-x));
     end;
   end;
 
@@ -403,7 +403,7 @@ end;
 function TBDToolDraw.MouseDown(x,y,button:integer):boolean;
 begin
   if button=1 then begin
-    Image.CurrentFrame.PutPixel(x,y,ActiveInk.GetColorIndexAt(x,y));
+    MainImage.PutPixel(x,y,ActiveInk.GetColorIndexAt(x,y));
     Result:=true;
     fDown:=true;
   end else begin
@@ -423,7 +423,7 @@ end;
 function TBDToolDraw.MouseMove(x,y,button:integer):boolean;
 begin
   if fDown then begin
-    Image.CurrentFrame.PutPixel(x,y,ActiveInk.GetColorIndexAt(x,y));
+    MainImage.PutPixel(x,y,ActiveInk.GetColorIndexAt(x,y));
     Result:=true;
   end else Result:=false;
 end;
@@ -457,31 +457,31 @@ var i,j,ic,cc:integer;w:boolean;
   function FFCheckPixel(x,y,src:integer):boolean;
   begin
     Result:=false;
-    if (y>0) and (Image.CurrentFrame.GetPixel(x,y-1)=src) then begin
-      Image.CurrentFrame.PutPixel(x,y-1,POSTPROCESSCOLOR);
+    if (y>0) and (MainImage.GetPixel(x,y-1)=src) then begin
+      MainImage.PutPixel(x,y-1,POSTPROCESSCOLOR);
       if y-1<fTop then fTop:=y-1;
       Result:=true;
     end;
-    if (x<Image.Width-1) and (Image.CurrentFrame.GetPixel(x+1,y)=src) then begin
-      Image.CurrentFrame.PutPixel(x+1,y,POSTPROCESSCOLOR);
+    if (x<MainImage.Width-1) and (MainImage.GetPixel(x+1,y)=src) then begin
+      MainImage.PutPixel(x+1,y,POSTPROCESSCOLOR);
       if x+1>fRight then fRight:=x+1;
       Result:=true;
     end;
-    if (y<Image.Height-1) and (Image.CurrentFrame.GetPixel(x,y+1)=src) then begin
-      Image.CurrentFrame.PutPixel(x,y+1,POSTPROCESSCOLOR);
+    if (y<MainImage.Height-1) and (MainImage.GetPixel(x,y+1)=src) then begin
+      MainImage.PutPixel(x,y+1,POSTPROCESSCOLOR);
       if y+1>fBottom then fBottom:=y+1;
       Result:=true;
     end;
-    if (x>0) and (Image.CurrentFrame.GetPixel(x-1,y)=src) then begin
-      Image.CurrentFrame.PutPixel(x-1,y,POSTPROCESSCOLOR);
+    if (x>0) and (MainImage.GetPixel(x-1,y)=src) then begin
+      MainImage.PutPixel(x-1,y,POSTPROCESSCOLOR);
       if x-1<fLeft then fLeft:=x-1;
       Result:=true;
     end;
   end;
 
 begin
-  cc:=Image.CurrentFrame.GetPixel(x,y);
-  Image.CurrentFrame.PutPixel(x,y,POSTPROCESSCOLOR);
+  cc:=MainImage.GetPixel(x,y);
+  MainImage.PutPixel(x,y,POSTPROCESSCOLOR);
   ic:=0;
   repeat
     w:=false;
@@ -494,7 +494,7 @@ begin
           while j<=fBottom do begin
             i:=fLeft;
             while i<=fRight do begin
-              if Image.CurrentFrame.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j,cc) then w:=true;
               inc(i);
             end;
@@ -506,7 +506,7 @@ begin
           while j>=fTop do begin
             i:=fLeft;
             while i<=fRight do begin
-              if Image.CurrentFrame.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j,cc) then w:=true;
               inc(i);
             end;
@@ -518,7 +518,7 @@ begin
           while j>=fTop do begin
             i:=fRight;
             while i>=fLeft do begin
-              if Image.CurrentFrame.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j,cc) then w:=true;
               dec(i);
             end;
@@ -530,7 +530,7 @@ begin
           while j<=fBottom do begin
             i:=fRight;
             while i>=fLeft do begin
-              if Image.CurrentFrame.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j,cc) then w:=true;
               dec(i);
             end;
@@ -557,7 +557,7 @@ begin
   if button=1 then
     case fstate of
       0:begin
-          fSourceColor:=Image.CurrentFrame.GetPixel(x,y);
+          fSourceColor:=MainImage.GetPixel(x,y);
           fState:=1;
           Result:=true;
         end;
@@ -594,34 +594,34 @@ var i,j,ic:integer;w:boolean;
   function FFCheckPixel(x,y:integer):boolean;
   begin
     Result:=false;
-    if (y>0) and (Image.CurrentFrame.GetPixel(x,y-1)<>fSourceColor) and
-      (Image.CurrentFrame.GetPixel(x,y-1)<>POSTPROCESSCOLOR) then begin
-      Image.CurrentFrame.PutPixel(x,y-1,POSTPROCESSCOLOR);
+    if (y>0) and (MainImage.GetPixel(x,y-1)<>fSourceColor) and
+      (MainImage.GetPixel(x,y-1)<>POSTPROCESSCOLOR) then begin
+      MainImage.PutPixel(x,y-1,POSTPROCESSCOLOR);
       if y-1<fTop then fTop:=y-1;
       Result:=true;
     end;
-    if (x<Image.Width-1) and (Image.CurrentFrame.GetPixel(x+1,y)<>fSourceColor) and
-      (Image.CurrentFrame.GetPixel(x+1,y)<>POSTPROCESSCOLOR) then begin
-      Image.CurrentFrame.PutPixel(x+1,y,POSTPROCESSCOLOR);
+    if (x<MainImage.Width-1) and (MainImage.GetPixel(x+1,y)<>fSourceColor) and
+      (MainImage.GetPixel(x+1,y)<>POSTPROCESSCOLOR) then begin
+      MainImage.PutPixel(x+1,y,POSTPROCESSCOLOR);
       if x+1>fRight then fRight:=x+1;
       Result:=true;
     end;
-    if (y<Image.Height-1) and (Image.CurrentFrame.GetPixel(x,y+1)<>fSourceColor) and
-      (Image.CurrentFrame.GetPixel(x,y+1)<>POSTPROCESSCOLOR) then begin
-      Image.CurrentFrame.PutPixel(x,y+1,POSTPROCESSCOLOR);
+    if (y<MainImage.Height-1) and (MainImage.GetPixel(x,y+1)<>fSourceColor) and
+      (MainImage.GetPixel(x,y+1)<>POSTPROCESSCOLOR) then begin
+      MainImage.PutPixel(x,y+1,POSTPROCESSCOLOR);
       if y+1>fBottom then fBottom:=y+1;
       Result:=true;
     end;
-    if (x>0) and (Image.CurrentFrame.GetPixel(x-1,y)<>fSourceColor) and
-      (Image.CurrentFrame.GetPixel(x-1,y)<>POSTPROCESSCOLOR) then begin
-      Image.CurrentFrame.PutPixel(x-1,y,POSTPROCESSCOLOR);
+    if (x>0) and (MainImage.GetPixel(x-1,y)<>fSourceColor) and
+      (MainImage.GetPixel(x-1,y)<>POSTPROCESSCOLOR) then begin
+      MainImage.PutPixel(x-1,y,POSTPROCESSCOLOR);
       if x-1<fLeft then fLeft:=x-1;
       Result:=true;
     end;
   end;
 
 begin
-  Image.CurrentFrame.PutPixel(x,y,POSTPROCESSCOLOR);
+  MainImage.PutPixel(x,y,POSTPROCESSCOLOR);
   ic:=0;
   repeat
     w:=false;
@@ -634,7 +634,7 @@ begin
           while j<=fBottom do begin
             i:=fLeft;
             while i<=fRight do begin
-              if Image.CurrentFrame.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j) then w:=true;
               inc(i);
             end;
@@ -646,7 +646,7 @@ begin
           while j>=fTop do begin
             i:=fLeft;
             while i<=fRight do begin
-              if Image.CurrentFrame.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j) then w:=true;
               inc(i);
             end;
@@ -658,7 +658,7 @@ begin
           while j>=fTop do begin
             i:=fRight;
             while i>=fLeft do begin
-              if Image.CurrentFrame.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j) then w:=true;
               dec(i);
             end;
@@ -670,7 +670,7 @@ begin
           while j<=fBottom do begin
             i:=fRight;
             while i>=fLeft do begin
-              if Image.CurrentFrame.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j) then w:=true;
               dec(i);
             end;
@@ -708,7 +708,7 @@ begin
           if ActiveInk.SupportsOnTheFly then
             DrawLineWithInk(fSX,fSY,x,y)
           else begin
-            Image.CurrentFrame.Line(fSX,fSY,fX,fY,POSTPROCESSCOLOR);
+            MainImage.Line(fSX,fSY,fX,fY,POSTPROCESSCOLOR);
             ActiveInk.PostProcess;
           end;
           Result:=true;
@@ -732,7 +732,7 @@ begin
     1:begin
         inc(fColorIndex);
         if fColorIndex=length(VibroColors) then fColorIndex:=0;
-        Image.WorkFrame.Line(fSX,fSY,fX,fY,VibroColors[fColorIndex]);
+        OverlayImage.Line(fSX,fSY,fX,fY,VibroColors[fColorIndex]);
         if (fSX>fX) then begin
           d:=trunc(arctan((fSY-fY)/(fSX-fX))*180/pi)+270;
         end else
@@ -795,7 +795,7 @@ begin
   nondiag_inc := b + b;
   diag_inc    := b + b - a - a;
   for i := 0 to a do begin   {draw the a+1 pixels}
-    Image.CurrentFrame.PutPixel(x,y,ActiveInk.GetColorIndexAt(x,y));
+    MainImage.PutPixel(x,y,ActiveInk.GetColorIndexAt(x,y));
     if d < 0 then begin
       x := x + dx_nondiag;
       y := y + dy_nondiag;
@@ -822,15 +822,15 @@ var i,j,sc:integer;
   fLeft,fRight,fTop,fBottom:integer;
 begin
   if button=1 then begin
-    fLeft:=Image.Width;
+    fLeft:=MainImage.Width;
     fRight:=-1;
-    fTop:=Image.Height;
+    fTop:=MainImage.Height;
     fBottom:=-1;
-    sc:=Image.CurrentFrame.GetPixel(x,y);
-    for j:=0 to Image.Height-1 do
-      for i:=0 to Image.Width-1 do
-        if Image.CurrentFrame.GetPixel(i,j)=sc then begin
-          Image.CurrentFrame.Putpixel(i,j,POSTPROCESSCOLOR);
+    sc:=MainImage.GetPixel(x,y);
+    for j:=0 to MainImage.Height-1 do
+      for i:=0 to MainImage.Width-1 do
+        if MainImage.GetPixel(i,j)=sc then begin
+          MainImage.Putpixel(i,j,POSTPROCESSCOLOR);
           if i>fRight then fRight:=i;
           if i<fLeft then fLeft:=i;
           if j>fBottom then fBottom:=j;

@@ -77,8 +77,8 @@ end;
 procedure TBDControls.Draw;
 begin
   if fVisible then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,SystemColors[1].c32);
-    fTexture.ARGBImage.Bar(0,3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,SystemColors[2].c32);
+    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,OverlayImage.Palette[1]);
+    fTexture.ARGBImage.Bar(0,3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[2]);
     inherited Draw;
     fTexture.Update;
     PutTexture(fLeft,fTop,fTexture);

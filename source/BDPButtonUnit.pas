@@ -78,12 +78,12 @@ end;
 
 procedure TBDButton.Draw;
 begin
-  fTarget.Bar(fLeft+8-fParentX,fTop-fParentY,fWidth-16,3,SystemColors[1].c32);
+  fTarget.Bar(fLeft+8-fParentX,fTop-fParentY,fWidth-16,3,OverlayImage.Palette[1]);
   if fSelected then
-    fTarget.Bar(fLeft-fParentX+3,fTop-fParentY+3,fWidth-6,21,SystemColors[3].c32)
+    fTarget.Bar(fLeft-fParentX+3,fTop-fParentY+3,fWidth-6,21,OverlayImage.Palette[3])
   else
-    fTarget.Bar(fLeft-fParentX+3,fTop-fParentY+3,fWidth-6,21,SystemColors[2].c32);
-  fTarget.Bar(fLeft-fParentX+8,fTop-fParentY+24,fWidth-16,3,SystemColors[1].c32);
+    fTarget.Bar(fLeft-fParentX+3,fTop-fParentY+3,fWidth-6,21,OverlayImage.Palette[2]);
+  fTarget.Bar(fLeft-fParentX+8,fTop-fParentY+24,fWidth-16,3,OverlayImage.Palette[1]);
   fLeftImage.CopyTo(0,0,fLeftImage.Width,fLeftImage.Height,fLeft-fParentX,fTop-fParentY,fTarget,true);
   fRightImage.CopyTo(0,0,fRightImage.Width,fRightImage.Height,fLeft-fParentX+fWidth-8,fTop-fParentY,fTarget,true);
 //  Log.Trace(fCaption);

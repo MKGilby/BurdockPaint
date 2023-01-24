@@ -53,6 +53,14 @@ type
     // Zoom                      : Zoom level (1->1x, 2->2x, 3->4x, 4->8x)
     procedure RenderToScreen(TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
 
+    // Renders the image onto the PrimaryWindow skipping all pixels
+    // where alpha is not 255
+    // TextureLeft, TextureTop   : The topleft position of the image on PrimaryWindow
+    // RenderWidth, RenderHeight : The dimensions of rendering in IMAGE pixels
+    // ImageLeft, ImageTop       : The topleft position of rendering in the image
+    // Zoom                      : Zoom level (1->1x, 2->2x, 3->4x, 4->8x)
+    procedure RenderToScreenAsOverlay(TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
+
     // Saves the raw image data (=array of colorindices) into a file. Used for debugging.
     procedure SaveRawDataToFile(fn:string);
     // Saves image to file, including palette data.
@@ -549,6 +557,65 @@ begin
         p:=GetPixel(ImageLeft+x,ImageTop+y);
         mk_sdl2.bar(tx+x*zPixel,ty+y*zPixel,zPixel,zPixel,
           fPalette.ColorR[p],fPalette.ColorG[p],fPalette.ColorB[p],fPalette.ColorA[p]);
+      end;
+  end;
+end;
+
+procedure TBDImage.RenderToScreenAsOverlay(TextureLeft, TextureTop,
+  RenderWidth, RenderHeight, ImageLeft, ImageTop, Zoom: integer);
+var x,y,tx,ty,zPixel,zRenderWidth,zRenderHeight:integer;
+    p:word;
+begin
+  if not(Zoom in [1..4]) then exit;
+  zPixel:=1<<(Zoom-1);
+
+  RenderWidth:=RenderWidth div ZPixel;
+  RenderHeight:=RenderHeight div ZPixel;
+
+  if ImageLeft<0 then begin
+    tx:=TextureLeft-ImageLeft*zPixel;
+    zRenderWidth:=fWidth;
+    ImageLeft:=0;
+    if RenderWidth<zRenderWidth then zRenderWidth:=RenderWidth;
+  end else begin
+    tx:=0;
+    zRenderWidth:=RenderWidth;
+    if zRenderWidth>fWidth-ImageLeft then zRenderWidth:=fWidth-ImageLeft;
+  end;
+
+  if ImageTop<0 then begin
+    ty:=TextureTop-ImageTop*zPixel;
+    zRenderHeight:=fHeight;
+    ImageTop:=0;
+    if RenderHeight<zRenderHeight then zRenderHeight:=RenderHeight;
+  end else begin
+    ty:=0;
+    zRenderHeight:=RenderHeight;
+    if zRenderHeight>fHeight-ImageTop then zRenderHeight:=fHeight-ImageTop;
+  end;
+
+  if zPixel=1 then begin
+    for y:=0 to zRenderHeight-1 do
+      for x:=0 to zRenderWidth-1 do begin
+        p:=GetPixel(ImageLeft+x,ImageTop+y);
+        if fPalette.ColorA[p]=255 then begin
+          SDL_SetRenderDrawColor(
+            PrimaryWindow.Renderer,
+            fPalette.ColorR[p],
+            fPalette.ColorG[p],
+            fPalette.ColorB[p],
+            fPalette.ColorA[p]);
+          SDL_RenderDrawPoint(PrimaryWindow.Renderer,tx+x,ty+y);
+        end;
+      end;
+  end else begin
+    for y:=0 to zRenderHeight-1 do
+      for x:=0 to zRenderWidth-1 do begin
+        p:=GetPixel(ImageLeft+x,ImageTop+y);
+        if fPalette.ColorA[p]=255 then begin
+          mk_sdl2.bar(tx+x*zPixel,ty+y*zPixel,zPixel,zPixel,
+            fPalette.ColorR[p],fPalette.ColorG[p],fPalette.ColorB[p],fPalette.ColorA[p]);
+        end;
       end;
   end;
 end;

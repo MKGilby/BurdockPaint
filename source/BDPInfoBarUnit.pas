@@ -67,8 +67,8 @@ end;
 
 procedure TBDInfoBar.Clear;
 begin
-  fTexture.ARGBImage.Bar(0,0,fTexture.Width,fTexture.Height-3,SystemColors[2].c32);
-  fTexture.ARGBImage.Bar(0,fTexture.Height-3,fTexture.Width,3,SystemColors[1].c32);
+  fTexture.ARGBImage.Bar(0,0,fTexture.Width,fTexture.Height-3,OverlayImage.Palette.Colors[2]);
+  fTexture.ARGBImage.Bar(0,fTexture.Height-3,fTexture.Width,3,OverlayImage.Palette.Colors[1]);
 end;
 
 end.
