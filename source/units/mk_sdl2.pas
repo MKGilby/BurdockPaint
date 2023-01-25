@@ -391,7 +391,7 @@ begin
       end;
       inc(i);
     end;
-    if EventHandled then Log.Trace('true') else Log.Trace('false');
+//    if EventHandled then Log.LogDebug('true') else Log.LogDebug('false');
     if not EventHandled then begin
       case event.type_ of
         SDL_QUITEV : begin

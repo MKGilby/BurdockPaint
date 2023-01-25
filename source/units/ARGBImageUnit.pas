@@ -5,7 +5,7 @@
 // You can freely distribute the sources.
 //
 // Written by Gilby/MKSZTSZ
-// Hungary, 2017-2021
+// Hungary, 2017-2023
 // ------------------------------------------------------------------
 
 // Version info:
@@ -92,6 +92,8 @@
 //     + Added HLine with uint32 color parameter
 //     + Added VLine with uint32 color parameter
 //     + Added Rectangle with uint32 color parameter
+//   1.22a - Gilby - 2023.01.25
+//     * Tidying code
 
 {$ifdef fpc}
   {$mode delphi}
@@ -304,15 +306,13 @@ type
   procedure RegisterARGBImageReader(pType:string;pProc:TARGBImageFileReaderProc;pAffectsImage:boolean);
   procedure RegisterARGBImageWriter(pType:string;pProc:TARGBImageFileWriterProc);
 
-//var Palette:TARGBPalette;
-
 implementation
 
 uses SysUtils, MKToolBox, Logger, MKStream;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.22';
+  Version='1.22a';
 
 var
   ARGBImageReaders:TARGBImageReaderList;
@@ -410,7 +410,6 @@ begin
   if (fRawdata<>nil) and (fWidth<>0) and (fHeight<>0) then begin
     for i:=0 to fWidth*fHeight-1 do
       dword((fRawData+i*4)^):=$ff000000;
-//    fillchar(fRawdata^,fWidth*fHeight*4,0)
   end
   else
     Log.LogWarning('Attempt to clear an uninitialized rawpicture!',Istr);
@@ -456,7 +455,6 @@ begin
           if byte((s1+3)^)=255 then begin
             uint32(t^):=uint32(s1^);
           end else begin
-//            a:=byte((s1+3)^);
             byte(t^):=byte(s1^)*byte((s1+3)^) div 255+byte(t^)*(255-byte((s1+3)^)) div 255;
             byte((t+1)^):=byte((s1+1)^)*byte((s1+3)^) div 255+byte((t+1)^)*(255-byte((s1+3)^)) div 255;
             byte((t+2)^):=byte((s1+2)^)*byte((s1+3)^) div 255+byte((t+2)^)*(255-byte((s1+3)^)) div 255;
@@ -574,7 +572,6 @@ begin
       inc(s2,4);
     end;
   end;
-//  freemem(fRawData,fWidth*fHeight*4);
   freemem(fRawData);
   fRawdata:=p;
 end;
@@ -602,7 +599,6 @@ begin
 end;
 
 procedure TARGBImage.Rotate(iAmount:word);
-//const Istr=Fstr+'TRawPicture.Rotate';
 var x,y:integer;s,t,p:pointer;
 begin
   p:=GetMem(fWidth*fHeight*4);
@@ -623,7 +619,7 @@ begin
         end;
         x:=fWidth;fWidth:=fHeight;fHeight:=x;
       end;
-    2:begin
+    2:begin  // Rotate 180°
         s:=fRawData+(fWidth*fHeight-1)*4;
         t:=p;
         for x:=0 to fWidth*fHeight-1 do begin
@@ -648,7 +644,6 @@ begin
       end;
   end;
   freemem(fRawData);
-//  freemem(fRawdata,fWidth*fHeight*4);
   fRawdata:=p;
 end;
 
@@ -882,12 +877,15 @@ begin
     end;
   w:=x2-x1+1;
   h:=y2-y1+1;
+  // 2. Allocate memory for smaller image
   p:=GetMem(w*h*4);
+  // 3. Copy cropped data to allocated memory
   for j:=0 to h-1 do
     move((fRawData+((y1+j)*fWidth+x1)*4)^,(p+(j*w)*4)^,w*4);
-//  FreeMem(fRawData,fWidth*fHeight*4);
+  // 4. Assign new data to image
   freemem(fRawData);
   fRawData:=p;
+  // 5. Adjust size
   fWidth:=w;
   fHeight:=h;
 end;
@@ -908,13 +906,9 @@ end;
 procedure TARGBImage.FlipH;
 var x,y:integer;s,t,p:pointer;
 begin
-//  Log.Trace('A1, '+inttostr(fWidth)+', '+inttostr(fHeight));
   p:=getmem(fWidth*fHeight*4);
-//  Log.Trace('A2');
   t:=p;
-//  Log.Trace('A3');
   s:=fRawdata+(fWidth-1)*4;
-//  Log.Trace('A4');
 
   for y:=0 to fHeight-1 do begin
     for x:=0 to fWidth-1 do begin
@@ -924,12 +918,8 @@ begin
     end;
     s+=fWidth*4*2;
   end;
-//  Log.Trace('A5');
-//  freemem(fRawdata,fWidth*fHeight*4);
   freemem(fRawData);
-//  Log.Trace('A6');
   fRawdata:=p;
-//  Log.Trace('A7');
 end;
 
 procedure TARGBImage.FlipV;
@@ -947,7 +937,6 @@ begin
     end;
     s-=fWidth*4*2;
   end;
-//  freemem(fRawdata,fWidth*fHeight*4);
   freemem(fRawData);
   fRawdata:=p;
 end;
@@ -960,11 +949,9 @@ begin
   s:=fRawdata;
   for y:=0 to fHeight<<1-1 do
     for x:=0 to fWidth<<1-1 do begin
-//        Log.Trace(inttostr(x)+', '+inttostr(y)+' = '+inttostr((y>>1*_width+x>>1)));
       move((s+(y>>1*fWidth+x>>1)*4)^,t^,4);
       t+=4;
     end;
-//  freemem(fRawdata,fWidth*fHeight*4);
   freemem(fRawData);
   fRawdata:=p;
   fWidth:=fWidth<<1;
@@ -987,7 +974,6 @@ begin
       inc(s,4);
     end;
 
-//  freemem(fRawdata,fWidth*fHeight*4);
   freemem(fRawData);
   fRawdata:=p;
   fWidth:=fWidth*n;
@@ -1014,7 +1000,6 @@ begin
       for i:=0 to fWidth-1 do begin
         r:=0;g:=0;b:=0;a:=0;
         for y:=0 to f-1 do begin
-//          s:=fRawdata+((j*f+y)*fWidth+(i*f))*4;
           s:=fRawdata+(j*f+y)*fWidth*f*4+i*f*4;
           for x:=0 to f-1 do begin
             b+=byte((s)^);
@@ -1151,7 +1136,6 @@ begin
       for y:=0 to frameHeight-1 do
         move((p+(y*fWidth*4))^,(q+(y*newWidth*4))^,frameWidth*4);
     end;
-//  FreeMem(fRawData,fWidth*fHeight*4);
   freemem(fRawData);
   fRawdata:=newRawData;
   fWidth:=newWidth;
@@ -1343,7 +1327,6 @@ begin
   if i=-1 then raise Exception.Create('Extension not recognized! ('+ext+')');
   Xs:=MKStreamOpener.OpenStream(iFileName);
   if ARGBImageReaders[i].AffectsImage then begin
-//    if (fRawdata<>nil) then Freemem(fRawdata,fWidth*fHeight*4);
     if (fRawdata<>nil) then Freemem(fRawdata);
     fAnimations.Clear;
     if Assigned(fFontData) then FreeAndNil(fFontData);
@@ -1358,7 +1341,6 @@ begin
   i:=ARGBImageReaders.IndexOf(uppercase(pFileType));
   if i=-1 then raise Exception.Create('Filetype not recognized! ('+pFileType+')');
   if ARGBImageReaders[i].AffectsImage then begin
-//    if (fRawdata<>nil) then Freemem(fRawdata,fWidth*fHeight*4);
     if (fRawdata<>nil) then Freemem(fRawdata);
     fAnimations.Clear;
     if Assigned(fFontData) then FreeAndNil(fFontData);
@@ -1405,7 +1387,6 @@ end;
 
 initialization
   Log.LogStatus(Fstr+'version '+Version,'uses');
-//  move(DefaultPalette,Palette,1024);
   ARGBImageReaders:=TARGBImageReaderList.Create;
   ARGBImageWriters:=TARGBImageWriterList.Create;
 

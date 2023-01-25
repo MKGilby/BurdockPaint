@@ -27,6 +27,8 @@
 //    * Simplified
 //  V1.02: Gilby - 2022.09.05
 //    + Added Outtext(TARGBImage,text,x,y,align);
+//  V1.02a: Gilby - 2023.01.25
+//    * Tidying code
 
 {$ifdef fpc}
   {$mode delphi}
@@ -67,7 +69,7 @@ uses SysUtils, MKToolBox, Logger, MKStream;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.02';
+  Version='1.02a';
 
 // ---------------------------------------------------------- [ TFontList ] ---
 
@@ -81,7 +83,6 @@ var i:longint;
 begin
   i:=IndexOf(aName);
   if i>-1 then begin
-//    FontByIndex[i].Free;
     Items[i].Free;
     inherited Delete(i);
   end;
@@ -103,7 +104,7 @@ var i:integer;
 begin
   Log.LogStatus('FontList listing starts...',Istr);
   for i:=0 to Count-1 do
-    Log.Trace(st(i,3,' ')+'. '+Strings[i]);
+    Log.LogStatus(st(i,3,' ')+'. '+Strings[i]);
   Log.LogStatus('FontList listing ends...',Istr);
 end;
 

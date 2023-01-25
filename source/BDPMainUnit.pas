@@ -77,8 +77,6 @@ begin
     SDL_RenderClear(fMainWindow.Renderer);
 
     MouseObjects.Draw;
-//    InfoBar.ShowSimpleCoords(MouseX,MouseY,true);
-//    InfoBar.Draw;
     Flip;
     while MessageQueue.HasNewMessage do begin
       msg:=MessageQueue.GetNextMessage;

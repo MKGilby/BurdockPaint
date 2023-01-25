@@ -3,7 +3,7 @@
 // You can freely distribute the sources under the GNU GPL Version 2.
 //
 // Written by Gilby/MKSZTSZ
-// Hungary, 2021
+// Hungary, 2021-2023
 // ------------------------------------------------------------------
 
 // Version info:
@@ -11,6 +11,10 @@
 //     + Created from MaskUnit.
 //   V1.01 - 2022.09.21
 //     + Removed unnecessary logging.
+//   V1.01a - 2023.01.25
+//     * Changed getmems to p:=getmem.
+//     * Changed freemem to sizeless version.
+//     * Tidying code.
 
 {$ifdef fpc}
   {$mode delphi}
@@ -45,7 +49,6 @@ type
     fWidth, fHeight: integer;  // Width and height of Mask
     fData:pointer;  // Mask data (width*height bytes)
     procedure LoadMask_MASK(iSource:TStream);
-//    procedure LoadMask_MSKT(iSource:TStream);
   public
     property Width:integer read fWidth;
     property Height:integer read fHeight;
@@ -58,13 +61,13 @@ uses SysUtils, Logger, MKToolBox, MKStream;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.01';
+  Version='1.01a';
 
 constructor TMask.Create(iWidth,iHeight:integer);
 begin
   fWidth:=iWidth;
   fHeight:=iHeight;
-  getmem(fData,fWidth*fHeight);
+  fData:=getmem(fWidth*fHeight);
   fillchar(fData^,fWidth*fHeight,0);
 end;
 
@@ -94,7 +97,6 @@ begin
   s:=#0#0#0#0;
   iStream.Read(s[1],4);
   if s='MASK' then LoadMask_MASK(iStream)
-//  else if s='MSKT' then LoadMask_MSKT(iStream)
   else begin
     fWidth:=16;
     fHeight:=16;
@@ -103,12 +105,11 @@ begin
 end;
 
 constructor TMask.CreateFromImage(iImage:TARGBImage;nzvalue:byte=1);
-//const Istr=Fstr+'CreateFromImage';
 var i,j:integer;p,q:pointer;
 begin
   fWidth:=iImage.Width;
   fHeight:=iImage.Height;
-  getmem(fData,fHeight*fWidth);
+  fData:=getmem(fHeight*fWidth);
   p:=fData;
   q:=iImage.Rawdata;
   for j:=0 to iImage.Height-1 do
@@ -122,10 +123,10 @@ end;
 constructor TMask.CreateFromImagePart(iImage:TARGBImage;x,y,w,h:integer;nzvalue:byte=1);
 var i,j:integer;p,q:pointer;
 begin
-//  Log.Trace(Format('TMask.CreateFromImagePart(%d,%d,%d,%d)',[x,y,w,h]));
+//  Log.LogDebug(Format('TMask.CreateFromImagePart(%d,%d,%d,%d)',[x,y,w,h]));
   fWidth:=w;
   fHeight:=h;
-  getmem(fData,fHeight*fWidth);
+  fData:=getmem(fHeight*fWidth);
   p:=fData;
   for j:=0 to h-1 do begin
     q:=iImage.Rawdata+((y+j)*iImage.Width+x)*4;
@@ -139,12 +140,11 @@ end;
 
 // Creates a mask from an image using one color channel.
 constructor TMask.CreateFromImage2(iImage:TARGBImage;shrvalue:integer=0);
-//const Istr=Fstr+'CreateFromImage2';
 var i,j:integer;p,q:pointer;
 begin
   fWidth:=iImage.Width;
   fHeight:=iImage.Height;
-  getmem(fData,fHeight*fWidth);
+  fData:=getmem(fHeight*fWidth);
   p:=fData;
   q:=iImage.Rawdata;
   if (shrvalue=1) or (shrvalue=8) then inc(q)
@@ -160,7 +160,7 @@ end;
 
 destructor TMask.Destroy;
 begin
-  freemem(fData,fWidth*fHeight);
+  freemem(fData);
 end;
 
 procedure TMask.LoadMask_MASK(iSource:TStream);
@@ -170,7 +170,7 @@ begin
   fHeight:=0;
   iSource.Read(fWidth,2);
   iSource.Read(fHeight,2);
-  getmem(fData,fWidth*fHeight);
+  fData:=getmem(fWidth*fHeight);
   i:=0;b:=0;
   for j:=0 to fWidth*fHeight-1 do begin
     if i=0 then begin
@@ -182,65 +182,6 @@ begin
     i-=1;
   end;
 end;
-
-{procedure TMask.LoadMask_MSKT(iSource:TStream);
-var Lexer:TLexer;
-    LD:TLexerData;
-    Xs:TStream;
-    wi,he:integer;
-    s:String;
-    datapos:integer;
-
-  procedure ProcessMask(iPos:integer);
-  var mul,cPos:integer;b:byte;s:string;tt:TTokenType;
-  begin
-    LD.Go(iPos);
-    repeat
-      tt:=LD.GetNextToken(s);
-      if tt<>lexNumber then exit;
-      mul:=strtoint(s);
-      tt:=LD.GetNextToken(s);
-      if tt<>lexNumber then begin
-        cPos:=LD.GetPosition;
-        while mul>0 do begin
-          ProcessMask(cPos);
-          dec(mul);
-        end;
-      end else begin
-        b:=strtoint(s);
-        while mul>0 do begin
-          byte((fData+datapos)^):=b;
-          inc(datapos);
-          dec(mul);
-        end;
-      end;
-    until LD.Eof;
-  end;
-
-begin
-  Xs:=TStringStream.Create('[*ReservedWords]'#13#10#13#10+
-     '[*VariableNames]'#13#10#13#10'[*ArithmeticalOperators]'#13#10#13#10+
-     '[*AssignmentOperators]'#13#10#13#10'[*WhiteSpace]'#13#10#39','#39#13#10#39' '#13#10);
-  Lexer:=TLexer.Create(Xs);
-  FreeAndNil(Xs);
-  LD:=Lexer.Parse(iSource);
-  FreeAndNil(Lexer);
-  if LD.GetNextToken(s)<>lexNumber then exit;
-  wi:=strtoint(s);
-  if LD.GetNextToken(s)<>lexNumber then exit;
-  he:=strtoint(s);
-  fWidth:=wi;
-  fHeight:=he;
-  getmem(fData,wi*he);
-  datapos:=0;
-  ProcessMask(LD.GetPosition);
-  FreeAndNil(LD);
-//  Lexer.List;
-//  new(atm);
-//  Log.Trace('Width='+inttostr(atm^.Width));
-//  Log.Trace('Height='+inttostr(atm^.height));
-  DebugMaskHex;
-end;}
 
 procedure TMask.PutMask(aX,aY:integer;aSource:TMask);
 var i,w,h:integer;

@@ -10,7 +10,7 @@
              under the GNU GPL Version 2.
 
   Written by Gilby/MKSZTSZ
-  Hungary, 2020
+  Hungary, 2020-2023
 
   --------------------------------------------------
 
@@ -24,9 +24,11 @@
 // Version info:
 //
 //  V1.00: Gilby - 2020.01.15
-//     - Initial creation from MusicCollectionUnit
+//     - Initial creation from MusicCollectionUnit.
 //  V1.01: Gilby - 2021.10.10
-//     - Tidying up
+//     - Tidying up.
+//  V1.02: Gilby - 2023.01.25
+//     * Changed Traces to LogDebug in List method.
 
 {$ifdef fpc}
   {$mode delphi}
@@ -52,23 +54,23 @@ type
 
   TMusicList=class(TNamedList<TMusicListItem>)
   public
-    constructor Create;
     // Creates the list.
+    constructor Create;
 
-    destructor Destroy; override;
     // Destroys the list, free up memory and the musics too!
-    
-    procedure Add(iMusic:TMusic;iName:String); overload;
+    destructor Destroy; override;
+
     // Add a music to the list with the specified name.
+    procedure Add(iMusic:TMusic;iName:String); overload;
 
-    procedure Add(iFilename,iName:String); overload;
     // Add a music to the list from external file.
+    procedure Add(iFilename,iName:String); overload;
 
-    procedure ToggleMusic;
     // Enables if disabled, disables if enabled
-    
-    procedure List;
+    procedure ToggleMusic;
+
     // List items into Log
+    procedure List;
   protected
     fGlobalVolume:float;
     fEnabled:boolean;
@@ -90,7 +92,7 @@ uses SysUtils, MKToolBox, Logger, MKStream;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.01';
+  Version='1.02';
 
 destructor TMusicListItem.Destroy;
 const Istr=Fstr+'TMusicListItem.Destroy';
@@ -187,11 +189,11 @@ end;
 procedure TMusicList.List;
 var i:integer;
 begin
-  Log.Trace('MusicList listing starts.');
+  Log.LogDebug('MusicList listing starts.');
   for i:=0 to Count-1 do begin
-    Log.Trace(inttostr(i+1)+'. '+MusicByIndex[i]._Name);
+    Log.LogDebug(inttostr(i+1)+'. '+MusicByIndex[i]._Name);
   end;
-  Log.Trace('MusicList listing ends.');
+  Log.LogDebug('MusicList listing ends.');
 end;
 
 initialization

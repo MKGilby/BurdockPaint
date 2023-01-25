@@ -86,8 +86,8 @@ begin
   fTarget.Bar(fLeft-fParentX+8,fTop-fParentY+24,fWidth-16,3,OverlayImage.Palette[2]);
   fLeftImage.CopyTo(0,0,fLeftImage.Width,fLeftImage.Height,fLeft-fParentX,fTop-fParentY,fTarget,true);
   fRightImage.CopyTo(0,0,fRightImage.Width,fRightImage.Height,fLeft-fParentX+fWidth-8,fTop-fParentY,fTarget,true);
-//  Log.Trace(fCaption);
-//  Log.Trace(Format('AlignPointX: %d, TextOffsetX: %d, AlignPointY: %d, TextOffsetY: %d',[fAlignPointX,fTextOffsetX,fAlignPointY,fTextOffsetY]));
+//  Log.LogDebug(fCaption);
+//  Log.LogDebug(Format('AlignPointX: %d, TextOffsetX: %d, AlignPointY: %d, TextOffsetY: %d',[fAlignPointX,fTextOffsetX,fAlignPointY,fTextOffsetY]));
   if not fSelected then
     fFont.OutText(fTarget,fCaption,fTextAlignPointX-fParentX,fTextAlignPointY+fTextOffsetY-fParentY,fTextAlignX)
   else

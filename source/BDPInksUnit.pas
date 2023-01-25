@@ -89,8 +89,7 @@ begin
     fTop:=pTop;
     fHeight:=pHeight;
   end;
-//  Log.Trace(inttostr(pLeft)+', '+inttostr(pTop)+', '+inttostr(pWidth)+', '+inttostr(pHeight));
-//  Log.Trace(inttostr(fLeft)+', '+inttostr(fTop)+', '+inttostr(fWidth)+', '+inttostr(fHeight));
+//  Log.LogDebug(inttostr(pLeft)+', '+inttostr(pTop)+', '+inttostr(pWidth)+', '+inttostr(pHeight));
 end;
 
 procedure TBDInk.InitializeArea(pX1,pY1,pX2,pY2:integer);
@@ -109,8 +108,7 @@ begin
     fTop:=pY1;
     fHeight:=pY2-pY1+1;
   end;
-//  Log.Trace(inttostr(pX1)+', '+inttostr(pY1)+', '+inttostr(pX2)+', '+inttostr(pY2));
-//  Log.Trace(inttostr(fLeft)+', '+inttostr(fTop)+', '+inttostr(fWidth)+', '+inttostr(fHeight));
+//  Log.LogDebug(inttostr(pX1)+', '+inttostr(pY1)+', '+inttostr(pX2)+', '+inttostr(pY2));
 end;
 
 function TBDInk.GetColorIndexAt(pX,pY:integer):integer;
@@ -144,7 +142,7 @@ end;
 
 function TBDInkHGrad.GetColorIndexAt(pX,pY: integer):integer;
 begin
-//  Log.Trace('pX='+inttostr(pX)+', pY='+inttostr(pY)+', fLeft='+inttostr(fLeft)+', fWidth='+inttostr(fWidth));
+//  Log.LogDebug('pX='+inttostr(pX)+', pY='+inttostr(pY)+', fLeft='+inttostr(fLeft)+', fWidth='+inttostr(fWidth));
   if fWidth>1 then
     Result:=trunc(0.5+ActiveCluster.startindex+(ActiveCluster.endindex-ActiveCluster.startindex)*(pX-fLeft)/(fWidth-1))
   else

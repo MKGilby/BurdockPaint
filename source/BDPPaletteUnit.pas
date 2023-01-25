@@ -112,13 +112,10 @@ begin
   i:=fMaxEntries;
   Target.Write(i,2);
   Compress(fEntries^,Target,i*4);
-  Log.Trace(Target.Position);
-  log.Trace(curr);
   i:=Target.Position-curr;
   Target.Position:=curr;
   Target.write(i,4);
   Target.Position:=Target.Position+i;
-//  Target.Write(fEntries^,i*4);
 end;
 
 procedure TBDPalette.LoadFromFile(pFilename:string);
@@ -159,7 +156,6 @@ begin
   fEntries:=GetMem(fMaxEntries*4);
   Xs:=TMemoryStream.Create;
   UnCompressStream(Source,Xs);
-  Log.Trace(Source.Position);
   Xs.Position:=0;
   Xs.Read(fEntries^,fMaxEntries*4);
   FreeAndNil(Xs);

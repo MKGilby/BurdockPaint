@@ -134,16 +134,12 @@ begin
   mx:=MouseXToFrame(x);
   my:=MouseYToFrame(y);
   InfoBar.ShowSimpleCoords(mx,my,(mx>=0) and (mx<MainImage.Width) and (my>=0) and (my<MainImage.Height));
-//  Log.Trace(Format('mx=%d, my=%d, buttons=%d',[mx,my,buttons]));
+//  Log.LogDebug(Format('mx=%d, my=%d, buttons=%d',[mx,my,buttons]));
   Result:=false;
   Result:=ActiveTool.MouseDown(mx,my,buttons);
-//  Log.Trace('1');
   if not Result then begin
-//    Log.Trace('2');
     Result:=ActiveTool.Click(mx,my,buttons);
-//    Log.Trace('3');
     if not Result then begin
-//      Log.Trace('4');
       case buttons of
         3:begin   // Right button
             fMousePanning:=1;
@@ -154,7 +150,6 @@ begin
          end;
       end;
       Result:=true;
-//      Log.Trace('5');
     end;
   end;
 end;

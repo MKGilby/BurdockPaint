@@ -120,7 +120,7 @@ end;
 
 destructor TBDTool.Destroy;
 begin
-  Log.Trace('Destroying '+fName+'...');
+//  Log.LogDebug('Destroying '+fName+'...');
   inherited ;
 end;
 
@@ -526,8 +526,8 @@ begin
   repeat
     w:=false;
 
-//    Log.Trace(Format('--- Iteration %d. ---',[ic]));
-//    Log.Trace(Format('Left=%d, Top=%d, Right=%d, Bottom=%d',[fLeft,fTop,fRight,fBottom]));
+//    Log.LogDebug(Format('--- Iteration %d. ---',[ic]));
+//    Log.LogDebug(Format('Left=%d, Top=%d, Right=%d, Bottom=%d',[fLeft,fTop,fRight,fBottom]));
     case (ic mod 4) of
       0:begin
           j:=fTop;
@@ -580,7 +580,7 @@ begin
     end;
     inc(ic);
   until not w;
-  Log.Trace(Format('FloodFill completed with %d iterations.',[ic]));
+  Infobar.ShowText(Format('FLOODFILL COMPLETED WITH %d ITERATIONS.',[ic]));
 end;
 
 // ------------------------------------------------------ [ TBDToolFillTo ] ---
@@ -666,8 +666,8 @@ begin
   repeat
     w:=false;
 
-//    Log.Trace(Format('--- Iteration %d. ---',[ic]));
-//    Log.Trace(Format('Left=%d, Top=%d, Right=%d, Bottom=%d',[fLeft,fTop,fRight,fBottom]));
+//    Log.LogDebug(Format('--- Iteration %d. ---',[ic]));
+//    Log.LogDebug(Format('Left=%d, Top=%d, Right=%d, Bottom=%d',[fLeft,fTop,fRight,fBottom]));
     case (ic mod 4) of
       0:begin
           j:=fTop;
@@ -720,7 +720,7 @@ begin
     end;
     inc(ic);
   until not w;
-  Infobar.ShowText(Format('FLOODFILL COMPLETED WITH %d ITERATIONS.',[ic]));
+  Infobar.ShowText(Format('FILLTO COMPLETED WITH %d ITERATIONS.',[ic]));
 end;
 
 // -------------------------------------------------------- [ TBDToolLine ] ---
@@ -795,7 +795,6 @@ begin
 end;
 
 procedure TBDToolLine.Clear;
-var d:integer;
 begin
   case fState of
     0:;

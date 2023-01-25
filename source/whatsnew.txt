@@ -1,6 +1,10 @@
 Todo:
-- Plan button layout on Controls. (what is on screen, and what is behind popups)
-- Add buttons to Controls.
+- Color selector.
+- CEL picker mode (ESC).
+- CEL put mode (0 on hungarian keyboard).
+- Quit by pressing Q (after confirmation window).
+- Autosave in every 1 min.
+- Configurable autosave interval.
 
 2023.01.24
 - Added tool and ink buttons.

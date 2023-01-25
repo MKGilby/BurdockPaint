@@ -18,6 +18,9 @@
 //     * Added Sort method to TMouseObjects to sort objects in ZOrder (ascending)
 //     * Added OnMouseWheel event
 //     * TMouseEvent is splitted to TMouseMotionEvent ant TMouseButtonEvent
+//   V1.03a - 2023.01.25 - Gilby
+//     * Removed unneccessary commented lines.
+//     * Changed Log.Trace to Log.LogDebug.
 }
 
 {$ifdef fpc}
@@ -108,7 +111,7 @@ uses SysUtils, Logger, MK_SDL2;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.03';
+  Version='1.03a';
 
 constructor TMouseObjects.Create;
 begin
@@ -127,18 +130,14 @@ end;
 procedure TMouseObjects.Delete(index:integer);
 begin
   if fSoftDelete then begin
-//    Log.Trace('SoftDelete('+inttostr(index)+')');
     Items[index]:=nil;
   end else begin
-//    Log.Trace('HardDelete('+inttostr(index)+')');
     inherited ;
   end;
 end;
 
 procedure TMouseObjects.Remove(Item:pointer);
 begin
-//  Log.Trace(longint(item));
-//  Log.Trace(IndexOf(item));
   if IndexOf(Item)>-1 then Delete(IndexOf(Item));
 end;
 
@@ -156,27 +155,23 @@ begin
     SDL_KEYUP:Log.LogDebug('KeyUp');
   end;
   if Count>0 then begin
-//    Log.Trace('s.HandleEvent');
     i:=Count-1;
-//    i:=fTop;
-//    Log.Trace(Format('i=%d, fTop=%d',[i,fTop]));
     while (i>=fTop) and (i<Count) and not(Result) do begin
-      Log.Trace('Passing event to object number '+inttostr(i)+' ('+Self[i].Name+')');
+      Log.LogDebug('Passing event to object number '+inttostr(i)+' ('+Self[i].Name+')');
       if Self[i]<>nil then
         Result:=Self[i].HandleEvent(Event);
       dec(i);
     end;
     if Result then begin
       if Self[i+1]<>nil then
-        Log.Trace('Event handled by object number '+inttostr(i+1)+' ('+Self[i+1].Name+')')
+        Log.LogDebug('Event handled by object number '+inttostr(i+1)+' ('+Self[i+1].Name+')')
       else
-        Log.Trace('Event handled by an object that invalidated itself.');
-    end else Log.Trace('Event not handled by any objects.');
+        Log.LogDebug('Event handled by an object that invalidated itself.');
+    end else Log.LogDebug('Event not handled by any objects.');
   end;
   fSoftDelete:=false;
   for i:=Count-1 downto fTop do
     if Self[i]=nil then Delete(i);
-//  Log.Trace('s.HandleEvent end');
 end;
 
 procedure TMouseObjects.Draw;
