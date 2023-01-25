@@ -40,7 +40,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, sdl2, BDPInfoBarUnit;
+uses SysUtils, BDPSharedUnit, sdl2, BDPInfoBarUnit, BDPKeyMappingUnit;
 
 { TBDDrawArea }
 
@@ -84,23 +84,8 @@ begin
 end;
 
 procedure TBDDrawArea.Draw;
-//var atm:TBDFrame;
 var mx,my:integer;
 begin
-//  atm:=Image.WorkFrame;  // This clears junk on workframe (drawlines, etc.)
-
-// Maybe we should put drawline drawing here?
-//  mx:=MouseXToFrame(MouseX);
-//  my:=MouseYToFrame(MouseY);
-//  InfoBar.ShowSimpleCoords(mx,my,(mx>=0) and (mx<MainImage.Width) and (my>=0) and (my<MainImage.Height));
-
-{  if MainImage.Changed then begin
-    MainImage.Changed:=false;
-//    fTexture.ARGBImage.Clear;
-    MainImage.RenderToTexture(fTexture,0,0,WindowWidth,WindowHeight,fZoomLeft,fZoomTop,fZoomLevel);
-    fTexture.Update;
-  end;}
-//  PutTexture(0,0,fTexture);
   MainImage.RenderToScreen(0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
   InfoBar.Draw;
   ActiveTool.Draw;
@@ -212,37 +197,37 @@ end;
 function TBDDrawArea.KeyDown(Sender:TObject; key:integer):boolean;
 begin
   Result:=false;
-  if (key=SDL_SCANCODE_UP) or (key=SDL_SCANCODE_W) then begin
+  if (key=KeyMap[KEY_PANNINGUP1]) or (key=KeyMap[KEY_PANNINGUP2]) then begin
     fPanDir:=1;
     fPanFase:=0;
     Result:=true;
   end;
-  if (key=SDL_SCANCODE_RIGHT) or (key=SDL_SCANCODE_D) then begin
+  if (key=KeyMap[KEY_PANNINGRIGHT1]) or (key=KeyMap[KEY_PANNINGRIGHT2]) then begin
     fPanDir:=2;
     fPanFase:=0;
     Result:=true;
   end;
-  if (key=SDL_SCANCODE_DOWN) or (key=SDL_SCANCODE_S) then begin
+  if (key=KeyMap[KEY_PANNINGDOWN1]) or (key=KeyMap[KEY_PANNINGDOWN2]) then begin
     fPanDir:=3;
     fPanFase:=0;
     Result:=true;
   end;
-  if (key=SDL_SCANCODE_LEFT) or (key=SDL_SCANCODE_A) then begin
+  if (key=KeyMap[KEY_PANNINGLEFT1]) or (key=KeyMap[KEY_PANNINGLEFT2]) then begin
     fPanDir:=4;
     fPanFase:=0;
     Result:=true;
   end;
-  if (key=SDL_SCANCODE_KP_MINUS) and (fZoomLevel>1) then begin
+  if (key=KeyMap[KEY_ZOOMIN]) and (fZoomLevel>1) then begin
     dec(fZoomLevel);
     fZoomTimes:=1<<(fZoomLevel-1);
     Result:=true;
   end;
-  if (key=SDL_SCANCODE_KP_PLUS) and (fZoomLevel<4) then begin
+  if (key=KeyMap[KEY_ZOOMOUT]) and (fZoomLevel<4) then begin
     inc(fZoomLevel);
     fZoomTimes:=1<<(fZoomLevel-1);
     Result:=true;
   end;
-  if (key=SDL_SCANCODE_C) then begin
+  if (key=KeyMap[KEY_CENTER]) then begin
     CenterImage;
     Result:=true;
   end;
@@ -251,10 +236,10 @@ end;
 function TBDDrawArea.KeyUp(Sender:TObject; key:integer):boolean;
 begin
   Result:=false;
-  if (((key=SDL_SCANCODE_UP) or (key=SDL_SCANCODE_W)) and (fPanDir=1)) or
-     (((key=SDL_SCANCODE_RIGHT) or (key=SDL_SCANCODE_D)) and (fPanDir=2)) or
-     (((key=SDL_SCANCODE_DOWN) or (key=SDL_SCANCODE_S)) and (fPanDir=3)) or
-     (((key=SDL_SCANCODE_LEFT) or (key=SDL_SCANCODE_A)) and (fPanDir=4)) then begin
+  if (((key=KeyMap[KEY_PANNINGUP1]) or (key=KeyMap[KEY_PANNINGUP2])) and (fPanDir=1)) or
+     (((key=KeyMap[KEY_PANNINGRIGHT1]) or (key=KeyMap[KEY_PANNINGRIGHT2])) and (fPanDir=2)) or
+     (((key=KeyMap[KEY_PANNINGDOWN1]) or (key=KeyMap[KEY_PANNINGDOWN2])) and (fPanDir=3)) or
+     (((key=KeyMap[KEY_PANNINGLEFT1]) or (key=KeyMap[KEY_PANNINGLEFT2])) and (fPanDir=4)) then begin
     fPanDir:=0;
     Result:=true;
   end;

@@ -7,7 +7,9 @@ Todo:
 
 2023.01.25
 - Quit like in the original. Press Q, and click yes or no, or press Y or N.
-  (Need to do some key mapping, since on my hungarian keyboard Y and Z is swapped.)
+- Key mapping added, stored and loaded from the settings.
+- You can assign keys to Quit, Yes and No.
+- Added keymapping to panning keys, centering and zooming.
 
 2023.01.24
 - Added tool and ink buttons.

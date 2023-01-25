@@ -1,6 +1,6 @@
 program BurdockPaint;
 
-uses BDPMainUnit, BDPConfirmQuitUnit;
+uses BDPMainUnit, BDPConfirmQuitUnit, BDPKeyMappingUnit;
 
 const
   VERSION='0.9';

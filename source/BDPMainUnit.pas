@@ -24,7 +24,7 @@ type
 implementation
 
 uses SysUtils, SDL2, BDPSharedUnit, MKToolbox, MKStream, MKMouse2, Logger,
-  BDPMessageUnit;
+  BDPMessageUnit, BDPKeyMappingUnit;
 
 { TMain }
 
@@ -98,11 +98,11 @@ begin
       end;
     end;
     HandleMessages;
-    if keys[SDL_SCANCODE_Q] then begin
+    if keys[KeyMap[KEY_QUIT]] then begin
       fQuitWindow.Visible:=true;
-      keys[SDL_SCANCODE_Q]:=false;
+      keys[KeyMap[KEY_QUIT]]:=false;
     end;
-  until keys[SDL_SCANCODE_ESCAPE] or quit;
+  until quit;
 end;
 
 end.

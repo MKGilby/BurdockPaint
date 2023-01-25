@@ -42,7 +42,7 @@ type
 
 implementation
 
-uses MKINIFile;
+uses MKINIFile, BDPKeyMappingUnit;
 
 { TSettings }
 
@@ -91,6 +91,7 @@ begin
   fSelectedInks[5]:=INI.ReadString('BasicControls','Ink5','H GRAD');
   fActiveInk:=INI.ReadInteger('BasicControls','ActiveInk',0);
   fFillShapes:=INI.ReadBool('BasicControls','FillShapes',false);
+  LoadKeyMap(INI);
   FreeAndNil(INI);
 end;
 

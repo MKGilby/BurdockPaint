@@ -45,7 +45,9 @@ type
 
 implementation
 
-uses SysUtils, SDL2, BDPSharedUnit, BDPButtonUnit, BDPMessageUnit;
+uses
+  SysUtils, BDPSharedUnit, BDPButtonUnit, BDPMessageUnit,
+  BDPKeyMappingUnit;
 
 const
   QUITWINDOWWIDTH=480;
@@ -114,11 +116,6 @@ var atmB:TBDButton;msg:TMessage;CC:TInvisibleClickCatcher;
 begin
   inherited Create;
   SetBoundsWH(0,0,WINDOWWIDTH,WINDOWHEIGHT);
-{  SetBoundsWH(
-    (WINDOWWIDTH-QUITWINDOWWIDTH) div 2,
-    (WINDOWHEIGHT-QUITWINDOWHEIGHT) div 2,
-    QUITWINDOWWIDTH,
-    QUITWINDOWHEIGHT);}
   fName:='ConfirmQuit';
   fWindowLeft:=(WINDOWWIDTH-QUITWINDOWWIDTH) div 2;
   fWindowTop:=(WINDOWHEIGHT-QUITWINDOWHEIGHT) div 2;
@@ -129,9 +126,6 @@ begin
   fTexture.ARGBImage.Bar(0,fTexture.ARGBImage.Height-3,fTexture.ARGBImage.Width,3,OverlayImage.Palette[2]);
   fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,OverlayImage.Palette[3]);
   MM.Fonts['Black'].OutText(fTexture.ARGBImage,'EXIT BURDOCK PAINT?',QUITWINDOWWIDTH div 2,16,1);
-{  CC:=TInvisibleClickCatcher.Create;
-  CC.ZIndex:=MaxLongint-2;
-  AddChild(CC);}
   msg.TypeID:=MSG_QUIT;
   msg.DataInt:=1;
   atmB:=TBDButton.Create(
@@ -177,14 +171,13 @@ begin
   if fVisible then begin
     inherited Draw;
     fTexture.Update;
-//    PutTexture(fLeft,fTop,fTexture);
     PutTexture(fWindowLeft,fWindowTop,fTexture);
   end;
 end;
 
 function TConfirmQuitWindow.KeyDownYes(Sender:TObject; key:integer):boolean;
 begin
-  if key=SDL_SCANCODE_Y then begin
+  if key=KeyMap[KEY_YES] then begin
     MessageQueue.AddMessage(MSG_QUIT,'',1);
     Result:=true;
   end else Result:=false;
@@ -192,7 +185,7 @@ end;
 
 function TConfirmQuitWindow.KeyDownNo(Sender:TObject; key:integer):boolean;
 begin
-  if key=SDL_SCANCODE_N then begin
+  if key=KeyMap[KEY_NO] then begin
     MessageQueue.AddMessage(MSG_QUIT,'',0);
     Result:=true;
   end else Result:=false;
