@@ -43,9 +43,7 @@
 // Version info:
 //
 //  V1.00: Gilby - 2023.01.17
-//    * Initial creation from vcc_Container.
-//  V1.01: Gilby - 2023.01.25
-//    * Handling MOUSEWHEEL events too.
+//    * Initial creation from vcc_Container
 
 {$mode delphi}{$H+}
 
@@ -85,7 +83,7 @@ uses SysUtils, Logger;
      
 const
   Fstr='vcc_Container2.pas, ';
-  Version='1.01';
+  Version='1.00';
 
 constructor TContainer.Create;
 begin
@@ -165,7 +163,7 @@ begin
   ny:=Event^.Button.y;
   if (((Event^.type_=SDL_MOUSEBUTTONDOWN) or (Event^.type_=SDL_MOUSEBUTTONUP))
       and IsOver(nx,ny)) or (Event^.type_=SDL_MOUSEMOTION) or (Event^.type_=SDL_KEYDOWN)
-      or (Event^.type_=SDL_KEYUP) or (Event^.type_=SDL_MOUSEWHEEL) then begin
+      or (Event^.type_=SDL_KEYUP) then begin
     i:=fChilds.Count;
     while (i>0) and (not Result) do begin
       dec(i);

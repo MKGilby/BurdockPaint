@@ -2,9 +2,12 @@ Todo:
 - Color selector.
 - CEL picker mode (ESC).
 - CEL put mode (0 on hungarian keyboard).
-- Quit by pressing Q (after confirmation window).
 - Autosave in every 1 min.
 - Configurable autosave interval.
+
+2023.01.25
+- Quit like in the original. Press Q, and click yes or no, or press Y or N.
+  (Need to do some key mapping, since on my hungarian keyboard Y and Z is swapped.)
 
 2023.01.24
 - Added tool and ink buttons.

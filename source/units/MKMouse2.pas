@@ -146,7 +146,7 @@ var i:integer;
 begin
   fSoftDelete:=true;
   Result:=false;
-  Log.LogDebug('MouseObjects.HandeEvent starts...');
+  Log.LogDebug('MouseObjects.HandleEvent starts...');
   case Event^.Type_ of
     SDL_MOUSEBUTTONDOWN:Log.LogDebug('MouseDown');
     SDL_MOUSEBUTTONUP:Log.LogDebug('MouseUp');

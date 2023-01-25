@@ -4,7 +4,7 @@ unit BDPMainUnit;
 
 interface
 
-uses mk_sdl2, BDPControlsUnit, BDPDrawAreaUnit;
+uses mk_sdl2, BDPControlsUnit, BDPDrawAreaUnit, BDPConfirmQuitUnit;
 
 type
 
@@ -18,6 +18,7 @@ type
     fMainWindow:TWindow;
     fControls:TBDControls;
     fDrawArea:TBDDrawArea;
+    fQuitWindow:TConfirmQuitWindow;
   end;
 
 implementation
@@ -57,11 +58,16 @@ begin
   fControls:=TBDControls.Create;
   fControls.ZIndex:=10;
   MouseObjects.Add(fControls);
+  fQuitWindow:=TConfirmQuitWindow.Create;
+  fQuitWindow.ZIndex:=MaxLongint-1;
+  fQuitWindow.Visible:=false;
+  MouseObjects.Add(fQuitWindow);
   MouseObjects.Sort;
 end;
 
 destructor TMain.Destroy;
 begin
+  if Assigned(fQuitWindow) then FreeAndNil(fQuitWindow);
   if Assigned(fControls) then FreeAndNil(fControls);
   if Assigned(fDrawArea) then FreeAndNil(fDrawArea);
   FreeAssets;
@@ -70,8 +76,9 @@ begin
 end;
 
 procedure TMain.Run;
-var msg:TMessage;
+var msg:TMessage;quit:boolean;
 begin
+  quit:=false;
   repeat
     SDL_SetRenderDrawColor(PrimaryWindow.Renderer,48,12,24,255);
     SDL_RenderClear(fMainWindow.Renderer);
@@ -84,10 +91,18 @@ begin
         MSG_TOGGLECONTROLS:fControls.Visible:=not fControls.Visible;
         MSG_ACTIVATETOOL:fControls.ActivateToolButton(msg.DataInt);
         MSG_ACTIVATEINK:fControls.ActivateInkButton(msg.DataInt);
+        MSG_QUIT:begin
+          if msg.DataInt=0 then fQuitWindow.Visible:=false
+          else quit:=true;
+        end;
       end;
     end;
     HandleMessages;
-  until keys[SDL_SCANCODE_ESCAPE];
+    if keys[SDL_SCANCODE_Q] then begin
+      fQuitWindow.Visible:=true;
+      keys[SDL_SCANCODE_Q]:=false;
+    end;
+  until keys[SDL_SCANCODE_ESCAPE] or quit;
 end;
 
 end.
