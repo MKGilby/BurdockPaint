@@ -7,6 +7,10 @@ Todo:
 
 2023.01.26
 - Changed vibrocolors.
+- Added CEL picker. Currently you have to click on GETCEL button to activate.
+- Added clipping for image drawing methods.
+- Optimized render to screen.
+- Added FPS counter. It seems that in lower zoom levels the fps count falls drastically.
 
 2023.01.25
 - Quit like in the original. Press Q, and click yes or no, or press Y or N.

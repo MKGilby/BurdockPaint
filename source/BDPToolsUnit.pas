@@ -59,6 +59,8 @@ type
     procedure DrawFilledCircleWithInk(cx,cy,r:integer);
   end;
 
+  { TBDToolDraw }
+
   TBDToolDraw=class(TBDTool)
     constructor Create; override;
     function MouseDown(x,y,button:integer):boolean; override;
@@ -67,6 +69,8 @@ type
   private
     fDown:boolean;
   end;
+
+  { TBDToolFill }
 
   TBDToolFill=class(TBDTool)
     constructor Create; override;
@@ -101,9 +105,23 @@ type
     procedure DrawLineWithInk(x1,y1,x2,y2:integer);
   end;
 
+  { TBDToolSep }
+
   TBDToolSep=class(TBDTool)
     constructor Create; override;
     function Click(x,y,button:integer):boolean; override;
+  end;
+
+  { TBDToolGetCel }
+
+  TBDToolGetCel=class(TBDTool)
+    constructor Create; override;
+    function Click(x,y,button:integer):boolean; override;
+    procedure Draw; override;
+    procedure Clear; override;
+  private
+    fSX,fSY:integer;
+    fColorIndex:integer;
   end;
 
 implementation
@@ -173,6 +191,7 @@ begin
   AddObject('FILLTO',TBDToolFillTo.Create);
   AddObject('LINE',TBDToolLine.Create);
   AddObject('SEP.',TBDToolSep.Create);
+  AddObject('GETCEL',TBDToolGetCel.Create);
 end;
 
 // --------------------------------------------------------- [ TBDToolBox ] ---
@@ -888,6 +907,76 @@ begin
     ActiveInk.PostProcess;
     Result:=true;
   end else Result:=false;
+end;
+
+// ------------------------------------------------------ [ TBDToolGetCEL ] ---
+
+constructor TBDToolGetCel.Create;
+begin
+  inherited Create;
+  inherited ;
+  fName:='GETCEL';
+  fHint:=uppercase('Get a part of the image into a temporary image.');
+  fColorIndex:=0;
+end;
+
+function TBDToolGetCel.Click(x,y,button:integer):boolean;
+begin
+  if button=1 then begin
+    case fState of
+      0:begin
+          fSX:=x;
+          fSY:=y;
+          Result:=true;
+          fState:=1;
+        end;
+      1:begin
+          // Get CEL here...
+          Result:=true;
+          fState:=0;
+        end;
+    end;
+  end
+  else if Button=3 then
+    if fState>0 then begin  // Right button
+      fState:=0;
+      Result:=true;
+    end else Result:=false
+  else Result:=false;
+end;
+
+procedure TBDToolGetCel.Draw;
+begin
+  case fState of
+    0:begin
+        inc(fColorIndex);
+        if fColorIndex=length(VibroColors) then fColorIndex:=0;
+        OverlayImage.VLine(fX,0,OverlayImage.Height,VIBROCOLORS[fColorIndex]);
+        OverlayImage.HLine(0,fY,OverlayImage.Width,VIBROCOLORS[fColorIndex]);
+      end;
+    1:begin
+        inc(fColorIndex);
+        if fColorIndex=length(VibroColors) then fColorIndex:=0;
+        OverlayImage.Rectangle(fSX,fSY,fX,fY,VIBROCOLORS[fColorIndex]);
+
+        InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
+          'WI='+inttostr(abs(fSX-fX)+1)+' HE='+inttostr(abs(fSY-fY)+1)+' '+
+          '('+inttostr(fX)+','+inttostr(fY)+') ');
+      end;
+  end;
+end;
+
+procedure TBDToolGetCel.Clear;
+begin
+  case fState of
+    0:begin
+        OverlayImage.VLine(fX,0,OverlayImage.Height,0);
+        OverlayImage.HLine(0,fY,OverlayImage.Width,0);
+      end;
+    1:begin
+        OverlayImage.Rectangle(fSX,fSY,fX,fY,0);
+      end;
+  end;
 end;
 
 end.

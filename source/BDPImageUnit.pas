@@ -31,6 +31,10 @@ type
     procedure Bar(x1,y1,x2,y2:integer;ColorIndex:word);
     // Draws a rectangle. Sets changed area accordingly.
     procedure Rectangle(x1,y1,x2,y2:integer;ColorIndex:word);
+    // Draws a horizontal line. Sets changed area accordingly.
+    procedure HLine(x1,y1,w:integer;ColorIndex:word);
+    // Draws a vertical line. Sets changed area accordingly.
+    procedure VLine(x1,y1,h:integer;ColorIndex:word);
     // FloodFills starting from the given pixel. Sets changed area accordingly.
     procedure FloodFill(x,y:integer;ColorIndex:word);
     // Resets changed area data.
@@ -51,7 +55,7 @@ type
     // RenderWidth, RenderHeight : The dimensions of rendering in IMAGE pixels
     // ImageLeft, ImageTop       : The topleft position of rendering in the image
     // Zoom                      : Zoom level (1->1x, 2->2x, 3->4x, 4->8x)
-    procedure RenderToScreen(TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
+    procedure RenderToScreen(ScreenLeft,ScreenTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
 
     // Renders the image onto the PrimaryWindow skipping all pixels
     // where alpha is not 255
@@ -59,7 +63,7 @@ type
     // RenderWidth, RenderHeight : The dimensions of rendering in IMAGE pixels
     // ImageLeft, ImageTop       : The topleft position of rendering in the image
     // Zoom                      : Zoom level (1->1x, 2->2x, 3->4x, 4->8x)
-    procedure RenderToScreenAsOverlay(TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
+    procedure RenderToScreenAsOverlay(ScreenLeft,ScreenTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
 
     // Saves the raw image data (=array of colorindices) into a file. Used for debugging.
     procedure SaveRawDataToFile(fn:string);
@@ -102,7 +106,7 @@ type
 
 implementation
 
-uses SysUtils, MyZStreamUnit, SDL2;
+uses SysUtils, MyZStreamUnit, SDL2, Logger;
 
 const
   IMAGEFOURCC='BDPI';
@@ -344,16 +348,24 @@ begin
   if x1>x2 then begin i:=x1;x1:=x2;x2:=i;end;
   if y1>y2 then begin i:=y1;y1:=y2;y2:=i;end;
 
-  fChanged:=true;
-  if fChangedArea.Left>x1 then fChangedArea.Left:=x1;
-  if fChangedArea.Right<x2 then fChangedArea.Right:=x2;
-  if fChangedArea.Top>y1 then fChangedArea.Top:=y1;
-  if fChangedArea.Bottom<y2 then fChangedArea.Bottom:=y2;
+  // If overlaps our image
+  if (x1<fWidth) and (x2>0) and (y1<fHeight) and (y2>0) then begin
+    // Still check for clipping
+    if x1<0 then x1:=0;
+    if x2>=fWidth then x2:=fWidth-1;
+    if y1<0 then y1:=0;
+    if y2>=fHeight then y2:=fHeight-1;
+    fChanged:=true;
+    if fChangedArea.Left>x1 then fChangedArea.Left:=x1;
+    if fChangedArea.Right<x2 then fChangedArea.Right:=x2;
+    if fChangedArea.Top>y1 then fChangedArea.Top:=y1;
+    if fChangedArea.Bottom<y2 then fChangedArea.Bottom:=y2;
 
-  for j:=y1 to y2 do begin
-    p:=fData+j*fWidth+x1;
-    for i:=x1 to x2 do
-      word((p+i*2)^):=ColorIndex;
+    for j:=y1 to y2 do begin
+      p:=fData+j*fWidth+x1;
+      for i:=x1 to x2 do
+        word((p+i*2)^):=ColorIndex;
+    end;
   end;
 end;
 
@@ -362,18 +374,64 @@ var i:integer;
 begin
   if x1>x2 then begin i:=x1;x1:=x2;x2:=i;end;
   if y1>y2 then begin i:=y1;y1:=y2;y2:=i;end;
-  fChanged:=true;
-  if fChangedArea.Left>x1 then fChangedArea.Left:=x1;
-  if fChangedArea.Right<x2 then fChangedArea.Right:=x2;
-  if fChangedArea.Top>y1 then fChangedArea.Top:=y1;
-  if fChangedArea.Bottom<y2 then fChangedArea.Bottom:=y2;
-  for i:=y1 to y2 do begin
-    word((fData+(i*fWidth+x1)*2)^):=ColorIndex;
-    word((fData+(i*fWidth+x2)*2)^):=ColorIndex;
+  // If overlaps our image
+  if (x1<fWidth) and (x2>0) and (y1<fHeight) and (y2>0) then begin
+    // Still check for clipping
+    if x1<0 then x1:=0;
+    if x2>=fWidth then x2:=fWidth-1;
+    if y1<0 then y1:=0;
+    if y2>=fHeight then y2:=fHeight-1;
+
+    fChanged:=true;
+    if fChangedArea.Left>x1 then fChangedArea.Left:=x1;
+    if fChangedArea.Right<x2 then fChangedArea.Right:=x2;
+    if fChangedArea.Top>y1 then fChangedArea.Top:=y1;
+    if fChangedArea.Bottom<y2 then fChangedArea.Bottom:=y2;
+    for i:=y1 to y2 do begin
+      word((fData+(i*fWidth+x1)*2)^):=ColorIndex;
+      word((fData+(i*fWidth+x2)*2)^):=ColorIndex;
+    end;
+    for i:=x1+1 to x2-1 do begin
+      word((fData+(y1*fWidth+i)*2)^):=ColorIndex;
+      word((fData+(y2*fWidth+i)*2)^):=ColorIndex;
+    end;
+
   end;
-  for i:=x1+1 to x2-1 do begin
-    word((fData+(y1*fWidth+i)*2)^):=ColorIndex;
-    word((fData+(y2*fWidth+i)*2)^):=ColorIndex;
+end;
+
+procedure TBDImage.HLine(x1,y1,w:integer; ColorIndex:word);
+var i:integer;
+begin
+  // If overlapping
+  if (w>0) and (x1<fWidth) and (x1+w>0) and (y1<fHeight) and (y1>=0) then begin
+    // Do some clipping first
+    if x1<0 then begin w+=x1;x1:=0;end;
+    if (x1+w>=fWidth) then w:=fWidth-x1;
+    fChanged:=true;
+    if fChangedArea.Left>x1 then fChangedArea.Left:=x1;
+    if fChangedArea.Right<x1+w-1 then fChangedArea.Right:=x1+w-1;
+    if fChangedArea.Top>y1 then fChangedArea.Top:=y1;
+    if fChangedArea.Bottom<y1 then fChangedArea.Bottom:=y1;
+    for i:=x1 to x1+w-1 do
+      word((fData+(y1*fWidth+i)*2)^):=ColorIndex;
+  end;
+end;
+
+procedure TBDImage.VLine(x1,y1,h:integer; ColorIndex:word);
+var i:integer;
+begin
+  // If overlapping
+  if (h>0) and (y1<fHeight) and (y1+h>0) and (x1<fWidth) and (x1>=0) then begin
+    // Do some clipping first
+    if y1<0 then begin h+=y1;y1:=0;end;
+    if (y1+h>=fHeight) then h:=fHeight-y1;
+    fChanged:=true;
+    if fChangedArea.Left>x1 then fChangedArea.Left:=x1;
+    if fChangedArea.Right<x1 then fChangedArea.Right:=x1;
+    if fChangedArea.Top>y1 then fChangedArea.Top:=y1;
+    if fChangedArea.Bottom<y1+h-1 then fChangedArea.Bottom:=y1+h-1;
+    for i:=y1 to y1+h-1 do
+      word((fData+(i*fWidth+x1)*2)^):=ColorIndex;
   end;
 end;
 
@@ -506,62 +564,53 @@ begin
   end;
 end;
 
-procedure TBDImage.RenderToScreen(TextureLeft,TextureTop,RenderWidth,
+procedure TBDImage.RenderToScreen(ScreenLeft,ScreenTop,RenderWidth,
   RenderHeight,ImageLeft,ImageTop,Zoom:integer);
-var x,y,tx,ty,zPixel,zRenderWidth,zRenderHeight:integer;
+var x,y,zPixel,zRenderWidth,zRenderHeight:integer;
     p:word;
 begin
   if not(Zoom in [1..4]) then exit;
   zPixel:=1<<(Zoom-1);
 
-  RenderWidth:=RenderWidth div ZPixel;
-  RenderHeight:=RenderHeight div ZPixel;
+  // RenderWidth and Height comes in real pixels, convert to image pixels.
+  zRenderWidth:=RenderWidth div ZPixel;
+  zRenderHeight:=RenderHeight div ZPixel;
 
-  if ImageLeft<0 then begin
-    tx:=TextureLeft-ImageLeft*zPixel;
-    zRenderWidth:=fWidth;
-    ImageLeft:=0;
-    if RenderWidth<zRenderWidth then zRenderWidth:=RenderWidth;
-  end else begin
-    tx:=0;
-    zRenderWidth:=RenderWidth;
-    if zRenderWidth>fWidth-ImageLeft then zRenderWidth:=fWidth-ImageLeft;
-  end;
+  if (zRenderWidth>0) and (zRenderHeight>0) and
+     (ImageLeft<zRenderWidth) and (ImageLeft+zRenderWidth>0) and
+     (ImageTop<zRenderHeight) and (ImageTop+zRenderHeight>0) then begin
+    // Still check for clipping
+    if ImageLeft<0 then begin zRenderWidth+=ImageLeft;ScreenLeft-=ImageLeft*zPixel;ImageLeft:=0;end;
+    if ImageLeft+zRenderWidth>fWidth then zRenderWidth:=fWidth-ImageLeft;
+    if ImageTop<0 then begin zRenderHeight+=ImageTop;ScreenTop-=ImageTop*zPixel;ImageTop:=0;end;
+    if ImageTop+zRenderHeight>fHeight then zRenderHeight:=fHeight-ImageTop;
 
-  if ImageTop<0 then begin
-    ty:=TextureTop-ImageTop*zPixel;
-    zRenderHeight:=fHeight;
-    ImageTop:=0;
-    if RenderHeight<zRenderHeight then zRenderHeight:=RenderHeight;
-  end else begin
-    ty:=0;
-    zRenderHeight:=RenderHeight;
-    if zRenderHeight>fHeight-ImageTop then zRenderHeight:=fHeight-ImageTop;
-  end;
-
-  if zPixel=1 then begin
-    for y:=0 to zRenderHeight-1 do
-      for x:=0 to zRenderWidth-1 do begin
-        p:=GetPixel(ImageLeft+x,ImageTop+y);
-        SDL_SetRenderDrawColor(
-          PrimaryWindow.Renderer,
-          fPalette.ColorR[p],
-          fPalette.ColorG[p],
-          fPalette.ColorB[p],
-          fPalette.ColorA[p]);
-        SDL_RenderDrawPoint(PrimaryWindow.Renderer,tx+x,ty+y);
-      end;
-  end else begin
-    for y:=0 to zRenderHeight-1 do
-      for x:=0 to zRenderWidth-1 do begin
-        p:=GetPixel(ImageLeft+x,ImageTop+y);
-        mk_sdl2.bar(tx+x*zPixel,ty+y*zPixel,zPixel,zPixel,
-          fPalette.ColorR[p],fPalette.ColorG[p],fPalette.ColorB[p],fPalette.ColorA[p]);
-      end;
+    Log.LogDebug(Format('Screen: %d,%d  Dims: %d,%d',[ScreenLeft,ScreenTop,zRenderWidth*zPixel,zRenderHeight*zPixel]));
+    Log.LogDebug(Format('Pixelcount: %d',[zRenderWidth*zRenderHeight]));
+    if zPixel=1 then begin
+      for y:=0 to zRenderHeight-1 do
+        for x:=0 to zRenderWidth-1 do begin
+          p:=GetPixel(ImageLeft+x,ImageTop+y);
+          SDL_SetRenderDrawColor(
+            PrimaryWindow.Renderer,
+            fPalette.ColorR[p],
+            fPalette.ColorG[p],
+            fPalette.ColorB[p],
+            fPalette.ColorA[p]);
+          SDL_RenderDrawPoint(PrimaryWindow.Renderer,ScreenLeft+x,ScreenTop+y);
+        end;
+    end else begin
+      for y:=0 to zRenderHeight-1 do
+        for x:=0 to zRenderWidth-1 do begin
+          p:=GetPixel(ImageLeft+x,ImageTop+y);
+          mk_sdl2.bar(ScreenLeft+x*zPixel,ScreenTop+y*zPixel,zPixel,zPixel,
+            fPalette.ColorR[p],fPalette.ColorG[p],fPalette.ColorB[p],fPalette.ColorA[p]);
+        end;
+    end;
   end;
 end;
 
-procedure TBDImage.RenderToScreenAsOverlay(TextureLeft, TextureTop,
+procedure TBDImage.RenderToScreenAsOverlay(ScreenLeft, ScreenTop,
   RenderWidth, RenderHeight, ImageLeft, ImageTop, Zoom: integer);
 var x,y,tx,ty,zPixel,zRenderWidth,zRenderHeight:integer;
     p:word;
@@ -569,54 +618,43 @@ begin
   if not(Zoom in [1..4]) then exit;
   zPixel:=1<<(Zoom-1);
 
-  RenderWidth:=RenderWidth div ZPixel;
-  RenderHeight:=RenderHeight div ZPixel;
+  // RenderWidth and Height comes in real pixels, convert to image pixels.
+  zRenderWidth:=RenderWidth div ZPixel;
+  zRenderHeight:=RenderHeight div ZPixel;
 
-  if ImageLeft<0 then begin
-    tx:=TextureLeft-ImageLeft*zPixel;
-    zRenderWidth:=fWidth;
-    ImageLeft:=0;
-    if RenderWidth<zRenderWidth then zRenderWidth:=RenderWidth;
-  end else begin
-    tx:=0;
-    zRenderWidth:=RenderWidth;
-    if zRenderWidth>fWidth-ImageLeft then zRenderWidth:=fWidth-ImageLeft;
-  end;
+  if (zRenderWidth>0) and (zRenderHeight>0) and
+     (ImageLeft<zRenderWidth) and (ImageLeft+zRenderWidth>0) and
+     (ImageTop<zRenderHeight) and (ImageTop+zRenderHeight>0) then begin
+    // Still check for clipping
+    if ImageLeft<0 then begin zRenderWidth+=ImageLeft;ScreenLeft-=ImageLeft*zPixel;ImageLeft:=0;end;
+    if ImageLeft+zRenderWidth>fWidth then zRenderWidth:=fWidth-ImageLeft;
+    if ImageTop<0 then begin zRenderHeight+=ImageTop;ScreenTop-=ImageTop*zPixel;ImageTop:=0;end;
+    if ImageTop+zRenderHeight>fHeight then zRenderHeight:=fHeight-ImageTop;
 
-  if ImageTop<0 then begin
-    ty:=TextureTop-ImageTop*zPixel;
-    zRenderHeight:=fHeight;
-    ImageTop:=0;
-    if RenderHeight<zRenderHeight then zRenderHeight:=RenderHeight;
-  end else begin
-    ty:=0;
-    zRenderHeight:=RenderHeight;
-    if zRenderHeight>fHeight-ImageTop then zRenderHeight:=fHeight-ImageTop;
-  end;
-
-  if zPixel=1 then begin
-    for y:=0 to zRenderHeight-1 do
-      for x:=0 to zRenderWidth-1 do begin
-        p:=GetPixel(ImageLeft+x,ImageTop+y);
-        if fPalette.ColorA[p]=255 then begin
-          SDL_SetRenderDrawColor(
-            PrimaryWindow.Renderer,
-            fPalette.ColorR[p],
-            fPalette.ColorG[p],
-            fPalette.ColorB[p],
-            fPalette.ColorA[p]);
-          SDL_RenderDrawPoint(PrimaryWindow.Renderer,tx+x,ty+y);
+    if zPixel=1 then begin
+      for y:=0 to zRenderHeight-1 do
+        for x:=0 to zRenderWidth-1 do begin
+          p:=GetPixel(ImageLeft+x,ImageTop+y);
+          if fPalette.ColorA[p]=255 then begin
+            SDL_SetRenderDrawColor(
+              PrimaryWindow.Renderer,
+              fPalette.ColorR[p],
+              fPalette.ColorG[p],
+              fPalette.ColorB[p],
+              fPalette.ColorA[p]);
+            SDL_RenderDrawPoint(PrimaryWindow.Renderer,tx+x,ty+y);
+          end;
         end;
-      end;
-  end else begin
-    for y:=0 to zRenderHeight-1 do
-      for x:=0 to zRenderWidth-1 do begin
-        p:=GetPixel(ImageLeft+x,ImageTop+y);
-        if fPalette.ColorA[p]=255 then begin
-          mk_sdl2.bar(tx+x*zPixel,ty+y*zPixel,zPixel,zPixel,
-            fPalette.ColorR[p],fPalette.ColorG[p],fPalette.ColorB[p],fPalette.ColorA[p]);
+    end else begin
+      for y:=0 to zRenderHeight-1 do
+        for x:=0 to zRenderWidth-1 do begin
+          p:=GetPixel(ImageLeft+x,ImageTop+y);
+          if fPalette.ColorA[p]=255 then begin
+            mk_sdl2.bar(tx+x*zPixel,ty+y*zPixel,zPixel,zPixel,
+              fPalette.ColorR[p],fPalette.ColorG[p],fPalette.ColorB[p],fPalette.ColorA[p]);
+          end;
         end;
-      end;
+    end;
   end;
 end;
 

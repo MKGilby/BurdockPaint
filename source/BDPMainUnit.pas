@@ -30,9 +30,9 @@ uses SysUtils, SDL2, BDPSharedUnit, MKToolbox, MKStream, MKMouse2, Logger,
 
 constructor TMain.Create(iVersion,iBuildDate:string);
 begin
-{$IFDEF DEBUG}
   // Set data directory path to allow running without datafile
   MKStreamOpener.AddDirectory('..\data',100);
+{$IFDEF DEBUG}
   // Set logging level
   Log.SetLogLevel(llAll);
 {$ELSE}
@@ -84,7 +84,8 @@ begin
     SDL_RenderClear(fMainWindow.Renderer);
 
     MouseObjects.Draw;
-    Flip;
+    MM.Fonts['Black'].OutText('FPS: '+st(fps,3,'0'),WINDOWWIDTH-141,3,0);
+    FlipNoLimit;
     while MessageQueue.HasNewMessage do begin
       msg:=MessageQueue.GetNextMessage;
       case msg.TypeID of
