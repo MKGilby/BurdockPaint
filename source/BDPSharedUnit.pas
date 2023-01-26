@@ -30,7 +30,7 @@ const
   MAXPALETTEENTRIES=2048;  // Palette color count hard limit
   POSTPROCESSCOLOR=$FFF0;
 
-  VIBROCOLORS:array[0..11] of integer=(1,1,2,2,3,3,4,4,3,3,2,2);
+  VIBROCOLORS:array[0..15] of integer=(6,6,7,7,8,8,9,9,10,10,9,9,8,8,7,7);
   TEMPIMAGEFILE='temp.bdp';
   SETTINGSFILE='BurdockPaint.ini';
   SYSTEMPALETTEFILE='system.bdpp';
@@ -153,6 +153,11 @@ begin
   OverlayImage.Palette.Colors[3]:=$ff9a9a9a;
   OverlayImage.Palette.Colors[4]:=$ffc7c7c7;
   OverlayImage.Palette.Colors[5]:=$ffc70404;
+  OverlayImage.Palette.Colors[6]:=$ff202020;
+  OverlayImage.Palette.Colors[7]:=$ff505050;
+  OverlayImage.Palette.Colors[8]:=$ff808080;
+  OverlayImage.Palette.Colors[9]:=$ffb0b0b0;
+  OverlayImage.Palette.Colors[10]:=$ffe0e0e0;
   OverlayImage.Bar(0,0,OverlayImage.Width,OverlayImage.Height,0);
   Log.LogStatus('  Creating information bar...');
   InfoBar:=TBDInfoBar.Create;

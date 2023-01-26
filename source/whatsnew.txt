@@ -5,6 +5,9 @@ Todo:
 - Autosave in every 1 min.
 - Configurable autosave interval.
 
+2023.01.26
+- Changed vibrocolors.
+
 2023.01.25
 - Quit like in the original. Press Q, and click yes or no, or press Y or N.
 - Key mapping added, stored and loaded from the settings.
