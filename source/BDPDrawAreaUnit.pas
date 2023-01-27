@@ -65,6 +65,7 @@ begin
   OnKeyDown:=Self.KeyDown;
   OnKeyUp:=Self.KeyUp;
   fTexture:=TStreamingTexture.Create(WINDOWWIDTH,WINDOWHEIGHT);
+  SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
 end;
 
 destructor TBDDrawArea.Destroy;
@@ -84,6 +85,32 @@ begin
 end;
 
 procedure TBDDrawArea.Draw;
+//var mx,my:integer;
+begin
+  MainImage.RenderToTexture(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
+  ActiveTool.Draw;
+//  InfoBar.Draw;
+  OverlayImage.RenderToTextureAsOverlay(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
+  fTexture.Update;
+  PutTexture(0,0,fTexture);
+  ActiveTool.Clear;
+  if SDL_ShowCursor(SDL_QUERY)=SDL_DISABLE then
+    Cursor.Draw(fCursorX,fCursorY,fZoomLevel);
+  if fPanDir<>0 then begin
+    if (fPanFase=0) or ((fPanFase>20) and (fPanFase mod 2=0)) then begin
+      case fPanDir of
+        1:dec(fZoomTop);
+        2:inc(fZoomLeft);
+        3:inc(fZoomTop);
+        4:dec(fZoomLeft);
+      end;
+    end;
+    inc(fPanFase);
+  end;
+
+end;
+
+{procedure TBDDrawArea.Draw;
 var mx,my:integer;
 begin
   MainImage.RenderToScreen(0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
@@ -105,7 +132,7 @@ begin
     inc(fPanFase);
   end;
 
-end;
+end;}
 
 function TBDDrawArea.Click(Sender:TObject; x,y,buttons:integer):boolean;
 begin
@@ -217,12 +244,12 @@ begin
     fPanFase:=0;
     Result:=true;
   end;
-  if (key=KeyMap[KEY_ZOOMIN]) and (fZoomLevel>1) then begin
+  if ((key=KeyMap[KEY_ZOOMIN1]) or (key=KeyMap[KEY_ZOOMIN2])) and (fZoomLevel>1) then begin
     dec(fZoomLevel);
     fZoomTimes:=1<<(fZoomLevel-1);
     Result:=true;
   end;
-  if (key=KeyMap[KEY_ZOOMOUT]) and (fZoomLevel<4) then begin
+  if ((key=KeyMap[KEY_ZOOMOUT1]) or (key=KeyMap[KEY_ZOOMOUT2])) and (fZoomLevel<4) then begin
     inc(fZoomLevel);
     fZoomTimes:=1<<(fZoomLevel-1);
     Result:=true;

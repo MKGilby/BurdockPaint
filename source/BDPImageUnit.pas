@@ -48,7 +48,16 @@ type
     // RenderWidth, RenderHeight : The dimensions of rendering in IMAGE pixels
     // ImageLeft, ImageTop       : The topleft position of rendering in the image
     // Zoom                      : Zoom level (1->1x, 2->2x, 3->4x, 4->8x)
-    procedure RenderToTexture(Target:TStreamingTexture;TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
+    procedure RenderToTexture(Target:TStreamingTexture;
+      TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
+
+    // Renders the image onto a Texture skipping all pixels where alpha is not 255.
+    // TextureLeft, TextureTop   : The topleft position of the image on the target texture
+    // RenderWidth, RenderHeight : The dimensions of rendering in IMAGE pixels
+    // ImageLeft, ImageTop       : The topleft position of rendering in the image
+    // Zoom                      : Zoom level (1->1x, 2->2x, 3->4x, 4->8x)
+    procedure RenderToTextureAsOverlay(Target:TStreamingTexture;
+      TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
 
     // Renders the image onto the PrimaryWindow
     // TextureLeft, TextureTop   : The topleft position of the image on PrimaryWindow
@@ -522,45 +531,75 @@ end;
 
 procedure TBDImage.RenderToTexture(Target:TStreamingTexture;
   TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
-var x,y,tx,ty,zPixel,zRenderWidth,zRenderHeight:integer;
-    p:pointer;pitch:integer;
+var x,y,zPixel,zRenderWidth,zRenderHeight:integer;
 begin
   if not(Zoom in [1..4]) then exit;
   zPixel:=1<<(Zoom-1);
 
-  RenderWidth:=RenderWidth div ZPixel;
-  RenderHeight:=RenderHeight div ZPixel;
+  // RenderWidth and Height comes in real pixels, convert to image pixels.
+  zRenderWidth:=RenderWidth div ZPixel;
+  zRenderHeight:=RenderHeight div ZPixel;
 
-  if ImageLeft<0 then begin
-    tx:=TextureLeft-ImageLeft*zPixel;
-    zRenderWidth:=fWidth;
-    ImageLeft:=0;
-    if RenderWidth<zRenderWidth then zRenderWidth:=RenderWidth;
-  end else begin
-    tx:=0;
-    zRenderWidth:=RenderWidth;
-    if zRenderWidth>fWidth-ImageLeft then zRenderWidth:=fWidth-ImageLeft;
+  if (zRenderWidth>0) and (zRenderHeight>0) and
+     (ImageLeft<zRenderWidth) and (ImageLeft+zRenderWidth>0) and
+     (ImageTop<zRenderHeight) and (ImageTop+zRenderHeight>0) then begin
+    // Still check for clipping
+    if ImageLeft<0 then begin zRenderWidth+=ImageLeft;TextureLeft-=ImageLeft*zPixel;ImageLeft:=0;end;
+    if ImageLeft+zRenderWidth>fWidth then zRenderWidth:=fWidth-ImageLeft;
+    if ImageTop<0 then begin zRenderHeight+=ImageTop;TextureTop-=ImageTop*zPixel;ImageTop:=0;end;
+    if ImageTop+zRenderHeight>fHeight then zRenderHeight:=fHeight-ImageTop;
+
+    FillChar(Target.ARGBImage.Rawdata^,Target.ARGBImage.Width*Target.ARGBImage.Height*4,0);
+
+    if zPixel=1 then begin
+      for y:=0 to zRenderHeight-1 do
+        for x:=0 to zRenderWidth-1 do
+          Target.ARGBImage.PutPixel(TextureLeft+x,TextureTop+y,fPalette[GetPixel(ImageLeft+x,ImageTop+y)]);
+    end else begin
+      for y:=0 to zRenderHeight-1 do
+        for x:=0 to zRenderWidth-1 do
+          Target.ARGBImage.Bar(TextureLeft+x*zPixel,TextureTop+y*zPixel,zPixel,zPixel,fPalette[GetPixel(ImageLeft+x,ImageTop+y)]);
+    end;
+
   end;
+end;
 
-  if ImageTop<0 then begin
-    ty:=TextureTop-ImageTop*zPixel;
-    zRenderHeight:=fHeight;
-    ImageTop:=0;
-    if RenderHeight<zRenderHeight then zRenderHeight:=RenderHeight;
-  end else begin
-    ty:=0;
-    zRenderHeight:=RenderHeight;
-    if zRenderHeight>fHeight-ImageTop then zRenderHeight:=fHeight-ImageTop;
-  end;
+procedure TBDImage.RenderToTextureAsOverlay(Target:TStreamingTexture;
+  TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
+var x,y,p,zPixel,zRenderWidth,zRenderHeight:integer;
+begin
+  if not(Zoom in [1..4]) then exit;
+  zPixel:=1<<(Zoom-1);
 
-  if zPixel=1 then begin
-    for y:=0 to zRenderHeight-1 do
-      for x:=0 to zRenderWidth-1 do
-        Target.ARGBImage.PutPixel(tx+x,ty+y,fPalette[GetPixel(ImageLeft+x,ImageTop+y)]);
-  end else begin
-    for y:=0 to zRenderHeight-1 do
-      for x:=0 to zRenderWidth-1 do
-        Target.ARGBImage.Bar(tx+x*zPixel,ty+y*zPixel,zPixel,zPixel,fPalette[GetPixel(ImageLeft+x,ImageTop+y)]);
+  // RenderWidth and Height comes in real pixels, convert to image pixels.
+  zRenderWidth:=RenderWidth div ZPixel;
+  zRenderHeight:=RenderHeight div ZPixel;
+
+  if (zRenderWidth>0) and (zRenderHeight>0) and
+     (ImageLeft<zRenderWidth) and (ImageLeft+zRenderWidth>0) and
+     (ImageTop<zRenderHeight) and (ImageTop+zRenderHeight>0) then begin
+    // Still check for clipping
+    if ImageLeft<0 then begin zRenderWidth+=ImageLeft;TextureLeft-=ImageLeft*zPixel;ImageLeft:=0;end;
+    if ImageLeft+zRenderWidth>fWidth then zRenderWidth:=fWidth-ImageLeft;
+    if ImageTop<0 then begin zRenderHeight+=ImageTop;TextureTop-=ImageTop*zPixel;ImageTop:=0;end;
+    if ImageTop+zRenderHeight>fHeight then zRenderHeight:=fHeight-ImageTop;
+
+    if zPixel=1 then begin
+      for y:=0 to zRenderHeight-1 do
+        for x:=0 to zRenderWidth-1 do begin
+          p:=GetPixel(ImageLeft+x,ImageTop+y);
+          if fPalette.ColorA[p]=255 then
+            Target.ARGBImage.PutPixel(TextureLeft+x,TextureTop+y,fPalette[GetPixel(ImageLeft+x,ImageTop+y)]);
+        end;
+    end else begin
+      for y:=0 to zRenderHeight-1 do
+        for x:=0 to zRenderWidth-1 do begin
+          p:=GetPixel(ImageLeft+x,ImageTop+y);
+          if fPalette.ColorA[p]=255 then
+            Target.ARGBImage.Bar(TextureLeft+x*zPixel,TextureTop+y*zPixel,zPixel,zPixel,fPalette[GetPixel(ImageLeft+x,ImageTop+y)]);
+        end;
+    end;
+
   end;
 end;
 
@@ -642,7 +681,7 @@ begin
               fPalette.ColorG[p],
               fPalette.ColorB[p],
               fPalette.ColorA[p]);
-            SDL_RenderDrawPoint(PrimaryWindow.Renderer,tx+x,ty+y);
+            SDL_RenderDrawPoint(PrimaryWindow.Renderer,ScreenLeft+x,ScreenTop+y);
           end;
         end;
     end else begin
@@ -650,7 +689,7 @@ begin
         for x:=0 to zRenderWidth-1 do begin
           p:=GetPixel(ImageLeft+x,ImageTop+y);
           if fPalette.ColorA[p]=255 then begin
-            mk_sdl2.bar(tx+x*zPixel,ty+y*zPixel,zPixel,zPixel,
+            mk_sdl2.bar(ScreenLeft+x*zPixel,ScreenTop+y*zPixel,zPixel,zPixel,
               fPalette.ColorR[p],fPalette.ColorG[p],fPalette.ColorB[p],fPalette.ColorA[p]);
           end;
         end;

@@ -84,6 +84,7 @@ begin
     SDL_RenderClear(fMainWindow.Renderer);
 
     MouseObjects.Draw;
+    InfoBar.Draw;
     MM.Fonts['Black'].OutText('FPS: '+st(fps,3,'0'),WINDOWWIDTH-141,3,0);
     FlipNoLimit;
     while MessageQueue.HasNewMessage do begin

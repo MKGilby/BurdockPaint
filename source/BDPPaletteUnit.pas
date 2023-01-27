@@ -183,7 +183,9 @@ begin
       byte(p^):=buf[i*3+1];
       inc(p);
       byte(p^):=buf[i*3];
-      inc(p,2);
+      inc(p);
+      byte(p^):=255;
+      inc(p);
     end;
   end;
 end;
