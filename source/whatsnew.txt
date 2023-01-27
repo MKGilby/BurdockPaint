@@ -4,7 +4,6 @@ Todo:
 - CEL put mode (0 on hungarian keyboard).
 - Autosave in every 1 min.
 - Configurable autosave interval.
-- Try the one texture approach on drawing image.
 
 2023.01.27
 - Using TStreamingTexture as DrawArea. It makes the FPS go over 60.

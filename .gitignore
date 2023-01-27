@@ -35,3 +35,4 @@ backup/
 *.pas;7
 *.pas;8
 *.pas;9
+*.log
