@@ -23,6 +23,8 @@ type
     function MouseWheel(Sender:TObject;x,y,{%H-}wheelx,wheely:integer):boolean;
     function KeyDown(Sender:TObject;key:integer):boolean;
     function KeyUp(Sender:TObject;key:integer):boolean;
+    function MouseXToFrame(x:integer):integer;
+    function MouseYToFrame(y:integer):integer;
   private
     fTexture:TStreamingTexture;
     fZoomTop,fZoomLeft:integer;
@@ -33,8 +35,6 @@ type
     fPanDir,fPanFase:integer;
     fMousePanning:integer;  // 0 - false, 1 - waiting for move or mouseup, 2 - was move, really panning
     fPanX,fPanY,fPanX2,fPanY2:integer;
-    function MouseXToFrame(x:integer):integer;
-    function MouseYToFrame(y:integer):integer;
   end;
 
 

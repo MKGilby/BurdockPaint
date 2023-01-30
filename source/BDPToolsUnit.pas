@@ -127,7 +127,7 @@ type
 implementation
 
 uses
-  BDPSharedUnit, MKToolbox, Logger;
+  BDPSharedUnit, MKToolbox, Logger, BDPMessageUnit;
 
 // ------------------------------------------------------------ [ TBDTool ] ---
 
@@ -932,16 +932,17 @@ begin
         end;
       1:begin
           // Get CEL here...
-          Result:=true;
           fState:=0;
+          MessageQueue.AddMessage(MSG_GETCELFINISHED);
+          Result:=true;
         end;
     end;
   end
-  else if Button=3 then
-    if fState>0 then begin  // Right button
-      fState:=0;
-      Result:=true;
-    end else Result:=false
+  else if Button=3 then begin
+    fState:=0;
+    MessageQueue.AddMessage(MSG_GETCELFINISHED);
+    Result:=true;
+  end
   else Result:=false;
 end;
 

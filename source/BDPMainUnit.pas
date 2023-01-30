@@ -76,7 +76,7 @@ begin
 end;
 
 procedure TMain.Run;
-var msg:TMessage;quit:boolean;
+var msg:TMessage;quit:boolean;mx,my:integer;
 begin
   quit:=false;
   repeat
@@ -91,11 +91,19 @@ begin
       msg:=MessageQueue.GetNextMessage;
       case msg.TypeID of
         MSG_TOGGLECONTROLS:fControls.Visible:=not fControls.Visible;
-        MSG_ACTIVATETOOL:fControls.ActivateToolButton(msg.DataInt);
+        MSG_ACTIVATETOOL:begin
+          fControls.ActivateToolButton(msg.DataInt);
+          SDL_GetMouseState(@mx,@my);
+          ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
+        end;
         MSG_ACTIVATEINK:fControls.ActivateInkButton(msg.DataInt);
         MSG_QUIT:begin
           if msg.DataInt=0 then fQuitWindow.Visible:=false
           else quit:=true;
+        end;
+        MSG_GETCELFINISHED:begin
+          fControls.Visible:=true;
+          fControls.ActivateToolButton(-1);  // Puts the already selected tool into ActiveTool
         end;
       end;
     end;
@@ -103,6 +111,13 @@ begin
     if keys[KeyMap[KEY_QUIT]] then begin
       fQuitWindow.Visible:=true;
       keys[KeyMap[KEY_QUIT]]:=false;
+    end;
+    if keys[KeyMap[KEY_GETCEL]] then begin
+      fControls.Visible:=false;
+      ActiveTool:=Tools.ItemByName['GETCEL'];
+      SDL_GetMouseState(@mx,@my);
+      ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
+      keys[KeyMap[KEY_GETCEL]]:=false;
     end;
   until quit;
 end;

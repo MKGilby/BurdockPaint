@@ -137,6 +137,7 @@ procedure TBDControls.ActivateToolButton(index:integer);
 var i:integer;
 begin
   if (index>=0) and (index<6) then begin
+    // Select the specified button and fill ActiveTool accordingly.
     Settings.ActiveTool:=index;
     for i:=0 to length(fToolButtons)-1 do
       if i<>index then begin
@@ -145,6 +146,12 @@ begin
         fToolButtons[i].Selected:=true;
         ActiveTool:=TBDTool(fToolButtons[i].AssignedObject);
       end;
+  end else
+  if index=-1 then begin
+    // Don't change selected button, but refill ActiveTool
+    for i:=0 to length(fToolButtons)-1 do
+      if fToolButtons[i].Selected then
+        MessageQueue.AddMessage(MSG_ACTIVATETOOL,'',i);
   end else
     raise Exception.Create(Format('ActivateToolButton: Index out of range! (%d)',[index]));
 end;

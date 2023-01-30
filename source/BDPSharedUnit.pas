@@ -41,6 +41,8 @@ const
   MSG_ACTIVATETOOL=2;
   MSG_ACTIVATEINK=3;
   MSG_QUIT=4;
+  MSG_GETCELFINISHED=5;
+
 
 var
   MM:TMediaManager;  // MediaManager to hold fonts and internal images

@@ -1,9 +1,12 @@
 Todo:
 - Color selector.
-- Make CEL picker activate on ESC.
 - CEL put mode (0 on hungarian keyboard).
 - Autosave in every 1 min.
 - Configurable autosave interval.
+
+2023.01.30
+- ESC hides controls and activates CEL picker. Right clicking in any phase will
+  return controls and activates previous tool.
 
 2023.01.27
 - Using TStreamingTexture as DrawArea. It makes the FPS go over 60.
