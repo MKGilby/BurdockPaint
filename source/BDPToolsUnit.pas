@@ -216,7 +216,7 @@ begin
         end;
       1:begin
           ActiveInk.InitializeArea(fSX,fSY,x,y);
-          if FillShapes then begin
+          if Settings.FillShapes then begin
             if ActiveInk.SupportsOnTheFly then
               DrawBarWithInk(fSX,fSY,x,y)
             else begin
@@ -323,12 +323,12 @@ begin
           r:=round(sqrt(sqr(fSX-x)+sqr(fSY-y)));
           ActiveInk.InitializeArea(fSX-r,fSY-r,fSX+r,fSY+r);
           if ActiveInk.SupportsOnTheFly then begin
-            if FillShapes then
+            if Settings.FillShapes then
               DrawFilledCircleWithInk(fSX,fSY,r)
             else
               DrawCircleWithInk(fSX,fSY,r)
           end else begin
-            if FillShapes then
+            if Settings.FillShapes then
               MainImage.FilledCircle(fSX,fSY,r,POSTPROCESSCOLOR)
             else
               MainImage.Circle(fSX,fSY,r,POSTPROCESSCOLOR);

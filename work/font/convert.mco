@@ -1,0 +1,6 @@
+r cel system.cel 1
+m create 420 6 2
+m copyto 0 0 186 6 0 0 1 2
+m copyto 0 8 186 6 186 0 1 2
+m copyto 0 16 42 6 372 0 1 2
+w tga systemfnt.tga 2

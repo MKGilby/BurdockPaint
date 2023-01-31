@@ -21,12 +21,14 @@ const
   WINDOWWIDTH=1280;
   WINDOWHEIGHT=720;
   CONTROLSHEIGHT=96;
+  NORMALBUTTONWIDTH=127;
+  SMALLBUTTONWIDTH=27;
   TOOLBUTTONSLEFT=3;
   TOOLBUTTONSTOP=6;
   INKBUTTONSLEFT=643;
   INKBUTTONSTOP=6;
-  NORMALBUTTONWIDTH=127;
-  SMALLBUTTONWIDTH=27;
+  TOGGLEBUTTONSLEFT=WINDOWWIDTH-SMALLBUTTONWIDTH-3;
+  TOGGLEBUTTONSTOP=6;
   MAXPALETTEENTRIES=2048;  // Palette color count hard limit
   POSTPROCESSCOLOR=$FFF0;
 
@@ -59,7 +61,7 @@ var
   Inks:TBDInks;  // All inks are loaded into this list
   ActiveInk:TBDInk;  // This is the selected ink
 
-  FillShapes:boolean;  // Fill shapes (if applicable?)
+//  FillShapes:boolean;  // Fill shapes (if applicable?)
 
   ActiveColorIndex:integer;  // The selected color index
   ActiveCluster:TColorCluster;  // The selected color cluster

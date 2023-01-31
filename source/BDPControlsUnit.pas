@@ -23,12 +23,14 @@ type
     function MouseMove(Sender:TObject;{%H-}x,{%H-}y:integer):boolean;
     function Click(Sender:TObject;{%H-}x, {%H-}y, {%H-}buttons: integer):boolean;
     function FilledButtonClick(Sender:TObject;{%H-}x, {%H-}y, {%H-}buttons: integer):boolean;
+    function ClearKeyColorButtonClick(Sender:TObject;{%H-}x, {%H-}y, {%H-}buttons: integer):boolean;
+    function UseAlphaButtonClick(Sender:TObject;{%H-}x, {%H-}y, {%H-}buttons: integer):boolean;
 //    function ToolEditorActivatorClick(Sender:TObject;{%H-}x, {%H-}y, {%H-}buttons: integer):boolean;
   private
     fTexture:TStreamingTexture;
     fToolButtons:array[0..5] of TBDButton;
     fInkButtons:array[0..5] of TBDButton;
-    fFilledButton:TBDButton;
+//    fFilledButton:TBDButton;
 //    fToolEditorActivator:TBDInvisibleButton;
   end;
 
@@ -39,7 +41,12 @@ uses SysUtils, BDPSharedUnit, sdl2, BDPToolsUnit, BDPInksUnit, BDPMessageUnit;
 { TBDControls }
 
 constructor TBDControls.Create;
-var i:integer;atmT:TBDTool;atmI:TBDInk;msg:TMessage;
+var
+  i:integer;
+  atmT:TBDTool;
+  atmI:TBDInk;
+  atmB:TBDButton;
+  msg:TMessage;
 begin
   inherited Create;
   fLeft:=0;
@@ -93,20 +100,35 @@ begin
   end;
   ActivateInkButton(Settings.ActiveInk);
 
-{  fFilledButton:=TBDButton.Create(
-    fTexture.ARGBImage,
-    fLeft+3,
-    fTop+6,
-    NORMALBUTTONWIDTH,
-    'TEST',
-    '',
-    'This is a test button');
-  fFilledButton.Selected:=false;
-  fFilledButton.OnClick:=FilledButtonClick;
-  fFilledButton.ParentX:=fLeft;
-  fFilledButton.ParentY:=fTop;
-  fFilledButton.ZIndex:=15;
-  AddChild(fFilledButton);}
+  msg.TypeID:=MSG_NONE;
+  atmB:=TBDButton.Create(fTexture.ARGBImage, fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP,
+    SMALLBUTTONWIDTH, 'F', 'FILL SHAPES', msg);
+  atmB.Selected:=Settings.FillShapes;
+  atmB.OnClick:=FilledButtonClick;
+  atmB.ParentX:=fLeft;
+  atmB.ParentY:=fTop;
+  atmB.ZIndex:=15;
+  AddChild(atmB);
+
+  atmB:=TBDButton.Create(fTexture.ARGBImage, fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+30,
+    SMALLBUTTONWIDTH, 'K', 'CLEAR KEY COLOR', msg);
+  atmB.Selected:=Settings.ClearKeyColor;
+  atmB.OnClick:=ClearKeyColorButtonClick;
+  atmB.ParentX:=fLeft;
+  atmB.ParentY:=fTop;
+  atmB.ZIndex:=15;
+  AddChild(atmB);
+
+  atmB:=TBDButton.Create(fTexture.ARGBImage, fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+30*2,
+    SMALLBUTTONWIDTH, 'A', 'USE ALPHA', msg);
+  atmB.Selected:=Settings.UseAlpha;
+  atmB.OnClick:=UseAlphaButtonClick;
+  atmB.ParentX:=fLeft;
+  atmB.ParentY:=fTop;
+  atmB.ZIndex:=15;
+  AddChild(atmB);
+
+
   fVisible:=true;
   OnMouseEnter:=MouseEnter;
   OnMouseLeave:=MouseLeave;
@@ -117,7 +139,6 @@ end;
 
 destructor TBDControls.Destroy;
 begin
-//  if Assigned(fFilledButton) then FreeAndNil(fFilledButton);
   if Assigned(fTexture) then FreeAndNil(fTexture);
   inherited Destroy;
 end;
@@ -197,8 +218,30 @@ end;
 function TBDControls.FilledButtonClick(Sender:TObject; x,y,buttons:integer
   ):boolean;
 begin
-  if Sender is TBDButton then with Sender as TBDButton do
+  if Sender is TBDButton then with Sender as TBDButton do begin
     fSelected:=not fSelected;
+    Settings.FillShapes:=fSelected;
+  end;
+  Result:=true;
+end;
+
+function TBDControls.ClearKeyColorButtonClick(Sender:TObject;
+  x,y,buttons:integer):boolean;
+begin
+  if Sender is TBDButton then with Sender as TBDButton do begin
+    fSelected:=not fSelected;
+    Settings.ClearKeyColor:=fSelected;
+  end;
+  Result:=true;
+end;
+
+function TBDControls.UseAlphaButtonClick(Sender:TObject; x,y,buttons:integer
+  ):boolean;
+begin
+  if Sender is TBDButton then with Sender as TBDButton do begin
+    fSelected:=not fSelected;
+    Settings.UseAlpha:=fSelected;
+  end;
   Result:=true;
 end;
 

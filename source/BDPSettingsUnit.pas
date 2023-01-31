@@ -23,7 +23,9 @@ type
     fActiveTool:integer;  // within fSelectedTools
     fSelectedInks:TStringArray6;
     fActiveInk:integer;  // within fSelectedInks
-    fFillShapes:boolean;
+    fFillShapes,
+    fClearKeyColor,
+    fUseAlpha:boolean;
     function fGetSelectedTool(index:integer):string;
     procedure fSetSelectedTool(index:integer;value:string);
     function fGetSelectedInk(index:integer):string;
@@ -37,6 +39,8 @@ type
     property SelectedInks[index:integer]:string read fGetSelectedInk write fSetSelectedInk;
     property ActiveInk:integer read fActiveInk write fActiveInk;
     property FillShapes:boolean read fFillShapes write fFillShapes;
+    property ClearKeyColor:boolean read fClearKeyColor write fClearKeyColor;
+    property UseAlpha:boolean read fUseAlpha write fUseAlpha;
   end;
 
 
@@ -66,6 +70,7 @@ begin
   fSelectedInks[5]:='H GRAD';
   fActiveInk:=0;
   fFillShapes:=false;
+  fClearKeyColor:=false;
 end;
 
 procedure TSettings.LoadFromFile(pFilename:String);
@@ -91,6 +96,8 @@ begin
   fSelectedInks[5]:=INI.ReadString('BasicControls','Ink5','H GRAD');
   fActiveInk:=INI.ReadInteger('BasicControls','ActiveInk',0);
   fFillShapes:=INI.ReadBool('BasicControls','FillShapes',false);
+  fClearKeyColor:=INI.ReadBool('BasicControls','ClearKeyColor',false);
+  fUseAlpha:=INI.ReadBool('BasicControls','UseAlpha',false);
   LoadKeyMap(INI);
   FreeAndNil(INI);
 end;
@@ -109,6 +116,8 @@ begin
     INI.WriteString('BasicControls','Ink'+inttostr(i),fSelectedInks[i]);
   INI.WriteInteger('BasicControls','ActiveInk',fActiveInk);
   INI.WriteBool('BasicControls','FillShapes',fFillShapes);
+  INI.WriteBool('BasicControls','ClearKeyColor',fClearKeyColor);
+  INI.WriteBool('BasicControls','UseAlpha',fUseAlpha);
   FreeAndNil(INI);
 end;
 

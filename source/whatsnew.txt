@@ -1,8 +1,14 @@
 Todo:
 - Color selector.
+- Drawing shapes should respect the (F) button.
 - CEL put mode (0 on hungarian keyboard).
+- CEL put mode should respect the (K) and (A) buttons.
 - Autosave in every 1 min.
 - Configurable autosave interval.
+
+2023.01.31
+- Added (F) (K) and (A) toggle buttons. (Fill shapes, clear key color and use alpha respectively)
+- Cosmetics: Fix in system font in letter K and L. These were only 4 pixel width.
 
 2023.01.30
 - ESC hides controls and activates CEL picker. Right clicking in any phase will
