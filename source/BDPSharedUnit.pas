@@ -15,6 +15,7 @@ type
 
   TColorCluster=record
     startindex,endindex:integer;
+    reverse,pingpong:boolean;
   end;
 
 const
@@ -22,7 +23,7 @@ const
   WINDOWHEIGHT=720;
   CONTROLSHEIGHT=96;
   NORMALBUTTONWIDTH=127;
-  SMALLBUTTONWIDTH=27;
+  SMALLBUTTONWIDTH=35;  // 27
   TOOLBUTTONSLEFT=3;
   TOOLBUTTONSTOP=6;
   INKBUTTONSLEFT=643;
@@ -35,7 +36,7 @@ const
   VIBROCOLORS:array[0..15] of integer=(6,6,7,7,8,8,9,9,10,10,9,9,8,8,7,7);
   TEMPIMAGEFILE='temp.bdp';
   SETTINGSFILE='BurdockPaint.ini';
-  SYSTEMPALETTEFILE='system.bdpp';
+//  SYSTEMPALETTEFILE='system.bdpp';
 
   // Message typeID constants
   MSG_NONE=0;
@@ -51,6 +52,7 @@ var
   InfoBar:TBDInfoBar;  // The information bar on the top of the screen
   MainImage:TBDImage;  // The image we are working on
   OverlayImage:TBDImage;  // The image where the tools draw its things
+  CELImage:TBDImage;  // The "clipboard" of image
   Settings:TSettings;  // All settings in one place
   MessageQueue:TMessageQueue;  // Messaging queue for classes who doesn't know each other
   Cursor:TBDCursor;  // The cursor on drawing area
@@ -61,11 +63,8 @@ var
   Inks:TBDInks;  // All inks are loaded into this list
   ActiveInk:TBDInk;  // This is the selected ink
 
-//  FillShapes:boolean;  // Fill shapes (if applicable?)
-
   ActiveColorIndex:integer;  // The selected color index
   ActiveCluster:TColorCluster;  // The selected color cluster
-//  SystemPalette:TBDPalette;
 
   // Load assets and create shared objects
   procedure LoadAssets;
@@ -140,7 +139,9 @@ begin
   LoadSystemFont($c7,4,4,'Red');
   LoadSystemFont($ee,$ee,$ee,'White');
   LoadSystemFont($ee,$aa,$cc,'Pinky');
-  LoadSystemFont($5d,$5d,$5d,'DarkGray');
+  LoadSystemFont($40,$40,$40,'DarkGray');
+  MM.LoadImage('burdock.png','Burdock');
+  MM.Images.ItemByName['Burdock'].Resize2x;
   Log.LogStatus('  Creating message queue...');
   MessageQueue:=TMessageQueue.Create(32);
   Log.LogStatus('  Creating main image...');

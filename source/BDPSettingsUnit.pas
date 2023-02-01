@@ -18,6 +18,7 @@ type
     procedure LoadFromFile(pFilename:String);
     procedure SaveToFile(pFilename:String);
   private
+    fShowSplash:Boolean;
     fZoom,fZoomLeft,fZoomTop:integer;
     fSelectedTools:TStringArray6;
     fActiveTool:integer;  // within fSelectedTools
@@ -41,6 +42,7 @@ type
     property FillShapes:boolean read fFillShapes write fFillShapes;
     property ClearKeyColor:boolean read fClearKeyColor write fClearKeyColor;
     property UseAlpha:boolean read fUseAlpha write fUseAlpha;
+    property ShowSplash:Boolean read fShowSplash write fShowSplash;
   end;
 
 
@@ -98,6 +100,7 @@ begin
   fFillShapes:=INI.ReadBool('BasicControls','FillShapes',false);
   fClearKeyColor:=INI.ReadBool('BasicControls','ClearKeyColor',false);
   fUseAlpha:=INI.ReadBool('BasicControls','UseAlpha',false);
+  fShowSplash:=INI.ReadBool('Settings','ShowSplash',false);
   LoadKeyMap(INI);
   FreeAndNil(INI);
 end;
@@ -118,6 +121,7 @@ begin
   INI.WriteBool('BasicControls','FillShapes',fFillShapes);
   INI.WriteBool('BasicControls','ClearKeyColor',fClearKeyColor);
   INI.WriteBool('BasicControls','UseAlpha',fUseAlpha);
+  INI.WriteBool('Settings','ShowSplash',fShowSplash);
   FreeAndNil(INI);
 end;
 

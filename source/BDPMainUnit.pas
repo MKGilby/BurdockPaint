@@ -4,7 +4,7 @@ unit BDPMainUnit;
 
 interface
 
-uses mk_sdl2, BDPControlsUnit, BDPDrawAreaUnit, BDPConfirmQuitUnit;
+uses mk_sdl2, BDPControlsUnit, BDPDrawAreaUnit, BDPConfirmQuitUnit, BDPSplashScreenUnit;
 
 type
 
@@ -18,6 +18,7 @@ type
     fMainWindow:TWindow;
     fControls:TBDControls;
     fDrawArea:TBDDrawArea;
+    fSplashScreen:TBDSplashScreen;
     fQuitWindow:TConfirmQuitWindow;
   end;
 
@@ -47,7 +48,7 @@ begin
     SDL_WINDOWPOS_CENTERED,
     WINDOWWIDTH,
     WINDOWHEIGHT,
-    Format('BurdockPaint V%s (%s)',[iVersion,replace(iBuildDate,'/','.')]));
+    Format('Burdock Paint V%s (%s)',[iVersion,replace(iBuildDate,'/','.')]));
 
   SetFPS(60);
 
@@ -62,11 +63,17 @@ begin
   fQuitWindow.ZIndex:=MaxLongint-1;
   fQuitWindow.Visible:=false;
   MouseObjects.Add(fQuitWindow);
+  if Settings.ShowSplash then begin
+    fSplashScreen:=TBDSplashScreen.Create;
+    fSplashScreen.ZIndex:=MaxLongint-1;
+    MouseObjects.Add(fSplashScreen);
+  end;
   MouseObjects.Sort;
 end;
 
 destructor TMain.Destroy;
 begin
+  if Assigned(fSplashScreen) then FreeAndNil(fSplashScreen);
   if Assigned(fQuitWindow) then FreeAndNil(fQuitWindow);
   if Assigned(fControls) then FreeAndNil(fControls);
   if Assigned(fDrawArea) then FreeAndNil(fDrawArea);

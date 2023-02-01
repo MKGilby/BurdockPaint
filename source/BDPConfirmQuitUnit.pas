@@ -112,7 +112,7 @@ end;
 { TConfirmQuitWindow }
 
 constructor TConfirmQuitWindow.Create;
-var atmB:TBDButton;msg:TMessage;CC:TInvisibleClickCatcher;
+var atmB:TBDButton;msg:TMessage;
 begin
   inherited Create;
   SetBoundsWH(0,0,WINDOWWIDTH,WINDOWHEIGHT);

@@ -1,6 +1,12 @@
 program BurdockPaint;
 
-uses BDPMainUnit, BDPConfirmQuitUnit, BDPKeyMappingUnit;
+uses
+  BDPMainUnit,
+  ARGBImageBMPReaderUnit,
+  ARGBImageCELReaderUnit,
+  ARGBImagePNGReaderUnit,
+  ARGBImagePNGWriterUnit,
+  ARGBImageTGAReaderUnit, BDPSplashScreenUnit;
 
 const
   VERSION='0.9';
