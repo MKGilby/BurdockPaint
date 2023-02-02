@@ -112,6 +112,9 @@ begin
           fControls.Visible:=true;
           fControls.ActivateToolButton(-1);  // Puts the already selected tool into ActiveTool
         end;
+        MSG_MOUSECOORDS:begin
+          fControls.SetMouseCoords(msg.DataInt and $7fff,(msg.DataInt and $7fff0000) shr 16);
+        end;
       end;
     end;
     HandleMessages;

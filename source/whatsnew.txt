@@ -5,6 +5,11 @@ Todo:
 - Autosave in every 1 min.
 - Configurable autosave interval.
 
+2023.02.02
+- Added a small area showing cursor coordinates and color index under cursor.
+  (Currently it is the part of Controls, but should separate it, to be visible
+  even with hidden Controls.)
+
 2023.02.01
 - Drawing shapes respects the (F) button.
 - Added a nice splash screen. (Turn it off in the .ini [Settings]/ShowSplash=No)

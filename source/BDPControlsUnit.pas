@@ -17,7 +17,6 @@ type
     procedure Draw; override;
     procedure ActivateToolButton(index:integer);
     procedure ActivateInkButton(index:integer);
-//    procedure ToggleFilledButton;
     function MouseEnter(Sender:TObject;{%H-}x,{%H-}y:integer):boolean;
     function MouseLeave(Sender:TObject;{%H-}x,{%H-}y:integer):boolean;
     function MouseMove(Sender:TObject;{%H-}x,{%H-}y:integer):boolean;
@@ -25,13 +24,13 @@ type
     function FilledButtonClick(Sender:TObject;{%H-}x, {%H-}y, {%H-}buttons: integer):boolean;
     function ClearKeyColorButtonClick(Sender:TObject;{%H-}x, {%H-}y, {%H-}buttons: integer):boolean;
     function UseAlphaButtonClick(Sender:TObject;{%H-}x, {%H-}y, {%H-}buttons: integer):boolean;
-//    function ToolEditorActivatorClick(Sender:TObject;{%H-}x, {%H-}y, {%H-}buttons: integer):boolean;
+    procedure SetMouseCoords(x,y:integer);
+//    procedure SetMouseCoords(s:string);
   private
     fTexture:TStreamingTexture;
     fToolButtons:array[0..5] of TBDButton;
     fInkButtons:array[0..5] of TBDButton;
-//    fFilledButton:TBDButton;
-//    fToolEditorActivator:TBDInvisibleButton;
+    fMouseX,fMouseY:integer;
   end;
 
 implementation
@@ -147,7 +146,26 @@ procedure TBDControls.Draw;
 begin
   if fVisible then begin
     fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(0,3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[3]);
+    fTexture.ARGBImage.Bar(COORDSLEFT,0,COORDSWIDTH,CONTROLSHEIGHT,OverlayImage.Palette[2]);
+    fTexture.ARGBImage.Bar(0,3,COORDSLEFT,fTexture.ARGBImage.Height-3,OverlayImage.Palette[3]);
+    if (fMouseX>=0) and (fMouseX<MainImage.Width) and (fMouseY>=0) and (fMouseY<=MainImage.Height) then begin
+      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'X='+inttostr(fMouseX),COORDSCENTER,CONTROLSHEIGHT-84,1);
+      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'Y='+inttostr(fMouseY),COORDSCENTER,CONTROLSHEIGHT-54,1);
+//      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'C='+inttostr(ActiveColorIndex),COORDSCENTER,CONTROLSHEIGHT-24,1);
+      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'C='+inttostr(MainImage.GetPixel(fMouseX,fMouseY)),COORDSCENTER,CONTROLSHEIGHT-24,1);
+//      MM.Fonts['Black'].OutText(fTexture.ARGBImage,inttostr(fMouseX)+', '+inttostr(fMouseY),WINDOWWIDTH-100,CONTROLSHEIGHT-21,1)
+    end else begin
+      if (fMouseX>-1000) and (fMouseX<1000) then
+        MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'X='+inttostr(fMouseX),COORDSCENTER,CONTROLSHEIGHT-84,1)
+      else
+        MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'X=OUT',COORDSCENTER,CONTROLSHEIGHT-84,1);
+      if (fMouseY>=-1000) and (fMouseY<=1000) then
+        MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'Y='+inttostr(fMouseY),COORDSCENTER,CONTROLSHEIGHT-54,1)
+      else
+        MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'Y=OUT',COORDSCENTER,CONTROLSHEIGHT-54,1);
+      MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'C=?',COORDSCENTER,CONTROLSHEIGHT-24,1);
+//      MM.Fonts['Red'].OutText(fTexture.ARGBImage,inttostr(fMouseX)+', '+inttostr(fMouseY),WINDOWWIDTH-100,CONTROLSHEIGHT-21,1);
+    end;
     inherited Draw;
     fTexture.Update;
     PutTexture(fLeft,fTop,fTexture);
@@ -196,6 +214,7 @@ end;
 function TBDControls.MouseEnter(Sender:TObject; x,y:integer):boolean;
 begin
   if fVisible then SDL_ShowCursor(SDL_ENABLE);
+  InfoBar.ShowText('');
   Result:=false;
 end;
 
@@ -243,6 +262,12 @@ begin
     Settings.UseAlpha:=fSelected;
   end;
   Result:=true;
+end;
+
+procedure TBDControls.SetMouseCoords(x,y:integer);
+begin
+  if x and $7000<>$7000 then fMouseX:=x else fMouseX:=x-32768;
+  if y and $7000<>$7000 then fMouseY:=y else fMouseY:=y-32768;
 end;
 
 end.

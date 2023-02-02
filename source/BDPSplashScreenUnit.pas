@@ -72,7 +72,7 @@ end;
 
 procedure TBDSplashScreen.Draw;
 begin
-  if SDL_GetTicks-fStart>7000 then fVisible:=false;
+  if SDL_GetTicks-fStart>5000 then fVisible:=false;
   if fVisible then begin
     inherited Draw;
     fTexture.Update;

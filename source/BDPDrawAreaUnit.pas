@@ -187,7 +187,8 @@ begin
   fFrameX:=MouseXToFrame(x);
   fFrameY:=MouseYToFrame(y);
   ActiveTool.Move(fFrameX,fFrameY);
-  InfoBar.ShowSimpleCoords(fFrameX,fFrameY,not((fFrameX<0) or (fFrameX>=MainImage.Width) or (fFrameY<0) or (fFrameY>=MainImage.Height)));
+  MessageQueue.AddMessage(MSG_MOUSECOORDS,'',(fFrameX and $7fff)+(fFrameY and $7fff)<<16);
+//  InfoBar.ShowSimpleCoords(fFrameX,fFrameY,not((fFrameX<0) or (fFrameX>=MainImage.Width) or (fFrameY<0) or (fFrameY>=MainImage.Height)));
   Result:=ActiveTool.MouseMove(fFrameX,fFrameY,buttons);
   if not Result then begin
     if fMousePanning=1 then fMousePanning:=2;

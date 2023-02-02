@@ -18,6 +18,7 @@ type
     procedure ShowText(text:string);
   private
     fTexture:TStreamingTexture;
+    fClear:boolean;
     procedure Clear;
   end;
 
@@ -34,6 +35,7 @@ begin
   SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
   Clear;
   fTexture.Update;
+  fClear:=true;
 end;
 
 destructor TBDInfoBar.Destroy;
@@ -44,7 +46,7 @@ end;
 
 procedure TBDInfoBar.Draw;
 begin
-  PutTexture(0,0,fTexture);
+  if not fClear then PutTexture(0,0,fTexture);
 end;
 
 procedure TBDInfoBar.ShowSimpleCoords(x,y:integer; valid:boolean);
@@ -56,12 +58,16 @@ begin
   else
     MM.Fonts['Red'].OutText(fTexture.ARGBImage,'('+inttostr(x)+','+inttostr(y)+')',8,3,mjLeft);
   fTexture.Update;
+  fClear:=false;
 end;
 
 procedure TBDInfoBar.ShowText(text:string);
 begin
   Clear;
-  MM.Fonts['Black'].OutText(fTexture.ARGBImage,text,8,3,mjLeft);
+  if text<>'' then begin
+    MM.Fonts['Black'].OutText(fTexture.ARGBImage,text,8,3,mjLeft);
+    fClear:=false;
+  end else fClear:=true;
   fTexture.Update;
 end;
 
