@@ -22,9 +22,11 @@ type
     fState:integer;  // 0 - Waiting for first click, 1 - waiting for second click, etc.
     fX,fY:integer;  // Current position from Move
     fName,fHint:string;
+    fPinnable:boolean;
   public
     property Name:string read fName;
     property Hint:string read fHint;
+    property Pinnable:boolean read fPinnable;
   end;
 
   TBDTools=class(TNamedList<TBDTool>)
@@ -134,6 +136,7 @@ uses
 constructor TBDTool.Create;
 begin
   fState:=0;
+  fPinnable:=false;
 end;
 
 destructor TBDTool.Destroy;
@@ -201,6 +204,7 @@ begin
   inherited ;
   fName:='BOX';
   fHint:=uppercase('Draw a rectangle (filled or not).');
+  fPinnable:=true;
 end;
 
 function TBDToolBox.Click(x,y,button:integer):boolean;
@@ -304,6 +308,7 @@ begin
   inherited ;
   fName:='CIRCLE';
   fHint:=uppercase('Draw a circle. Right click to select method.');
+  fPinnable:=true;
 end;
 
 function TBDToolCircle.Click(x,y,button:integer):boolean;
@@ -457,6 +462,7 @@ begin
   inherited ;
   fName:='DRAW';
   fHint:=uppercase('Freehand draw. Click and move mouse to draw.');
+  fPinnable:=true;
 end;
 
 function TBDToolDraw.MouseDown(x,y,button:integer):boolean;
@@ -494,6 +500,7 @@ begin
   inherited ;
   fName:='FILL';
   fHint:=uppercase('Apply ink to all pixels until stopped by a different color.');
+  fPinnable:=true;
 end;
 
 function TBDToolFill.Click(x,y,button:integer):boolean;
@@ -609,6 +616,7 @@ begin
   inherited ;
   fName:='FILLTO';
   fHint:=uppercase('Click to select boundary color. Click again inside to fill.');
+  fPinnable:=true;
 end;
 
 function TBDToolFillTo.Click(x,y,button:integer):boolean;
@@ -749,6 +757,7 @@ begin
   inherited ;
   fName:='LINE';
   fHint:=uppercase('Click for start then click for the end.');
+  fPinnable:=true;
 end;
 
 function TBDToolLine.Click(x,y,button:integer):boolean;
@@ -882,6 +891,7 @@ begin
   inherited ;
   fName:='SEP.';
   fHint:=uppercase('Change the clicked color to ink color.');
+  fPinnable:=true;
 end;
 
 function TBDToolSep.Click(x,y,button:integer):boolean;

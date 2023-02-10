@@ -24,9 +24,10 @@
       <Unit>
         <Filename Value="BDPSharedUnit.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="9"/>
-        <TopLine Value="124"/>
-        <CursorPos X="21" Y="144"/>
+        <TopLine Value="165"/>
+        <CursorPos X="51" Y="191"/>
         <UsageCount Value="101"/>
         <Loaded Value="True"/>
       </Unit>
@@ -50,10 +51,9 @@
       <Unit>
         <Filename Value="BDPControlsUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <TopLine Value="143"/>
-        <CursorPos X="21" Y="166"/>
+        <CursorPos X="21" Y="169"/>
         <UsageCount Value="94"/>
         <Loaded Value="True"/>
       </Unit>
@@ -111,8 +111,9 @@
         <Filename Value="BDPToolsUnit.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="7"/>
-        <TopLine Value="880"/>
-        <CursorPos X="21" Y="905"/>
+        <TopLine Value="832"/>
+        <CursorPos Y="889"/>
+        <FoldState Value=" T3lT065 pifjI0641117141]Ht2uO06212 PiHj50="/>
         <UsageCount Value="61"/>
         <Loaded Value="True"/>
       </Unit>
@@ -149,7 +150,6 @@
         <CursorPos X="27" Y="75"/>
         <UsageCount Value="24"/>
         <Loaded Value="True"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="units\mk_sdl2.pas"/>

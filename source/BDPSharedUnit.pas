@@ -182,11 +182,13 @@ begin
   Log.LogStatus('Loading settings...');
   Settings:=TSettings.Create;
   Settings.LoadFromFile(SETTINGSFILE);
+  CELImage:=nil;
 //  ActiveInk:=Inks[Settings.ActiveInk];
 end;
 
 procedure FreeAssets;
 begin
+  if Assigned(CELImage) then FreeAndNil(CELImage);
   if Assigned(Settings) then begin
     Settings.SaveToFile(SETTINGSFILE);
     FreeAndNil(Settings);

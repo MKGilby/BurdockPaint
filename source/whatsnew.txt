@@ -5,6 +5,11 @@ Todo:
 - Autosave in every 1 min.
 - Configurable autosave interval.
 
+2023.02.10
+- Added Pinnable property to tools, to differentiate between tools that can be
+  selected in tool selector and the tools that cannot be selected. (The latter
+  are used internally like GETCEL or PUTCEL.)
+
 2023.02.02
 - Added a small area showing cursor coordinates and color index under cursor.
   (Currently it is the part of Controls, but should separate it, to be visible
