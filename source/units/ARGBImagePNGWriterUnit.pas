@@ -21,6 +21,8 @@
 //     * Following changes in TAnimData
 //   1.05 - Gilby - 2022.07.19
 //     + Added ReverseAnim flag
+//   1.06 - Gilby - 2022.07.19
+//     + Bugfix with writing colormode 3 images with odd with and 4, 2 or 1 bitdepth.
 
 unit ARGBImagePNGWriterUnit;
 
@@ -44,7 +46,7 @@ uses Classes, SysUtils, ARGBImageUnit, CRC32Unit, FastPaletteUnit,
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.05';
+  Version='1.06';
 
   HEADER=#137#80#78#71#13#10#26#10;
   IHDR:uint32=$52444849; //  #82#68#72#73;
@@ -359,7 +361,6 @@ begin
           end else begin
             b:=0;
             for i:=0 to pWidth-1 do begin
-              b:=(b<<bitdepth) and $ff;
               case bitdepth of
                 1:b:=b or (byte(pp^) and 1);
                 2:b:=b or (byte(pp^) and 3);
@@ -371,6 +372,7 @@ begin
                 inc(pr);
                 b:=0;
               end;
+              b:=(b<<bitdepth) and $ff;
             end;
             if pWidth mod (8 div bitdepth)<>0 then begin
               byte(pr^):=b;

@@ -193,7 +193,7 @@ end;
 procedure FreeAssets;
 begin
   if Assigned(CELImage) then begin
-y    CELImage.SaveToFile(TEMPCELIMAGEFILE);
+    CELImage.SaveToFile(TEMPCELIMAGEFILE);
     CELImage.ExportToPNG('CELtemp.png');
     FreeAndNil(CELImage);
   end;

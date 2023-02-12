@@ -778,11 +778,12 @@ begin
 end;
 
 procedure TBDImage.ExportToPNG(pFilename:string);
-var atm:TARGBImage;i,j:integer;p,pp:pointer;//f:file;c:uint32;
+var atm:TARGBImage;i,j:integer;p,pp:pointer;f:file;//c:uint32;
 begin
   atm:=TARGBImage.Create(fWidth,fHeight);
   p:=fData;
   pp:=atm.Rawdata;
+  SaveRawDataToFile('data.dat');
 {  assign(f,'data.dat');
   rewrite(f,1);
   blockwrite(f,p^,fWidth*fHeight*2);
@@ -793,10 +794,11 @@ begin
       inc(p,2);
       inc(pp,4);
     end;
-{  assign(f,'data2.dat');
+  assign(f,'data2.dat');
   rewrite(f,1);
   blockwrite(f,atm.RawData^,fWidth*fHeight*4);
-  close(f);}
+  close(f);
+  atm.WriteFile(ChangeFileExt(pFilename,'.tga'),'TGA');
   atm.WriteFile(pFilename,'PNG');
   FreeAndNil(atm);
 end;

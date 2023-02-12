@@ -6,7 +6,8 @@ uses
   ARGBImageCELReaderUnit,
   ARGBImagePNGReaderUnit,
   ARGBImagePNGWriterUnit,
-  ARGBImageTGAReaderUnit, BDPSplashScreenUnit;
+  ARGBImageTGAReaderUnit,
+  ARGBImageTGAWriterUnit;
 
 const
   VERSION='0.9';

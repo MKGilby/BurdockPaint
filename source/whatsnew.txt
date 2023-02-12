@@ -6,7 +6,6 @@ Todo:
 - Configurable autosave interval.
 
 Bugs:
-- Sometimes the CEL has a colored line in the rightmost column.
 - When clicking the second point of the cel, the click (or mousedown/up) is
   forwarded to the Controls window and processed by it.
 
@@ -14,6 +13,10 @@ Bugs:
 - GETCEL really copies the selected area into CELImage.
   (It saves it to a PNG on exit, to be sure.)
 - CEL is saved on exit and reloaded on startup.
+- BUG narrowed down: The colored line appears only in PNG file and
+  only with odd width. So the bug is in the PNG writer.
+- BUG fixed: Writing paletted images with odd with and 4, 2 or 1 bitdepth was
+  bugged. (Had to move the bit shift operations after adding the color bits.)
 
 2023.02.10
 - Added Pinnable property to tools, to differentiate between tools that can be
