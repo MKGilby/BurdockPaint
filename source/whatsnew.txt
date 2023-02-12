@@ -1,15 +1,19 @@
 Todo:
 - Color selector.
-- Save temporary CEL in BDP format.
-- Read temporary CEL if exists.
 - CEL put mode (0 on hungarian keyboard).
 - CEL put mode should respect the (K) and (A) buttons.
 - Autosave in every 1 min.
 - Configurable autosave interval.
 
+Bugs:
+- Sometimes the CEL has a colored line in the rightmost column.
+- When clicking the second point of the cel, the click (or mousedown/up) is
+  forwarded to the Controls window and processed by it.
+
 2023.02.12
 - GETCEL really copies the selected area into CELImage.
   (It saves it to a PNG on exit, to be sure.)
+- CEL is saved on exit and reloaded on startup.
 
 2023.02.10
 - Added Pinnable property to tools, to differentiate between tools that can be

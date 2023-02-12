@@ -39,6 +39,7 @@ const
 
   VIBROCOLORS:array[0..15] of integer=(6,6,7,7,8,8,9,9,10,10,9,9,8,8,7,7);
   TEMPIMAGEFILE='temp.bdp';
+  TEMPCELIMAGEFILE='tempcel.bdp';
   SETTINGSFILE='BurdockPaint.ini';
 
   // Message typeID constants
@@ -182,13 +183,17 @@ begin
   Log.LogStatus('Loading settings...');
   Settings:=TSettings.Create;
   Settings.LoadFromFile(SETTINGSFILE);
-  CELImage:=nil;
+  if FileExists(TEMPCELIMAGEFILE) then begin
+    CELImage:=TBDImage.Create(16,16);
+    CELImage.LoadFromFile(TEMPCELIMAGEFILE);
+  end else CELImage:=nil;
 //  ActiveInk:=Inks[Settings.ActiveInk];
 end;
 
 procedure FreeAssets;
 begin
   if Assigned(CELImage) then begin
+y    CELImage.SaveToFile(TEMPCELIMAGEFILE);
     CELImage.ExportToPNG('CELtemp.png');
     FreeAndNil(CELImage);
   end;
