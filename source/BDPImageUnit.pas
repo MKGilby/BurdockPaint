@@ -39,9 +39,12 @@ type
     procedure FloodFill(x,y:integer;ColorIndex:word);
     // Resets changed area data.
     procedure ResetChange;
-    // Puts another image into image, using colorkey is specified.
+    // Puts another image onto image, using the specified colorkey.
     // Sets changed area accordingly.
     procedure PutImage(x,y:integer;frame:TBDImage;colorkey:word=65535);
+
+    // Puts a part of another image onto image, using the specified colorkey.
+    procedure PutImagePart(x,y,sx,sy,w,h:integer; SourceImage:TBDImage; colorkey:word=65535);
 
     // Renders the image onto a Texture.
     // TextureLeft, TextureTop   : The topleft position of the image on the target texture
@@ -84,12 +87,8 @@ type
     procedure LoadFromFile(pFilename:string);
     // Loads image from stream, including palette data.
     procedure LoadFromStream(Source:TStream);
-    //    procedure CopyWholeFrame(Target:TBDFrame);
-    //    procedure CopyAreaTo(Target:TBDFrame;x,y,w,h:integer);
-    //    procedure CopyAreaFrom(Source:TBDFrame;x,y,w,h:integer);
-    //    procedure CopyChangedTo(aTarget:TBDFrame);
-    //    procedure CopyChangedFrom(Source:TBDFrame);
-    //    procedure DoClipping(aFx,aFy,aFw,aFh:integer;var aVx,aVy,aVw,aVh:integer);
+    // Exports the image to PNG.
+    procedure ExportToPNG(pFilename:string);
   private
     // Image dimensions
     fWidth,fHeight:integer;
@@ -115,7 +114,7 @@ type
 
 implementation
 
-uses SysUtils, MyZStreamUnit, SDL2, Logger;
+uses SysUtils, MyZStreamUnit, SDL2, Logger, ARGBImageUnit;
 
 const
   IMAGEFOURCC='BDPI';
@@ -129,6 +128,7 @@ type
 
 function GetClipBox(x1,y1,w1,h1,x2,y2,w2,h2:integer):TClipBox;
 begin
+  Log.Trace(Format('GetClipBox(%d,%d,%d,%d, %d,%d,%d,%d)',[x1,y1,w1,h1,x2,y2,w2,h2]));
   if x1<x2 then begin
     if x1+w1<x2 then begin
       Result.x1:=-1;  // 1
@@ -371,7 +371,7 @@ begin
     if fChangedArea.Bottom<y2 then fChangedArea.Bottom:=y2;
 
     for j:=y1 to y2 do begin
-      p:=fData+j*fWidth+x1;
+      p:=fData+(j*fWidth)*2;
       for i:=x1 to x2 do
         word((p+i*2)^):=ColorIndex;
     end;
@@ -529,6 +529,36 @@ begin
   end;
 end;
 
+procedure TBDImage.PutImagePart(x,y,sx,sy,w,h:integer; SourceImage:TBDImage; colorkey:word);
+var clip1,clip2:TClipBox;i,j,c:integer;
+begin
+  // 1. Clip the source image with the specified area
+  clip1:=GetClipBox(0,0,SourceImage.Width,SourceImage.Height,sx,sy,w,h);
+  if clip1.x1=-1 then exit;  // Specified area is not overlapping with source image.
+  with clip1 do Log.Trace(Format('PIP: x1=%d, y1=%d, x2=%d, y2=%d, wi=%d, he=%d',[x1,y1,x2,y2,wi,he]));
+  clip2:=GetClipBox(0,0,fWidth,fHeight,x,y,clip1.wi,clip1.he);
+  with clip2 do Log.Trace(Format('PIP: x1=%d, y1=%d, x2=%d, y2=%d, wi=%d, he=%d',[x1,y1,x2,y2,wi,he]));
+  if clip2.x1<>-1 then begin
+    if (colorkey<fPalette.Size) then begin
+      for i:=0 to clip2.he-1 do
+        for j:=0 to clip2.wi-1 do begin
+          c:=word((SourceImage.RawData+(clip1.x1+j+(clip1.y1+i)*SourceImage.Width)*2)^);
+          if c<>colorkey then word((fData+(clip2.x1+j+(clip2.y1+i)*fWidth)*2)^):=c;
+        end;
+    end else begin
+      for i:=0 to clip2.he-1 do
+        move((SourceImage.RawData+(clip1.x1+(clip1.y1+i)*SourceImage.Width)*2)^,
+             (fData+(clip2.x1+(clip2.y1+i)*fWidth)*2)^,clip2.wi*2);
+    end;
+    if fChangedArea.Left>clip2.x1 then fChangedArea.Left:=clip2.x1;
+    if fChangedArea.Right<clip2.x1+clip2.wi-1 then fChangedArea.Right:=clip2.x1+clip2.wi-1;
+    if fChangedArea.Top>clip2.y1 then fChangedArea.Top:=clip2.y1;
+    if fChangedArea.Bottom<clip2.y1+clip2.he-1 then fChangedArea.Bottom:=clip2.y1+clip2.he-1;
+    fChanged:=true;
+
+  end;
+end;
+
 procedure TBDImage.RenderToTexture(Target:TStreamingTexture;
   TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
 var x,y,zPixel,zRenderWidth,zRenderHeight:integer;
@@ -651,7 +681,7 @@ end;
 
 procedure TBDImage.RenderToScreenAsOverlay(ScreenLeft, ScreenTop,
   RenderWidth, RenderHeight, ImageLeft, ImageTop, Zoom: integer);
-var x,y,tx,ty,zPixel,zRenderWidth,zRenderHeight:integer;
+var x,y,zPixel,zRenderWidth,zRenderHeight:integer;
     p:word;
 begin
   if not(Zoom in [1..4]) then exit;
@@ -745,6 +775,30 @@ begin
   Source.Read(b,1);
   if b=1 then LoadFromStreamV1(Source)
   else raise Exception.Create(Format('Unknown image file version! (%d)',[b]));
+end;
+
+procedure TBDImage.ExportToPNG(pFilename:string);
+var atm:TARGBImage;i,j:integer;p,pp:pointer;//f:file;c:uint32;
+begin
+  atm:=TARGBImage.Create(fWidth,fHeight);
+  p:=fData;
+  pp:=atm.Rawdata;
+{  assign(f,'data.dat');
+  rewrite(f,1);
+  blockwrite(f,p^,fWidth*fHeight*2);
+  close(f);}
+  for j:=0 to fHeight-1 do
+    for i:=0 to fWidth-1 do begin
+      move(fPalette[word(p^)],pp^,4);
+      inc(p,2);
+      inc(pp,4);
+    end;
+{  assign(f,'data2.dat');
+  rewrite(f,1);
+  blockwrite(f,atm.RawData^,fWidth*fHeight*4);
+  close(f);}
+  atm.WriteFile(pFilename,'PNG');
+  FreeAndNil(atm);
 end;
 
 procedure TBDImage.LoadFromStreamV1(Source:TStream);

@@ -188,7 +188,10 @@ end;
 
 procedure FreeAssets;
 begin
-  if Assigned(CELImage) then FreeAndNil(CELImage);
+  if Assigned(CELImage) then begin
+    CELImage.ExportToPNG('CELtemp.png');
+    FreeAndNil(CELImage);
+  end;
   if Assigned(Settings) then begin
     Settings.SaveToFile(SETTINGSFILE);
     FreeAndNil(Settings);

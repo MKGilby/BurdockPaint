@@ -129,7 +129,7 @@ type
 implementation
 
 uses
-  BDPSharedUnit, MKToolbox, Logger, BDPMessageUnit;
+  BDPSharedUnit, MKToolbox, Logger, BDPMessageUnit, BDPImageUnit;
 
 // ------------------------------------------------------------ [ TBDTool ] ---
 
@@ -931,6 +931,7 @@ begin
 end;
 
 function TBDToolGetCel.Click(x,y,button:integer):boolean;
+var i:integer;
 begin
   if button=1 then begin
     case fState of
@@ -939,8 +940,17 @@ begin
           fSY:=y;
           Result:=true;
           fState:=1;
+          Log.Trace(Format('GETCEL1 fSX=%d, fSY=%d',[fSX,fSY]));
         end;
       1:begin
+          Log.Trace(Format('GETCEL2 fSX=%d, fSY=%d, x=%d, y=%d',[fSX,fSY,x,y]));
+          if x<fSX then begin i:=x;x:=fSX;fSX:=i;end;
+          if y<fSY then begin i:=y;y:=fSY;fSY:=i;end;
+          if Assigned(CELImage) then FreeAndNil(CELImage);
+          CELImage:=TBDImage.Create(x-fSX+1,y-fSY+1);
+          CELImage.Palette.CopyColorsFrom(MainImage.Palette);
+          CELImage.PutImagePart(0,0,fSX,fSY,x-fSX+1,y-fSY+1,MainImage);
+//          MainImage.PutImagePart(0,0,fSX,fSY,x-fSX+1,y-fSY+1,CELImage);
           // Get CEL here...
           fState:=0;
           MessageQueue.AddMessage(MSG_GETCELFINISHED);

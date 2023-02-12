@@ -42,6 +42,10 @@ type
     // Load an entire .COL format palette (256 colors) from stream.
     // Loading entry 0 to startindex, entry 1 to startindex+1 and so on.
     procedure LoadCOL(Source:TStream;startindex:integer); overload;
+
+    // Copies colors from the specified palette. Omit count to copy all
+    // colors from start, omit start to copy whole palette.
+    procedure CopyColorsFrom(Source:TBDPalette;start:integer=0;count:integer=-1);
   private
     fEntries:pointer;
     fMaxEntries:integer;
@@ -188,6 +192,19 @@ begin
       inc(p);
     end;
   end;
+end;
+
+procedure TBDPalette.CopyColorsFrom(Source:TBDPalette; start:integer;
+  count:integer);
+var
+  i:Integer;
+begin
+  if fMaxEntries<>Source.Size then begin
+    Freemem(fEntries);
+    fMaxEntries:=Source.Size;
+    fEntries:=Getmem(fMaxEntries*4);
+  end;
+  for i:=0 to fMaxEntries do Colors[i]:=Source.Colors[i];
 end;
 
 function TBDPalette.fGetColor(index:integer):uint32;

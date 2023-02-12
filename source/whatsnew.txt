@@ -1,14 +1,21 @@
 Todo:
 - Color selector.
+- Save temporary CEL in BDP format.
+- Read temporary CEL if exists.
 - CEL put mode (0 on hungarian keyboard).
 - CEL put mode should respect the (K) and (A) buttons.
 - Autosave in every 1 min.
 - Configurable autosave interval.
 
+2023.02.12
+- GETCEL really copies the selected area into CELImage.
+  (It saves it to a PNG on exit, to be sure.)
+
 2023.02.10
 - Added Pinnable property to tools, to differentiate between tools that can be
   selected in tool selector and the tools that cannot be selected. (The latter
   are used internally like GETCEL or PUTCEL.)
+- Bugfix in BOX tool.
 
 2023.02.02
 - Added a small area showing cursor coordinates and color index under cursor.
