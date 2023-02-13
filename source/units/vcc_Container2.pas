@@ -46,6 +46,9 @@
 //    * Initial creation from vcc_Container.
 //  V1.01: Gilby - 2023.01.25
 //    * Handling MOUSEWHEEL events too.
+//  V1.02: Gilby - 2023.02.13
+//    * Improved logging.
+//    * Removed commented out parts.
 
 {$mode delphi}{$H+}
 
@@ -159,8 +162,11 @@ end;
 function TContainer.HandleEvent(Event:PSDL_Event):boolean;
 var nx,ny,i:integer;
 begin
+//  Log.LogDebug(Format('Container "%s" got event.',[Name]));
   Result:=false;
-  if not fVisible then exit;
+
+  if not fVisible then begin Log.LogDebug('Not visible.');exit;end;
+  Log.IncreaseIndent(2);
   nx:=Event^.Button.x;
   ny:=Event^.Button.y;
   if (((Event^.type_=SDL_MOUSEBUTTONDOWN) or (Event^.type_=SDL_MOUSEBUTTONUP))
@@ -169,46 +175,12 @@ begin
     i:=fChilds.Count;
     while (i>0) and (not Result) do begin
       dec(i);
+      Log.LogDebug('Passing event to object number '+inttostr(i)+' ('+fChilds[i].Name+')');
       Result:=fChilds[i].HandleEvent(Event);
     end;
   end;
+  Log.DecreaseIndent(2);
   if not Result then Result:=inherited HandleEvent(Event);
-{  case Event^.Type_ of
-    SDL_MOUSEBUTTONDOWN:with Event^.Button do begin
-      if IsOver(nx,ny) and Assigned(OnMouseDown) then begin
-        Result:=OnMouseDown(Self,nx,ny,Button);
-      end;
-    end;
-    SDL_MOUSEBUTTONUP:with Event^.Button do begin
-      if IsOver(nx,ny) then begin
-        if Assigned(OnMouseUp) then Result:=OnMouseUp(Self,nx,ny,Button);
-        if Assigned(OnClick) then
-          if OnClick(Self,nx,ny,Button) then Result:=true;
-      end;
-    end;
-    SDL_MOUSEMOTION:with Event^.Button do begin
-      if IsOver(nx,ny) then begin
-        if Assigned(OnMouseMove) then Result:=OnMouseMove(Self,nx,ny,Button);
-        if not over then begin
-          Result:=false;
-          if Assigned(OnMouseEnter) then OnMouseEnter(Self,nx,ny,Button);
-          over:=true;
-        end;
-      end else
-        if over then begin
-          Result:=false;
-          if Assigned(OnMouseLeave) then OnMouseLeave(Self,nx,ny,Button);
-          over:=false;
-        end;
-    end;
-    SDL_KEYDOWN:begin
-      if Assigned(OnKeyDown) then Result:=OnKeyDown(Self,Event^.Key.keysym.sym);
-    end;
-    SDL_KEYUP:begin
-      if Assigned(OnKeyUp) then Result:=OnKeyUp(Self,Event^.Key.keysym.sym);
-    end;
-  end;
-  if ((Event^.type_ in [SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP]) and IsOver(nx,ny)) then Result:=true;}
 end;
 
 initialization

@@ -119,7 +119,6 @@ type
   TBDToolGetCel=class(TBDTool)
     constructor Create; override;
     function Click(x,y,button:integer):boolean; override;
-    function MouseUp({%H-}x,{%H-}y,{%H-}button:integer):boolean; override;
     procedure Draw; override;
     procedure Clear; override;
   private
@@ -965,11 +964,6 @@ begin
     Result:=true;
   end
   else Result:=false;
-end;
-
-function TBDToolGetCel.MouseUp(x,y,button:integer):boolean;
-begin
-  Result:=true;
 end;
 
 procedure TBDToolGetCel.Draw;

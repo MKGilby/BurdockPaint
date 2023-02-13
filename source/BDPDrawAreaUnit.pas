@@ -145,36 +145,39 @@ begin
   fMousePanning:=0;  // To stop panning if you press other button
   mx:=MouseXToFrame(x);
   my:=MouseYToFrame(y);
-  InfoBar.ShowSimpleCoords(mx,my,(mx>=0) and (mx<MainImage.Width) and (my>=0) and (my<MainImage.Height));
+//  InfoBar.ShowSimpleCoords(mx,my,(mx>=0) and (mx<MainImage.Width) and (my>=0) and (my<MainImage.Height));
 //  Log.LogDebug(Format('mx=%d, my=%d, buttons=%d',[mx,my,buttons]));
   Result:=false;
   Result:=ActiveTool.MouseDown(mx,my,buttons);
   if not Result then begin
-    Result:=ActiveTool.Click(mx,my,buttons);
-    if not Result then begin
-      case buttons of
-        3:begin   // Right button
-            fMousePanning:=1;
-            fPanX:=fCursorX;
-            fPanY:=fCursorY;
-            fPanX2:=fZoomLeft;
-            fPanY2:=fZoomTop;
-         end;
-      end;
-      Result:=true;
+    case buttons of
+      3:begin   // Right button
+          fMousePanning:=1;
+          fPanX:=fCursorX;
+          fPanY:=fCursorY;
+          fPanX2:=fZoomLeft;
+          fPanY2:=fZoomTop;
+        end;
     end;
+    Result:=true;
   end;
 end;
 
 function TBDDrawArea.MouseUp(Sender:TObject; x,y,buttons:integer):boolean;
+var mx,my:integer;
 begin
-  Result:=ActiveTool.MouseUp(MouseXToFrame(x),MouseYToFrame(y),buttons);
+  mx:=MouseXToFrame(x);
+  my:=MouseYToFrame(y);
+  Result:=ActiveTool.MouseUp(mx,my,buttons);
   if not Result then begin
-    if buttons=3 then begin   // Right button
-      if fMousePanning=1 then MessageQueue.AddMessage(MSG_TOGGLECONTROLS);
-      fMousePanning:=0;
-    end;
-    Result:=true;
+    Result:=ActiveTool.Click(mx,my,buttons);
+    if not Result then begin
+      if buttons=3 then begin   // Right button
+        if fMousePanning=1 then MessageQueue.AddMessage(MSG_TOGGLECONTROLS);
+        fMousePanning:=0;
+      end;
+      Result:=true;
+    end else fMousePanning:=0;
   end;
 end;
 

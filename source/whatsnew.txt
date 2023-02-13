@@ -5,9 +5,10 @@ Todo:
 - Autosave in every 1 min.
 - Configurable autosave interval.
 
-Bugs:
-- When clicking the second point of the cel, the click (or mousedown/up) is
-  forwarded to the Controls window and processed by it.
+
+2023.02.13
+- Bugfix with clickin anomaly. Click was on mouseup in TMouseObject, but was
+  on mousedown in TDrawArea. Changed it in TDrawArea.
 
 2023.02.12
 - GETCEL really copies the selected area into CELImage.

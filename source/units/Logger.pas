@@ -63,6 +63,9 @@ unit Logger;
 //    * Write and Writeln can write to screen too. (FIX)
 //  V1.14: Gilby - 2019.05.07
 //    * SetLogLevel reworked. Now it really sets the minimum severity to log.
+//  V1.15: Gilby - 2023.02.13
+//    * Removed filtering options.
+//    * Added indenting. Indenting works with everything.
 
 interface
 
@@ -72,20 +75,20 @@ uses
 type
   TLogLevel=(llAll,llDebug,llStatus,llWarning,llError,llNone);
 
+  { TLogger }
+
   TLogger = class
   private
     fStream:TFileStream;
     fApplicationName : string;
     fApplicationPath : string;
-    fCreated:boolean;
+//    fCreated:boolean;
 {$ifndef fpc}
     fPreTick:integer;
 {$endif}
     fScreenOutput:boolean;
     fLogLevel:TLogLevel;
-    fFilter:TStringList;
-    function FilterOK(Location : string):boolean;
-    function CheckFilterLine(Line, Location : string):boolean;
+    fIndent:integer;
   public
     constructor Create( FileName : string = ''; Append : boolean = false );
     destructor Destroy; override;
@@ -93,7 +96,7 @@ type
     procedure LogError( ErrorMessage : string; Location : string = '' );
     procedure LogWarning( WarningMessage : string; Location : string = '' );
     procedure LogStatus( StatusMessage : string; Location : string = '' );
-    procedure LogDebug( StatusMessage : string; Location : string = '' );
+    procedure LogDebug( DebugMessage : string; Location : string = '' );
 {$ifndef fpc}
     procedure LogTick( TickMessage : string );
 {$endif}
@@ -105,17 +108,18 @@ type
                           start , size : integer;
                           Message , Location : string );
 {$endif}
-    procedure Trace( s : String ); overload;
+    procedure Trace( TraceMessage : String ); overload;
     procedure Trace( l : longint ); overload;
     procedure SetScreenOutputOn;
     procedure SetScreenOutputOff;
     procedure SetLogLevel(pLogLevel:TLogLevel);
     procedure Write( s : string );
     procedure WriteLN( s : string );
+    procedure IncreaseIndent(value:integer);
+    procedure DecreaseIndent(value:integer);
   public
     property ApplicationName : string read fApplicationName;
     property ApplicationPath : string read fApplicationPath;
-    property Filter:TStringList read fFilter;
   end;
 
 var
@@ -126,8 +130,9 @@ implementation
 uses SysUtils, Windows, ParametersUnit;
 
 const
+  Fstr={$I %FILE%}+', ';
   sysstr='..system..';
-  Version='1.14';
+  Version='1.15';
   HexChars='0123456789ABCDEF';
 
 { Helper functions borrowed from MKToolBox }
@@ -160,6 +165,18 @@ begin
   Result:=lpad('0',Dec2Hex(l),fix);
 end;
 
+function GetIndentSpaces(count:integer):string;
+const SPACES='                                ';  // 32
+begin
+  Result:='';
+  while count>32 do begin
+    Result+=SPACES;
+    dec(count,32);
+  end;
+  if Count>0 then
+    Result+=copy(SPACES,1,count);
+end;
+
 { TLogger }
 constructor TLogger.Create( FileName : string; Append : boolean );
 begin
@@ -167,7 +184,7 @@ begin
   fApplicationName := ExtractFileName( Parameters[0] );
   fApplicationPath := ExtractFilePath( Parameters[0] );
   
-  if (Parameters.IndexOfSwitch('nolog',true)>-1) then begin fCreated:=false; exit; end;
+  if (Parameters.IndexOfSwitch('nolog',true)>-1) then exit;
 
   if (Parameters.IndexOfSwitch('waitlog',true)>-1) then Sleep(1000);
 
@@ -184,39 +201,26 @@ begin
   if (Parameters.IndexOfSwitch('safelog')>-1) then FileName := fApplicationPath + 'run.log';
 
   if not Append or not fileexists(Filename) then begin
-    try
-      fStream:=TFileStream.Create( FileName, fmCreate or fmShareDenyNone );
-    except
-      on exception do begin
-        fCreated:=false;exit;
-      end;
-    end;
+    fStream:=TFileStream.Create( FileName, fmCreate or fmShareDenyNone );
     FreeAndNil(fStream);
   end;
-  try
-    fStream:=TFileStream.Create( FileName, fmOpenWrite or fmShareDenyWrite );
-  except
-    on exception do begin
-      fCreated:=false;exit;
-    end;
-  end;
+  fStream:=TFileStream.Create( FileName, fmOpenWrite or fmShareDenyWrite );
   fStream.Seek(0,soFromEnd);
 
   SetLogLevel(llAll);
-  fCreated:=true;
-  fFilter:=TStringList.Create;
+  fIndent:=0;
 end;
 
 destructor TLogger.Destroy;
 begin
-  FreeAndNil(fFilter);
-  FreeAndNil(fStream);
+  if Assigned(fStream) then FreeAndNil(fStream);
   inherited ;
 end;
 
 procedure TLogger.Write( s : string );
 begin
-  if fCreated then begin
+  if Assigned(fStream) then begin
+    s:=GetIndentSpaces(fIndent)+s;
     fStream.write(S[1], length(S)*sizeof(char));
     if fScreenOutput then system.write(s);
   end;
@@ -224,30 +228,41 @@ end;
 
 procedure TLogger.WriteLN( s : string );
 begin
-  if fCreated then begin
-    S:=S+#13#10; 
+  if Assigned(fStream) then begin
+    s:=GetIndentSpaces(fIndent)+s+#13#10;
     fStream.write(S[1], length(S)*sizeof(char));
     if fScreenOutput then system.write(s);
   end;
 end;
 
+procedure TLogger.IncreaseIndent(value:integer);
+begin
+  inc(fIndent,value);
+end;
+
+procedure TLogger.DecreaseIndent(value:integer);
+begin
+  dec(fIndent,value);
+  if fIndent<0 then fIndent:=0;
+end;
+
 // Everybody can log error messages, so no filtering here. 
-procedure TLogger.LogError(ErrorMessage, Location: string);
+procedure TLogger.LogError(ErrorMessage:string; Location:string);
 var s:string;
 begin
-  if fCreated and (fLogLevel<=llError) then begin
-    s:='{'+Location+'} ' + ErrorMessage + #13#10;
+  if Assigned(fStream) and (fLogLevel<=llError) then begin
+    s:='{'+Location+'} ' + GetIndentSpaces(fIndent) + ErrorMessage + #13#10;
     fStream.write(S[1], length(S)*sizeof(char));
     if fScreenOutput then system.writeln('Error: ',ErrorMessage);
   end;
 end;
 
-procedure TLogger.LogApphead(Head, Location: string);
+procedure TLogger.LogAppHead(Head:string; Location:string);
 var
   S,S2 : string;
 begin
-  if fCreated then begin
-    S := '<'+Location+'> ' + Head;
+  if Assigned(fStream) then begin
+    S := '<'+Location+'> ' + GetIndentSpaces(fIndent) + Head;
     S2:='-';
     while length(S2)<length(S) do S2:=S2+'-';
     S:=S+#13#10;
@@ -258,31 +273,31 @@ begin
   end;
 end;
 
-procedure TLogger.LogStatus(StatusMessage, Location: string);
+procedure TLogger.LogStatus(StatusMessage:string; Location:string);
 var s:string;
 begin
-  if fCreated and (fLogLevel<=llStatus) and FilterOK(Location) then begin
-    s:= '('+Location+') ' + StatusMessage + #13#10;
+  if Assigned(fStream) and (fLogLevel<=llStatus) then begin
+    s:= '('+Location+') ' + GetIndentSpaces(fIndent) + StatusMessage + #13#10;
     fStream.write(S[1], length(S)*sizeof(char));
     if fScreenOutput then system.writeln(StatusMessage);
   end;
 end;
 
-procedure TLogger.LogDebug(StatusMessage, Location: string);
+procedure TLogger.LogDebug(DebugMessage:string; Location:string);
 var s:String;
 begin
-  if fCreated and (fLogLevel<=llDebug) and FilterOK(Location) then begin
-    s:='<'+Location+'> ' + StatusMessage+#13#10;
+  if Assigned(fStream) and (fLogLevel<=llDebug) then begin
+    s:='<'+Location+'> ' + GetIndentSpaces(fIndent) + DebugMessage+#13#10;
     fStream.write(S[1], length(S)*sizeof(char));
-    if fScreenOutput then system.writeln(StatusMessage);
+    if fScreenOutput then system.writeln(DebugMessage);
   end;
 end;
 
-procedure TLogger.LogWarning(WarningMessage, Location: string);
+procedure TLogger.LogWarning(WarningMessage:string; Location:string);
 var s:String;
 begin
-  if fCreated and (fLogLevel<=llWarning) and FilterOK(Location) then begin
-    s:='['+Location+'] ' + WarningMessage+#13#10;
+  if Assigned(fStream) and (fLogLevel<=llWarning) then begin
+    s:='['+Location+'] ' + GetIndentSpaces(fIndent) + WarningMessage+#13#10;
     fStream.write(S[1], length(S)*sizeof(char));
     if fScreenOutput then system.writeln('Warning: ',WarningMessage);
   end;
@@ -295,7 +310,7 @@ var
     b : byte;
 
 begin
-  if fCreated then begin
+  if Assigned(fStream) then begin
     WriteLN('');
     WriteLN('Stream dump invoked from "'+Location+'".');
     WriteLN('Comment: ' + Message);
@@ -340,7 +355,7 @@ var
     t : pointer;
 
 begin
-  if fCreated then begin
+  if Assigned(fStream) then begin
     WriteLN ('Memory dump invoked from "'+Location+'".');
     WriteLN('Comment: ' + Message);
     WriteLN('Dump start: ' + inttostr(start));
@@ -374,11 +389,13 @@ begin
 end;
 {$endif}
 
-procedure TLogger.Trace(s:String);
+procedure TLogger.Trace(TraceMessage:String);
+var s:String;
 begin
-  if fCreated then begin
-    WriteLN('< Trace > '+ s);
-//    if fScreenOutput then system.writeln('<T> ',s);
+  if Assigned(fStream) then begin
+    s:='< Trace > ' + GetIndentSpaces(fIndent) + TraceMessage+#13#10;
+    fStream.write(s[1], length(s)*sizeof(char));
+    if fScreenOutput then system.writeln('Warning: ',TraceMessage);
   end;
 end;
 
@@ -413,7 +430,7 @@ end;
 procedure TLogger.SetLogLevel(pLogLevel:TLogLevel);
 begin
   fLogLevel:=pLogLevel;
-  Self.Write('Minimum logging level set to ');
+  Self.Write(GetIndentSpaces(fIndent)+'Minimum logging level set to ');
   case fLogLevel of
     llAll:Self.WriteLN('ALL');
     llDebug:Self.Writeln('DEBUG');
@@ -424,48 +441,11 @@ begin
   end;
 end;
 
-function TLogger.CheckFilterLine(Line, Location : string):boolean;
-var i:integer;
-begin
-  i:=pos('*',Line);
-  if (i=1) and (length(Line)=1) then Result:=true
-  else if (i=1) and (length(Location)>=length(Line)) and
-     (uppercase(copy(Line,2,length(Line)-1))=
-      uppercase(copy(Location,length(Location)-length(Line)+2,length(Location)-Length(Line))))
-  then Result:=true
-  else if (i=length(Line)) and (length(Location)>=length(Line)) and
-     (uppercase(copy(Line,1,length(Line)-1))=
-      uppercase(copy(Location,1,length(Line)-1)))
-  then Result:=true
-  else
-    if (uppercase(Line)=uppercase(Location)) then
-      Result:=true
-    else
-      Result:=false;
-end;
-
-function TLogger.FilterOK(Location : string):boolean;
-var i:integer;
-begin
-  if Filter.Count=0 then begin Result:=true;exit;end;
-  Result:=false;
-  for i:=0 to Filter.Count-1 do
-    if (Filter[i][1]<>'-') and
-       (CheckFilterLine(Filter[i],Location)) then begin Result:=true;break;end;
-  if Result then
-    for i:=0 to Filter.Count-1 do
-      if (Filter[i][1]='-') and
-         (CheckFilterLine(copy(Filter[i],2,length(Filter[i])),Location)) then begin
-           Result:=false;
-           exit;
-         end;
-end;
-
 initialization
   Log := TLogger.Create;
   Log.LogStatus('Starting Application. '+DateToStr(Date)+' '+TimeToStr(Time),sysstr);
   Log.LogStatus('(Status) [Warning] {Error} <Debug>',sysstr);
-  Log.LogStatus('Logger.pas, version '+Version,'uses');
+  Log.LogStatus(Fstr+'version '+Version,'uses');
 
 finalization
   Log.LogStatus('Terminating Application. '+DateToStr(Date)+' '+TimeToStr(Time),sysstr);

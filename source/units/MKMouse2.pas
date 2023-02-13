@@ -147,6 +147,7 @@ begin
   fSoftDelete:=true;
   Result:=false;
   Log.LogDebug('MouseObjects.HandleEvent starts...');
+  Log.IncreaseIndent(2);
   case Event^.Type_ of
     SDL_MOUSEBUTTONDOWN:Log.LogDebug('MouseDown');
     SDL_MOUSEBUTTONUP:Log.LogDebug('MouseUp');
@@ -172,6 +173,7 @@ begin
   fSoftDelete:=false;
   for i:=Count-1 downto fTop do
     if Self[i]=nil then Delete(i);
+  Log.DecreaseIndent(2);
 end;
 
 procedure TMouseObjects.Draw;
