@@ -90,13 +90,15 @@ begin
   fSelectedTools[4]:=INI.ReadString('BasicControls','Tool4','SEP.');
   fSelectedTools[5]:=INI.ReadString('BasicControls','Tool5','FILL');
   fActiveTool:=INI.ReadInteger('BasicControls','ActiveTool',0);
+  if (fActiveTool<0) or (fActiveTool>5) then fActiveTool:=0;
   fSelectedInks[0]:=INI.ReadString('BasicControls','Ink0','OPAQUE');
   fSelectedInks[1]:=INI.ReadString('BasicControls','Ink1','OPAQUE');
   fSelectedInks[2]:=INI.ReadString('BasicControls','Ink2','L GRAD');
   fSelectedInks[3]:=INI.ReadString('BasicControls','Ink3','L GRAD');
   fSelectedInks[4]:=INI.ReadString('BasicControls','Ink4','H GRAD');
-  fSelectedInks[5]:=INI.ReadString('BasicControls','Ink5','H GRAD');
+  fSelectedInks[5]:=INI.ReadString('BasicControls','Ink5','V GRAD');
   fActiveInk:=INI.ReadInteger('BasicControls','ActiveInk',0);
+  if (fActiveInk<0) or (fActiveInk>5) then fActiveInk:=0;
   fFillShapes:=INI.ReadBool('BasicControls','FillShapes',false);
   fClearKeyColor:=INI.ReadBool('BasicControls','ClearKeyColor',false);
   fUseAlpha:=INI.ReadBool('BasicControls','UseAlpha',false);

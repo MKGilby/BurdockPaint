@@ -118,14 +118,14 @@ begin
   atmB.ZIndex:=15;
   AddChild(atmB);
 
-  atmB:=TBDButton.Create(fTexture.ARGBImage, fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+30*2,
+{  atmB:=TBDButton.Create(fTexture.ARGBImage, fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+30*2,
     SMALLBUTTONWIDTH, 'A', 'USE ALPHA', msg);
   atmB.Selected:=Settings.UseAlpha;
   atmB.OnClick:=UseAlphaButtonClick;
   atmB.ParentX:=fLeft;
   atmB.ParentY:=fTop;
   atmB.ZIndex:=15;
-  AddChild(atmB);
+  AddChild(atmB);}
 
 
   fVisible:=true;
@@ -148,7 +148,7 @@ begin
     fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,OverlayImage.Palette[2]);
     fTexture.ARGBImage.Bar(COORDSLEFT,0,COORDSWIDTH,CONTROLSHEIGHT,OverlayImage.Palette[2]);
     fTexture.ARGBImage.Bar(0,3,COORDSLEFT,fTexture.ARGBImage.Height-3,OverlayImage.Palette[3]);
-    if (fMouseX>=0) and (fMouseX<MainImage.Width) and (fMouseY>=0) and (fMouseY<=MainImage.Height) then begin
+    if (fMouseX>=0) and (fMouseX<MainImage.Width) and (fMouseY>=0) and (fMouseY<MainImage.Height) then begin
       MM.Fonts['Black'].OutText(fTexture.ARGBImage,'X='+inttostr(fMouseX),COORDSCENTER,CONTROLSHEIGHT-84,1);
       MM.Fonts['Black'].OutText(fTexture.ARGBImage,'Y='+inttostr(fMouseY),COORDSCENTER,CONTROLSHEIGHT-54,1);
 //      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'C='+inttostr(ActiveColorIndex),COORDSCENTER,CONTROLSHEIGHT-24,1);

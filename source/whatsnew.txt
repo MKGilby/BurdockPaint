@@ -5,6 +5,8 @@ Todo:
 - Autosave in every 1 min.
 - Configurable autosave interval.
 
+2023.02.14
+- Small bugfix in writing color index under cursor.
 
 2023.02.13
 - Bugfix with clickin anomaly. Click was on mouseup in TMouseObject, but was

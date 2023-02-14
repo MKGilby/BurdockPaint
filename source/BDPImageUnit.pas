@@ -535,9 +535,10 @@ begin
   // 1. Clip the source image with the specified area
   clip1:=GetClipBox(0,0,SourceImage.Width,SourceImage.Height,sx,sy,w,h);
   if clip1.x1=-1 then exit;  // Specified area is not overlapping with source image.
-  with clip1 do Log.Trace(Format('PIP: x1=%d, y1=%d, x2=%d, y2=%d, wi=%d, he=%d',[x1,y1,x2,y2,wi,he]));
+//  with clip1 do Log.Trace(Format('PIP: x1=%d, y1=%d, x2=%d, y2=%d, wi=%d, he=%d',[x1,y1,x2,y2,wi,he]));
+  // 2. Clip the target image with remaining area
   clip2:=GetClipBox(0,0,fWidth,fHeight,x,y,clip1.wi,clip1.he);
-  with clip2 do Log.Trace(Format('PIP: x1=%d, y1=%d, x2=%d, y2=%d, wi=%d, he=%d',[x1,y1,x2,y2,wi,he]));
+//  with clip2 do Log.Trace(Format('PIP: x1=%d, y1=%d, x2=%d, y2=%d, wi=%d, he=%d',[x1,y1,x2,y2,wi,he]));
   if clip2.x1<>-1 then begin
     if (colorkey<fPalette.Size) then begin
       for i:=0 to clip2.he-1 do
@@ -555,7 +556,6 @@ begin
     if fChangedArea.Top>clip2.y1 then fChangedArea.Top:=clip2.y1;
     if fChangedArea.Bottom<clip2.y1+clip2.he-1 then fChangedArea.Bottom:=clip2.y1+clip2.he-1;
     fChanged:=true;
-
   end;
 end;
 
@@ -783,7 +783,7 @@ begin
   atm:=TARGBImage.Create(fWidth,fHeight);
   p:=fData;
   pp:=atm.Rawdata;
-  SaveRawDataToFile('data.dat');
+//  SaveRawDataToFile('data.dat');
 {  assign(f,'data.dat');
   rewrite(f,1);
   blockwrite(f,p^,fWidth*fHeight*2);
@@ -794,12 +794,12 @@ begin
       inc(p,2);
       inc(pp,4);
     end;
-  assign(f,'data2.dat');
+{  assign(f,'data2.dat');
   rewrite(f,1);
   blockwrite(f,atm.RawData^,fWidth*fHeight*4);
-  close(f);
-  atm.WriteFile(ChangeFileExt(pFilename,'.tga'),'TGA');
-  atm.WriteFile(pFilename,'PNG');
+  close(f);}
+//  atm.WriteFile(ChangeFileExt(pFilename,'.tga'),'TGA');
+//  atm.WriteFile(pFilename,'PNG');
   FreeAndNil(atm);
 end;
 
