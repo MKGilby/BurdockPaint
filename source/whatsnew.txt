@@ -8,6 +8,7 @@ Todo:
 
 2023.02.15
 - Added color selector to controls. Not yet clickable.
+- Added selected colors to Settings, so they are saved on exit and loaded on startup.
 
 2023.02.14
 - Small bugfix in writing color index under cursor.

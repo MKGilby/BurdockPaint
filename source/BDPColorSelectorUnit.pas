@@ -26,7 +26,7 @@ type
 
 implementation
 
-uses BDPSharedUnit;
+uses BDPSharedUnit, BDPSettingsUnit;
 
 { TColorSelector }
 
@@ -40,7 +40,7 @@ begin
   fHeight:=27;
   SetLength(fColors,fColorCount);
   for i:=0 to fColorCount-1 do
-    fColors[i]:=i;
+    fColors[i]:=Settings.SelectedColors[i];
   fTarget:=iTarget;
   fSelectedIndex:=0;
 end;

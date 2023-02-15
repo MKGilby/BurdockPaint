@@ -27,7 +27,10 @@ type
     fFillShapes,
     fClearKeyColor,
     fUseAlpha:boolean;
+    fColorSelectorColors:array of integer;
+    function fGetSelectedColor(index:integer):integer;
     function fGetSelectedTool(index:integer):string;
+    procedure fSetSelectedColor(index:integer; AValue:integer);
     procedure fSetSelectedTool(index:integer;value:string);
     function fGetSelectedInk(index:integer):string;
     procedure fSetSelectedInk(index:integer;value:string);
@@ -43,16 +46,18 @@ type
     property ClearKeyColor:boolean read fClearKeyColor write fClearKeyColor;
     property UseAlpha:boolean read fUseAlpha write fUseAlpha;
     property ShowSplash:Boolean read fShowSplash write fShowSplash;
+    property SelectedColors[index:integer]:integer read fGetSelectedColor write fSetSelectedColor;
   end;
 
 
 implementation
 
-uses MKINIFile, BDPKeyMappingUnit;
+uses MKINIFile, BDPKeyMappingUnit, BDPSharedUnit;
 
 { TSettings }
 
 constructor TSettings.Create;
+var i:integer;
 begin
   fZoom:=2;
   fZoomLeft:=0;
@@ -73,10 +78,12 @@ begin
   fActiveInk:=0;
   fFillShapes:=false;
   fClearKeyColor:=false;
+  SetLength(fColorSelectorColors,COLORSELECTORCOLORS);
+  for i:=0 to COLORSELECTORCOLORS-1 do fColorSelectorColors[i]:=i;
 end;
 
 procedure TSettings.LoadFromFile(pFilename:String);
-var INI:TIniFile;
+var INI:TIniFile;i:integer;
 begin
   if not FileExists(pFilename) then exit;
   INI:=TIniFile.Create(pFilename);
@@ -104,6 +111,8 @@ begin
   fUseAlpha:=INI.ReadBool('BasicControls','UseAlpha',false);
   fShowSplash:=INI.ReadBool('Settings','ShowSplash',false);
   LoadKeyMap(INI);
+  for i:=0 to COLORSELECTORCOLORS-1 do
+    fColorSelectorColors[i]:=INI.ReadInteger('Colors',Format('Selected%d',[i]),i);
   FreeAndNil(INI);
 end;
 
@@ -124,6 +133,8 @@ begin
   INI.WriteBool('BasicControls','ClearKeyColor',fClearKeyColor);
   INI.WriteBool('BasicControls','UseAlpha',fUseAlpha);
   INI.WriteBool('Settings','ShowSplash',fShowSplash);
+  for i:=0 to COLORSELECTORCOLORS-1 do
+    INI.WriteInteger('Colors',Format('Selected%d',[i]),fColorSelectorColors[i]);
   FreeAndNil(INI);
 end;
 
@@ -132,6 +143,20 @@ begin
   if (index>=0) and (index<6) then
     Result:=fSelectedTools[index]
   else raise Exception.Create(Format('fGetSelectedTool: Index out of range! (%d)',[index]));
+end;
+
+function TSettings.fGetSelectedColor(index:integer):integer;
+begin
+  if (index>=0) and (index<COLORSELECTORCOLORS) then
+    Result:=fColorSelectorColors[index]
+  else raise Exception.Create(Format('fGetSelectedTool: Index out of range! (%d)',[index]));
+end;
+
+procedure TSettings.fSetSelectedColor(index:integer; AValue:integer);
+begin
+  if (index>=0) and (index<COLORSELECTORCOLORS) then
+    fColorSelectorColors[index]:=AValue
+  else raise Exception.Create(Format('fSetSelectedTool: Index out of range! (%d)',[index]));
 end;
 
 procedure TSettings.fSetSelectedTool(index:integer; value:string);
