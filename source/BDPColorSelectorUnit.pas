@@ -13,6 +13,7 @@ type
   TColorSelector=class(TMouseObject)
     constructor Create(iTarget:TARGBImage;iLeft,iTop,iColorCount:integer);
     procedure Draw; override;
+    function Click(Sender:TObject;x, y, buttons: integer): boolean;
   private
     fTarget:TARGBImage;
     fColorCount:integer;
@@ -36,13 +37,14 @@ begin
   fColorCount:=iColorCount;
   fLeft:=iLeft;
   fTop:=iTop;
-  fWidth:=fColorCount*27+6;
-  fHeight:=27;
+  fWidth:=fColorCount*(COLORSELECTORBOXSIZE-3)+COLORSELECTORGAP;
+  fHeight:=COLORSELECTORBOXSIZE;
   SetLength(fColors,fColorCount);
   for i:=0 to fColorCount-1 do
     fColors[i]:=Settings.SelectedColors[i];
   fTarget:=iTarget;
   fSelectedIndex:=0;
+  OnClick:=Self.Click;
 end;
 
 procedure TColorSelector.Draw;
@@ -53,7 +55,7 @@ begin
     fTarget.Bar(fLeft+x-fParentX,fTop-fParentY,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[2]);
     fTarget.Bar(fLeft+x-fParentX+3,fTop-fParentY+3,COLORSELECTORBOXSIZE-6,COLORSELECTORBOXSIZE-6,MainImage.Palette[fColors[i]]);
     x+=COLORSELECTORBOXSIZE-3;
-    if i=0 then x+=6;
+    if i=0 then x+=COLORSELECTORGAP;
   end;
   x:=0;
   for i:=0 to fColorCount-1 do begin
@@ -61,9 +63,25 @@ begin
       fTarget.Bar(fLeft+x-fParentX,fTop-fParentY,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[5]);
       fTarget.Bar(fLeft+x-fParentX+3,fTop-fParentY+3,COLORSELECTORBOXSIZE-6,COLORSELECTORBOXSIZE-6,MainImage.Palette[fColors[i]]);
     end;
-    x+=27;
-    if i=0 then x+=6;
+    x+=COLORSELECTORBOXSIZE-3;
+    if i=0 then x+=COLORSELECTORGAP;
   end;
+end;
+
+function TColorSelector.Click(Sender:TObject; x,y,buttons:integer):boolean;
+var i,cx:integer;
+begin
+  cx:=0;
+  x-=Left;
+  for i:=0 to fColorCount-1 do begin
+    if (cx+3<=x) and (cx+COLORSELECTORBOXSIZE-3>x) then begin
+      fSelectedIndex:=i;
+      ActiveColorIndex:=fColors[i];
+    end;
+    cx+=COLORSELECTORBOXSIZE-3;
+    if i=0 then cx+=COLORSELECTORGAP;
+  end;
+  Result:=true;
 end;
 
 

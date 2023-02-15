@@ -1,5 +1,4 @@
 Todo:
-- Make the color selector clickable.
 - Use the selected color when Opaque ink is selected.
 - CEL put mode (0 on hungarian keyboard).
 - CEL put mode should respect the (K) button.
@@ -7,8 +6,9 @@ Todo:
 - Configurable autosave interval.
 
 2023.02.15
-- Added color selector to controls. Not yet clickable.
+- Added color selector to controls.
 - Added selected colors to Settings, so they are saved on exit and loaded on startup.
+- Clicking on color selector selects the clicked color.
 
 2023.02.14
 - Small bugfix in writing color index under cursor.

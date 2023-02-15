@@ -1,6 +1,7 @@
 unit BDPButtonUnit;
 
 {$mode Delphi}{$H+}
+{$WARN 5024 off : Parameter "$1" not used}
 
 interface
 
@@ -16,9 +17,9 @@ type
     constructor Create(iTarget:TARGBImage); overload;
     destructor Destroy; override;
     procedure Draw; override;
-    function MouseEnter(Sender:TObject;{%H-}x,{%H-}y:integer):boolean;
-    function MouseLeave(Sender:TObject;{%H-}x,{%H-}y:integer):boolean;
-    function Click(Sender:TObject;{%H-}x, {%H-}y, buttons: integer): boolean;
+    function MouseEnter(Sender:TObject;x,y:integer):boolean;
+    function MouseLeave(Sender:TObject;x,y:integer):boolean;
+    function Click(Sender:TObject;x, y, buttons: integer): boolean;
   private
     fParentX,fParentY:integer;
     fHint:string;
