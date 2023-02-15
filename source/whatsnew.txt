@@ -1,5 +1,4 @@
 Todo:
-- Use the selected color when Opaque ink is selected.
 - CEL put mode (0 on hungarian keyboard).
 - CEL put mode should respect the (K) button.
 - Autosave in every 1 min.
@@ -9,6 +8,9 @@ Todo:
 - Added color selector to controls.
 - Added selected colors to Settings, so they are saved on exit and loaded on startup.
 - Clicking on color selector selects the clicked color.
+- The selected color is used when Opaque ink is selected.
+- The selected color is saved into Settings.
+- On startup the color selector selects the box that contains the color saved in Settings.
 
 2023.02.14
 - Small bugfix in writing color index under cursor.

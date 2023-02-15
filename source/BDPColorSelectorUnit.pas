@@ -1,7 +1,7 @@
 unit BDPColorSelectorUnit;
 
 {$mode Delphi}
-
+{$WARN 5024 off : Parameter "$1" not used}
 interface
 
 uses MKMouse2, ARGBImageUnit;
@@ -40,10 +40,12 @@ begin
   fWidth:=fColorCount*(COLORSELECTORBOXSIZE-3)+COLORSELECTORGAP;
   fHeight:=COLORSELECTORBOXSIZE;
   SetLength(fColors,fColorCount);
-  for i:=0 to fColorCount-1 do
-    fColors[i]:=Settings.SelectedColors[i];
-  fTarget:=iTarget;
   fSelectedIndex:=0;
+  for i:=0 to fColorCount-1 do begin
+    fColors[i]:=Settings.SelectedColors[i];
+    if fColors[i]=Settings.ActiveColorIndex then fSelectedIndex:=i;
+  end;
+  fTarget:=iTarget;
   OnClick:=Self.Click;
 end;
 
@@ -76,7 +78,7 @@ begin
   for i:=0 to fColorCount-1 do begin
     if (cx+3<=x) and (cx+COLORSELECTORBOXSIZE-3>x) then begin
       fSelectedIndex:=i;
-      ActiveColorIndex:=fColors[i];
+      Settings.ActiveColorIndex:=fColors[i];
     end;
     cx+=COLORSELECTORBOXSIZE-3;
     if i=0 then cx+=COLORSELECTORGAP;

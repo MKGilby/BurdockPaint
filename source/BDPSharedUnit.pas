@@ -72,7 +72,7 @@ var
   Inks:TBDInks;  // All inks are loaded into this list
   ActiveInk:TBDInk;  // This is the selected ink
 
-  ActiveColorIndex:integer;  // The selected color index
+//  ActiveColorIndex:integer;  // The selected color index
   ActiveCluster:TColorCluster;  // The selected color cluster
 
   // Load assets and create shared objects

@@ -47,10 +47,10 @@ begin
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x,y+2);
         SDL_SetRenderDrawColor(
           PrimaryWindow.Renderer,
-          MainImage.Palette.ColorR[ActiveColorIndex],
-          MainImage.Palette.ColorG[ActiveColorIndex],
-          MainImage.Palette.ColorB[ActiveColorIndex],
-          MainImage.Palette.ColorA[ActiveColorIndex]);
+          MainImage.Palette.ColorR[Settings.ActiveColorIndex],
+          MainImage.Palette.ColorG[Settings.ActiveColorIndex],
+          MainImage.Palette.ColorB[Settings.ActiveColorIndex],
+          MainImage.Palette.ColorA[Settings.ActiveColorIndex]);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x,y);
       end;
     2:begin
@@ -83,10 +83,10 @@ begin
         r.y:=y+4;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         Bar(x,y,2,2,
-          MainImage.Palette.ColorR[ActiveColorIndex],
-          MainImage.Palette.ColorG[ActiveColorIndex],
-          MainImage.Palette.ColorB[ActiveColorIndex],
-          MainImage.Palette.ColorA[ActiveColorIndex]);
+          MainImage.Palette.ColorR[Settings.ActiveColorIndex],
+          MainImage.Palette.ColorG[Settings.ActiveColorIndex],
+          MainImage.Palette.ColorB[Settings.ActiveColorIndex],
+          MainImage.Palette.ColorA[Settings.ActiveColorIndex]);
       end;
     3:begin
         x-=x mod 4;
@@ -118,10 +118,10 @@ begin
         r.y:=y+8;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         Bar(x,y,4,4,
-          MainImage.Palette.ColorR[ActiveColorIndex],
-          MainImage.Palette.ColorG[ActiveColorIndex],
-          MainImage.Palette.ColorB[ActiveColorIndex],
-          MainImage.Palette.ColorA[ActiveColorIndex]);
+          MainImage.Palette.ColorR[Settings.ActiveColorIndex],
+          MainImage.Palette.ColorG[Settings.ActiveColorIndex],
+          MainImage.Palette.ColorB[Settings.ActiveColorIndex],
+          MainImage.Palette.ColorA[Settings.ActiveColorIndex]);
       end;
     4:begin
         x-=x mod 8;
@@ -153,10 +153,10 @@ begin
         r.y:=y+16;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         Bar(x,y,8,8,
-          MainImage.Palette.ColorR[ActiveColorIndex],
-          MainImage.Palette.ColorG[ActiveColorIndex],
-          MainImage.Palette.ColorB[ActiveColorIndex],
-          MainImage.Palette.ColorA[ActiveColorIndex]);
+          MainImage.Palette.ColorR[Settings.ActiveColorIndex],
+          MainImage.Palette.ColorG[Settings.ActiveColorIndex],
+          MainImage.Palette.ColorB[Settings.ActiveColorIndex],
+          MainImage.Palette.ColorA[Settings.ActiveColorIndex]);
       end;
   end;
 end;

@@ -217,7 +217,7 @@ end;
 
 function TBDInkOpaque.GetColorIndexAt(pX,pY: integer):integer;
 begin
-  Result:=ActiveColorIndex;
+  Result:=Settings.ActiveColorIndex;
 end;
 
 procedure TBDInkOpaque.PostProcess;
@@ -226,7 +226,7 @@ begin
   for j:=fTop to fTop+fHeight-1 do
     for i:=fLeft to fLeft+fWidth-1 do
       if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
-        MainImage.PutPixel(i,j,ActiveColorIndex);
+        MainImage.PutPixel(i,j,Settings.ActiveColorIndex);
 end;
 
 // -------------------------------------------------------- [ TBDInkHGrad ] ---

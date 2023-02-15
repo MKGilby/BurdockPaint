@@ -28,6 +28,7 @@ type
     fClearKeyColor,
     fUseAlpha:boolean;
     fColorSelectorColors:array of integer;
+    fActiveColorIndex:integer;
     function fGetSelectedColor(index:integer):integer;
     function fGetSelectedTool(index:integer):string;
     procedure fSetSelectedColor(index:integer; AValue:integer);
@@ -47,6 +48,7 @@ type
     property UseAlpha:boolean read fUseAlpha write fUseAlpha;
     property ShowSplash:Boolean read fShowSplash write fShowSplash;
     property SelectedColors[index:integer]:integer read fGetSelectedColor write fSetSelectedColor;
+    property ActiveColorIndex:integer read fActiveColorIndex write fActiveColorIndex;
   end;
 
 
@@ -80,6 +82,7 @@ begin
   fClearKeyColor:=false;
   SetLength(fColorSelectorColors,COLORSELECTORCOLORS);
   for i:=0 to COLORSELECTORCOLORS-1 do fColorSelectorColors[i]:=i;
+  fActiveColorIndex:=0;
 end;
 
 procedure TSettings.LoadFromFile(pFilename:String);
@@ -113,6 +116,7 @@ begin
   LoadKeyMap(INI);
   for i:=0 to COLORSELECTORCOLORS-1 do
     fColorSelectorColors[i]:=INI.ReadInteger('Colors',Format('Selected%d',[i]),i);
+  fActiveColorIndex:=INI.ReadInteger('Colors','ActiveColor',0);
   FreeAndNil(INI);
 end;
 
@@ -135,6 +139,7 @@ begin
   INI.WriteBool('Settings','ShowSplash',fShowSplash);
   for i:=0 to COLORSELECTORCOLORS-1 do
     INI.WriteInteger('Colors',Format('Selected%d',[i]),fColorSelectorColors[i]);
+  INI.WriteInteger('Colors','ActiveColor',fActiveColorIndex);
   FreeAndNil(INI);
 end;
 
