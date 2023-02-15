@@ -1,12 +1,17 @@
 Todo:
-- Color selector.
+- Make the color selector clickable.
+- Use the selected color when Opaque ink is selected.
 - CEL put mode (0 on hungarian keyboard).
-- CEL put mode should respect the (K) and (A) buttons.
+- CEL put mode should respect the (K) button.
 - Autosave in every 1 min.
 - Configurable autosave interval.
 
+2023.02.15
+- Added color selector to controls. Not yet clickable.
+
 2023.02.14
 - Small bugfix in writing color index under cursor.
+- Removed (A) button. Has no meaning with paletted mode.
 
 2023.02.13
 - Bugfix with clickin anomaly. Click was on mouseup in TMouseObject, but was

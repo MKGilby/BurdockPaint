@@ -35,7 +35,8 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, sdl2, BDPToolsUnit, BDPInksUnit, BDPMessageUnit;
+uses SysUtils, BDPSharedUnit, sdl2, BDPToolsUnit, BDPInksUnit, BDPMessageUnit,
+  BDPColorSelectorUnit;
 
 { TBDControls }
 
@@ -45,6 +46,7 @@ var
   atmT:TBDTool;
   atmI:TBDInk;
   atmB:TBDButton;
+  atmC:TColorSelector;
   msg:TMessage;
 begin
   inherited Create;
@@ -118,6 +120,13 @@ begin
   atmB.ZIndex:=15;
   AddChild(atmB);
 
+  atmC:=TColorSelector.Create(fTexture.ARGBImage, fLeft+COLORSELECTORLEFT, fTop+COLORSELECTORTOP, 8);
+  atmC.ParentX:=fLeft;
+  atmC.ParentY:=fTop;
+  atmC.ZIndex:=15;
+  atmC.Name:='ColorSelector';
+  AddChild(atmC);
+
 {  atmB:=TBDButton.Create(fTexture.ARGBImage, fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+30*2,
     SMALLBUTTONWIDTH, 'A', 'USE ALPHA', msg);
   atmB.Selected:=Settings.UseAlpha;
@@ -151,9 +160,7 @@ begin
     if (fMouseX>=0) and (fMouseX<MainImage.Width) and (fMouseY>=0) and (fMouseY<MainImage.Height) then begin
       MM.Fonts['Black'].OutText(fTexture.ARGBImage,'X='+inttostr(fMouseX),COORDSCENTER,CONTROLSHEIGHT-84,1);
       MM.Fonts['Black'].OutText(fTexture.ARGBImage,'Y='+inttostr(fMouseY),COORDSCENTER,CONTROLSHEIGHT-54,1);
-//      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'C='+inttostr(ActiveColorIndex),COORDSCENTER,CONTROLSHEIGHT-24,1);
       MM.Fonts['Black'].OutText(fTexture.ARGBImage,'C='+inttostr(MainImage.GetPixel(fMouseX,fMouseY)),COORDSCENTER,CONTROLSHEIGHT-24,1);
-//      MM.Fonts['Black'].OutText(fTexture.ARGBImage,inttostr(fMouseX)+', '+inttostr(fMouseY),WINDOWWIDTH-100,CONTROLSHEIGHT-21,1)
     end else begin
       if (fMouseX>-1000) and (fMouseX<1000) then
         MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'X='+inttostr(fMouseX),COORDSCENTER,CONTROLSHEIGHT-84,1)
@@ -164,7 +171,6 @@ begin
       else
         MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'Y=OUT',COORDSCENTER,CONTROLSHEIGHT-54,1);
       MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'C=?',COORDSCENTER,CONTROLSHEIGHT-24,1);
-//      MM.Fonts['Red'].OutText(fTexture.ARGBImage,inttostr(fMouseX)+', '+inttostr(fMouseY),WINDOWWIDTH-100,CONTROLSHEIGHT-21,1);
     end;
     inherited Draw;
     fTexture.Update;
