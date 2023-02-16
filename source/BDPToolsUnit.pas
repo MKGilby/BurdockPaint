@@ -66,8 +66,8 @@ type
   TBDToolDraw=class(TBDTool)
     constructor Create; override;
     function MouseDown(x,y,button:integer):boolean; override;
-    function MouseUp({%H-}x,{%H-}y,{%H-}button:integer):boolean; override;
-    function MouseMove(x,y,{%H-}button:integer):boolean; override;
+    function MouseUp(x,y,button:integer):boolean; override;
+    function MouseMove(x,y,button:integer):boolean; override;
   private
     fDown:boolean;
   end;
@@ -126,10 +126,24 @@ type
     fColorIndex:integer;
   end;
 
+  { TBDToolPutCel }
+
+  TBDToolPutCel=class(TBDTool)
+    constructor Create; override;
+    procedure Initialize;
+    function Click(x,y,button:integer):boolean; override;
+    procedure Draw; override;
+    procedure Clear; override;
+  private
+    fSX,fSY:integer;
+    fColorIndex:integer;
+  end;
+
 implementation
 
 uses
   BDPSharedUnit, MKToolbox, Logger, BDPMessageUnit, BDPImageUnit;
+
 
 // ------------------------------------------------------------ [ TBDTool ] ---
 
@@ -195,6 +209,7 @@ begin
   AddObject('LINE',TBDToolLine.Create);
   AddObject('SEP.',TBDToolSep.Create);
   AddObject('GETCEL',TBDToolGetCel.Create);
+  AddObject('PUTCEL',TBDToolPutCel.Create);
 end;
 
 // --------------------------------------------------------- [ TBDToolBox ] ---
@@ -924,7 +939,6 @@ end;
 constructor TBDToolGetCel.Create;
 begin
   inherited Create;
-  inherited ;
   fName:='GETCEL';
   fHint:=uppercase('Get a part of the image into a temporary image.');
   fColorIndex:=0;
@@ -998,6 +1012,39 @@ begin
         OverlayImage.Rectangle(fSX,fSY,fX,fY,0);
       end;
   end;
+end;
+
+// ------------------------------------------------------ [ TBDToolPutCEL ] ---
+
+constructor TBDToolPutCel.Create;
+begin
+  inherited Create;
+  fName:='PUTCEL';
+  fHint:=uppercase('Paste the temporary image to the image.');
+  fColorIndex:=0;
+end;
+
+procedure TBDToolPutCel.Initialize;
+begin
+  CELHelperImage.Palette.CopyColorsFrom(CELImage.Palette);
+  CELHelperImage.Palette.Resize(CELHelperImage.Palette.Size+1);
+  CELHelperImage.Palette[CELHelperImage.Palette.Size]:=0;
+  CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,CELHelperImage.Palette.Size);
+end;
+
+function TBDToolPutCel.Click(x,y,button:integer):boolean;
+begin
+  Result:=inherited Click(x,y,button);
+end;
+
+procedure TBDToolPutCel.Draw;
+begin
+  CELHelperImage.PutImage(fX,fY,CELImage);
+end;
+
+procedure TBDToolPutCel.Clear;
+begin
+  CELHelperImage.BarWH(fX,fY,CELImage.Width,CELImage.Height,CELHelperImage.Palette.Size);
 end;
 
 end.

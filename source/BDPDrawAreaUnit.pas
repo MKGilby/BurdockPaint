@@ -90,6 +90,8 @@ begin
   MainImage.RenderToTexture(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
   ActiveTool.Draw;
 //  InfoBar.Draw;
+  if ActiveTool.Name='PUTCEL' then
+    CELHelperImage.RenderToTextureAsOverlay(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
   OverlayImage.RenderToTextureAsOverlay(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
   fTexture.Update;
   PutTexture(0,0,fTexture);

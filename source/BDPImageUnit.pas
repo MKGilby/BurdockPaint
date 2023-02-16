@@ -27,8 +27,10 @@ type
     // Draws a filled circle. Sets changed area accordingly.
     // Uses Bresenham's circle drawing algorithm.
     procedure FilledCircle(cx,cy,r:integer;ColorIndex:word);
-    // Draws a filled rectangle.Sets changed area accordingly.
+    // Draws a filled rectangle. Sets changed area accordingly.
     procedure Bar(x1,y1,x2,y2:integer;ColorIndex:word);
+    // Draws a filled rectangle. Sets changed area accordingly.
+    procedure BarWH(x1,y1,wi,he:integer;ColorIndex:word);
     // Draws a rectangle. Sets changed area accordingly.
     procedure Rectangle(x1,y1,x2,y2:integer;ColorIndex:word);
     // Draws a horizontal line. Sets changed area accordingly.
@@ -373,6 +375,30 @@ begin
     for j:=y1 to y2 do begin
       p:=fData+(j*fWidth)*2;
       for i:=x1 to x2 do
+        word((p+i*2)^):=ColorIndex;
+    end;
+  end;
+end;
+
+procedure TBDImage.BarWH(x1,y1,wi,he:integer; ColorIndex:word);
+var i,j:integer;p:pointer;
+begin
+  // If overlaps our image
+  if (x1<fWidth) and (x1+wi>0) and (y1<fHeight) and (y1+he>0) then begin
+    // Still check for clipping
+    if x1<0 then begin wi+=x1;x1:=0;end;
+    if x1+wi>fWidth then wi:=fWidth-x1;
+    if y1<0 then begin he+=y1;y1:=0;end;
+    if y1+he>fHeight then he:=fHeight-y1;
+    fChanged:=true;
+    if fChangedArea.Left>x1 then fChangedArea.Left:=x1;
+    if fChangedArea.Right<x1+wi-1 then fChangedArea.Right:=x1+wi-1;
+    if fChangedArea.Top>y1 then fChangedArea.Top:=y1;
+    if fChangedArea.Bottom<y1+he-1 then fChangedArea.Bottom:=y1+he-1;
+
+    for j:=0 to he-1 do begin
+      p:=fData+((y1+j)*fWidth+x1)*2;
+      for i:=0 to wi-1 do
         word((p+i*2)^):=ColorIndex;
     end;
   end;
@@ -799,7 +825,7 @@ begin
   blockwrite(f,atm.RawData^,fWidth*fHeight*4);
   close(f);}
 //  atm.WriteFile(ChangeFileExt(pFilename,'.tga'),'TGA');
-//  atm.WriteFile(pFilename,'PNG');
+  atm.WriteFile(pFilename,'PNG');
   FreeAndNil(atm);
 end;
 

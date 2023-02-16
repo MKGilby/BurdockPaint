@@ -46,6 +46,9 @@ type
     // Copies colors from the specified palette. Omit count to copy all
     // colors from start, omit start to copy whole palette.
     procedure CopyColorsFrom(Source:TBDPalette;start:integer=0;count:integer=-1);
+
+    // Resizes the palette, retaining color data that fits into new size.
+    procedure Resize(newSize:integer);
   private
     fEntries:pointer;
     fMaxEntries:integer;
@@ -205,6 +208,23 @@ begin
     fEntries:=Getmem(fMaxEntries*4);
   end;
   for i:=0 to fMaxEntries do Colors[i]:=Source.Colors[i];
+end;
+
+procedure TBDPalette.Resize(newSize:integer);
+var p:pointer;i:integer;
+begin
+  p:=fEntries;
+  getmem(fEntries,newSize*4);
+  if fMaxEntries>newSize then
+    move(p^,fEntries^,newSize*4)
+  else begin
+    move(p^,fEntries^,fMaxEntries);
+    for i:=fMaxEntries to newSize-1 do
+      uint32((fEntries+i*4)^):=0;
+  end;
+
+  fMaxEntries:=newSize;
+  Freemem(p);
 end;
 
 function TBDPalette.fGetColor(index:integer):uint32;

@@ -25,7 +25,7 @@ type
 implementation
 
 uses SysUtils, SDL2, BDPSharedUnit, MKToolbox, MKStream, MKMouse2, Logger,
-  BDPMessageUnit, BDPKeyMappingUnit;
+  BDPMessageUnit, BDPKeyMappingUnit, BDPToolsUnit;
 
 { TMain }
 
@@ -128,6 +128,14 @@ begin
       SDL_GetMouseState(@mx,@my);
       ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
       keys[KeyMap[KEY_GETCEL]]:=false;
+    end;
+    if keys[KeyMap[KEY_PUTCEL]] then begin
+      fControls.Visible:=false;
+      ActiveTool:=Tools.ItemByName['PUTCEL'];
+      TBDToolPutCel(ActiveTool).Initialize;
+      SDL_GetMouseState(@mx,@my);
+      ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
+      keys[KeyMap[KEY_PUTCEL]]:=false;
     end;
   until quit;
 end;

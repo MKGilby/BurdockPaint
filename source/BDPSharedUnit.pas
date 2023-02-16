@@ -62,6 +62,7 @@ var
   MainImage:TBDImage;  // The image we are working on
   OverlayImage:TBDImage;  // The image where the tools draw its things
   CELImage:TBDImage;  // The "clipboard" of image
+  CELHelperImage:TBDImage;  // Helper image for PUTCel
   Settings:TSettings;  // All settings in one place
   MessageQueue:TMessageQueue;  // Messaging queue for classes who doesn't know each other
   Cursor:TBDCursor;  // The cursor on drawing area
@@ -159,7 +160,6 @@ begin
   MainImage.Palette.LoadCOL('ntsc.col',0);
   for i:=1 to 15 do
     MainImage.Circle(i*20,random(160)+20,random(10)+15,i);
-  if FileExists(TEMPIMAGEFILE) then MainImage.LoadFromFile(TEMPIMAGEFILE);
   Log.LogStatus('  Creating overlay image...');
   OverlayImage:=TBDImage.Create(320,200);
   OverlayImage.Palette.Colors[0]:=$00000000;
@@ -174,6 +174,9 @@ begin
   OverlayImage.Palette.Colors[9]:=$ffb0b0b0;
   OverlayImage.Palette.Colors[10]:=$ffe0e0e0;
   OverlayImage.Bar(0,0,OverlayImage.Width,OverlayImage.Height,0);
+  Log.LogStatus('  Creating CEL helper image...');
+  CELHelperImage:=TBDImage.Create(320,200);
+  CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,0);
   Log.LogStatus('  Creating information bar...');
   InfoBar:=TBDInfoBar.Create;
   Log.LogStatus('  Creating button gfx...');
@@ -187,6 +190,11 @@ begin
   Log.LogStatus('Loading settings...');
   Settings:=TSettings.Create;
   Settings.LoadFromFile(SETTINGSFILE);
+
+  Log.LogStatus('Loading previous session data...');
+  Log.LogStatus('  Image...');
+  if FileExists(TEMPIMAGEFILE) then MainImage.LoadFromFile(TEMPIMAGEFILE);
+  Log.LogStatus('  CEL...');
   if FileExists(TEMPCELIMAGEFILE) then begin
     CELImage:=TBDImage.Create(16,16);
     CELImage.LoadFromFile(TEMPCELIMAGEFILE);
@@ -196,9 +204,10 @@ end;
 
 procedure FreeAssets;
 begin
+  if Assigned(CELHelperImage) then FreeAndNil(CELHelperImage);
   if Assigned(CELImage) then begin
     CELImage.SaveToFile(TEMPCELIMAGEFILE);
-    CELImage.ExportToPNG('CELtemp.png');
+//    CELImage.ExportToPNG('CELtemp.png');
     FreeAndNil(CELImage);
   end;
   if Assigned(Settings) then begin
