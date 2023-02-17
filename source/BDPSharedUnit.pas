@@ -151,6 +151,7 @@ begin
   LoadSystemFont($ee,$ee,$ee,'White');
   LoadSystemFont($ee,$aa,$cc,'Pinky');
   LoadSystemFont($40,$40,$40,'DarkGray');
+  MM.Load('logofont.png','LogoFont');
   MM.LoadImage('burdock.png','Burdock');
   MM.Images.ItemByName['Burdock'].Resize2x;
   Log.LogStatus('  Creating message queue...');

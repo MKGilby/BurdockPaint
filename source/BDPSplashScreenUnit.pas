@@ -31,7 +31,7 @@ type
 implementation
 
 uses
-  SysUtils, SDL2, BDPSharedUnit;
+  SysUtils, SDL2, BDPSharedUnit, Font2Unit;
 
 const
   SPLASHSCREENWIDTH=480;
@@ -40,6 +40,7 @@ const
 { TBDSplashScreen }
 
 constructor TBDSplashScreen.Create;
+var font:TFont;
 begin
   inherited Create;
   SetBoundsWH(0,0,WINDOWWIDTH,WINDOWHEIGHT);
@@ -49,7 +50,8 @@ begin
   fTexture:=TStreamingTexture.Create(SPLASHSCREENWIDTH,SPLASHSCREENHEIGHT);
   fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,OverlayImage.Palette[2]);
   fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,OverlayImage.Palette[3]);
-  MM.Fonts['Black'].OutText(fTexture.ARGBImage,'BURDOCK PAINT',80,24,0);
+  font:=MM.Fonts['LogoFont'];
+  MM.Fonts['LogoFont'].OutText(fTexture.ARGBImage,'BURDoCK PAINT',80,24,0);
   MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'CODE: GILBY/MKSZTSZ',80,56,0);
   MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'HUNGARY - 2023',80,88,0);
   MM.Images.ItemByName['Burdock'].CopyTo(0,0,46,52,16,(SPLASHSCREENHEIGHT-52) div 2,fTexture.ARGBImage,true);

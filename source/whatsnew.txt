@@ -1,8 +1,15 @@
 Todo:
-- CEL put mode (0 on hungarian keyboard).
+- Finish PutCel.
 - CEL put mode should respect the (K) button.
 - Autosave in every 1 min.
 - Configurable autosave interval.
+
+
+2023.02.17
+- Created a logo font, it is used in the splash screen.
+- Added icon.
+- GetCEL now stores position too.
+- Pressing ESC or ` when in GetCEL or PutCEL cancels curent operation.
 
 2023.02.16
 - Pressing the key below ESC is invokes PUTCel. It doesn't work fully, you can

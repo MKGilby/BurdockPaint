@@ -964,9 +964,9 @@ begin
           CELImage:=TBDImage.Create(x-fSX+1,y-fSY+1);
           CELImage.Palette.CopyColorsFrom(MainImage.Palette);
           CELImage.PutImagePart(0,0,fSX,fSY,x-fSX+1,y-fSY+1,MainImage);
-//          MainImage.PutImagePart(0,0,fSX,fSY,x-fSX+1,y-fSY+1,CELImage);
-          // Get CEL here...
-          fState:=0;
+          CELImage.Left:=fSX;
+          CELImage.Top:=fSY;
+          fState:=-1;
           MessageQueue.AddMessage(MSG_GETCELFINISHED);
           Result:=true;
         end;
@@ -983,6 +983,8 @@ end;
 procedure TBDToolGetCel.Draw;
 begin
   case fState of
+    -1:fState:=0;  // One frame where we don't draw anything before resetting fState.
+                   // This is needed to remove flickering.
     0:begin
         inc(fColorIndex);
         if fColorIndex=length(VibroColors) then fColorIndex:=0;
@@ -1039,7 +1041,14 @@ end;
 
 procedure TBDToolPutCel.Draw;
 begin
-  CELHelperImage.PutImage(fX,fY,CELImage);
+  case fState of
+    0:begin
+        inc(fColorIndex);
+        if fColorIndex=length(VibroColors) then fColorIndex:=0;
+        OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,VIBROCOLORS[fColorIndex]);
+      end;
+  end;
+//  CELHelperImage.PutImage(fX,fY,CELImage);
 end;
 
 procedure TBDToolPutCel.Clear;

@@ -123,18 +123,28 @@ begin
       keys[KeyMap[KEY_QUIT]]:=false;
     end;
     if keys[KeyMap[KEY_GETCEL]] then begin
-      fControls.Visible:=false;
-      ActiveTool:=Tools.ItemByName['GETCEL'];
-      SDL_GetMouseState(@mx,@my);
-      ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
+      if ActiveTool.Pinnable then begin  // Not GetCEL or PutCEL
+        fControls.Visible:=false;
+        ActiveTool:=Tools.ItemByName['GETCEL'];
+        SDL_GetMouseState(@mx,@my);
+        ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
+      end else begin
+        fControls.Visible:=true;
+        fControls.ActivateToolButton(-1);
+      end;
       keys[KeyMap[KEY_GETCEL]]:=false;
     end;
     if keys[KeyMap[KEY_PUTCEL]] then begin
-      fControls.Visible:=false;
-      ActiveTool:=Tools.ItemByName['PUTCEL'];
-      TBDToolPutCel(ActiveTool).Initialize;
-      SDL_GetMouseState(@mx,@my);
-      ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
+      if ActiveTool.Pinnable and (Assigned(CELImage)) then begin  // Not GetCEL or PutCEL
+        fControls.Visible:=false;
+        ActiveTool:=Tools.ItemByName['PUTCEL'];
+        TBDToolPutCel(ActiveTool).Initialize;
+        SDL_GetMouseState(@mx,@my);
+        ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
+      end else begin
+        fControls.Visible:=true;
+        fControls.ActivateToolButton(-1);
+      end;
       keys[KeyMap[KEY_PUTCEL]]:=false;
     end;
   until quit;

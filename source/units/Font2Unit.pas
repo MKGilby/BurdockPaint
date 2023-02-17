@@ -40,6 +40,8 @@
 //      + Added logging of chars and charboxes.
 //   V1.06: Gilby - 2022.05.01
 //      * Followed change in TARGBImage.Copy
+//   V1.07: Gilby - 2023.02.17
+//      * BUGFix in creating from ARGBImage. Missed fRerender.
 
 {$ifdef fpc}
   {$mode delphi}
@@ -110,7 +112,7 @@ uses SDL2, Logger, MKToolBox, SysUtils;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.06';
+  Version='1.07';
 
 // --------------------------------------------------------------- [ TFont ]---
 
@@ -153,6 +155,7 @@ begin
   fHeight:=fTexture.Height;
   fIsColorKey:=false;
   fFixedWidth:=0;
+  fRerender;
 end;
 
 destructor TFont.Destroy;

@@ -33,6 +33,8 @@ type
     procedure BarWH(x1,y1,wi,he:integer;ColorIndex:word);
     // Draws a rectangle. Sets changed area accordingly.
     procedure Rectangle(x1,y1,x2,y2:integer;ColorIndex:word);
+    // Draws a rectangle. Sets changed area accordingly.
+    procedure RectangleWH(x1,y1,wi,he:integer;ColorIndex:word);
     // Draws a horizontal line. Sets changed area accordingly.
     procedure HLine(x1,y1,w:integer;ColorIndex:word);
     // Draws a vertical line. Sets changed area accordingly.
@@ -92,6 +94,8 @@ type
     // Exports the image to PNG.
     procedure ExportToPNG(pFilename:string);
   private
+    // Image position (used for CELImage, leave on 0,0 otherwise)
+    fLeft,fTop:integer;
     // Image dimensions
     fWidth,fHeight:integer;
     // Memory needed for holding pixel data
@@ -107,6 +111,8 @@ type
     // Sub proc for loading data from version 1 file structure.
     procedure LoadFromStreamV1(Source:TStream);
   public
+    property Left:integer read fLeft write fLeft;
+    property Top:integer read fTop write fTop;
     property Width:integer read fWidth;
     property Height:integer read fHeight;
     property Changed:boolean read fChanged write fChanged;
@@ -187,6 +193,8 @@ end;
 
 constructor TBDImage.Create(iWidth,iHeight:integer);
 begin
+  fLeft:=0;
+  fTop:=0;
   fWidth:=iWidth;
   fHeight:=iHeight;
   fDataSize:=fWidth*fHeight*2;
@@ -431,6 +439,33 @@ begin
       word((fData+(y2*fWidth+i)*2)^):=ColorIndex;
     end;
 
+  end;
+end;
+
+procedure TBDImage.RectangleWH(x1,y1,wi,he:integer; ColorIndex:word);
+var i,j:integer;p:pointer;
+begin
+  // If overlaps our image
+  if (x1<fWidth) and (x1+wi>0) and (y1<fHeight) and (y1+he>0) then begin
+    // Still check for clipping
+    if x1<0 then begin wi+=x1;x1:=0;end;
+    if x1+wi>fWidth then wi:=fWidth-x1;
+    if y1<0 then begin he+=y1;y1:=0;end;
+    if y1+he>fHeight then he:=fHeight-y1;
+    fChanged:=true;
+    if fChangedArea.Left>x1 then fChangedArea.Left:=x1;
+    if fChangedArea.Right<x1+wi-1 then fChangedArea.Right:=x1+wi-1;
+    if fChangedArea.Top>y1 then fChangedArea.Top:=y1;
+    if fChangedArea.Bottom<y1+he-1 then fChangedArea.Bottom:=y1+he-1;
+
+    for i:=y1 to y1+he-1 do begin
+      word((fData+(i*fWidth+x1)*2)^):=ColorIndex;
+      word((fData+(i*fWidth+x1+wi-1)*2)^):=ColorIndex;
+    end;
+    for i:=x1 to x1+wi-1 do begin
+      word((fData+(y1*fWidth+i)*2)^):=ColorIndex;
+      word((fData+((y1+he-1)*fWidth+i)*2)^):=ColorIndex;
+    end;
   end;
 end;
 
