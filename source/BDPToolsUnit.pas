@@ -1,7 +1,7 @@
 unit BDPToolsUnit;
 
 {$mode delphi}
-
+{$WARN 5024 off : Parameter "$1" not used}
 interface
 
 uses
@@ -1036,24 +1036,51 @@ end;
 
 function TBDToolPutCel.Click(x,y,button:integer):boolean;
 begin
-  Result:=inherited Click(x,y,button);
+  case fState of
+    0:begin
+        fSX:=x;
+        fSY:=y;
+        inc(fState);
+      end;
+    1:begin
+        fState:=-1;
+        MessageQueue.AddMessage(MSG_GETCELFINISHED);
+        Result:=true;
+      end;
+  end;
+  Result:=true;
 end;
 
 procedure TBDToolPutCel.Draw;
 begin
   case fState of
+    -1:fState:=0;  // One frame where we don't draw anything before resetting fState.
+                   // This is needed to remove flickering.
     0:begin
         inc(fColorIndex);
         if fColorIndex=length(VibroColors) then fColorIndex:=0;
         OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,VIBROCOLORS[fColorIndex]);
       end;
+    1:begin
+        CELHelperImage.PutImage(CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,CELImage);
+//        CELHelperImage.ExportToPNG('celhelper.png');
+      end;
   end;
-//  CELHelperImage.PutImage(fX,fY,CELImage);
 end;
 
 procedure TBDToolPutCel.Clear;
 begin
-  CELHelperImage.BarWH(fX,fY,CELImage.Width,CELImage.Height,CELHelperImage.Palette.Size);
+  case fState of
+    0:begin
+        OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,0);
+//        CELHelperImage.BarWH(fX,fY,CELImage.Width,CELImage.Height,CELHelperImage.Palette.Size);
+      end;
+    1:begin
+//        OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,VIBROCOLORS[fColorIndex]);
+        CELHelperImage.BarWH(CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,CELImage.Width,CELImage.Height,CELHelperImage.Palette.Size);
+      end;
+
+  end;
 end;
 
 end.

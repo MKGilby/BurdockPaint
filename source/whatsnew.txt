@@ -10,6 +10,8 @@ Todo:
 - Added icon.
 - GetCEL now stores position too.
 - Pressing ESC or ` when in GetCEL or PutCEL cancels curent operation.
+- Image position saved into BDP file. (Needed in CEL)
+- PutCEL almost works as expected. Only thing is missing putting the CEL onto the image.
 
 2023.02.16
 - Pressing the key below ESC is invokes PUTCel. It doesn't work fully, you can

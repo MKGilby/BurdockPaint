@@ -812,6 +812,8 @@ begin
   i:=IMAGESAVEVERSION;
   Target.Write(i,1);
   fPalette.SaveToStream(Target);
+  Target.Write(fLeft,2);
+  Target.Write(fTop,2);
   Target.Write(fWidth,2);
   Target.Write(fHeight,2);
   Compress(fData^,Target,fDataSize);
@@ -868,7 +870,9 @@ procedure TBDImage.LoadFromStreamV1(Source:TStream);
 var Xs:TMemoryStream;
 begin
   fPalette.LoadFromStream(Source);
-  fWidth:=0;fHeight:=0;
+  fLeft:=0;fTop:=0;fWidth:=0;fHeight:=0;
+  Source.Read(fLeft,2);
+  Source.Read(fTop,2);
   Source.Read(fWidth,2);
   Source.Read(fHeight,2);
   Freemem(fData);
