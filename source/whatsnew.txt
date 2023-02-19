@@ -1,9 +1,12 @@
 Todo:
-- Finish PutCel.
-- CEL put mode should respect the (K) button.
+- Move VibroColors to a class (don't calculate in every tool).
 - Autosave in every 1 min.
 - Configurable autosave interval.
 
+
+2023.02.19
+- PutCEL now works as intended.
+- PutCEL respects the state of (K) button.
 
 2023.02.17
 - Created a logo font, it is used in the splash screen.
@@ -14,7 +17,7 @@ Todo:
 - PutCEL almost works as expected. Only thing is missing putting the CEL onto the image.
 
 2023.02.16
-- Pressing the key below ESC is invokes PUTCel. It doesn't work fully, you can
+- Pressing ` (the key below ESC) invokes PUTCel. It doesn't work fully, you can
   just move the picked CEL image around with the mouse, until you quit.
   Cannot continue now, I drank a beer and cannot concentrate anymore. :)
 

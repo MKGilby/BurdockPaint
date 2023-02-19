@@ -142,7 +142,8 @@ type
 implementation
 
 uses
-  BDPSharedUnit, MKToolbox, Logger, BDPMessageUnit, BDPImageUnit;
+  BDPSharedUnit, MKToolbox, Logger, BDPMessageUnit, BDPImageUnit,
+  BDPSettingsUnit;
 
 
 // ------------------------------------------------------------ [ TBDTool ] ---
@@ -1036,17 +1037,26 @@ end;
 
 function TBDToolPutCel.Click(x,y,button:integer):boolean;
 begin
-  case fState of
-    0:begin
-        fSX:=x;
-        fSY:=y;
-        inc(fState);
-      end;
-    1:begin
-        fState:=-1;
-        MessageQueue.AddMessage(MSG_GETCELFINISHED);
-        Result:=true;
-      end;
+  if button=1 then begin
+    case fState of
+      0:begin
+          fSX:=x;
+          fSY:=y;
+          inc(fState);
+        end;
+      1:begin
+          fState:=-1;
+          if Settings.ClearKeyColor then
+            MainImage.PutImage(CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,CELImage,Settings.SelectedColors[0])
+          else
+            MainImage.PutImage(CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,CELImage);
+          MessageQueue.AddMessage(MSG_GETCELFINISHED);
+        end;
+    end;
+  end else
+  if button=3 then begin
+    fState:=-1;
+    MessageQueue.AddMessage(MSG_GETCELFINISHED);
   end;
   Result:=true;
 end;
@@ -1060,10 +1070,16 @@ begin
         inc(fColorIndex);
         if fColorIndex=length(VibroColors) then fColorIndex:=0;
         OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,VIBROCOLORS[fColorIndex]);
+        if Settings.ClearKeyColor then
+          CELHelperImage.PutImage(CELImage.Left,CELImage.Top,CELImage,Settings.SelectedColors[0])
+        else
+          CELHelperImage.PutImage(CELImage.Left,CELImage.Top,CELImage);
       end;
     1:begin
-        CELHelperImage.PutImage(CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,CELImage);
-//        CELHelperImage.ExportToPNG('celhelper.png');
+        if Settings.ClearKeyColor then
+          CELHelperImage.PutImage(CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,CELImage,Settings.SelectedColors[0])
+        else
+          CELHelperImage.PutImage(CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,CELImage);
       end;
   end;
 end;
@@ -1073,7 +1089,7 @@ begin
   case fState of
     0:begin
         OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,0);
-//        CELHelperImage.BarWH(fX,fY,CELImage.Width,CELImage.Height,CELHelperImage.Palette.Size);
+        CELHelperImage.BarWH(CELImage.Left,CELImage.Top,CELImage.Width,CELImage.Height,CELHelperImage.Palette.Size);
       end;
     1:begin
 //        OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,VIBROCOLORS[fColorIndex]);
