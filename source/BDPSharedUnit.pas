@@ -41,7 +41,7 @@ const
   MAXPALETTEENTRIES=2048;  // Palette color count hard limit
   POSTPROCESSCOLOR=$FFF0;
 
-  VIBROCOLORS:array[0..15] of integer=(6,6,7,7,8,8,9,9,10,10,9,9,8,8,7,7);
+//  VIBROCOLORS:array[0..15] of integer=(6,6,7,7,8,8,9,9,10,10,9,9,8,8,7,7);
   TEMPIMAGEFILE='temp.bdp';
   TEMPCELIMAGEFILE='tempcel.bdp';
   SETTINGSFILE='BurdockPaint.ini';
@@ -66,6 +66,7 @@ var
   Settings:TSettings;  // All settings in one place
   MessageQueue:TMessageQueue;  // Messaging queue for classes who doesn't know each other
   Cursor:TBDCursor;  // The cursor on drawing area
+  VibroColors:TBDVibroColors;
 
   Tools:TBDTools;  // All tools are loaded into this list
   ActiveTool:TBDTool;  // This is the selected tool
@@ -184,6 +185,7 @@ begin
   CreateButtonGFX;
   Log.LogStatus('  Creating cursor...');
   Cursor:=TBDCursor.Create;
+  VibroColors:=TBDVibroColors.Create(6,10);
   Log.LogStatus('  Creating inks...');
   Inks:=TBDInks.Create;
   Log.LogStatus('  Creating tools...');
@@ -217,6 +219,7 @@ begin
   end;
   if Assigned(Tools) then FreeAndNil(Tools);
   if Assigned(Inks) then FreeAndNil(Inks);
+  if Assigned(VibroColors) then FreeAndNil(VibroColors);
   if Assigned(Cursor) then FreeAndNil(Cursor);
   if Assigned(OverlayImage) then FreeAndNil(OverlayImage);
   if Assigned(MainImage) then begin

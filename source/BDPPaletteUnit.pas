@@ -8,6 +8,15 @@ uses Classes;
 
 type
 
+  { TBDVibroColors }
+
+  TBDVibroColors=class
+    constructor Create(iMinIndex,iMaxIndex:integer);
+    function GetColorIndex:integer;
+  private
+    fMinIndex,fLength:integer;
+  end;
+
   { TBDPalette }
 
   TBDPalette=class
@@ -75,6 +84,23 @@ uses SysUtils, BDPSharedUnit, MKStream, Logger, MyZStreamUnit;
 const
   PALETTEFOURCC='BDPP';
   PALETTESAVEVERSION=1;
+
+{ TBDVibroColors }
+
+constructor TBDVibroColors.Create(iMinIndex, iMaxIndex: integer);
+begin
+  fMinIndex:=iMinIndex;
+  fLength:=iMaxIndex-iMinIndex+1;
+end;
+
+function TBDVibroColors.GetColorIndex: integer;
+var i:integer;
+begin
+  i:=GetTickCount64 mod 1000;
+  if i>500 then i:=1000-i;
+  if i=500 then i:=499;
+  Result:=fMinIndex+(fLength*i) div 500;
+end;
 
 
 { TBDPalette }

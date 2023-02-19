@@ -42,7 +42,6 @@ type
     procedure Clear; override;
   private
     fSX,fSY:integer;
-    fColorIndex:integer;
     procedure DrawBarWithInk(x1,y1,x2,y2:integer);
     procedure DrawRectangleWithInk(x1,y1,x2,y2:integer);
   end;
@@ -56,7 +55,6 @@ type
     procedure Clear; override;
   private
     fSX,fSY:integer;
-    fColorIndex:integer;
     procedure DrawCircleWithInk(cx,cy,r:integer);
     procedure DrawFilledCircleWithInk(cx,cy,r:integer);
   end;
@@ -103,7 +101,6 @@ type
     procedure Clear; override;
   private
     fSX,fSY:integer;
-    fColorIndex:integer;
     procedure DrawLineWithInk(x1,y1,x2,y2:integer);
   end;
 
@@ -123,7 +120,6 @@ type
     procedure Clear; override;
   private
     fSX,fSY:integer;
-    fColorIndex:integer;
   end;
 
   { TBDToolPutCel }
@@ -136,7 +132,6 @@ type
     procedure Clear; override;
   private
     fSX,fSY:integer;
-    fColorIndex:integer;
   end;
 
 implementation
@@ -232,7 +227,6 @@ begin
           fSY:=y;
           Result:=true;
           fState:=1;
-          fColorIndex:=0;
         end;
       1:begin
           ActiveInk.InitializeArea(fSX,fSY,x,y);
@@ -269,9 +263,7 @@ begin
   case fState of
     0:;
     1:begin
-        inc(fColorIndex);
-        if fColorIndex=length(VibroColors) then fColorIndex:=0;
-        OverlayImage.Rectangle(fSX,fSY,fX,fY,VibroColors[fColorIndex]);
+        OverlayImage.Rectangle(fSX,fSY,fX,fY,VibroColors.GetColorIndex);
 
         InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
           'WI='+inttostr(abs(fSX-fX)+1)+' HE='+inttostr(abs(fSY-fY)+1)+' '+
@@ -337,7 +329,6 @@ begin
           fSY:=y;
           Result:=true;
           fState:=1;
-          fColorIndex:=0;
         end;
       1:begin
 //          if abs(fSX-x)>abs(fSY-y) then r:=abs(fSX-x) else r:=abs(fSY-y);
@@ -374,11 +365,9 @@ begin
   case fState of
     0:;
     1:begin
-        inc(fColorIndex);
-        if fColorIndex=length(VibroColors) then fColorIndex:=0;
         r:=round(sqrt(sqr(fSX-fX)+sqr(fSY-fY)));
 //        if abs(fSX-fX)>abs(fSY-fY) then r:=abs(fSX-fX) else r:=abs(fSY-fY);
-        OverlayImage.Circle(fSX,fSY,r,VibroColors[fColorIndex]);
+        OverlayImage.Circle(fSX,fSY,r,VibroColors.GetColorIndex);
 
         InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
           'RADIUS='+inttostr(r)+' '+
@@ -785,7 +774,6 @@ begin
           fSY:=y;
           Result:=true;
           fState:=1;
-          fColorIndex:=0;
         end;
       1:begin
           ActiveInk.InitializeArea(fSX,fSY,x,y);
@@ -814,9 +802,7 @@ begin
   case fState of
     0:;
     1:begin
-        inc(fColorIndex);
-        if fColorIndex=length(VibroColors) then fColorIndex:=0;
-        OverlayImage.Line(fSX,fSY,fX,fY,VibroColors[fColorIndex]);
+        OverlayImage.Line(fSX,fSY,fX,fY,VibroColors.GetColorIndex);
         if (fSX>fX) then begin
           d:=trunc(arctan((fSY-fY)/(fSX-fX))*180/pi)+270;
         end else
@@ -942,7 +928,6 @@ begin
   inherited Create;
   fName:='GETCEL';
   fHint:=uppercase('Get a part of the image into a temporary image.');
-  fColorIndex:=0;
 end;
 
 function TBDToolGetCel.Click(x,y,button:integer):boolean;
@@ -987,15 +972,11 @@ begin
     -1:fState:=0;  // One frame where we don't draw anything before resetting fState.
                    // This is needed to remove flickering.
     0:begin
-        inc(fColorIndex);
-        if fColorIndex=length(VibroColors) then fColorIndex:=0;
-        OverlayImage.VLine(fX,0,OverlayImage.Height,VIBROCOLORS[fColorIndex]);
-        OverlayImage.HLine(0,fY,OverlayImage.Width,VIBROCOLORS[fColorIndex]);
+        OverlayImage.VLine(fX,0,OverlayImage.Height,VibroColors.GetColorIndex);
+        OverlayImage.HLine(0,fY,OverlayImage.Width,VibroColors.GetColorIndex);
       end;
     1:begin
-        inc(fColorIndex);
-        if fColorIndex=length(VibroColors) then fColorIndex:=0;
-        OverlayImage.Rectangle(fSX,fSY,fX,fY,VIBROCOLORS[fColorIndex]);
+        OverlayImage.Rectangle(fSX,fSY,fX,fY,VibroColors.GetColorIndex);
 
         InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
           'WI='+inttostr(abs(fSX-fX)+1)+' HE='+inttostr(abs(fSY-fY)+1)+' '+
@@ -1024,7 +1005,6 @@ begin
   inherited Create;
   fName:='PUTCEL';
   fHint:=uppercase('Paste the temporary image to the image.');
-  fColorIndex:=0;
 end;
 
 procedure TBDToolPutCel.Initialize;
@@ -1067,9 +1047,7 @@ begin
     -1:fState:=0;  // One frame where we don't draw anything before resetting fState.
                    // This is needed to remove flickering.
     0:begin
-        inc(fColorIndex);
-        if fColorIndex=length(VibroColors) then fColorIndex:=0;
-        OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,VIBROCOLORS[fColorIndex]);
+        OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,VibroColors.GetColorIndex);
         if Settings.ClearKeyColor then
           CELHelperImage.PutImage(CELImage.Left,CELImage.Top,CELImage,Settings.SelectedColors[0])
         else

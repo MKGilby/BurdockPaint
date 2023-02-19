@@ -40,7 +40,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, sdl2, BDPInfoBarUnit, BDPKeyMappingUnit;
+uses SysUtils, BDPSharedUnit, sdl2, BDPKeyMappingUnit;
 
 { TBDDrawArea }
 
