@@ -6,7 +6,7 @@ interface
 
 uses MediaManagerUnit, mk_sdl2, ARGBImageUnit, BDPInfoBarUnit, BDPImageUnit,
   BDPSettingsUnit, BDPMessageUnit, BDPCursorUnit, BDPToolsUnit, BDPInksUnit,
-  BDPPaletteUnit;
+  BDPPaletteUnit, BDPUndoUnit;
 
 type
   TSystemColor=record
@@ -27,9 +27,11 @@ const
   COORDSCENTER=COORDSLEFT+COORDSWIDTH div 2;
   NORMALBUTTONWIDTH=127;
   SMALLBUTTONWIDTH=35;  // 27
-  TOOLBUTTONSLEFT=3;
+  UNDOBUTTONSLEFT=3;
+  UNDOBUTTONSTOP=36;
+  TOOLBUTTONSLEFT=UNDOBUTTONSLEFT+NORMALBUTTONWIDTH+3;
   TOOLBUTTONSTOP=6;
-  INKBUTTONSLEFT=643;
+  INKBUTTONSLEFT=720;
   INKBUTTONSTOP=6;
   COLORSELECTORLEFT=TOOLBUTTONSLEFT+2*NORMALBUTTONWIDTH+12;
   COLORSELECTORTOP=6;
@@ -54,6 +56,8 @@ const
   MSG_QUIT=4;
   MSG_GETCELFINISHED=5;
   MSG_MOUSECOORDS=6;
+  MSG_UNDO=7;
+  MSG_REDO=8;
 
 
 var
@@ -73,6 +77,8 @@ var
 
   Inks:TBDInks;  // All inks are loaded into this list
   ActiveInk:TBDInk;  // This is the selected ink
+
+  UndoSystem:TBDUndoSystem;
 
 //  ActiveColorIndex:integer;  // The selected color index
   ActiveCluster:TColorCluster;  // The selected color cluster
@@ -190,6 +196,8 @@ begin
   Inks:=TBDInks.Create;
   Log.LogStatus('  Creating tools...');
   Tools:=TBDTools.Create;
+  Log.LogStatus('  Initializing Undo system...');
+  UndoSystem:=TBDUndoSystem.Create;
   Log.LogStatus('Loading settings...');
   Settings:=TSettings.Create;
   Settings.LoadFromFile(SETTINGSFILE);
@@ -217,6 +225,7 @@ begin
     Settings.SaveToFile(SETTINGSFILE);
     FreeAndNil(Settings);
   end;
+  if Assigned(UndoSystem) then FreeAndNil(UndoSystem);
   if Assigned(Tools) then FreeAndNil(Tools);
   if Assigned(Inks) then FreeAndNil(Inks);
   if Assigned(VibroColors) then FreeAndNil(VibroColors);

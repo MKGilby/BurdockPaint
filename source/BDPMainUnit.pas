@@ -115,6 +115,9 @@ begin
         MSG_MOUSECOORDS:begin
           fControls.SetMouseCoords(msg.DataInt and $7fff,(msg.DataInt and $7fff0000) shr 16);
         end;
+        MSG_UNDO:begin
+          UndoSystem.Undo;
+        end;
       end;
     end;
     HandleMessages;

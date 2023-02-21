@@ -40,7 +40,6 @@ const
 { TBDSplashScreen }
 
 constructor TBDSplashScreen.Create;
-var font:TFont;
 begin
   inherited Create;
   SetBoundsWH(0,0,WINDOWWIDTH,WINDOWHEIGHT);
@@ -50,7 +49,6 @@ begin
   fTexture:=TStreamingTexture.Create(SPLASHSCREENWIDTH,SPLASHSCREENHEIGHT);
   fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,OverlayImage.Palette[2]);
   fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,OverlayImage.Palette[3]);
-  font:=MM.Fonts['LogoFont'];
   MM.Fonts['LogoFont'].OutText(fTexture.ARGBImage,'BURDoCK PAINT',80,24,0);
   MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'CODE: GILBY/MKSZTSZ',80,56,0);
   MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'HUNGARY - 2023',80,88,0);

@@ -57,6 +57,8 @@ begin
   fTexture:=TStreamingTexture.Create(WINDOWWIDTH,CONTROLSHEIGHT);
   fTexture.ARGBImage.Clear;
 
+
+
   msg.TypeID:=MSG_ACTIVATETOOL;
   msg.DataString:='';
   for i:=0 to 5 do begin
@@ -100,6 +102,24 @@ begin
     AddChild(fInkButtons[i]);
   end;
   ActivateInkButton(Settings.ActiveInk);
+
+  msg.TypeID:=MSG_UNDO;
+  atmB:=TBDButton.Create(fTexture.ARGBImage, fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP,
+    NORMALBUTTONWIDTH, 'UNDO', 'UNDO LAST OPERATION', msg);
+//  atmB.OnClick:=FilledButtonClick;
+  atmB.ParentX:=fLeft;
+  atmB.ParentY:=fTop;
+  atmB.ZIndex:=15;
+  AddChild(atmB);
+
+  msg.TypeID:=MSG_REDO;
+  atmB:=TBDButton.Create(fTexture.ARGBImage, fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP+30,
+    NORMALBUTTONWIDTH, 'REDO', 'REDO LAST UNDOED OPERATION', msg);
+//  atmB.OnClick:=FilledButtonClick;
+  atmB.ParentX:=fLeft;
+  atmB.ParentY:=fTop;
+  atmB.ZIndex:=15;
+  AddChild(atmB);
 
   msg.TypeID:=MSG_NONE;
   atmB:=TBDButton.Create(fTexture.ARGBImage, fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP,

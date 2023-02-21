@@ -1,13 +1,19 @@
 Todo:
+- Add Undo/Redo code to Tools.
+- Test Undo/Redo.
+- Create menu like in the original. (Not the same items.)
 - Autosave in every 1 min.
 - Configurable autosave interval.
 - Fix: TBDPalette.CopyColorFrom ignores start and count.
 
+2023.02.21
+- Added Undo/Redo mechanism. (Not tested yet...)
+- Added Undo/Redo buttons. (Not working yet...)
 
 2023.02.19
 - PutCEL now works as intended.
 - PutCEL respects the state of (K) button.
-- Vibrocolors is now a class, and changes colors based on ticks instead of program loops.
+- Vibrocolors is now a class and changes colors based on ticks instead of program loops.
 
 2023.02.17
 - Created a logo font, it is used in the splash screen.
