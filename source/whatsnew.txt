@@ -1,14 +1,24 @@
 Todo:
-- Add Undo/Redo code to Tools.
-- Test Undo/Redo.
+- Add Undo/Redo code to
+  - Draw
+  - Circle
+  - Fill
+  - FillTo
+  - Line
+  - Sep
+  - PutCEL.
+- Limit undo somehow. (Currently it stores all operations while you have free memory...)
+- Create workarea system.
 - Create menu like in the original. (Not the same items.)
 - Autosave in every 1 min.
 - Configurable autosave interval.
 - Fix: TBDPalette.CopyColorFrom ignores start and count.
 
+
 2023.02.21
 - Added Undo/Redo mechanism. (Not tested yet...)
 - Added Undo/Redo buttons. (Not working yet...)
+- Added Undo/Redo code to Box. You can now undo and redo Box drawing.
 
 2023.02.19
 - PutCEL now works as intended.

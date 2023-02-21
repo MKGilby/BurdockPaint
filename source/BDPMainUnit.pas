@@ -118,6 +118,9 @@ begin
         MSG_UNDO:begin
           UndoSystem.Undo;
         end;
+        MSG_REDO:begin
+          UndoSystem.Redo;
+        end;
       end;
     end;
     HandleMessages;

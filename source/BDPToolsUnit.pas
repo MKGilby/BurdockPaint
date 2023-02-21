@@ -219,6 +219,7 @@ begin
 end;
 
 function TBDToolBox.Click(x,y,button:integer):boolean;
+var i:integer;
 begin
   if button=1 then begin
     case fState of
@@ -229,6 +230,9 @@ begin
           fState:=1;
         end;
       1:begin
+          if fSX>x then begin i:=x;x:=fSX;fSX:=i;end;
+          if fSY>y then begin i:=y;y:=fSY;fSY:=i;end;
+          UndoSystem.AddImageUndo(fSX,fSY,x-fSX+1,y-fSY+1);
           ActiveInk.InitializeArea(fSX,fSY,x,y);
           if Settings.FillShapes then begin
             if ActiveInk.SupportsOnTheFly then
@@ -245,6 +249,7 @@ begin
               ActiveInk.PostProcess;
             end;
           end;
+          UndoSystem.AddImageRedoToLastUndo(fSX,fSY,x-fSX+1,y-fSY+1);
           Result:=true;
           fState:=0;
         end;

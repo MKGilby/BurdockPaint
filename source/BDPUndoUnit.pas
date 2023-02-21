@@ -89,7 +89,7 @@ constructor TBDUndoSystem.Create;
 begin
   fList:=TBDUndoList.Create;
   fList.FreeObjects:=true;
-  fPointer:=0;
+  fPointer:=-1;
 end;
 
 destructor TBDUndoSystem.Destroy;
@@ -101,7 +101,7 @@ end;
 procedure TBDUndoSystem.AddImageUndo(Left,Top,Width,Height:integer);
 var atm:TBDUndoItem;atmi:TBDImage;i:integer;
 begin
-  if fPointer<>fList.Count-1 then   // If not the last item, delete items after it.
+  if (fPointer<>fList.Count-1) then   // If not the last item, delete items after it.
     fList.DeleteRange(fPointer+1,fList.Count-1);
   atmi:=TBDImage.Create(Width,Height);
   atmi.Left:=Left;
@@ -115,7 +115,7 @@ end;
 procedure TBDUndoSystem.AddImageRedoToLastUndo(Left,Top,Width,Height:integer);
 var atmi:TBDImage;
 begin
-  if fPointer>0 then begin
+  if fPointer>-1 then begin
     if not fList[fPointer].Redoable then begin
       atmi:=TBDImage.Create(Width,Height);
       atmi.Left:=Left;
