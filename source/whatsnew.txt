@@ -1,8 +1,5 @@
 Todo:
 - Add Undo/Redo code to
-  - Fill
-  - FillTo
-  - Line
   - Sep
   - PutCEL.
 - Limit undo somehow. (Currently it stores all operations while you have free memory...)
@@ -19,6 +16,8 @@ Todo:
 - BugFix: Controls now captures OnMouseDown if none of its child does it.
   This prevents Draw to start drawing without pressing LMB over the draw area.
 - Added Undo/Redo code to Fill.
+- Added Undo/Redo code to FillTo.
+- Added Undo/Redo code to Line.
 
 2023.02.21
 - Added Undo/Redo mechanism. (Not tested yet...)

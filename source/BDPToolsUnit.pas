@@ -656,6 +656,7 @@ begin
 end;
 
 function TBDToolFillTo.Click(x,y,button:integer):boolean;
+var fTempImage:TBDImage;
 begin
   if button=1 then
     case fstate of
@@ -669,9 +670,18 @@ begin
           fTop:=y;
           fRight:=x;
           fBottom:=y;
+
+          fTempImage:=TBDImage.Create(MainImage.Width,MainImage.Height);
+          fTempImage.Palette.CopyColorsFrom(MainImage.Palette);
+          fTempImage.PutImage(0,0,MainImage);
+
           FillToWithPostProcessColor(x,y);
+          UndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+          FreeAndNil(fTempImage);
+
           ActiveInk.InitializeArea(fLeft,fTop,fRight,fBottom);
           ActiveInk.PostProcess;
+          UndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
           fState:=0;
           Result:=true;
         end;
@@ -797,6 +807,7 @@ begin
 end;
 
 function TBDToolLine.Click(x,y,button:integer):boolean;
+var Left,Top,Width,Height:integer;
 begin
   if button=1 then begin
     case fState of
@@ -807,6 +818,21 @@ begin
           fState:=1;
         end;
       1:begin
+          if fSX>x then begin
+            Left:=x;
+            Width:=fSX-x+1;
+          end else begin
+            Left:=fSX;
+            Width:=x-fSX+1;
+          end;
+          if fSY>y then begin
+            Top:=y;
+            Height:=fSY-y+1;
+          end else begin
+            Top:=fSY;
+            Height:=y-fSY+1;
+          end;
+          UndoSystem.AddImageUndo(Left,Top,Width,Height);
           ActiveInk.InitializeArea(fSX,fSY,x,y);
           if ActiveInk.SupportsOnTheFly then
             DrawLineWithInk(fSX,fSY,x,y)
@@ -814,6 +840,7 @@ begin
             MainImage.Line(fSX,fSY,fX,fY,POSTPROCESSCOLOR);
             ActiveInk.PostProcess;
           end;
+          UndoSystem.AddImageRedoToLastUndo(Left,Top,Width,Height);
           Result:=true;
           fState:=0;
         end;

@@ -112,9 +112,9 @@
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
-        <TopLine Value="505"/>
-        <CursorPos Y="543"/>
-        <FoldState Value=" T7AAJ415 PiKjWG T3kH04B pj2jY0C5 piYjH0F4]9giP2B12211]VQjZ2N]Mk2k92R5]IVmA06[e4ajB0B5 PiOiY0H"/>
+        <TopLine Value="798"/>
+        <CursorPos Y="843"/>
+        <FoldState Value=" T7AAJ415 PiKjWG T3kH04A16 pk5m80F4 pigiP2B7]IUjZ2N4]9CkJ2R113 pj2mR06[c4ajB0B[!4OiY0_"/>
         <UsageCount Value="85"/>
         <Loaded Value="True"/>
       </Unit>
@@ -369,14 +369,6 @@
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="BDPUndoUnit.pas"/>
-        <Caret Line="28" Column="9" TopLine="19"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPUndoUnit.pas"/>
-        <Caret Line="79" Column="19" TopLine="53"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPUndoUnit.pas"/>
         <Caret Line="31" Column="6" TopLine="5"/>
       </Position>
       <Position>
@@ -486,6 +478,14 @@
       <Position>
         <Filename Value="BDPToolsUnit.pas"/>
         <Caret Line="535" Column="25" TopLine="491"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPToolsUnit.pas"/>
+        <Caret Line="830" TopLine="704"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPToolsUnit.pas"/>
+        <Caret Line="810" Column="26" TopLine="704"/>
       </Position>
     </JumpHistory>
     <RunParams>
