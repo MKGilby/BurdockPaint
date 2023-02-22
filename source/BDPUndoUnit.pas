@@ -4,7 +4,7 @@ unit BDPUndoUnit;
 
 interface
 
-uses fgl;
+uses fgl, BDPImageUnit;
 
 type
   TBDUndoItemType=(uitImage,uitPalette);
@@ -32,7 +32,7 @@ type
   TBDUndoSystem=class
     constructor Create;
     destructor Destroy; override;
-    procedure AddImageUndo(Left,Top,Width,Height:integer);
+    procedure AddImageUndo(Left,Top,Width,Height:integer;Image:TBDImage=nil);
     procedure AddImageRedoToLastUndo(Left,Top,Width,Height:integer);
     procedure Undo;
     procedure Redo;
@@ -43,7 +43,7 @@ type
 
 implementation
 
-uses SysUtils, BDPImageUnit, BDPSharedUnit;
+uses SysUtils, BDPSharedUnit;
 
 { TBDUndoItem }
 
@@ -98,7 +98,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TBDUndoSystem.AddImageUndo(Left,Top,Width,Height:integer);
+procedure TBDUndoSystem.AddImageUndo(Left,Top,Width,Height:integer;Image:TBDImage);
 var atm:TBDUndoItem;atmi:TBDImage;i:integer;
 begin
   if (fPointer<>fList.Count-1) then   // If not the last item, delete items after it.
@@ -106,7 +106,10 @@ begin
   atmi:=TBDImage.Create(Width,Height);
   atmi.Left:=Left;
   atmi.Top:=Top;
-  atmi.PutImagePart(0,0,Left,Top,Width,Height,MainImage);
+  if Image=nil then
+    atmi.PutImagePart(0,0,Left,Top,Width,Height,MainImage)
+  else
+    atmi.PutImagePart(0,0,Left,Top,Width,Height,Image);
   atm:=TBDUndoItem.Create(uitImage,atmi);
   fList.Add(atm);
   fPointer:=fList.Count-1;

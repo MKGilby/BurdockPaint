@@ -1,7 +1,7 @@
 unit BDPControlsUnit;
 
 {$mode Delphi}{$H+}
-
+{$WARN 5024 off : Parameter "$1" not used}
 interface
 
 uses
@@ -17,13 +17,14 @@ type
     procedure Draw; override;
     procedure ActivateToolButton(index:integer);
     procedure ActivateInkButton(index:integer);
-    function MouseEnter(Sender:TObject;{%H-}x,{%H-}y:integer):boolean;
-    function MouseLeave(Sender:TObject;{%H-}x,{%H-}y:integer):boolean;
-    function MouseMove(Sender:TObject;{%H-}x,{%H-}y:integer):boolean;
-    function Click(Sender:TObject;{%H-}x, {%H-}y, {%H-}buttons: integer):boolean;
-    function FilledButtonClick(Sender:TObject;{%H-}x, {%H-}y, {%H-}buttons: integer):boolean;
-    function ClearKeyColorButtonClick(Sender:TObject;{%H-}x, {%H-}y, {%H-}buttons: integer):boolean;
-    function UseAlphaButtonClick(Sender:TObject;{%H-}x, {%H-}y, {%H-}buttons: integer):boolean;
+    function MouseEnter(Sender:TObject;x,y:integer):boolean;
+    function MouseLeave(Sender:TObject;x,y:integer):boolean;
+    function MouseMove(Sender:TObject;x,y:integer):boolean;
+    function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
+    function Click(Sender:TObject;x,y,buttons: integer):boolean;
+    function FilledButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
+    function ClearKeyColorButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
+    function UseAlphaButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
     procedure SetMouseCoords(x,y:integer);
 //    procedure SetMouseCoords(s:string);
   private
@@ -161,6 +162,7 @@ begin
   OnMouseEnter:=MouseEnter;
   OnMouseLeave:=MouseLeave;
   OnMouseMove:=MouseMove;
+  OnMouseDown:=MouseDown;
   OnClick:=Click;
   fName:='Controls';
 end;
@@ -251,6 +253,11 @@ begin
 end;
 
 function TBDControls.MouseMove(Sender:TObject; x,y:integer):boolean;
+begin
+  Result:=true;
+end;
+
+function TBDControls.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
 begin
   Result:=true;
 end;

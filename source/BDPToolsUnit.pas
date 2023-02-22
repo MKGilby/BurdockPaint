@@ -5,7 +5,7 @@ unit BDPToolsUnit;
 interface
 
 uses
-  Classes, SysUtils, Lists;
+  Classes, SysUtils, Lists, BDPImageUnit;
 
 type
   TBDTool=class
@@ -67,6 +67,8 @@ type
     function MouseUp(x,y,button:integer):boolean; override;
     function MouseMove(x,y,button:integer):boolean; override;
   private
+    fTempImage:TBDImage;
+    fLeft,fTop,fRight,fBottom:integer;
     fDown:boolean;
   end;
 
@@ -137,8 +139,7 @@ type
 implementation
 
 uses
-  BDPSharedUnit, MKToolbox, Logger, BDPMessageUnit, BDPImageUnit,
-  BDPSettingsUnit;
+  BDPSharedUnit, MKToolbox, Logger, BDPMessageUnit, BDPSettingsUnit;
 
 
 // ------------------------------------------------------------ [ TBDTool ] ---
@@ -338,6 +339,7 @@ begin
       1:begin
 //          if abs(fSX-x)>abs(fSY-y) then r:=abs(fSX-x) else r:=abs(fSY-y);
           r:=round(sqrt(sqr(fSX-x)+sqr(fSY-y)));
+          UndoSystem.AddImageUndo(fSX-r,fSY-r,r*2+1,r*2+1);
           ActiveInk.InitializeArea(fSX-r,fSY-r,fSX+r,fSY+r);
           if ActiveInk.SupportsOnTheFly then begin
             if Settings.FillShapes then
@@ -351,6 +353,7 @@ begin
               MainImage.Circle(fSX,fSY,r,POSTPROCESSCOLOR);
             ActiveInk.PostProcess;
           end;
+          UndoSystem.AddImageRedoToLastUndo(fSX-r,fSY-r,r*2+1,r*2+1);
           Result:=true;
           fState:=0;
         end;
@@ -478,8 +481,15 @@ end;
 function TBDToolDraw.MouseDown(x,y,button:integer):boolean;
 begin
   if button=1 then begin
+    fTempImage:=TBDImage.Create(MainImage.Width,MainImage.Height);
+    fTempImage.Palette.CopyColorsFrom(MainImage.Palette);
+    fTempImage.PutImage(0,0,MainImage);
     MainImage.PutPixel(x,y,ActiveInk.GetColorIndexAt(x,y));
     Result:=true;
+    fLeft:=x;
+    fTop:=y;
+    fRight:=x;
+    fBottom:=y;
     fDown:=true;
   end else begin
     Result:=false;
@@ -491,6 +501,9 @@ function TBDToolDraw.MouseUp(x,y,button:integer):boolean;
 begin
   if fDown then begin
     fDown:=false;
+    UndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+    FreeAndNil(fTempImage);
+    UndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
     Result:=true;
   end else Result:=false;
 end;
@@ -499,6 +512,10 @@ function TBDToolDraw.MouseMove(x,y,button:integer):boolean;
 begin
   if fDown then begin
     MainImage.PutPixel(x,y,ActiveInk.GetColorIndexAt(x,y));
+    if fLeft>x then fLeft:=x;
+    if fTop>y then fTop:=y;
+    if fRight<x then fRight:=x;
+    if fBottom<y then fBottom:=y;
     Result:=true;
   end else Result:=false;
 end;
