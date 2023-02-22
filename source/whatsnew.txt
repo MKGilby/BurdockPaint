@@ -1,5 +1,4 @@
 Todo:
-- Limit undo somehow. (Currently it stores all operations while you have free memory...)
 - Create workarea system.
 - Create menu like in the original. (Not the same items.)
 - Autosave in every 1 min.
@@ -17,6 +16,9 @@ Todo:
 - Added Undo/Redo code to Line.
 - Added Undo/Redo code to Sep.
 - Added Undo/Redo code to PutCEL.
+- Added UndoLimit to Settings (16 steps by default).
+- UndoSystem respects UndoLimit. If a new item is added over the limit,
+  the oldest item is removed to keep the item count in the limit.
 
 2023.02.21
 - Added Undo/Redo mechanism. (Not tested yet...)

@@ -43,7 +43,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit;
+uses SysUtils, BDPSharedUnit, BDPSettingsUnit;
 
 { TBDUndoItem }
 
@@ -103,6 +103,7 @@ var atm:TBDUndoItem;atmi:TBDImage;i:integer;
 begin
   if (fPointer<>fList.Count-1) then   // If not the last item, delete items after it.
     fList.DeleteRange(fPointer+1,fList.Count-1);
+  if fList.Count=Settings.UndoLimit then fList.Delete(0);
   atmi:=TBDImage.Create(Width,Height);
   atmi.Left:=Left;
   atmi.Top:=Top;

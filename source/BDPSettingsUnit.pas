@@ -29,6 +29,7 @@ type
     fUseAlpha:boolean;
     fColorSelectorColors:array of integer;
     fActiveColorIndex:integer;
+    fUndoLimit:integer;
     function fGetSelectedColor(index:integer):integer;
     function fGetSelectedTool(index:integer):string;
     procedure fSetSelectedColor(index:integer; AValue:integer);
@@ -49,6 +50,7 @@ type
     property ShowSplash:Boolean read fShowSplash write fShowSplash;
     property SelectedColors[index:integer]:integer read fGetSelectedColor write fSetSelectedColor;
     property ActiveColorIndex:integer read fActiveColorIndex write fActiveColorIndex;
+    property UndoLimit:integer read fUndoLimit write fUndoLimit;
   end;
 
 
@@ -83,6 +85,7 @@ begin
   SetLength(fColorSelectorColors,COLORSELECTORCOLORS);
   for i:=0 to COLORSELECTORCOLORS-1 do fColorSelectorColors[i]:=i;
   fActiveColorIndex:=0;
+  fUndoLimit:=16;
 end;
 
 procedure TSettings.LoadFromFile(pFilename:String);
@@ -113,6 +116,7 @@ begin
   fClearKeyColor:=INI.ReadBool('BasicControls','ClearKeyColor',false);
   fUseAlpha:=INI.ReadBool('BasicControls','UseAlpha',false);
   fShowSplash:=INI.ReadBool('Settings','ShowSplash',false);
+  fUndoLimit:=INI.ReadInteger('Settings','UndoLimit',16);
   LoadKeyMap(INI);
   for i:=0 to COLORSELECTORCOLORS-1 do
     fColorSelectorColors[i]:=INI.ReadInteger('Colors',Format('Selected%d',[i]),i);
@@ -137,6 +141,7 @@ begin
   INI.WriteBool('BasicControls','ClearKeyColor',fClearKeyColor);
   INI.WriteBool('BasicControls','UseAlpha',fUseAlpha);
   INI.WriteBool('Settings','ShowSplash',fShowSplash);
+  INI.WriteInteger('Settings','UndoLimit',fUndoLimit);
   for i:=0 to COLORSELECTORCOLORS-1 do
     INI.WriteInteger('Colors',Format('Selected%d',[i]),fColorSelectorColors[i]);
   INI.WriteInteger('Colors','ActiveColor',fActiveColorIndex);
