@@ -160,7 +160,7 @@ begin
 end;
 
 procedure TBDPalette.LoadFromStream(Source:TStream);
-var s:string;i,size,curr:integer;
+var s:string;size,curr:int64;b:byte;
 begin
   s:=#0#0#0#0;
   Source.Read(s[1],length(s));
@@ -168,11 +168,11 @@ begin
   size:=0;
   Source.Read(Size,4);
   curr:=Source.Position;
-  i:=0;
-  Source.Read(i,1);
-  if i=1 then LoadFromStreamV1(Source)
-  else raise Exception.Create(Format('Unknown palette file version! (%d)',[i]));
-  Source.Position:=curr+Size;
+  b:=0;
+  Source.Read(b,1);
+  if b=1 then LoadFromStreamV1(Source)
+  else raise Exception.Create(Format('Unknown palette file version! (%d)',[b]));
+  Source.Position:=curr+size;
 end;
 
 procedure TBDPalette.LoadFromStreamV1(Source:TStream);
@@ -226,14 +226,18 @@ end;
 procedure TBDPalette.CopyColorsFrom(Source:TBDPalette; start:integer;
   count:integer);
 var
-  i:Integer;
+  i,c:Integer;
 begin
-  if fMaxEntries<>Source.Size then begin
-    Freemem(fEntries);
-    fMaxEntries:=Source.Size;
-    fEntries:=Getmem(fMaxEntries*4);
-  end;
-  for i:=0 to fMaxEntries do Colors[i]:=Source.Colors[i];
+  if (start>=0) and (start<Source.Size) then begin
+    c:=count;
+    if (c=-1) or (start+c>Source.Size) then c:=Source.Size-start;
+    if fMaxEntries<>c then begin
+      Freemem(fEntries);
+      fMaxEntries:=c;
+      fEntries:=Getmem(fMaxEntries*4);
+    end;
+    for i:=0 to fMaxEntries do Colors[i]:=Source.Colors[start+i];
+  end;  // Start is out of range so nothing to copy.
 end;
 
 procedure TBDPalette.Resize(newSize:integer);

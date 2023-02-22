@@ -3,10 +3,9 @@ Todo:
 - Create menu like in the original. (Not the same items.)
 - Autosave in every 1 min.
 - Configurable autosave interval.
-- Fix: TBDPalette.CopyColorFrom ignores start and count.
 
 
-2023.02.21
+2023.02.22
 - Added Undo/Redo code to Circle.
 - Added Undo/Redo code to Draw.
 - BugFix: Controls now captures OnMouseDown if none of its child does it.
@@ -19,6 +18,7 @@ Todo:
 - Added UndoLimit to Settings (16 steps by default).
 - UndoSystem respects UndoLimit. If a new item is added over the limit,
   the oldest item is removed to keep the item count in the limit.
+- Fix: TBDPalette.CopyColorFrom ignored start and count.
 
 2023.02.21
 - Added Undo/Redo mechanism. (Not tested yet...)
