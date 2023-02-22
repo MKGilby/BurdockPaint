@@ -531,15 +531,24 @@ begin
 end;
 
 function TBDToolFill.Click(x,y,button:integer):boolean;
+var fTempImage:TBDImage;
 begin
   if button=1 then begin
     fLeft:=x;
     fTop:=y;
     fRight:=x;
     fBottom:=y;
+    fTempImage:=TBDImage.Create(MainImage.Width,MainImage.Height);
+    fTempImage.Palette.CopyColorsFrom(MainImage.Palette);
+    fTempImage.PutImage(0,0,MainImage);
+
     FloodFillWithPostProcessColor(x,y);
+
+    UndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+    FreeAndNil(fTempImage);
     ActiveInk.InitializeArea(fLeft,fTop,fRight,fBottom);
     ActiveInk.PostProcess;
+    UndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
     Result:=true;
   end else Result:=false;
 end;

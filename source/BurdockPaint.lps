@@ -50,7 +50,6 @@
       <Unit>
         <Filename Value="BDPControlsUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <CursorPos Y="27"/>
         <UsageCount Value="118"/>
@@ -111,10 +110,11 @@
       <Unit>
         <Filename Value="BDPToolsUnit.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
-        <TopLine Value="477"/>
-        <CursorPos Y="518"/>
-        <FoldState Value=" T7AAJ325 PiBjWG T3kH04B pj2jY0C415 pk8kg2B0412[D4VmZ2R5]XVmA064 piajB0B[,4OiY0v"/>
+        <TopLine Value="505"/>
+        <CursorPos Y="543"/>
+        <FoldState Value=" T7AAJ415 PiKjWG T3kH04B pj2jY0C5 piYjH0F4]9giP2B12211]VQjZ2N]Mk2k92R5]IVmA06[e4ajB0B5 PiOiY0H"/>
         <UsageCount Value="85"/>
         <Loaded Value="True"/>
       </Unit>
@@ -161,7 +161,6 @@
         <CursorPos X="21" Y="26"/>
         <UsageCount Value="36"/>
         <Loaded Value="True"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="BDPUndoUnit.pas"/>
@@ -169,7 +168,6 @@
         <EditorIndex Value="7"/>
         <TopLine Value="48"/>
         <CursorPos X="56" Y="112"/>
-        <FoldState Value=" T7DEC T3i605713 PiBj40l"/>
         <UsageCount Value="26"/>
         <Loaded Value="True"/>
       </Unit>
@@ -371,14 +369,6 @@
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="BDPUndoUnit.pas"/>
-        <Caret Line="47" Column="13" TopLine="19"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPUndoUnit.pas"/>
-        <Caret Line="20" Column="18"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPUndoUnit.pas"/>
         <Caret Line="28" Column="9" TopLine="19"/>
       </Position>
       <Position>
@@ -488,6 +478,14 @@
       <Position>
         <Filename Value="BDPControlsUnit.pas"/>
         <Caret Line="261" Column="16" TopLine="259"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPToolsUnit.pas"/>
+        <Caret Line="79" Column="10" TopLine="31"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPToolsUnit.pas"/>
+        <Caret Line="535" Column="25" TopLine="491"/>
       </Position>
     </JumpHistory>
     <RunParams>

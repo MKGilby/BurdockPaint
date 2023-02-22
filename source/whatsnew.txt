@@ -18,7 +18,7 @@ Todo:
 - Added Undo/Redo code to Draw.
 - BugFix: Controls now captures OnMouseDown if none of its child does it.
   This prevents Draw to start drawing without pressing LMB over the draw area.
-
+- Added Undo/Redo code to Fill.
 
 2023.02.21
 - Added Undo/Redo mechanism. (Not tested yet...)
