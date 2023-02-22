@@ -957,8 +957,12 @@ end;
 function TBDToolSep.Click(x,y,button:integer):boolean;
 var i,j,sc:integer;
   fLeft,fRight,fTop,fBottom:integer;
+  fTempImage:TBDImage;
 begin
   if button=1 then begin
+    fTempImage:=TBDImage.Create(MainImage.Width,MainImage.Height);
+    fTempImage.Palette.CopyColorsFrom(MainImage.Palette);
+    fTempImage.PutImage(0,0,MainImage);
     fLeft:=MainImage.Width;
     fRight:=-1;
     fTop:=MainImage.Height;
@@ -973,8 +977,11 @@ begin
           if j>fBottom then fBottom:=j;
           if j<fTop then fTop:=j;
         end;
+    UndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+    FreeAndNil(fTempImage);
     ActiveInk.InitializeArea(fLeft,fTop,fRight,fBottom);
     ActiveInk.PostProcess;
+    UndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
     Result:=true;
   end else Result:=false;
 end;
@@ -1084,10 +1091,14 @@ begin
         end;
       1:begin
           fState:=-1;
+          CelImage.Left:=CelImage.Left+fX-fSX;
+          CelImage.Top:=CelImage.Top+fY-fSY;
+          UndoSystem.AddImageUndo(CelImage.Left,Celimage.Top,CelImage.Width,CELImage.Height);
           if Settings.ClearKeyColor then
-            MainImage.PutImage(CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,CELImage,Settings.SelectedColors[0])
+            MainImage.PutImage(CELImage.Left,CELImage.Top,CELImage,Settings.SelectedColors[0])
           else
-            MainImage.PutImage(CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,CELImage);
+            MainImage.PutImage(CELImage.Left,CELImage.Top,CELImage);
+          UndoSystem.AddImageRedoToLastUndo(CelImage.Left,Celimage.Top,CelImage.Width,CELImage.Height);
           MessageQueue.AddMessage(MSG_GETCELFINISHED);
         end;
     end;

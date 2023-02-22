@@ -1,7 +1,4 @@
 Todo:
-- Add Undo/Redo code to
-  - Sep
-  - PutCEL.
 - Limit undo somehow. (Currently it stores all operations while you have free memory...)
 - Create workarea system.
 - Create menu like in the original. (Not the same items.)
@@ -18,6 +15,8 @@ Todo:
 - Added Undo/Redo code to Fill.
 - Added Undo/Redo code to FillTo.
 - Added Undo/Redo code to Line.
+- Added Undo/Redo code to Sep.
+- Added Undo/Redo code to PutCEL.
 
 2023.02.21
 - Added Undo/Redo mechanism. (Not tested yet...)
