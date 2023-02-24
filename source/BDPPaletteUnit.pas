@@ -41,9 +41,6 @@ type
     // Identify palette file and call appropiate loader method.
     procedure LoadFromStream(Source:TStream);
 
-    // Load palette from stream format V1 (see below).
-    procedure LoadFromStreamV1(Source:TStream);
-
     // Load an entire .COL format palette (256 colors) from file.
     // Loading entry 0 to startindex, entry 1 to startindex+1 and so on.
     procedure LoadCOL(filename:string;startindex:integer); overload;
@@ -67,6 +64,18 @@ type
     function fGetColorG(index:integer):uint8;
     function fGetColorR(index:integer):uint8;
     procedure fSetColor(index:integer; value:uint32);
+    // Creates a compressed stream that contains the data in V1 format.
+    function CreateDataV1:TStream;
+    // Creates a compressed stream that contains the data in V2 format.
+    function CreateDataV2:TStream;
+    // Creates a compressed stream that contains the data in V3 format.
+    function CreateDataV3:TStream;
+    // Load palette from stream format V1 (see below).
+    procedure LoadFromStreamV1(Source:TStream);
+    // Load palette from stream format V2 (see below).
+    procedure LoadFromStreamV2(Source:TStream);
+    // Load palette from stream format V3 (see below).
+    procedure LoadFromStreamV3(Source:TStream);
 
   public
     property Colors[index:integer]:uint32 read fGetColor write fSetColor; default;
@@ -79,11 +88,10 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, MKStream, Logger, MyZStreamUnit;
+uses SysUtils, BDPSharedUnit, MKStream, Logger, MyZStreamUnit, CodingUnit;
 
 const
-  PALETTEFOURCC='BDPP';
-  PALETTESAVEVERSION=1;
+  PALETTEID=$43;
 
 { TBDVibroColors }
 
@@ -133,22 +141,93 @@ begin
 end;
 
 procedure TBDPalette.SaveToStream(Target:TStream);
-var s:string;i,curr:integer;
+var i,curr:integer;Xs,Ys:TStream;
 begin
-  s:=PALETTEFOURCC;
-  Target.Write(s[1],length(s));
+  i:=PALETTEID;
+  Target.Write(i,1);
   curr:=Target.Position;
   i:=0;
   Target.Write(i,4);
-  i:=PALETTESAVEVERSION;
-  Target.Write(i,1);
-  i:=fMaxEntries;
-  Target.Write(i,2);
-  Compress(fEntries^,Target,i*4);
-  i:=Target.Position-curr;
+  Xs:=CreateDataV1;
+  Ys:=CreateDataV2;
+  if Xs.Size<=Ys.Size then begin
+    FreeAndNil(Ys);
+  end else begin
+    FreeAndNil(Xs);
+    Xs:=Ys;
+  end;
+  Ys:=CreateDataV3;
+  if Xs.Size<=Ys.Size then begin
+    Target.CopyFrom(Xs,Xs.Size);
+  end else begin
+    Target.CopyFrom(Ys,Ys.Size);
+  end;
+  FreeAndNil(Xs);
+  FreeAndNil(Ys);
+  i:=Target.Position-curr-4;
   Target.Position:=curr;
   Target.write(i,4);
   Target.Position:=Target.Position+i;
+end;
+
+function TBDPalette.CreateDataV1:TStream;
+var Xs:TMemoryStream;i:integer;
+begin
+  Result:=TMemoryStream.Create;
+  Xs:=TMemoryStream.Create;
+  i:=1;
+  Xs.Write(i,1);
+  i:=fMaxEntries;
+  Xs.Write(i,2);
+  Xs.Write(fEntries^,i*4);
+  Xs.Position:=0;
+//  Xs.SaveToFile('ntsc1.dat');
+  CompressStream(Xs,Result,Xs.Size);
+  FreeAndNil(Xs);
+  Result.Position:=0;
+end;
+
+function TBDPalette.CreateDataV2:TStream;
+var Xs:TMemoryStream;i,j:integer;
+begin
+  Result:=TMemoryStream.Create;
+  Xs:=TMemoryStream.Create;
+  i:=2;
+  Xs.Write(i,1);
+  i:=fMaxEntries;
+  Xs.Write(i,2);
+  for j:=0 to 3 do
+    for i:=0 to fMaxEntries-1 do
+      Xs.Write((fEntries+i*4+j)^,1);
+  Xs.Position:=0;
+//  Xs.SaveToFile('ntsc2.dat');
+  CompressStream(Xs,Result,Xs.Size);
+  FreeAndNil(Xs);
+  Result.Position:=0;
+end;
+
+function TBDPalette.CreateDataV3:TStream;
+var Xs:TMemoryStream;i,j,b:integer;
+begin
+  Result:=TMemoryStream.Create;
+  Xs:=TMemoryStream.Create;
+  i:=3;
+  Xs.Write(i,1);
+  i:=fMaxEntries;
+  Xs.Write(i,2);
+  for j:=0 to 3 do begin
+    b:=0;
+    for i:=0 to fMaxEntries-1 do begin
+      b:=byte((fEntries+i*4+j)^)-b;
+      Xs.Write(b,1);
+      b:=byte((fEntries+i*4+j)^);
+    end;
+  end;
+  Xs.Position:=0;
+//  Xs.SaveToFile('ntsc3.dat');
+  CompressStream(Xs,Result,Xs.Size);
+  FreeAndNil(Xs);
+  Result.Position:=0;
 end;
 
 procedure TBDPalette.LoadFromFile(pFilename:string);
@@ -160,23 +239,29 @@ begin
 end;
 
 procedure TBDPalette.LoadFromStream(Source:TStream);
-var s:string;size,curr:int64;b:byte;
+var size,curr:int64;b:byte;Xs:TMemoryStream;
 begin
-  s:=#0#0#0#0;
-  Source.Read(s[1],length(s));
-  if s<>PALETTEFOURCC then raise Exception.Create('Not a palette file!');
+  b:=0;
+  Source.Read(b,1);
+  if b<>PALETTEID then raise Exception.Create(Format('ID is not for palette data! (%.2x)',[b]));
   size:=0;
   Source.Read(Size,4);
   curr:=Source.Position;
+  Xs:=TMemoryStream.Create;
+  UnCompressStream(Source,Xs);
+  Xs.Position:=0;
   b:=0;
-  Source.Read(b,1);
-  if b=1 then LoadFromStreamV1(Source)
-  else raise Exception.Create(Format('Unknown palette file version! (%d)',[b]));
+  Xs.Read(b,1);
+  if b=1 then LoadFromStreamV1(Xs)
+  else if b=2 then LoadFromStreamV2(Xs)
+  else if b=3 then LoadFromStreamV3(Xs)
+  else raise Exception.Create(Format('Unknown palette data version! (%d)',[b]));
+  FreeAndNil(Xs);
   Source.Position:=curr+size;
 end;
 
 procedure TBDPalette.LoadFromStreamV1(Source:TStream);
-var count:integer;Xs:TMemoryStream;
+var count:integer;
 begin
   count:=0;
   Source.Read(count,2);
@@ -187,11 +272,17 @@ begin
   Freemem(fEntries);
   fMaxEntries:=count;
   fEntries:=GetMem(fMaxEntries*4);
-  Xs:=TMemoryStream.Create;
-  UnCompressStream(Source,Xs);
-  Xs.Position:=0;
-  Xs.Read(fEntries^,fMaxEntries*4);
-  FreeAndNil(Xs);
+  Source.Read(fEntries^,fMaxEntries*4);
+end;
+
+procedure TBDPalette.LoadFromStreamV2(Source:TStream);
+begin
+
+end;
+
+procedure TBDPalette.LoadFromStreamV3(Source:TStream);
+begin
+
 end;
 
 procedure TBDPalette.LoadCOL(filename:string; startindex:integer);
@@ -205,7 +296,7 @@ end;
 procedure TBDPalette.LoadCOL(Source:TStream; startindex:integer);
 var buf:array[0..767] of byte;i:integer;p:pointer;
 begin
-  if (startindex+256<fMaxEntries) then begin
+  if (startindex+256<=fMaxEntries) then begin
     buf[0]:=0;
     Source.Read(buf[0],768);
     for i:=0 to 767 do buf[i]:=buf[i]<<2;
@@ -306,16 +397,66 @@ end;
 end.
 
 {
-  Version 1
-  ---------
+  Palette file format
+  -------------------
     Name       Size   Content / Description
-    FourCC      4     'PALE'
-    Size        4     Size of Version+EntryCount+Colors
-    Version     1     1
-    EntryCount  2     Count of entries
-    Colors      ???   ZLib compressed color data
+    ID          1     'C'  (0x43)   Shows that serialized TPalette data follows.
+    Size        4     Size of data
+    Data       ???    ZLib compressed data
+
+  Version 1 uncompressed data structure
+  ---------------------------
+    Name        Size               Content / Description
+    Version     1                  0x01
+    ColorCount  2                  Count of colors
+    Colors      ColorCount*uint32  Color data
+
+  Version 2 uncompressed data structure
+  ---------------------------
+    Name        Size               Content / Description
+    Version     1                  0x02
+    ColorCount  2                  Count of colors
+    ColorsB     ColorCount*byte    Blue color data
+    ColorsG     ColorCount*byte    Green color data
+    ColorsR     ColorCount*byte    Red color data
+    ColorsA     ColorCount*byte    Alpha color data
+
+  Version 2 uncompressed data structure
+  ---------------------------
+    Name        Size               Content / Description
+    Version     1                  0x03
+    ColorCount  2                  Count of colors
+    ColorsB     ColorCount*byte    Blue color data delta encoded
+    ColorsG     ColorCount*byte    Green color data delta encoded
+    ColorsR     ColorCount*byte    Red color data delta encoded
+    ColorsA     ColorCount*byte    Alpha color data delta encoded
+
+  Delta encoding
+  --------------
+    First byte is the same as original data
+    Second and other bytes are difference from the previous original data.
+
+    Example:
+      Original data:  01 02 04 05 01 02 01 01
+      Delta encoded:  01 01 02 01 FC 01 FF 00
+
+      Encoding:       First=01
+                      02-01=01
+                      04-02=02
+                      05-04=01
+                      (01-05) and FF=FC
+                      02-01=01
+                      (01-02) and FF=FF
+                      01-01=00
+
+      Decoding:       First=01
+                      01+01=02
+                      02+02=04
+                      04+01=05
+                      (05+FC) and FF=01
+                      01+01=02
+                      (02+FF) and FF=01
+                      01+00=01
+                      04+01=05
 }
-
-
-
 

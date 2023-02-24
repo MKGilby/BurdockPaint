@@ -108,8 +108,12 @@ type
     fChanged:boolean;
     // If pixel data changed what area was affected?
     fChangedArea:TRect;
-    // Sub proc for loading data from version 1 file structure.
-    procedure LoadFromStreamV1(Source:TStream);
+    // Write whole image data to stream.
+    // (probably later will be added method to save only a region)
+    procedure SaveWholeImageDataToStream(Target:TStream);
+    // Read whole image data from stream
+    // (probably later will be added method to load only a region)
+    procedure LoadWholeImageDataFromStream(Source:TStream);
   public
     property Left:integer read fLeft write fLeft;
     property Top:integer read fTop write fTop;
@@ -125,8 +129,8 @@ implementation
 uses SysUtils, MyZStreamUnit, SDL2, Logger, ARGBImageUnit;
 
 const
-  IMAGEFOURCC='BDPI';
-  IMAGESAVEVERSION=1;
+  IMAGEID=$49;
+  PIXELDATAID=$50;
 
 type
   TClipBox=record
@@ -443,7 +447,7 @@ begin
 end;
 
 procedure TBDImage.RectangleWH(x1,y1,wi,he:integer; ColorIndex:word);
-var i,j:integer;p:pointer;
+var i:integer;
 begin
   // If overlaps our image
   if (x1<fWidth) and (x1+wi>0) and (y1<fHeight) and (y1+he>0) then begin
@@ -805,19 +809,19 @@ begin
 end;
 
 procedure TBDImage.SaveToStream(Target:TStream);
-var s:string;i:integer;
+var i,curr:integer;
 begin
-  s:=IMAGEFOURCC;
-  Target.Write(s[1],4);
-  i:=IMAGESAVEVERSION;
+  i:=IMAGEID;
   Target.Write(i,1);
+  curr:=Target.Position;
+  i:=0;
+  Target.Write(i,4);
   fPalette.SaveToStream(Target);
-  Target.Write(fLeft,2);
-  Target.Write(fTop,2);
-  Target.Write(fWidth,2);
-  Target.Write(fHeight,2);
-  Compress(fData^,Target,fDataSize);
-//  Target.Write(fData^,fDataSize);
+  SaveWholeImageDataToStream(Target);
+  i:=Target.Position-curr-4;
+  Target.Position:=curr;
+  Target.write(i,4);
+  Target.Position:=Target.Position+i;
 end;
 
 procedure TBDImage.LoadFromFile(pFilename:string);
@@ -829,61 +833,116 @@ begin
 end;
 
 procedure TBDImage.LoadFromStream(Source:TStream);
-var s:string;b:byte;
+var curr,size:int64;b:byte;
 begin
-  s:=#0#0#0#0;
-  Source.Read(s[1],4);
-  if s<>IMAGEFOURCC then raise Exception.Create('Not an image file!');
   b:=0;
   Source.Read(b,1);
-  if b=1 then LoadFromStreamV1(Source)
-  else raise Exception.Create(Format('Unknown image file version! (%d)',[b]));
+  if b<>IMAGEID then raise Exception.Create('Not an image file!');
+  size:=0;
+  Source.Read(size,4);
+  curr:=Source.Position;
+  fPalette.LoadFromStream(Source);
+  LoadWholeImageDataFromStream(Source);
+  Source.Position:=curr+size;
 end;
 
 procedure TBDImage.ExportToPNG(pFilename:string);
-var atm:TARGBImage;i,j:integer;p,pp:pointer;f:file;//c:uint32;
+var atm:TARGBImage;i,j:integer;p,pp:pointer;
 begin
   atm:=TARGBImage.Create(fWidth,fHeight);
   p:=fData;
   pp:=atm.Rawdata;
-//  SaveRawDataToFile('data.dat');
-{  assign(f,'data.dat');
-  rewrite(f,1);
-  blockwrite(f,p^,fWidth*fHeight*2);
-  close(f);}
   for j:=0 to fHeight-1 do
     for i:=0 to fWidth-1 do begin
       move(fPalette[word(p^)],pp^,4);
       inc(p,2);
       inc(pp,4);
     end;
-{  assign(f,'data2.dat');
-  rewrite(f,1);
-  blockwrite(f,atm.RawData^,fWidth*fHeight*4);
-  close(f);}
-//  atm.WriteFile(ChangeFileExt(pFilename,'.tga'),'TGA');
   atm.WriteFile(pFilename,'PNG');
   FreeAndNil(atm);
 end;
 
-procedure TBDImage.LoadFromStreamV1(Source:TStream);
-var Xs:TMemoryStream;
+procedure TBDImage.SaveWholeImageDataToStream(Target:TStream);
+var i,curr:integer;Xs:TStream;
 begin
-  fPalette.LoadFromStream(Source);
+  i:=PIXELDATAID;
+  Target.Write(i,1);
+  curr:=Target.Position;
+  i:=0;
+  Target.Write(i,4);
+  Xs:=TMemoryStream.Create;
+  i:=1;
+  Xs.Write(i,1);
+  Xs.Write(fLeft,2);
+  Xs.Write(fTop,2);
+  Xs.Write(fWidth,2);
+  Xs.Write(fHeight,2);
+  Xs.Write(fData^,fDataSize);
+  Xs.Position:=0;
+  CompressStream(Xs,Target,Xs.Size);
+  FreeAndNil(Xs);
+  i:=Target.Position-curr-4;
+  Target.Position:=curr;
+  Target.write(i,4);
+  Target.Position:=Target.Position+i;
+end;
+
+procedure TBDImage.LoadWholeImageDataFromStream(Source:TStream);
+var curr,size:int64;b:byte;Xs:TStream;
+begin
+  b:=0;
+  Source.Read(b,1);
+  if b<>PIXELDATAID then raise Exception.Create(Format('PixelData ID expected (0x50), got 0x%.2x!',[b]));
+  size:=0;
+  Source.Read(size,4);
+  curr:=Source.Position;
+  Xs:=TMemoryStream.Create;
+  UnCompressStream(Source,Xs);
+  Source.Position:=curr+size;
+  Xs.Position:=0;
+
+  Xs.Read(b,1);
+  if b<>1 then Exception.Create(Format('Unknown PixelData version! (%d)',[b]));
+
   fLeft:=0;fTop:=0;fWidth:=0;fHeight:=0;
-  Source.Read(fLeft,2);
-  Source.Read(fTop,2);
-  Source.Read(fWidth,2);
-  Source.Read(fHeight,2);
+  Xs.Read(fLeft,2);
+  Xs.Read(fTop,2);
+  Xs.Read(fWidth,2);
+  Xs.Read(fHeight,2);
   Freemem(fData);
   fDataSize:=fWidth*fHeight*2;
   fData:=Getmem(fDataSize);
-  Xs:=TMemoryStream.Create;
-  UnCompressStream(Source,Xs);
-  Xs.Position:=0;
   Xs.Read(fData^,fDataSize);
   FreeAndNil(Xs);
 end;
 
 end.
+
+{
+  Image file format
+  -------------------
+    Name       Size   Content / Description
+    ID          1     'I'  (0x49)   Shows that serialized Image data follows.
+    Size        4     Size of data
+    Palette    ???    Palette data (specified in BDPPaletteUnit)
+    Pixels     ???    Region data (a region of the image or the whole image, specified below)
+
+  Region data format
+  -----------------
+    Name       Size   Content / Description
+    ID          1     'P'  (0x50)   Shows that serialized Region data follows.
+    Size        4     Size of data
+    Data       ???    ZLib compressed pixel data
+
+  Version 1 uncompressed region data structure
+  ---------------------------
+    Name         Size              Content / Description
+    Version      1                 0x01
+    Left         2                 Left position of the topleft pixel
+    Top          2                 Top position of the topleft pixel
+    Width        2                 Width of the pixel array
+    Height       2                 Height of the pixel array
+    ColorIndices width*height*2    Color indices line by line
+
+}
 
