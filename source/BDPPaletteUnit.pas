@@ -91,7 +91,7 @@ implementation
 uses SysUtils, BDPSharedUnit, MKStream, Logger, MyZStreamUnit, CodingUnit;
 
 const
-  PALETTEID=$43;
+  PALETTEDATAID=$43;
 
 { TBDVibroColors }
 
@@ -143,7 +143,7 @@ end;
 procedure TBDPalette.SaveToStream(Target:TStream);
 var i,curr:integer;Xs,Ys:TStream;
 begin
-  i:=PALETTEID;
+  i:=PALETTEDATAID;
   Target.Write(i,1);
   curr:=Target.Position;
   i:=0;
@@ -242,7 +242,7 @@ var size,curr:int64;b:byte;Xs:TMemoryStream;
 begin
   b:=0;
   Source.Read(b,1);
-  if b<>PALETTEID then raise Exception.Create(Format('ID is not for palette data! (%.2x)',[b]));
+  if b<>PALETTEDATAID then raise Exception.Create(Format('ID is not for palette data! (%.2x)',[b]));
   size:=0;
   Source.Read(Size,4);
   curr:=Source.Position;
@@ -430,68 +430,4 @@ begin
 end;
 
 end.
-
-{
-  Palette file format
-  -------------------
-    Name       Size   Content / Description
-    ID          1     'C'  (0x43)   Shows that serialized TPalette data follows.
-    Size        4     Size of data
-    Data       ???    ZLib compressed data
-
-  Version 1 uncompressed data structure
-  ---------------------------
-    Name        Size               Content / Description
-    Version     1                  0x01
-    ColorCount  2                  Count of colors
-    Colors      ColorCount*uint32  Color data
-
-  Version 2 uncompressed data structure
-  ---------------------------
-    Name        Size               Content / Description
-    Version     1                  0x02
-    ColorCount  2                  Count of colors
-    ColorsB     ColorCount*byte    Blue color data
-    ColorsG     ColorCount*byte    Green color data
-    ColorsR     ColorCount*byte    Red color data
-    ColorsA     ColorCount*byte    Alpha color data
-
-  Version 2 uncompressed data structure
-  ---------------------------
-    Name        Size               Content / Description
-    Version     1                  0x03
-    ColorCount  2                  Count of colors
-    ColorsB     ColorCount*byte    Blue color data delta encoded
-    ColorsG     ColorCount*byte    Green color data delta encoded
-    ColorsR     ColorCount*byte    Red color data delta encoded
-    ColorsA     ColorCount*byte    Alpha color data delta encoded
-
-  Delta encoding
-  --------------
-    First byte is the same as original data
-    Second and other bytes are difference from the previous original data.
-
-    Example:
-      Original data:  01 02 04 05 01 02 01 01
-      Delta encoded:  01 01 02 01 FC 01 FF 00
-
-      Encoding:       First=01
-                      02-01=01
-                      04-02=02
-                      05-04=01
-                      (01-05) and FF=FC
-                      02-01=01
-                      (01-02) and FF=FF
-                      01-01=00
-
-      Decoding:       First=01
-                      01+01=02
-                      02+02=04
-                      04+01=05
-                      (05+FC) and FF=01
-                      01+01=02
-                      (02+FF) and FF=01
-                      01+00=01
-                      04+01=05
-}
 

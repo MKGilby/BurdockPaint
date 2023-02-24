@@ -129,8 +129,8 @@ implementation
 uses SysUtils, MyZStreamUnit, SDL2, Logger, ARGBImageUnit;
 
 const
-  IMAGEID=$49;
-  PIXELDATAID=$50;
+  IMAGEDATAID=$49;
+  REGIONDATAID=$52;
 
 type
   TClipBox=record
@@ -811,7 +811,7 @@ end;
 procedure TBDImage.SaveToStream(Target:TStream);
 var i,curr:integer;
 begin
-  i:=IMAGEID;
+  i:=IMAGEDATAID;
   Target.Write(i,1);
   curr:=Target.Position;
   i:=0;
@@ -837,7 +837,7 @@ var curr,size:int64;b:byte;
 begin
   b:=0;
   Source.Read(b,1);
-  if b<>IMAGEID then raise Exception.Create('Not an image file!');
+  if b<>IMAGEDATAID then raise Exception.Create('Not an image file!');
   size:=0;
   Source.Read(size,4);
   curr:=Source.Position;
@@ -865,7 +865,7 @@ end;
 procedure TBDImage.SaveWholeImageDataToStream(Target:TStream);
 var i,curr:integer;Xs:TStream;
 begin
-  i:=PIXELDATAID;
+  i:=REGIONDATAID;
   Target.Write(i,1);
   curr:=Target.Position;
   i:=0;
@@ -892,7 +892,7 @@ var curr,size:int64;b:byte;Xs:TStream;
 begin
   b:=0;
   Source.Read(b,1);
-  if b<>PIXELDATAID then raise Exception.Create(Format('PixelData ID expected (0x50), got 0x%.2x!',[b]));
+  if b<>REGIONDATAID then raise Exception.Create(Format('Region data ID expected (0x%.2x), got 0x%.2x!',[REGIONDATAID,b]));
   size:=0;
   Source.Read(size,4);
   curr:=Source.Position;
@@ -917,32 +917,4 @@ begin
 end;
 
 end.
-
-{
-  Image file format
-  -------------------
-    Name       Size   Content / Description
-    ID          1     'I'  (0x49)   Shows that serialized Image data follows.
-    Size        4     Size of data
-    Palette    ???    Palette data (specified in BDPPaletteUnit)
-    Pixels     ???    Region data (a region of the image or the whole image, specified below)
-
-  Region data format
-  -----------------
-    Name       Size   Content / Description
-    ID          1     'P'  (0x50)   Shows that serialized Region data follows.
-    Size        4     Size of data
-    Data       ???    ZLib compressed pixel data
-
-  Version 1 uncompressed region data structure
-  ---------------------------
-    Name         Size              Content / Description
-    Version      1                 0x01
-    Left         2                 Left position of the topleft pixel
-    Top          2                 Top position of the topleft pixel
-    Width        2                 Width of the pixel array
-    Height       2                 Height of the pixel array
-    ColorIndices width*height*2    Color indices line by line
-
-}
 

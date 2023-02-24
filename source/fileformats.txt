@@ -1,0 +1,171 @@
+                    +---------------------------+
+                    | BurdockPaint file formats |
+                    +---------------------------+
+
+
+1. Basics
+=========
+
+  In this program the data are stored in blocks containing three parts:
+
+    Start    Size     Description
+      0       1       Data ID. Shows the data the blocks contains.
+                      Possible IDs:
+                        I (0x49) - Image data
+                        C (0x43) - Color data
+                        R (0x52) - Region data
+                        U (0x55) - UndoSystem data
+                        O (0x4F) - Undo operation data
+      1       4       Size of the block without the Data ID and the size.
+      5     [Size]    The data in uncompressed or ZLib compressed format.
+
+  Each file is containing exactly one block, but each block can contain more blocks.
+  So referring to a C-block is a block like above with a Data ID 0x43.
+
+
+2. Detailed block formats
+=========================
+
+  Let's see basic blocks first the go to the more complex ones.
+
+
+2.1. Color data
+---------------
+
+  The standalone color data file (usually with .bdc extension) is a C-block.
+  The C-block always has ZLib compressed data. The uncompressed data can
+  be one of the 3 versions, allowing store color data efficiently.
+
+  Version 1 uncompressed data structure
+  -------------------------------------
+    Start   Size                Description (content)
+    0       1                   Version marker (0x01)
+    1       2                   Count of colors
+    3       ColorCount*uint32   Color data
+
+    This is the simplest, stores whole color data after each other.
+
+  Version 2 uncompressed data structure
+  -------------------------------------
+    Start   Size                Description (content)
+    0       1                   Version (0x02)
+    1       2                   Count of colors
+    3       ColorCount*byte     Blue color data
+    .       ColorCount*byte     Green color data
+    .       ColorCount*byte     Red color data
+    .       ColorCount*byte     Alpha color data
+
+    In this version the color channels are separated allowing greater
+    compression ratio in some cases.
+
+  Version 3 uncompressed data structure
+  -------------------------------------
+    Start   Size                Description (content)
+    0       1                  Version (0x03)
+    1       2                  Count of colors
+    3       ColorCount*byte    Blue color data delta encoded
+    .       ColorCount*byte    Green color data delta encoded
+    .       ColorCount*byte    Red color data delta encoded
+    .       ColorCount*byte    Alpha color data delta encoded
+
+    In this version the separated color channels are delta encoded allowing
+    even greater compression ratio with color data containing gradients.
+
+  Delta encoding
+  --------------
+    First byte is the same as original data
+    Second and additional bytes are difference from the previous data byte.
+
+    Example:
+      Original data:  01 02 04 05 01 02 01 01
+      Delta encoded:  01 01 02 01 FC 01 FF 00
+
+      Encoding:       First=01
+                      02-01=01
+                      04-02=02
+                      05-04=01
+                      (01-05) and FF=FC
+                      02-01=01
+                      (01-02) and FF=FF
+                      01-01=00
+
+      Decoding:       First=01
+                      01+01=02
+                      02+02=04
+                      04+01=05
+                      (05+FC) and FF=01
+                      01+01=02
+                      (02+FF) and FF=01
+                      01+00=01
+                      04+01=05
+
+
+2.2. Region data
+----------------
+
+  Region data is the pixel data of a region of the full image. It is not used
+  in standalone files. Region data is an R-block, and always has compressed data.
+  The uncompressed region data has only one version yet.
+
+  Version 1 uncompressed region data structure
+  --------------------------------------------
+    Start   Size                Description (content)
+    0       1                   Version (0x01)
+    1       2                   Left position of the topleft pixel
+    3       2                   Top position of the topleft pixel
+    5       2                   Width of the region
+    7       2                   Height of the region
+    9       width*height*2      Color indices line by line
+
+
+2.3. Image data
+---------------
+
+  This is the first complex block. Image data consist of two parts, color
+  data and region data containing the full image. It is an I-block containing
+  a C-block and an R-block, so itself has uncommpressed data, but the two
+  inside block has compressed data as written above. The usual extension is .bdi.
+
+  Image data format
+  -----------------
+    Start   Size        Description (content)
+    5       ???         Color data in a C-block
+    .       ???         Region data in an R-block
+
+
+2.4. Undo operation data
+------------------------
+
+  Undo operation data contains information about one undo/redo operation.
+  It is an O-block and has uncompressed data with other blocks inside.
+
+  Undo operation data format
+  --------------------------
+    Start   Size        Description (content)
+    5       1           The type of operation
+                          0 - image (drawing, etc.)
+                          1 - color (editing colors)
+
+  if the type of operation is image:
+
+    6       ???         The affected region before the operation in an R-block
+    .       ???         The affected region after the operation in an R-block
+
+  if the type of operation is color:
+
+    6       ???         The affected color data before the operation in a C-block
+    .       ???         The affected color data after the operation in a C-block
+
+
+2.5. UndoSystem data
+--------------------
+
+  UndoSystem data contains info about undo/redo operations. It is an U-block
+  and has uncompressed data with O-blocks inside.
+
+  UndoSystem data format
+  ----------------------
+    Start   Size        Description (content)
+    5       2           Undo/redo operation count
+    7       ???         O-blocks (count times)
+

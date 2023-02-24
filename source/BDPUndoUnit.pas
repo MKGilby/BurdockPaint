@@ -49,6 +49,10 @@ implementation
 
 uses SysUtils, BDPSharedUnit, BDPSettingsUnit;
 
+const
+  UNDODATAID=$55;
+  UNDOOPERATIONDATAID=$4F;
+
 { TBDUndoItem }
 
 constructor TBDUndoItem.Create(iItemType:TBDUndoItemType; iEntity:TObject);
@@ -161,8 +165,19 @@ begin
 end;
 
 procedure TBDUndoSystem.SaveToStream(Target:TStream);
+var i,curr:integer;
 begin
-
+  i:=UndoDataID;
+  Target.Write(i,1);
+  curr:=Target.Position;
+  i:=0;
+  Target.Write(i,4);
+  fPalette.SaveToStream(Target);
+  SaveWholeImageDataToStream(Target);
+  i:=Target.Position-curr-4;
+  Target.Position:=curr;
+  Target.write(i,4);
+  Target.Position:=Target.Position+i;
 end;
 
 procedure TBDUndoSystem.LoadFromFile(Filename:string);
