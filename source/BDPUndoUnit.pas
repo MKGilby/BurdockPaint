@@ -4,7 +4,7 @@ unit BDPUndoUnit;
 
 interface
 
-uses fgl, BDPImageUnit;
+uses classes, fgl, BDPImageUnit;
 
 type
   TBDUndoItemType=(uitImage,uitPalette);
@@ -36,6 +36,10 @@ type
     procedure AddImageRedoToLastUndo(Left,Top,Width,Height:integer);
     procedure Undo;
     procedure Redo;
+    procedure SaveToFile(Filename:string);
+    procedure SaveToStream(Target:TStream);
+    procedure LoadFromFile(Filename:string);
+    procedure LoadFromStream(Source:TStream);
   private
     fList:TBDUndoList;
     fPointer:integer;  // points to the item that will be undoed if requested.
@@ -146,6 +150,32 @@ begin
       fList[fPointer].Redo;
     end;
   end;
+end;
+
+procedure TBDUndoSystem.SaveToFile(Filename:string);
+var Xs:TStream;
+begin
+  Xs:=TFileStream.Create(Filename,fmCreate);
+  SaveToStream(Xs);
+  FreeAndNil(Xs);
+end;
+
+procedure TBDUndoSystem.SaveToStream(Target:TStream);
+begin
+
+end;
+
+procedure TBDUndoSystem.LoadFromFile(Filename:string);
+var Xs:TStream;
+begin
+  Xs:=TFileStream.Create(Filename,fmOpenRead or fmShareDenyNone);
+  LoadFromStream(Xs);
+  FreeAndNil(Xs);
+end;
+
+procedure TBDUndoSystem.LoadFromStream(Source:TStream);
+begin
+
 end;
 
 end.

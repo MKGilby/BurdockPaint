@@ -200,7 +200,6 @@ begin
     for i:=0 to fMaxEntries-1 do
       Xs.Write((fEntries+i*4+j)^,1);
   Xs.Position:=0;
-//  Xs.SaveToFile('ntsc2.dat');
   CompressStream(Xs,Result,Xs.Size);
   FreeAndNil(Xs);
   Result.Position:=0;
@@ -269,20 +268,56 @@ begin
     Log.LogWarning(Format('Too many palette entries in file! Only the first %d entries will be loaded.',[MAXPALETTEENTRIES]));
     count:=MAXPALETTEENTRIES;
   end;
-  Freemem(fEntries);
-  fMaxEntries:=count;
-  fEntries:=GetMem(fMaxEntries*4);
+  if count<>fMaxEntries then begin
+    Freemem(fEntries);
+    fMaxEntries:=count;
+    fEntries:=GetMem(fMaxEntries*4);
+  end;
   Source.Read(fEntries^,fMaxEntries*4);
 end;
 
 procedure TBDPalette.LoadFromStreamV2(Source:TStream);
+var i,j,count:integer;
 begin
-
+  count:=0;
+  Source.Read(count,2);
+  if count>MAXPALETTEENTRIES then begin
+    Log.LogWarning(Format('Too many palette entries in file! Only the first %d entries will be loaded.',[MAXPALETTEENTRIES]));
+    count:=MAXPALETTEENTRIES;
+  end;
+  if count<>fMaxEntries then begin
+    Freemem(fEntries);
+    fMaxEntries:=count;
+    fEntries:=GetMem(fMaxEntries*4);
+  end;
+  for j:=0 to 3 do
+    for i:=0 to fMaxEntries-1 do
+      Source.Read((fEntries+i*4+j)^,1);
 end;
 
 procedure TBDPalette.LoadFromStreamV3(Source:TStream);
+var i,j,count:integer;b,b2:byte;
 begin
-
+  count:=0;
+  Source.Read(count,2);
+  if count>MAXPALETTEENTRIES then begin
+    Log.LogWarning(Format('Too many palette entries in file! Only the first %d entries will be loaded.',[MAXPALETTEENTRIES]));
+    count:=MAXPALETTEENTRIES;
+  end;
+  if count<>fMaxEntries then begin
+    Freemem(fEntries);
+    fMaxEntries:=count;
+    fEntries:=GetMem(fMaxEntries*4);
+  end;
+  b2:=0;
+  for j:=0 to 3 do begin
+    b:=0;
+    for i:=0 to fMaxEntries-1 do begin
+      Source.Read(b2,1);
+      b:=(b+b2) and $ff;
+      byte((fEntries+i*4+j)^):=b;
+    end;
+  end;
 end;
 
 procedure TBDPalette.LoadCOL(filename:string; startindex:integer);
