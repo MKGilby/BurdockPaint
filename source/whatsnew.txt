@@ -2,15 +2,18 @@ Todo:
 - Create workarea system.
 - Create menu like in the original. (Not the same items.)
 - Create PaletteEditor.
-- Save UndoSystem state in workarea.
+- Disable Undo/Redo buttons when nothing to undo/redo.
 - Right clicking on ColorSelector should invoke PaletteEditor.
 - Autosave in every 1 min.
 - Configurable autosave interval.
 
 
+2023.02.25
+- UndoSystem state saved and loaded (temp.bdu).
+
 2023.02.24
 - File format changed.
-- File format documented in source code. (after end.)
+- File format documented in fileformats.txt.
 
 2023.02.22
 - Added Undo/Redo code to Circle.

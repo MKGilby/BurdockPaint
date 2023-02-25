@@ -7,22 +7,33 @@ interface
 uses classes, fgl, BDPImageUnit;
 
 type
-  TBDUndoItemType=(uitImage,uitPalette);
 
   { TBDUndoItem }
 
   TBDUndoItem=class
-    constructor Create(iItemType:TBDUndoItemType;iEntity:TObject);
-    destructor Destroy; override;
-    procedure AddRedo(iEntity:TObject);
-    procedure Undo;
-    procedure Redo;
+    constructor Create;
+    procedure Undo; virtual; abstract;
+    procedure Redo; virtual; abstract;
+    procedure SaveToFile(Filename:string);
+    procedure SaveToStream(Target:TStream); virtual; abstract;
   private
-    fItemType:TBDUndoItemType;
-    fUndoEntity,fRedoEntity:TObject;
-    function fGetRedoable:boolean;
+    fRedoable:boolean;
   public
-    property Redoable:boolean read fGetRedoable;
+    property Redoable:boolean read fRedoable;
+  end;
+
+  { TBDUndoImageItem }
+
+  TBDUndoImageItem=class(TBDUndoItem)
+    constructor Create(iBefore:TBDImage);
+    constructor CreateFromStream(Source:TStream);
+    destructor Destroy; override;
+    procedure AddAfter(iAfter:TBDImage);
+    procedure Undo; override;
+    procedure Redo; override;
+    procedure SaveToStream(Target:TStream); override;
+  private
+    fBefore,fAfter:TBDImage;
   end;
 
   TBDUndoList=TFPGObjectList<TBDUndoItem>;
@@ -40,6 +51,7 @@ type
     procedure SaveToStream(Target:TStream);
     procedure LoadFromFile(Filename:string);
     procedure LoadFromStream(Source:TStream);
+    procedure LoadItemFromStream(Source:TStream);
   private
     fList:TBDUndoList;
     fPointer:integer;  // points to the item that will be undoed if requested.
@@ -52,43 +64,86 @@ uses SysUtils, BDPSharedUnit, BDPSettingsUnit;
 const
   UNDODATAID=$55;
   UNDOOPERATIONDATAID=$4F;
+  UNDOIMAGESUBID=$00;
+  UNDOPALETTESUBID=$01;
 
 { TBDUndoItem }
 
-constructor TBDUndoItem.Create(iItemType:TBDUndoItemType; iEntity:TObject);
+constructor TBDUndoItem.Create;
 begin
-  fItemType:=iItemType;
-  fUndoEntity:=iEntity;
-  fRedoEntity:=nil;
+  fRedoable:=false;
 end;
 
-destructor TBDUndoItem.Destroy;
+procedure TBDUndoItem.SaveToFile(Filename: string);
+var Xs:TStream;
 begin
-  if Assigned(fUndoEntity) then FreeAndNil(fUndoEntity);
-  if Assigned(fRedoEntity) then FreeAndNil(fRedoEntity);
+  Xs:=TFileStream.Create(Filename,fmCreate);
+  SaveToStream(Xs);
+  FreeAndNil(Xs);
+end;
+
+{ TBDUndoImageItem }
+
+constructor TBDUndoImageItem.Create(iBefore:TBDImage);
+begin
+  inherited Create;
+  fBefore:=iBefore;
+  fAfter:=nil;
+end;
+
+constructor TBDUndoImageItem.CreateFromStream(Source:TStream);
+begin
+  inherited Create;
+  fBefore:=TBDImage.Create(16,16);
+  fBefore.LoadFromStream(Source);
+  fAfter:=TBDImage.Create(16,16);
+  fAfter.LoadFromStream(Source);
+  fRedoable:=true;
+end;
+
+destructor TBDUndoImageItem.Destroy;
+begin
+  if Assigned(fBefore) then FreeAndNil(fBefore);
+  if Assigned(fAfter) then FreeAndNil(fAfter);
   inherited Destroy;
 end;
 
-procedure TBDUndoItem.AddRedo(iEntity:TObject);
+procedure TBDUndoImageItem.AddAfter(iAfter:TBDImage);
 begin
-  fRedoEntity:=iEntity;
+  fAfter:=iAfter;
+  fRedoable:=true;
 end;
 
-procedure TBDUndoItem.Undo;
+procedure TBDUndoImageItem.Undo;
 begin
-  if fItemType=uitImage then
-    MainImage.PutImage(TBDImage(fUndoEntity).Left,TBDImage(fUndoEntity).Top,TBDImage(fUndoEntity));
+  MainImage.PutImage(fBefore.Left,fBefore.Top,fBefore);
 end;
 
-procedure TBDUndoItem.Redo;
+procedure TBDUndoImageItem.Redo;
 begin
-  if fItemType=uitImage then
-    MainImage.PutImage(TBDImage(fRedoEntity).Left,TBDImage(fRedoEntity).Top,TBDImage(fRedoEntity));
+  if Assigned(fAfter) then
+    MainImage.PutImage(fAfter.Left,fAfter.Top,fAfter);
 end;
 
-function TBDUndoItem.fGetRedoable:boolean;
+procedure TBDUndoImageItem.SaveToStream(Target:TStream);
+var i,curr:integer;
 begin
-  Result:=Assigned(fRedoEntity);
+  if Assigned(fAfter) then begin
+    i:=UNDOOPERATIONDATAID;
+    Target.Write(i,1);
+    curr:=Target.Position;
+    i:=0;
+    Target.Write(i,4);
+    i:=UNDOIMAGESUBID;
+    Target.Write(i,1);
+    fBefore.SaveToStream(Target);
+    fAfter.SaveToStream(Target);
+    i:=Target.Position-curr-4;
+    Target.Position:=curr;
+    Target.write(i,4);
+    Target.Position:=Target.Position+i;
+  end else
+    raise Exception.Create('UndoImageItem save error: No AfterImage assigned!');
 end;
 
 { TBDUndoSystem }
@@ -107,7 +162,7 @@ begin
 end;
 
 procedure TBDUndoSystem.AddImageUndo(Left,Top,Width,Height:integer;Image:TBDImage);
-var atm:TBDUndoItem;atmi:TBDImage;i:integer;
+var atm:TBDUndoImageItem;atmi:TBDImage;
 begin
   if (fPointer<>fList.Count-1) then   // If not the last item, delete items after it.
     fList.DeleteRange(fPointer+1,fList.Count-1);
@@ -119,7 +174,7 @@ begin
     atmi.PutImagePart(0,0,Left,Top,Width,Height,MainImage)
   else
     atmi.PutImagePart(0,0,Left,Top,Width,Height,Image);
-  atm:=TBDUndoItem.Create(uitImage,atmi);
+  atm:=TBDUndoImageItem.Create(atmi);
   fList.Add(atm);
   fPointer:=fList.Count-1;
 end;
@@ -133,7 +188,7 @@ begin
       atmi.Left:=Left;
       atmi.Top:=Top;
       atmi.PutImagePart(0,0,Left,Top,Width,Height,MainImage);
-      fList[fPointer].AddRedo(atmi);
+      TBDUndoImageItem(fList[fPointer]).AddAfter(atmi);
     end;
   end;
 end;
@@ -167,13 +222,16 @@ end;
 procedure TBDUndoSystem.SaveToStream(Target:TStream);
 var i,curr:integer;
 begin
-  i:=UndoDataID;
+  i:=UNDODATAID;
   Target.Write(i,1);
   curr:=Target.Position;
   i:=0;
   Target.Write(i,4);
-  fPalette.SaveToStream(Target);
-  SaveWholeImageDataToStream(Target);
+  i:=fList.Count;
+  Target.Write(i,2);
+  Target.Write(fPointer,2);
+  for i:=0 to fList.Count-1 do
+    fList[i].SaveToStream(Target);
   i:=Target.Position-curr-4;
   Target.Position:=curr;
   Target.write(i,4);
@@ -189,8 +247,36 @@ begin
 end;
 
 procedure TBDUndoSystem.LoadFromStream(Source:TStream);
+var size,curr:int64;b:byte;count,i:integer;
 begin
+  b:=0;
+  Source.Read(b,1);
+  if b<>UNDODATAID then raise Exception.Create(Format('ID is not for undosystem data! (%.2x)',[b]));
+  size:=0;
+  Source.Read(Size,4);
+  curr:=Source.Position;
+  count:=0;
+  Source.Read(count,2);
+  fPointer:=0;
+  Source.Read(fPointer,2);
+  for i:=0 to Count-1 do
+    LoadItemFromStream(Source);
+  Source.Position:=curr+size;
+end;
 
+procedure TBDUndoSystem.LoadItemFromStream(Source:TStream);
+var size,curr:int64;b:byte;
+begin
+  b:=0;
+  Source.Read(b,1);
+  if b<>UNDOOPERATIONDATAID then raise Exception.Create(Format('ID is not for undo operation data! (%.2x)',[b]));
+  size:=0;
+  Source.Read(Size,4);
+  curr:=Source.Position;
+  Source.Read(b,1);
+  if b=UNDOIMAGESUBID then fList.Add(TBDUndoImageItem.CreateFromStream(Source))
+  else if b=UNDOPALETTESUBID then // not yet;
+  Source.Position:=curr+size;
 end;
 
 end.

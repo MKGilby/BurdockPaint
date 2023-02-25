@@ -198,6 +198,7 @@ begin
   Tools:=TBDTools.Create;
   Log.LogStatus('  Initializing Undo system...');
   UndoSystem:=TBDUndoSystem.Create;
+  if FileExists('temp.bdu') then UndoSystem.LoadFromFile('temp.bdu');
   Log.LogStatus('Loading settings...');
   Settings:=TSettings.Create;
   Settings.LoadFromFile(SETTINGSFILE);
@@ -225,7 +226,10 @@ begin
     Settings.SaveToFile(SETTINGSFILE);
     FreeAndNil(Settings);
   end;
-  if Assigned(UndoSystem) then FreeAndNil(UndoSystem);
+  if Assigned(UndoSystem) then begin
+    UndoSystem.SaveToFile('temp.bdu');
+    FreeAndNil(UndoSystem);
+  end;
   if Assigned(Tools) then FreeAndNil(Tools);
   if Assigned(Inks) then FreeAndNil(Inks);
   if Assigned(VibroColors) then FreeAndNil(VibroColors);
