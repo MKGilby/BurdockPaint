@@ -21,6 +21,8 @@
 //   V1.03a - 2023.01.25 - Gilby
 //     * Removed unneccessary commented lines.
 //     * Changed Log.Trace to Log.LogDebug.
+//   V1.04 - 2023.02.26 - Gilby
+//     * Added Enabled property to TMouseObject.
 }
 
 {$ifdef fpc}
@@ -62,7 +64,7 @@ type
     over:boolean;
     keyhandled:boolean;
     fName:string;
-    fSelected, fClicked, fVisible:boolean;
+    fSelected, fClicked, fVisible, fEnabled:boolean;
   private
     fTag:integer;
     procedure fSetWidth(value:integer);
@@ -79,6 +81,7 @@ type
     property ZIndex:integer read fZIndex write fZIndex;
     property Tag:integer read fTag write fTag;
     property Visible:boolean read fVisible write fVisible;
+    property Enabled:boolean read fEnabled write fEnabled;
   end;
 
   { *** You must add your mouse objects to this to handle events... *** }
@@ -111,7 +114,7 @@ uses SysUtils, Logger, MK_SDL2;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.03a';
+  Version='1.04';
 
 constructor TMouseObjects.Create;
 begin
@@ -226,6 +229,7 @@ begin
   fLeft:=-1; // To show that object coordinates are not set.
   over:=false;
   fVisible:=true;
+  fEnabled:=true;
   OnMouseDown:=nil;
   OnMouseUp:=nil;
   OnClick:=nil;
@@ -280,6 +284,10 @@ begin
   Result:=false;
   if not fVisible then begin
     Log.LogDebug('Not visible.');
+    exit;
+  end;
+  if not fEnabled then begin
+    Log.LogDebug('Not enabled.');
     exit;
   end;
   SDL_GetMouseState(@nx,@ny);

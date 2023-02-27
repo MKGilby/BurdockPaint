@@ -2,11 +2,16 @@ Todo:
 - Create workarea system.
 - Create menu like in the original. (Not the same items.)
 - Create PaletteEditor.
-- Disable Undo/Redo buttons when nothing to undo/redo.
 - Right clicking on ColorSelector should invoke PaletteEditor.
 - Autosave in every 1 min.
 - Configurable autosave interval.
 
+
+2023.02.26
+- Undo/Redo buttons are disabled when nothing to undo/redo.
+- BUGFix: Sometimes the render to texture failed to render. Especially when after
+  changing zoom level the whole picture got outside of DrawArea.
+- Message handling moved to TControls for messages needed to be handled by TControls.
 
 2023.02.25
 - UndoSystem state saved and loaded (temp.bdu).

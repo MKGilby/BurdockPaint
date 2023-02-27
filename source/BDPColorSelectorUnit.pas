@@ -34,6 +34,7 @@ uses BDPSharedUnit, BDPSettingsUnit;
 constructor TColorSelector.Create(iTarget:TARGBImage;iLeft,iTop,iColorCount:integer);
 var i:integer;
 begin
+  inherited Create;
   fColorCount:=iColorCount;
   fLeft:=iLeft;
   fTop:=iTop;

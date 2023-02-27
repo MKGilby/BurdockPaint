@@ -92,34 +92,21 @@ begin
 
     MouseObjects.Draw;
     InfoBar.Draw;
-    MM.Fonts['Black'].OutText('FPS: '+st(fps,3,'0'),WINDOWWIDTH-141,3,0);
+    MM.Fonts['Pinky'].OutText('FPS: '+st(fps,3,'0'),WINDOWWIDTH-141,3,0);
     FlipNoLimit;
     while MessageQueue.HasNewMessage do begin
       msg:=MessageQueue.GetNextMessage;
-      case msg.TypeID of
-        MSG_TOGGLECONTROLS:fControls.Visible:=not fControls.Visible;
-        MSG_ACTIVATETOOL:begin
-          fControls.ActivateToolButton(msg.DataInt);
-          SDL_GetMouseState(@mx,@my);
-          ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
-        end;
-        MSG_ACTIVATEINK:fControls.ActivateInkButton(msg.DataInt);
-        MSG_QUIT:begin
-          if msg.DataInt=0 then fQuitWindow.Visible:=false
-          else quit:=true;
-        end;
-        MSG_GETCELFINISHED:begin
-          fControls.Visible:=true;
-          fControls.ActivateToolButton(-1);  // Puts the already selected tool into ActiveTool
-        end;
-        MSG_MOUSECOORDS:begin
-          fControls.SetMouseCoords(msg.DataInt and $7fff,(msg.DataInt and $7fff0000) shr 16);
-        end;
-        MSG_UNDO:begin
-          UndoSystem.Undo;
-        end;
-        MSG_REDO:begin
-          UndoSystem.Redo;
+      if not fControls.ProcessMessage(msg) then begin
+        case msg.TypeID of
+          MSG_ACTIVATETOOL:begin
+            fControls.ActivateToolButton(msg.DataInt);
+            SDL_GetMouseState(@mx,@my);
+            ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
+          end;
+          MSG_QUIT:begin
+            if msg.DataInt=0 then fQuitWindow.Visible:=false
+            else quit:=true;
+          end;
         end;
       end;
     end;

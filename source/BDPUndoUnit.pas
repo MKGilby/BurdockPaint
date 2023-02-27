@@ -52,6 +52,8 @@ type
     procedure LoadFromFile(Filename:string);
     procedure LoadFromStream(Source:TStream);
     procedure LoadItemFromStream(Source:TStream);
+    function CanUndo:boolean;
+    function CanRedo:boolean;
   private
     fList:TBDUndoList;
     fPointer:integer;  // points to the item that will be undoed if requested.
@@ -189,6 +191,7 @@ begin
       atmi.Top:=Top;
       atmi.PutImagePart(0,0,Left,Top,Width,Height,MainImage);
       TBDUndoImageItem(fList[fPointer]).AddAfter(atmi);
+      MessageQueue.AddMessage(MSG_SETUNDOREDOBUTTON);
     end;
   end;
 end;
@@ -198,6 +201,7 @@ begin
   if (fPointer>=0) and (fPointer<fList.Count) then begin
     fList[fPointer].Undo;
     dec(fPointer);  // It can go below 0, -1 shows that no more undoable task remains.
+    MessageQueue.AddMessage(MSG_SETUNDOREDOBUTTON);
   end;
 end;
 
@@ -207,6 +211,7 @@ begin
     if fList[fPointer+1].Redoable then begin
       inc(fPointer);
       fList[fPointer].Redo;
+      MessageQueue.AddMessage(MSG_SETUNDOREDOBUTTON);
     end;
   end;
 end;
@@ -259,6 +264,7 @@ begin
   Source.Read(count,2);
   fPointer:=0;
   Source.Read(fPointer,2);
+  if fPointer=65535 then fPointer:=-1;
   for i:=0 to Count-1 do
     LoadItemFromStream(Source);
   Source.Position:=curr+size;
@@ -277,6 +283,16 @@ begin
   if b=UNDOIMAGESUBID then fList.Add(TBDUndoImageItem.CreateFromStream(Source))
   else if b=UNDOPALETTESUBID then // not yet;
   Source.Position:=curr+size;
+end;
+
+function TBDUndoSystem.CanUndo: boolean;
+begin
+  Result:=fPointer>-1;
+end;
+
+function TBDUndoSystem.CanRedo: boolean;
+begin
+  Result:=fPointer<fList.Count-1;
 end;
 
 end.

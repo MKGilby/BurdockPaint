@@ -5,7 +5,7 @@ unit BDPControlsUnit;
 interface
 
 uses
-  vcc_Container2, BDPButtonUnit, mk_sdl2;
+  vcc_Container2, BDPButtonUnit, mk_sdl2, BDPMessageUnit;
 
 type
 
@@ -26,18 +26,19 @@ type
     function ClearKeyColorButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
     function UseAlphaButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
     procedure SetMouseCoords(x,y:integer);
+    function ProcessMessage(msg:TMessage):boolean;
 //    procedure SetMouseCoords(s:string);
   private
     fTexture:TStreamingTexture;
     fToolButtons:array[0..5] of TBDButton;
     fInkButtons:array[0..5] of TBDButton;
+    fUndoButton,fRedoButton:TBDButton;
     fMouseX,fMouseY:integer;
   end;
 
 implementation
 
-uses SysUtils, BDPSharedUnit, sdl2, BDPToolsUnit, BDPInksUnit, BDPMessageUnit,
-  BDPColorSelectorUnit;
+uses SysUtils, BDPSharedUnit, sdl2, BDPToolsUnit, BDPInksUnit, BDPColorSelectorUnit;
 
 { TBDControls }
 
@@ -105,22 +106,22 @@ begin
   ActivateInkButton(Settings.ActiveInk);
 
   msg.TypeID:=MSG_UNDO;
-  atmB:=TBDButton.Create(fTexture.ARGBImage, fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP,
+  fUndoButton:=TBDButton.Create(fTexture.ARGBImage, fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP,
     NORMALBUTTONWIDTH, 'UNDO', 'UNDO LAST OPERATION', msg);
 //  atmB.OnClick:=FilledButtonClick;
-  atmB.ParentX:=fLeft;
-  atmB.ParentY:=fTop;
-  atmB.ZIndex:=15;
-  AddChild(atmB);
+  fUndoButton.ParentX:=fLeft;
+  fUndoButton.ParentY:=fTop;
+  fUndoButton.ZIndex:=15;
+  AddChild(fUndoButton);
 
   msg.TypeID:=MSG_REDO;
-  atmB:=TBDButton.Create(fTexture.ARGBImage, fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP+30,
+  fRedoButton:=TBDButton.Create(fTexture.ARGBImage, fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP+30,
     NORMALBUTTONWIDTH, 'REDO', 'REDO LAST UNDOED OPERATION', msg);
 //  atmB.OnClick:=FilledButtonClick;
-  atmB.ParentX:=fLeft;
-  atmB.ParentY:=fTop;
-  atmB.ZIndex:=15;
-  AddChild(atmB);
+  fRedoButton.ParentX:=fLeft;
+  fRedoButton.ParentY:=fTop;
+  fRedoButton.ZIndex:=15;
+  AddChild(fRedoButton);
 
   msg.TypeID:=MSG_NONE;
   atmB:=TBDButton.Create(fTexture.ARGBImage, fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP,
@@ -301,6 +302,41 @@ procedure TBDControls.SetMouseCoords(x,y:integer);
 begin
   if x and $7000<>$7000 then fMouseX:=x else fMouseX:=x-32768;
   if y and $7000<>$7000 then fMouseY:=y else fMouseY:=y-32768;
+end;
+
+function TBDControls.ProcessMessage(msg: TMessage): boolean;
+begin
+  Result:=false;
+  case msg.TypeID of
+    MSG_TOGGLECONTROLS:begin
+      Self.Visible:=not Self.Visible;
+      Result:=true;
+    end;
+    MSG_ACTIVATEINK:begin
+      Self.ActivateInkButton(msg.DataInt);
+      Result:=true;
+    end;
+    MSG_GETCELFINISHED:begin
+      Self.Visible:=true;
+      Self.ActivateToolButton(-1);  // Puts the already selected tool into ActiveTool
+      Result:=true;
+    end;
+    MSG_MOUSECOORDS:begin
+      Self.SetMouseCoords(msg.DataInt and $7fff,(msg.DataInt and $7fff0000) shr 16);
+      Result:=true;
+    end;
+    MSG_UNDO:begin
+      UndoSystem.Undo;
+    end;
+    MSG_REDO:begin
+      UndoSystem.Redo;
+    end;
+    MSG_SETUNDOREDOBUTTON:begin
+      fUndoButton.Enabled:=UndoSystem.CanUndo;
+      fRedoButton.Enabled:=UndoSystem.CanRedo;
+    end;
+  end;
+
 end;
 
 end.

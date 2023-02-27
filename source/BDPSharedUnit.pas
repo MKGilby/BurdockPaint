@@ -58,6 +58,7 @@ const
   MSG_MOUSECOORDS=6;
   MSG_UNDO=7;
   MSG_REDO=8;
+  MSG_SETUNDOREDOBUTTON=9;
 
 
 var
@@ -199,6 +200,7 @@ begin
   Log.LogStatus('  Initializing Undo system...');
   UndoSystem:=TBDUndoSystem.Create;
   if FileExists('temp.bdu') then UndoSystem.LoadFromFile('temp.bdu');
+  MessageQueue.AddMessage(MSG_SETUNDOREDOBUTTON);
   Log.LogStatus('Loading settings...');
   Settings:=TSettings.Create;
   Settings.LoadFromFile(SETTINGSFILE);

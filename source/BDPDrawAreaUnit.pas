@@ -112,30 +112,6 @@ begin
 
 end;
 
-{procedure TBDDrawArea.Draw;
-var mx,my:integer;
-begin
-  MainImage.RenderToScreen(0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
-  InfoBar.Draw;
-  ActiveTool.Draw;
-  OverlayImage.RenderToScreenAsOverlay(0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
-  ActiveTool.Clear;
-  if SDL_ShowCursor(SDL_QUERY)=SDL_DISABLE then
-    Cursor.Draw(fCursorX,fCursorY,fZoomLevel);
-  if fPanDir<>0 then begin
-    if (fPanFase=0) or ((fPanFase>20) and (fPanFase mod 2=0)) then begin
-      case fPanDir of
-        1:dec(fZoomTop);
-        2:inc(fZoomLeft);
-        3:inc(fZoomTop);
-        4:dec(fZoomLeft);
-      end;
-    end;
-    inc(fPanFase);
-  end;
-
-end;}
-
 function TBDDrawArea.Click(Sender:TObject; x,y,buttons:integer):boolean;
 begin
   Result:=false;

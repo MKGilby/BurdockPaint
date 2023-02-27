@@ -635,16 +635,16 @@ begin
   zRenderWidth:=RenderWidth div ZPixel;
   zRenderHeight:=RenderHeight div ZPixel;
 
+  FillChar(Target.ARGBImage.Rawdata^,Target.ARGBImage.Width*Target.ARGBImage.Height*4,0);
   if (zRenderWidth>0) and (zRenderHeight>0) and
-     (ImageLeft<zRenderWidth) and (ImageLeft+zRenderWidth>0) and
-     (ImageTop<zRenderHeight) and (ImageTop+zRenderHeight>0) then begin
+     (ImageLeft<fWidth) and (ImageLeft+zRenderWidth>0) and
+     (ImageTop<fHeight) and (ImageTop+zRenderHeight>0) then begin
     // Still check for clipping
     if ImageLeft<0 then begin zRenderWidth+=ImageLeft;TextureLeft-=ImageLeft*zPixel;ImageLeft:=0;end;
     if ImageLeft+zRenderWidth>fWidth then zRenderWidth:=fWidth-ImageLeft;
     if ImageTop<0 then begin zRenderHeight+=ImageTop;TextureTop-=ImageTop*zPixel;ImageTop:=0;end;
     if ImageTop+zRenderHeight>fHeight then zRenderHeight:=fHeight-ImageTop;
 
-    FillChar(Target.ARGBImage.Rawdata^,Target.ARGBImage.Width*Target.ARGBImage.Height*4,0);
 
     if zPixel=1 then begin
       for y:=0 to zRenderHeight-1 do
@@ -671,8 +671,8 @@ begin
   zRenderHeight:=RenderHeight div ZPixel;
 
   if (zRenderWidth>0) and (zRenderHeight>0) and
-     (ImageLeft<zRenderWidth) and (ImageLeft+zRenderWidth>0) and
-     (ImageTop<zRenderHeight) and (ImageTop+zRenderHeight>0) then begin
+     (ImageLeft<fWidth) and (ImageLeft+zRenderWidth>0) and
+     (ImageTop<fHeight) and (ImageTop+zRenderHeight>0) then begin
     // Still check for clipping
     if ImageLeft<0 then begin zRenderWidth+=ImageLeft;TextureLeft-=ImageLeft*zPixel;ImageLeft:=0;end;
     if ImageLeft+zRenderWidth>fWidth then zRenderWidth:=fWidth-ImageLeft;

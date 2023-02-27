@@ -19,8 +19,8 @@
       1       4       Size of the block without the Data ID and the size.
       5     [Size]    The data in uncompressed or ZLib compressed format.
 
-  Each file is containing exactly one block, but each block can contain more blocks.
   So referring to a C-block is a block like above with a Data ID 0x43.
+  Each file is containing exactly one block, but each block can contain more blocks.
 
 
 2. Detailed block formats
