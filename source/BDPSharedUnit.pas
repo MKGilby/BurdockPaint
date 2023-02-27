@@ -100,31 +100,34 @@ end;
 
 procedure CreateButtonGFX;
 const
-  Arch='.....xxx'+
-       '...xxxxx'+
-       '..xxxxxx'+
-       '.xxxxxx '+
-       '.xxxx   '+
-       'xxxx    '+
-       'xxxx    '+
-       'xxx     ';
-{  Arch='......xx'+
-       '......xx'+
-       '......xx'+
-       '...xxx  '+
-       '...xxx  '+
-       '...xxx  '+
-       'xxx     '+
-       'xxx     ';}
-var x,y:integer;c:uint32;fLeftImage,fRightImage:TARGBImage;
+  ArchModern=
+    '.....xxx'+
+    '...xxxxx'+
+    '..xxxxxx'+
+    '.xxxxxx '+
+    '.xxxx   '+
+    'xxxx    '+
+    'xxxx    '+
+    'xxx     ';
+  ArchOriginal=
+    '......xx'+
+    '......xx'+
+    '......xx'+
+    '...xxx  '+
+    '...xxx  '+
+    '...xxx  '+
+    'xxx     '+
+    'xxx     ';
+var x,y:integer;c:uint32;fLeftImage,fRightImage:TARGBImage;s:string;
 begin
   fLeftImage:=TARGBImage.Create(8,27);
   fLeftImage.Bar(0,0,fLeftImage.Width,fLeftImage.Height,0,0,0,0);
   fRightImage:=TARGBImage.Create(8,27);
   fRightImage.Bar(0,0,fRightImage.Width,fRightImage.Height,0,0,0,0);
+  if Settings.ModernGraphics then s:=ArchModern else s:=ArchOriginal;
   for y:=0 to 7 do
     for x:=0 to 7 do begin
-      case Arch[x+y*8+1] of
+      case s[x+y*8+1] of
       '.':c:=OverlayImage.Palette[3];
       'x':c:=OverlayImage.Palette[2];
       ' ':c:=0;
@@ -166,6 +169,9 @@ end;
 procedure LoadAssets;
 var i:integer;
 begin
+  Log.LogStatus('Loading settings...');
+  Settings:=TSettings.Create;
+  Settings.LoadFromFile(SETTINGSFILE);
   Log.LogStatus('Loading and creating assets...');
   MM:=TMediaManager.Create;
   Log.LogStatus('  Loading fonts...');
@@ -217,9 +223,6 @@ begin
   UndoSystem:=TBDUndoSystem.Create;
 //  if FileExists('temp.bdu') then UndoSystem.LoadFromFile('temp.bdu');
   MessageQueue.AddMessage(MSG_SETUNDOREDOBUTTON);
-  Log.LogStatus('Loading settings...');
-  Settings:=TSettings.Create;
-  Settings.LoadFromFile(SETTINGSFILE);
 
   Log.LogStatus('Loading previous session data...');
   LoadState;

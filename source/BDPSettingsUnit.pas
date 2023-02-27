@@ -30,6 +30,7 @@ type
     fColorSelectorColors:array of integer;
     fActiveColorIndex:integer;
     fUndoLimit:integer;
+    fModernGraphics:boolean;
     function fGetSelectedColor(index:integer):integer;
     function fGetSelectedTool(index:integer):string;
     procedure fSetSelectedColor(index:integer; AValue:integer);
@@ -51,6 +52,7 @@ type
     property SelectedColors[index:integer]:integer read fGetSelectedColor write fSetSelectedColor;
     property ActiveColorIndex:integer read fActiveColorIndex write fActiveColorIndex;
     property UndoLimit:integer read fUndoLimit write fUndoLimit;
+    property ModernGraphics:boolean read fModernGraphics write fModernGraphics;
   end;
 
 
@@ -117,6 +119,7 @@ begin
   fUseAlpha:=INI.ReadBool('BasicControls','UseAlpha',false);
   fShowSplash:=INI.ReadBool('Settings','ShowSplash',false);
   fUndoLimit:=INI.ReadInteger('Settings','UndoLimit',16);
+  fModernGraphics:=INI.ReadBool('Settings','ModernGraphics',true);
   LoadKeyMap(INI);
   for i:=0 to COLORSELECTORCOLORS-1 do
     fColorSelectorColors[i]:=INI.ReadInteger('Colors',Format('Selected%d',[i]),i);
@@ -142,6 +145,7 @@ begin
   INI.WriteBool('BasicControls','UseAlpha',fUseAlpha);
   INI.WriteBool('Settings','ShowSplash',fShowSplash);
   INI.WriteInteger('Settings','UndoLimit',fUndoLimit);
+  INI.WriteBool('Settings','ModernGraphics',fModernGraphics);
   for i:=0 to COLORSELECTORCOLORS-1 do
     INI.WriteInteger('Colors',Format('Selected%d',[i]),fColorSelectorColors[i]);
   INI.WriteInteger('Colors','ActiveColor',fActiveColorIndex);

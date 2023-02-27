@@ -6,11 +6,7 @@ Todo:
 - Configurable autosave interval.
 
 
-2023.02.26
-- Undo/Redo buttons are disabled when nothing to undo/redo.
-- BUGFix: Sometimes the render to texture failed to render. Especially when after
-  changing zoom level the whole picture got outside of DrawArea.
-- Message handling moved to TControls for messages needed to be handled by TControls.
+2023.02.27
 - Undosystem now saves only region data instead of palette+region in region type
   undoitem. (It was correct in the file format text, only implementation was wrong.)
 - New block type in filetypes (SystemState - S-block).
@@ -18,6 +14,13 @@ Todo:
   to state.bds.
 - ColorSelector selects color only by left clicking on it.
 - Removing some obsolete code and declarations here and there.
+- Button appearance can be changed in INI file. (Settings/ModernGraphics)
+
+2023.02.26
+- Undo/Redo buttons are disabled when nothing to undo/redo.
+- BUGFix: Sometimes the render to texture failed to render. Especially when after
+  changing zoom level the whole picture got outside of DrawArea.
+- Message handling moved to TControls for messages needed to be handled by TControls.
 
 2023.02.25
 - UndoSystem state saved and loaded (temp.bdu).
