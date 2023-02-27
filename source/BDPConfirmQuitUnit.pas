@@ -9,20 +9,6 @@ uses
 
 type
 
-  { TInvisibleClickCatcher }
-
-  TInvisibleClickCatcher=class(TMouseObject)
-    constructor Create;
-    procedure Draw; override;
-    function MouseMove(Sender:TObject;x,y:integer):boolean;
-    function Click(Sender:TObject;x,y,buttons: integer):boolean;
-    function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
-    function KeyDown(Sender:TObject;key:integer):boolean;
-    function KeyUp(Sender:TObject;key:integer):boolean;
-  end;
-
   { TConfirmQuitWindow }
 
   TConfirmQuitWindow=class(TContainer)
@@ -52,62 +38,6 @@ uses
 const
   QUITWINDOWWIDTH=480;
   QUITWINDOWHEIGHT=96;
-
-{ TInvisibleClickCatcher }
-
-constructor TInvisibleClickCatcher.Create;
-begin
-  SetBoundsWH(0,0,WINDOWWIDTH,WINDOWHEIGHT);
-  fVisible:=true;
-  fName:='ClickCatcher';
-  OnMouseMove:=MouseMove;
-  OnMouseDown:=MouseDown;
-  OnMouseUp:=MouseUp;
-  OnMouseWheel:=MouseWheel;
-  OnClick:=Click;
-  OnKeyDown:=KeyDown;
-  OnKeyUp:=KeyUp;
-end;
-
-procedure TInvisibleClickCatcher.Draw;
-begin
-  ;
-end;
-
-function TInvisibleClickCatcher.MouseMove(Sender:TObject; x,y:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TInvisibleClickCatcher.Click(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TInvisibleClickCatcher.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TInvisibleClickCatcher.MouseUp(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TInvisibleClickCatcher.MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TInvisibleClickCatcher.KeyDown(Sender:TObject; key:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TInvisibleClickCatcher.KeyUp(Sender:TObject; key:integer):boolean;
-begin
-  Result:=true;
-end;
 
 { TConfirmQuitWindow }
 

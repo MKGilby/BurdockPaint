@@ -9,10 +9,6 @@ uses MediaManagerUnit, mk_sdl2, ARGBImageUnit, BDPInfoBarUnit, BDPImageUnit,
   BDPPaletteUnit, BDPUndoUnit;
 
 type
-  TSystemColor=record
-    r,g,b:byte;c32:uint32;
-  end;
-
   TColorCluster=record
     startindex,endindex:integer;
     reverse,pingpong:boolean;
@@ -43,10 +39,7 @@ const
   MAXPALETTEENTRIES=2048;  // Palette color count hard limit
   POSTPROCESSCOLOR=$FFF0;
 
-//  VIBROCOLORS:array[0..15] of integer=(6,6,7,7,8,8,9,9,10,10,9,9,8,8,7,7);
   STATEFILE='state.bps';
-//  TEMPIMAGEFILE='temp.bdp';
-//  TEMPCELIMAGEFILE='tempcel.bdp';
   SETTINGSFILE='BurdockPaint.ini';
   STATEDATAID=$53;
 
@@ -73,7 +66,7 @@ var
   Settings:TSettings;  // All settings in one place
   MessageQueue:TMessageQueue;  // Messaging queue for classes who doesn't know each other
   Cursor:TBDCursor;  // The cursor on drawing area
-  VibroColors:TBDVibroColors;
+  VibroColors:TBDVibroColors; // The flashing color for helping the Tools
 
   Tools:TBDTools;  // All tools are loaded into this list
   ActiveTool:TBDTool;  // This is the selected tool
@@ -81,9 +74,8 @@ var
   Inks:TBDInks;  // All inks are loaded into this list
   ActiveInk:TBDInk;  // This is the selected ink
 
-  UndoSystem:TBDUndoSystem;
+  UndoSystem:TBDUndoSystem;  // Handles undo and redo things
 
-//  ActiveColorIndex:integer;  // The selected color index
   ActiveCluster:TColorCluster;  // The selected color cluster
 
   // Load assets and create shared objects
@@ -108,22 +100,22 @@ end;
 
 procedure CreateButtonGFX;
 const
-{  Arch='.....xxx'+
+  Arch='.....xxx'+
        '...xxxxx'+
        '..xxxxxx'+
        '.xxxxxx '+
        '.xxxx   '+
        'xxxx    '+
        'xxxx    '+
-       'xxx     ';}
-  Arch='......xx'+
+       'xxx     ';
+{  Arch='......xx'+
        '......xx'+
        '......xx'+
        '...xxx  '+
        '...xxx  '+
        '...xxx  '+
        'xxx     '+
-       'xxx     ';
+       'xxx     ';}
 var x,y:integer;c:uint32;fLeftImage,fRightImage:TARGBImage;
 begin
   fLeftImage:=TARGBImage.Create(8,27);

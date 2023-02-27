@@ -152,7 +152,6 @@ end;
 
 destructor TBDTool.Destroy;
 begin
-//  Log.LogDebug('Destroying '+fName+'...');
   inherited ;
 end;
 
@@ -337,7 +336,6 @@ begin
           fState:=1;
         end;
       1:begin
-//          if abs(fSX-x)>abs(fSY-y) then r:=abs(fSX-x) else r:=abs(fSY-y);
           r:=round(sqrt(sqr(fSX-x)+sqr(fSY-y)));
           UndoSystem.AddImageUndo(fSX-r,fSY-r,r*2+1,r*2+1);
           ActiveInk.InitializeArea(fSX-r,fSY-r,fSX+r,fSY+r);
@@ -360,7 +358,7 @@ begin
     end;
   end
   else if Button=3 then begin  // Right button
-    if fState>0 then begin  // Right button
+    if fState>0 then begin
       fState:=0;
       Result:=true;
     end else Result:=false
@@ -374,7 +372,6 @@ begin
     0:;
     1:begin
         r:=round(sqrt(sqr(fSX-fX)+sqr(fSY-fY)));
-//        if abs(fSX-fX)>abs(fSY-fY) then r:=abs(fSX-fX) else r:=abs(fSY-fY);
         OverlayImage.Circle(fSX,fSY,r,VibroColors.GetColorIndex);
 
         InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
@@ -587,9 +584,6 @@ begin
   ic:=0;
   repeat
     w:=false;
-
-//    Log.LogDebug(Format('--- Iteration %d. ---',[ic]));
-//    Log.LogDebug(Format('Left=%d, Top=%d, Right=%d, Bottom=%d',[fLeft,fTop,fRight,fBottom]));
     case (ic mod 4) of
       0:begin
           j:=fTop;
@@ -739,8 +733,6 @@ begin
   repeat
     w:=false;
 
-//    Log.LogDebug(Format('--- Iteration %d. ---',[ic]));
-//    Log.LogDebug(Format('Left=%d, Top=%d, Right=%d, Bottom=%d',[fLeft,fTop,fRight,fBottom]));
     case (ic mod 4) of
       0:begin
           j:=fTop;
@@ -1139,7 +1131,6 @@ begin
         CELHelperImage.BarWH(CELImage.Left,CELImage.Top,CELImage.Width,CELImage.Height,CELHelperImage.Palette.Size);
       end;
     1:begin
-//        OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,VIBROCOLORS[fColorIndex]);
         CELHelperImage.BarWH(CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,CELImage.Width,CELImage.Height,CELHelperImage.Palette.Size);
       end;
 

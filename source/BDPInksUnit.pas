@@ -89,7 +89,6 @@ begin
     fTop:=pTop;
     fHeight:=pHeight;
   end;
-//  Log.LogDebug(inttostr(pLeft)+', '+inttostr(pTop)+', '+inttostr(pWidth)+', '+inttostr(pHeight));
 end;
 
 procedure TBDInk.InitializeArea(pX1,pY1,pX2,pY2:integer);
@@ -108,7 +107,6 @@ begin
     fTop:=pY1;
     fHeight:=pY2-pY1+1;
   end;
-//  Log.LogDebug(inttostr(pX1)+', '+inttostr(pY1)+', '+inttostr(pX2)+', '+inttostr(pY2));
 end;
 
 function TBDInk.GetColorIndexAt(pX,pY:integer):integer;
@@ -199,7 +197,6 @@ begin
     while i<=fLeft+fWidth-1 do begin
       if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
         i+=ProcessSegment(i,j);
-//        Image.CurrentFrame.PutPixel(i,j,GetColorIndexAt(i,j));
       inc(i);
     end;
   end;

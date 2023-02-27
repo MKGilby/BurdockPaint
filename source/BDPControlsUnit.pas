@@ -27,7 +27,6 @@ type
     function UseAlphaButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
     procedure SetMouseCoords(x,y:integer);
     function ProcessMessage(msg:TMessage):boolean;
-//    procedure SetMouseCoords(s:string);
   private
     fTexture:TStreamingTexture;
     fToolButtons:array[0..5] of TBDButton;
@@ -58,8 +57,6 @@ begin
   fHeight:=CONTROLSHEIGHT;
   fTexture:=TStreamingTexture.Create(WINDOWWIDTH,CONTROLSHEIGHT);
   fTexture.ARGBImage.Clear;
-
-
 
   msg.TypeID:=MSG_ACTIVATETOOL;
   msg.DataString:='';
@@ -108,7 +105,6 @@ begin
   msg.TypeID:=MSG_UNDO;
   fUndoButton:=TBDButton.Create(fTexture.ARGBImage, fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP,
     NORMALBUTTONWIDTH, 'UNDO', 'UNDO LAST OPERATION', msg);
-//  atmB.OnClick:=FilledButtonClick;
   fUndoButton.ParentX:=fLeft;
   fUndoButton.ParentY:=fTop;
   fUndoButton.ZIndex:=15;
@@ -117,7 +113,6 @@ begin
   msg.TypeID:=MSG_REDO;
   fRedoButton:=TBDButton.Create(fTexture.ARGBImage, fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP+30,
     NORMALBUTTONWIDTH, 'REDO', 'REDO LAST UNDOED OPERATION', msg);
-//  atmB.OnClick:=FilledButtonClick;
   fRedoButton.ParentX:=fLeft;
   fRedoButton.ParentY:=fTop;
   fRedoButton.ZIndex:=15;
@@ -148,16 +143,6 @@ begin
   atmC.ZIndex:=15;
   atmC.Name:='ColorSelector';
   AddChild(atmC);
-
-{  atmB:=TBDButton.Create(fTexture.ARGBImage, fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+30*2,
-    SMALLBUTTONWIDTH, 'A', 'USE ALPHA', msg);
-  atmB.Selected:=Settings.UseAlpha;
-  atmB.OnClick:=UseAlphaButtonClick;
-  atmB.ParentX:=fLeft;
-  atmB.ParentY:=fTop;
-  atmB.ZIndex:=15;
-  AddChild(atmB);}
-
 
   fVisible:=true;
   OnMouseEnter:=MouseEnter;

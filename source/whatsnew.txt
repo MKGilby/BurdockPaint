@@ -1,7 +1,7 @@
 Todo:
 - Create menu like in the original. (Not the same items.)
 - Create PaletteEditor.
-- Right clicking on ColorSelector should invoke PaletteEditor.
+- Right clicking on ColorSelector should invoke Color Picker Mode.
 - Autosave state in every 1 min.
 - Configurable autosave interval.
 
@@ -16,6 +16,8 @@ Todo:
 - New block type in filetypes (SystemState - S-block).
 - System state (image current state, palette, undo state and CEL if exists) saved
   to state.bds.
+- ColorSelector selects color only by left clicking on it.
+- Removing some obsolete code and declarations here and there.
 
 2023.02.25
 - UndoSystem state saved and loaded (temp.bdu).

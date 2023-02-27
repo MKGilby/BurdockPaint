@@ -181,7 +181,6 @@ begin
   Xs.Write(i,2);
   Xs.Write(fEntries^,i*4);
   Xs.Position:=0;
-//  Xs.SaveToFile('ntsc1.dat');
   CompressStream(Xs,Result,Xs.Size);
   FreeAndNil(Xs);
   Result.Position:=0;
@@ -223,7 +222,6 @@ begin
     end;
   end;
   Xs.Position:=0;
-//  Xs.SaveToFile('ntsc3.dat');
   CompressStream(Xs,Result,Xs.Size);
   FreeAndNil(Xs);
   Result.Position:=0;

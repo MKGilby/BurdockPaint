@@ -85,11 +85,9 @@ begin
 end;
 
 procedure TBDDrawArea.Draw;
-//var mx,my:integer;
 begin
   MainImage.RenderToTexture(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
   ActiveTool.Draw;
-//  InfoBar.Draw;
   if ActiveTool.Name='PUTCEL' then
     CELHelperImage.RenderToTextureAsOverlay(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
   OverlayImage.RenderToTextureAsOverlay(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
@@ -123,8 +121,6 @@ begin
   fMousePanning:=0;  // To stop panning if you press other button
   mx:=MouseXToFrame(x);
   my:=MouseYToFrame(y);
-//  InfoBar.ShowSimpleCoords(mx,my,(mx>=0) and (mx<MainImage.Width) and (my>=0) and (my<MainImage.Height));
-//  Log.LogDebug(Format('mx=%d, my=%d, buttons=%d',[mx,my,buttons]));
   Result:=false;
   Result:=ActiveTool.MouseDown(mx,my,buttons);
   if not Result then begin
@@ -169,7 +165,6 @@ begin
   fFrameY:=MouseYToFrame(y);
   ActiveTool.Move(fFrameX,fFrameY);
   MessageQueue.AddMessage(MSG_MOUSECOORDS,'',(fFrameX and $7fff)+(fFrameY and $7fff)<<16);
-//  InfoBar.ShowSimpleCoords(fFrameX,fFrameY,not((fFrameX<0) or (fFrameX>=MainImage.Width) or (fFrameY<0) or (fFrameY>=MainImage.Height)));
   Result:=ActiveTool.MouseMove(fFrameX,fFrameY,buttons);
   if not Result then begin
     if fMousePanning=1 then fMousePanning:=2;

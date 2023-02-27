@@ -74,15 +74,17 @@ end;
 function TColorSelector.Click(Sender:TObject; x,y,buttons:integer):boolean;
 var i,cx:integer;
 begin
-  cx:=0;
-  x-=Left;
-  for i:=0 to fColorCount-1 do begin
-    if (cx+3<=x) and (cx+COLORSELECTORBOXSIZE-3>x) then begin
-      fSelectedIndex:=i;
-      Settings.ActiveColorIndex:=fColors[i];
+  if buttons=1 then begin
+    cx:=0;
+    x-=Left;
+    for i:=0 to fColorCount-1 do begin
+      if (cx+3<=x) and (cx+COLORSELECTORBOXSIZE-3>x) then begin
+        fSelectedIndex:=i;
+        Settings.ActiveColorIndex:=fColors[i];
+      end;
+      cx+=COLORSELECTORBOXSIZE-3;
+      if i=0 then cx+=COLORSELECTORGAP;
     end;
-    cx+=COLORSELECTORBOXSIZE-3;
-    if i=0 then cx+=COLORSELECTORGAP;
   end;
   Result:=true;
 end;
