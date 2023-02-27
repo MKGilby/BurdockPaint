@@ -4,7 +4,8 @@ unit BDPMainUnit;
 
 interface
 
-uses mk_sdl2, BDPControlsUnit, BDPDrawAreaUnit, BDPConfirmQuitUnit, BDPSplashScreenUnit;
+uses mk_sdl2, BDPControlsUnit, BDPDrawAreaUnit, BDPConfirmQuitUnit,
+  BDPSplashScreenUnit, BDPPaletteEditorUnit;
 
 type
 
@@ -18,6 +19,7 @@ type
     fMainWindow:TWindow;
     fControls:TBDControls;
     fDrawArea:TBDDrawArea;
+    fPaletteEditor:TBDPaletteEditor;
     fSplashScreen:TBDSplashScreen;
     fQuitWindow:TConfirmQuitWindow;
   end;
@@ -59,6 +61,10 @@ begin
   fControls:=TBDControls.Create;
   fControls.ZIndex:=10;
   MouseObjects.Add(fControls);
+  fPaletteEditor:=TBDPaletteEditor.Create;
+  fPaletteEditor.ZIndex:=10;
+  fPaletteEditor.Visible:=false;
+  MouseObjects.Add(fPaletteEditor);
   fQuitWindow:=TConfirmQuitWindow.Create;
   fQuitWindow.ZIndex:=MaxLongint-1;
   fQuitWindow.Visible:=false;
@@ -75,6 +81,7 @@ destructor TMain.Destroy;
 begin
   if Assigned(fSplashScreen) then FreeAndNil(fSplashScreen);
   if Assigned(fQuitWindow) then FreeAndNil(fQuitWindow);
+  if Assigned(fPaletteEditor) then FreeAndNil(fPaletteEditor);
   if Assigned(fControls) then FreeAndNil(fControls);
   if Assigned(fDrawArea) then FreeAndNil(fDrawArea);
   FreeAssets;
@@ -102,6 +109,10 @@ begin
             fControls.ActivateToolButton(msg.DataInt);
             SDL_GetMouseState(@mx,@my);
             ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
+          end;
+          MSG_ACTIVATEPALETTEEDITOR:begin
+            fControls.Visible:=false;
+            fPaletteEditor.Visible:=true;
           end;
           MSG_QUIT:begin
             if msg.DataInt=0 then fQuitWindow.Visible:=false

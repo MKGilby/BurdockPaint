@@ -1,6 +1,8 @@
 Todo:
+- Palette editor should activate the ColorPicker Tool in the background.
+  This tool should pick a color if left clicked on the drawarea and exit palette
+  editor when right clicked on the drawarea.
 - Create menu like in the original. (Not the same items.)
-- Create PaletteEditor.
 - Right clicking on ColorSelector should invoke Color Picker Mode.
 - Autosave state in every 1 min.
 - Configurable autosave interval.
@@ -15,6 +17,9 @@ Todo:
 - ColorSelector selects color only by left clicking on it.
 - Removing some obsolete code and declarations here and there.
 - Button appearance can be changed in INI file. (Settings/ModernGraphics)
+- Right clicking on ColorSelector invokes Palette Editor. Cannot go back, you have
+  to quit (Q->Y).
+- Palette Editor shows the first 256 colors, highlights the active color.
 
 2023.02.26
 - Undo/Redo buttons are disabled when nothing to undo/redo.

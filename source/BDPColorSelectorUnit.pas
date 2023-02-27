@@ -85,6 +85,8 @@ begin
       cx+=COLORSELECTORBOXSIZE-3;
       if i=0 then cx+=COLORSELECTORGAP;
     end;
+  end else if buttons=3 then begin
+    MessageQueue.AddMessage(MSG_ACTIVATEPALETTEEDITOR);
   end;
   Result:=true;
 end;
