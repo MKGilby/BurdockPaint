@@ -44,9 +44,11 @@ const
   POSTPROCESSCOLOR=$FFF0;
 
 //  VIBROCOLORS:array[0..15] of integer=(6,6,7,7,8,8,9,9,10,10,9,9,8,8,7,7);
-  TEMPIMAGEFILE='temp.bdp';
-  TEMPCELIMAGEFILE='tempcel.bdp';
+  STATEFILE='state.bps';
+//  TEMPIMAGEFILE='temp.bdp';
+//  TEMPCELIMAGEFILE='tempcel.bdp';
   SETTINGSFILE='BurdockPaint.ini';
+  STATEDATAID=$53;
 
   // Message typeID constants
   MSG_NONE=0;
@@ -92,7 +94,7 @@ var
 
 implementation
 
-uses SysUtils, MKRFont2Unit, Logger, MKStream;
+uses Classes, SysUtils, MKRFont2Unit, Logger, MKStream;
 
 procedure LoadSystemFont(pR,pG,pB:integer;pName:string);
 begin
@@ -147,6 +149,28 @@ begin
   // Don't free images, MM will do that!
 end;
 
+procedure LoadState;
+var size,curr:int64;b:byte;State:TStream;
+begin
+  if not FileExists(STATEFILE) then exit;
+  State:=TFileStream.Create(STATEFILE,fmOpenRead or fmShareDenyNone);
+  b:=0;
+  State.Read(b,1);
+  if b<>STATEDATAID then raise Exception.Create(Format('ID is not for System state data! (%.2x)',[b]));
+  size:=0;
+  State.Read(Size,4);
+  curr:=State.Position;
+  State.Read(b,1);
+  MainImage.LoadFromStream(State);
+  UndoSystem.LoadFromStream(State);
+  if b and 1>0 then begin
+    CELImage:=TBDImage.Create(16,16);
+    CELImage.LoadFromStream(State);
+  end;
+//  State.Position:=curr+size;
+  FreeAndNil(State);
+end;
+
 procedure LoadAssets;
 var i:integer;
 begin
@@ -199,28 +223,53 @@ begin
   Tools:=TBDTools.Create;
   Log.LogStatus('  Initializing Undo system...');
   UndoSystem:=TBDUndoSystem.Create;
-  if FileExists('temp.bdu') then UndoSystem.LoadFromFile('temp.bdu');
+//  if FileExists('temp.bdu') then UndoSystem.LoadFromFile('temp.bdu');
   MessageQueue.AddMessage(MSG_SETUNDOREDOBUTTON);
   Log.LogStatus('Loading settings...');
   Settings:=TSettings.Create;
   Settings.LoadFromFile(SETTINGSFILE);
 
   Log.LogStatus('Loading previous session data...');
-  Log.LogStatus('  Image...');
+  LoadState;
+{  Log.LogStatus('  Image...');
   if FileExists(TEMPIMAGEFILE) then MainImage.LoadFromFile(TEMPIMAGEFILE);
   Log.LogStatus('  CEL...');
   if FileExists(TEMPCELIMAGEFILE) then begin
     CELImage:=TBDImage.Create(16,16);
     CELImage.LoadFromFile(TEMPCELIMAGEFILE);
-  end else CELImage:=nil;
+  end else CELImage:=nil;}
 //  ActiveInk:=Inks[Settings.ActiveInk];
+end;
+
+procedure WriteState;
+var i,curr:integer;State:TStream;
+begin
+  if not (Assigned(MainImage) and Assigned(UndoSystem)) then exit;
+  State:=TFileStream.Create(STATEFILE,fmCreate);
+  i:=STATEDATAID;
+  State.Write(i,1);
+  curr:=State.Position;
+  i:=0;
+  State.Write(i,4);
+  i:=0;
+  if Assigned(CELImage) then i:=i or 1;
+  State.Write(i,1);
+  MainImage.SaveToStream(State);
+  UndoSystem.SaveToStream(State);
+  if Assigned(CELImage) then CELImage.SaveToStream(State);
+  i:=State.Position-curr-4;
+  State.Position:=curr;
+  State.write(i,4);
+//  State.Position:=State.Position+i;
+  FreeAndNil(State);
 end;
 
 procedure FreeAssets;
 begin
+  WriteState;
   if Assigned(CELHelperImage) then FreeAndNil(CELHelperImage);
   if Assigned(CELImage) then begin
-    CELImage.SaveToFile(TEMPCELIMAGEFILE);
+//    CELImage.SaveToFile(TEMPCELIMAGEFILE);
 //    CELImage.ExportToPNG('CELtemp.png');
     FreeAndNil(CELImage);
   end;
@@ -229,7 +278,7 @@ begin
     FreeAndNil(Settings);
   end;
   if Assigned(UndoSystem) then begin
-    UndoSystem.SaveToFile('temp.bdu');
+//    UndoSystem.SaveToFile('temp.bdu');
     FreeAndNil(UndoSystem);
   end;
   if Assigned(Tools) then FreeAndNil(Tools);
@@ -238,7 +287,7 @@ begin
   if Assigned(Cursor) then FreeAndNil(Cursor);
   if Assigned(OverlayImage) then FreeAndNil(OverlayImage);
   if Assigned(MainImage) then begin
-    MainImage.SaveToFile(TEMPIMAGEFILE);
+//    MainImage.SaveToFile(TEMPIMAGEFILE);
     FreeAndNil(MainImage);
   end;
   if Assigned(MessageQueue) then FreeAndNil(MessageQueue);

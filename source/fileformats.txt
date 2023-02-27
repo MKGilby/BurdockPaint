@@ -16,6 +16,7 @@
                         R (0x52) - Region data
                         U (0x55) - UndoSystem data
                         O (0x4F) - Undo operation data
+                        S (0x53) - System state data
       1       4       Size of the block without the Data ID and the size.
       5     [Size]    The data in uncompressed or ZLib compressed format.
 
@@ -172,4 +173,20 @@
     5       2           Undo/redo operation count
     7       2           Index of current operation
     9       ???         O-blocks (count times)
+
+2.6. System state data
+----------------------
+
+  System state data is the current state of image, palette and undosystem.
+  It is saved on exit and loaded on start. So you can continue where you left.
+  It's and S-block with uncompressed data.
+
+  System state data format
+  ----------------------
+    Start   Size        Description (content)
+    5       1           Flags
+                          bit 0 - Is system state contains the CELImage?
+    6       ???         Main image in an I-block.
+    .       ???         UndoSystem data in an U-block.
+   [.       ???]        If Flags.bit[0] is set, then CELImage in an I-block.
 

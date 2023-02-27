@@ -7,7 +7,7 @@ uses
   ARGBImagePNGReaderUnit,
   ARGBImagePNGWriterUnit,
   ARGBImageTGAReaderUnit,
-  ARGBImageTGAWriterUnit, BDPUndoUnit;
+  ARGBImageTGAWriterUnit, BDPUndoUnit, BDPPaletteEditorUnit;
 
 const
   VERSION='0.9';

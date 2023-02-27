@@ -1,9 +1,8 @@
 Todo:
-- Create workarea system.
 - Create menu like in the original. (Not the same items.)
 - Create PaletteEditor.
 - Right clicking on ColorSelector should invoke PaletteEditor.
-- Autosave in every 1 min.
+- Autosave state in every 1 min.
 - Configurable autosave interval.
 
 
@@ -14,6 +13,9 @@ Todo:
 - Message handling moved to TControls for messages needed to be handled by TControls.
 - Undosystem now saves only region data instead of palette+region in region type
   undoitem. (It was correct in the file format text, only implementation was wrong.)
+- New block type in filetypes (SystemState - S-block).
+- System state (image current state, palette, undo state and CEL if exists) saved
+  to state.bds.
 
 2023.02.25
 - UndoSystem state saved and loaded (temp.bdu).
