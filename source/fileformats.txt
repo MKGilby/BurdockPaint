@@ -143,7 +143,7 @@
   --------------------------
     Start   Size        Description (content)
     5       1           The type of operation
-                          0 - image (drawing, etc.)
+                          0 - region (drawing, etc.)
                           1 - color (editing colors)
 
   if the type of operation is image:

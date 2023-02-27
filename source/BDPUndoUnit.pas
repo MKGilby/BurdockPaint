@@ -22,9 +22,9 @@ type
     property Redoable:boolean read fRedoable;
   end;
 
-  { TBDUndoImageItem }
+  { TBDUndoRegionItem }
 
-  TBDUndoImageItem=class(TBDUndoItem)
+  TBDUndoRegionItem=class(TBDUndoItem)
     constructor Create(iBefore:TBDImage);
     constructor CreateFromStream(Source:TStream);
     destructor Destroy; override;
@@ -66,7 +66,7 @@ uses SysUtils, BDPSharedUnit, BDPSettingsUnit;
 const
   UNDODATAID=$55;
   UNDOOPERATIONDATAID=$4F;
-  UNDOIMAGESUBID=$00;
+  UNDOREGIONSUBID=$00;
   UNDOPALETTESUBID=$01;
 
 { TBDUndoItem }
@@ -84,50 +84,52 @@ begin
   FreeAndNil(Xs);
 end;
 
-{ TBDUndoImageItem }
+{ TBDUndoRegionItem }
 
-constructor TBDUndoImageItem.Create(iBefore:TBDImage);
+constructor TBDUndoRegionItem.Create(iBefore:TBDImage);
 begin
   inherited Create;
   fBefore:=iBefore;
   fAfter:=nil;
 end;
 
-constructor TBDUndoImageItem.CreateFromStream(Source:TStream);
+constructor TBDUndoRegionItem.CreateFromStream(Source:TStream);
 begin
   inherited Create;
   fBefore:=TBDImage.Create(16,16);
-  fBefore.LoadFromStream(Source);
+  fBefore.Palette.CopyColorsFrom(MainImage.Palette);
+  fBefore.LoadWholeImageDataFromStream(Source);
   fAfter:=TBDImage.Create(16,16);
-  fAfter.LoadFromStream(Source);
+  fAfter.Palette.CopyColorsFrom(MainImage.Palette);
+  fAfter.LoadWholeImageDataFromStream(Source);
   fRedoable:=true;
 end;
 
-destructor TBDUndoImageItem.Destroy;
+destructor TBDUndoRegionItem.Destroy;
 begin
   if Assigned(fBefore) then FreeAndNil(fBefore);
   if Assigned(fAfter) then FreeAndNil(fAfter);
   inherited Destroy;
 end;
 
-procedure TBDUndoImageItem.AddAfter(iAfter:TBDImage);
+procedure TBDUndoRegionItem.AddAfter(iAfter:TBDImage);
 begin
   fAfter:=iAfter;
   fRedoable:=true;
 end;
 
-procedure TBDUndoImageItem.Undo;
+procedure TBDUndoRegionItem.Undo;
 begin
   MainImage.PutImage(fBefore.Left,fBefore.Top,fBefore);
 end;
 
-procedure TBDUndoImageItem.Redo;
+procedure TBDUndoRegionItem.Redo;
 begin
   if Assigned(fAfter) then
     MainImage.PutImage(fAfter.Left,fAfter.Top,fAfter);
 end;
 
-procedure TBDUndoImageItem.SaveToStream(Target:TStream);
+procedure TBDUndoRegionItem.SaveToStream(Target:TStream);
 var i,curr:integer;
 begin
   if Assigned(fAfter) then begin
@@ -136,10 +138,10 @@ begin
     curr:=Target.Position;
     i:=0;
     Target.Write(i,4);
-    i:=UNDOIMAGESUBID;
+    i:=UNDOREGIONSUBID;
     Target.Write(i,1);
-    fBefore.SaveToStream(Target);
-    fAfter.SaveToStream(Target);
+    fBefore.SaveWholeImageDataToStream(Target);
+    fAfter.SaveWholeImageDataToStream(Target);
     i:=Target.Position-curr-4;
     Target.Position:=curr;
     Target.write(i,4);
@@ -164,7 +166,7 @@ begin
 end;
 
 procedure TBDUndoSystem.AddImageUndo(Left,Top,Width,Height:integer;Image:TBDImage);
-var atm:TBDUndoImageItem;atmi:TBDImage;
+var atm:TBDUndoRegionItem;atmi:TBDImage;
 begin
   if (fPointer<>fList.Count-1) then   // If not the last item, delete items after it.
     fList.DeleteRange(fPointer+1,fList.Count-1);
@@ -176,7 +178,7 @@ begin
     atmi.PutImagePart(0,0,Left,Top,Width,Height,MainImage)
   else
     atmi.PutImagePart(0,0,Left,Top,Width,Height,Image);
-  atm:=TBDUndoImageItem.Create(atmi);
+  atm:=TBDUndoRegionItem.Create(atmi);
   fList.Add(atm);
   fPointer:=fList.Count-1;
 end;
@@ -190,7 +192,7 @@ begin
       atmi.Left:=Left;
       atmi.Top:=Top;
       atmi.PutImagePart(0,0,Left,Top,Width,Height,MainImage);
-      TBDUndoImageItem(fList[fPointer]).AddAfter(atmi);
+      TBDUndoRegionItem(fList[fPointer]).AddAfter(atmi);
       MessageQueue.AddMessage(MSG_SETUNDOREDOBUTTON);
     end;
   end;
@@ -280,7 +282,7 @@ begin
   Source.Read(Size,4);
   curr:=Source.Position;
   Source.Read(b,1);
-  if b=UNDOIMAGESUBID then fList.Add(TBDUndoImageItem.CreateFromStream(Source))
+  if b=UNDOREGIONSUBID then fList.Add(TBDUndoRegionItem.CreateFromStream(Source))
   else if b=UNDOPALETTESUBID then // not yet;
   Source.Position:=curr+size;
 end;

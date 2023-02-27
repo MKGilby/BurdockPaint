@@ -12,6 +12,8 @@ Todo:
 - BUGFix: Sometimes the render to texture failed to render. Especially when after
   changing zoom level the whole picture got outside of DrawArea.
 - Message handling moved to TControls for messages needed to be handled by TControls.
+- Undosystem now saves only region data instead of palette+region in region type
+  undoitem. (It was correct in the file format text, only implementation was wrong.)
 
 2023.02.25
 - UndoSystem state saved and loaded (temp.bdu).

@@ -69,11 +69,10 @@
       <Unit>
         <Filename Value="BDPImageUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="6"/>
-        <TopLine Value="638"/>
-        <CursorPos Y="675"/>
-        <FoldState Value=" T7DB{U T3kB0r5 pidkO0Y4]9cjF0M[94gjV0p421 PjXlH0V"/>
+        <TopLine Value="68"/>
+        <CursorPos Y="102"/>
+        <FoldState Value=" T3kB0r5 pidkO0Y4]9cjF0M[94gjV0p]RjMkL0b2 Pj4ig0d"/>
         <UsageCount Value="130"/>
         <Loaded Value="True"/>
       </Unit>
@@ -167,9 +166,11 @@
       <Unit>
         <Filename Value="BDPUndoUnit.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="7"/>
-        <TopLine Value="238"/>
-        <CursorPos Y="271"/>
+        <TopLine Value="42"/>
+        <CursorPos X="18" Y="86"/>
+        <FoldState Value=" T7CEA2 PRUG T3iU0321A pj5k70941]Qi9ig0}"/>
         <UsageCount Value="47"/>
         <Loaded Value="True"/>
       </Unit>
@@ -372,7 +373,7 @@
         <UsageCount Value="14"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="26">
+    <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="BDPUndoUnit.pas"/>
         <Caret Line="83" TopLine="68"/>
@@ -478,6 +479,18 @@
       <Position>
         <Filename Value="BDPControlsUnit.pas"/>
         <Caret Line="332" TopLine="302"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPUndoUnit.pas"/>
+        <Caret Line="69" Column="18" TopLine="7"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPUndoUnit.pas"/>
+        <Caret Line="27" Column="20"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPImageUnit.pas"/>
+        <Caret Line="865" Column="25" TopLine="839"/>
       </Position>
     </JumpHistory>
     <RunParams>

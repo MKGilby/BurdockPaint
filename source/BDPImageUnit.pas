@@ -93,6 +93,12 @@ type
     procedure LoadFromStream(Source:TStream);
     // Exports the image to PNG.
     procedure ExportToPNG(pFilename:string);
+    // Write whole image data to stream.
+    // (probably later will be added method to save only a region)
+    procedure SaveWholeImageDataToStream(Target:TStream);
+    // Read whole image data from stream
+    // (probably later will be added method to load only a region)
+    procedure LoadWholeImageDataFromStream(Source:TStream);
   private
     // Image position (used for CELImage, leave on 0,0 otherwise)
     fLeft,fTop:integer;
@@ -108,12 +114,6 @@ type
     fChanged:boolean;
     // If pixel data changed what area was affected?
     fChangedArea:TRect;
-    // Write whole image data to stream.
-    // (probably later will be added method to save only a region)
-    procedure SaveWholeImageDataToStream(Target:TStream);
-    // Read whole image data from stream
-    // (probably later will be added method to load only a region)
-    procedure LoadWholeImageDataFromStream(Source:TStream);
   public
     property Left:integer read fLeft write fLeft;
     property Top:integer read fTop write fTop;
