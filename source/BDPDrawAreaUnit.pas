@@ -124,14 +124,12 @@ begin
   Result:=false;
   Result:=ActiveTool.MouseDown(mx,my,buttons);
   if not Result then begin
-    case buttons of
-      3:begin   // Right button
-          fMousePanning:=1;
-          fPanX:=fCursorX;
-          fPanY:=fCursorY;
-          fPanX2:=fZoomLeft;
-          fPanY2:=fZoomTop;
-        end;
+    if buttons=SDL_BUTTON_RIGHT then begin
+      fMousePanning:=1;
+      fPanX:=fCursorX;
+      fPanY:=fCursorY;
+      fPanX2:=fZoomLeft;
+      fPanY2:=fZoomTop;
     end;
     Result:=true;
   end;
@@ -146,7 +144,7 @@ begin
   if not Result then begin
     Result:=ActiveTool.Click(mx,my,buttons);
     if not Result then begin
-      if buttons=3 then begin   // Right button
+      if buttons=SDL_BUTTON_RIGHT then begin
         if fMousePanning=1 then MessageQueue.AddMessage(MSG_TOGGLECONTROLS);
         fMousePanning:=0;
       end;

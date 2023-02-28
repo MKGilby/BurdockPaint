@@ -304,10 +304,6 @@ begin
       Self.Visible:=not Self.Visible;
       Result:=true;
     end;
-{    MSG_ACTIVATEINK:begin
-      Self.ActivateInkButton(msg.DataInt);
-      Result:=true;
-    end;}
     MSG_GETCELFINISHED:begin
       Self.Visible:=true;
       Self.ActivateToolButton(-1);  // Puts the already selected tool into ActiveTool

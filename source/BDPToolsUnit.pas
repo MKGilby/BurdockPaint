@@ -229,7 +229,7 @@ end;
 function TBDToolBox.Click(x,y,button:integer):boolean;
 var i:integer;
 begin
-  if button=1 then begin
+  if button=SDL_BUTTON_LEFT then begin
     case fState of
       0:begin
           fSX:=x;
@@ -263,8 +263,8 @@ begin
         end;
     end;
   end
-  else if Button=3 then
-    if fState>0 then begin  // Right button
+  else if Button=SDL_BUTTON_RIGHT then
+    if fState>0 then begin
       fState:=0;
       Result:=true;
     end else Result:=false
@@ -335,7 +335,7 @@ end;
 function TBDToolCircle.Click(x,y,button:integer):boolean;
 var r:integer;
 begin
-  if button=1 then begin
+  if button=SDL_BUTTON_LEFT then begin
     case fState of
       0:begin
           fSX:=x;
@@ -365,7 +365,7 @@ begin
         end;
     end;
   end
-  else if Button=3 then begin  // Right button
+  else if Button=SDL_BUTTON_RIGHT then begin  // Right button
     if fState>0 then begin
       fState:=0;
       Result:=true;
@@ -485,7 +485,7 @@ end;
 
 function TBDToolDraw.MouseDown(x,y,button:integer):boolean;
 begin
-  if button=1 then begin
+  if button=SDL_BUTTON_LEFT then begin
     fTempImage:=TBDImage.Create(MainImage.Width,MainImage.Height);
     fTempImage.Palette.CopyColorsFrom(MainImage.Palette);
     fTempImage.PutImage(0,0,MainImage);
@@ -538,7 +538,7 @@ end;
 function TBDToolFill.Click(x,y,button:integer):boolean;
 var fTempImage:TBDImage;
 begin
-  if button=1 then begin
+  if button=SDL_BUTTON_LEFT then begin
     fLeft:=x;
     fTop:=y;
     fRight:=x;
@@ -660,7 +660,7 @@ end;
 function TBDToolFillTo.Click(x,y,button:integer):boolean;
 var fTempImage:TBDImage;
 begin
-  if button=1 then
+  if button=SDL_BUTTON_LEFT then
     case fstate of
       0:begin
           fSourceColor:=MainImage.GetPixel(x,y);
@@ -809,7 +809,7 @@ end;
 function TBDToolLine.Click(x,y,button:integer):boolean;
 var Left,Top,Width,Height:integer;
 begin
-  if button=1 then begin
+  if button=SDL_BUTTON_LEFT then begin
     case fState of
       0:begin
           fSX:=x;
@@ -846,8 +846,8 @@ begin
         end;
     end;
   end
-  else if Button=3 then begin  // Right button
-    if fState>0 then begin  // Right button
+  else if Button=SDL_BUTTON_RIGHT then begin
+    if fState>0 then begin
       fState:=0;
       Result:=true;
     end else Result:=false
@@ -959,7 +959,7 @@ var i,j,sc:integer;
   fLeft,fRight,fTop,fBottom:integer;
   fTempImage:TBDImage;
 begin
-  if button=1 then begin
+  if button=SDL_BUTTON_LEFT then begin
     fTempImage:=TBDImage.Create(MainImage.Width,MainImage.Height);
     fTempImage.Palette.CopyColorsFrom(MainImage.Palette);
     fTempImage.PutImage(0,0,MainImage);
@@ -998,7 +998,7 @@ end;
 function TBDToolGetCel.Click(x,y,button:integer):boolean;
 var i:integer;
 begin
-  if button=1 then begin
+  if button=SDL_BUTTON_LEFT then begin
     case fState of
       0:begin
           fSX:=x;
@@ -1023,7 +1023,7 @@ begin
         end;
     end;
   end
-  else if Button=3 then begin
+  else if Button=SDL_BUTTON_RIGHT then begin
     fState:=0;
     MessageQueue.AddMessage(MSG_GETCELFINISHED);
     Result:=true;
@@ -1082,7 +1082,7 @@ end;
 
 function TBDToolPutCel.Click(x,y,button:integer):boolean;
 begin
-  if button=1 then begin
+  if button=SDL_BUTTON_LEFT then begin
     case fState of
       0:begin
           fSX:=x;
@@ -1103,7 +1103,7 @@ begin
         end;
     end;
   end else
-  if button=3 then begin
+  if button=SDL_BUTTON_RIGHT then begin
     fState:=-1;
     MessageQueue.AddMessage(MSG_GETCELFINISHED);
   end;

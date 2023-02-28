@@ -20,6 +20,7 @@ Todo:
 - Pressing F1 changes the ActiveColorIndex to the color under the cursor.
 - Get rid of MSG_ACTIVATETOOL and MSG_ACTIVATEINK. Using the buttons TAG property
   and OnClick event instead.
+- Changed mouse button checks to SDL_BUTTON* constants.
 
 2023.02.27
 - Undosystem now saves only region data instead of palette+region in region type
