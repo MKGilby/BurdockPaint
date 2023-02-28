@@ -7,7 +7,7 @@ interface
 uses MKINIFile;
 
 const
-  KEYCOUNT=18;
+  KEYCOUNT=19;
 
   KEY_QUIT=0;
   KEY_YES=1;
@@ -27,6 +27,7 @@ const
   KEY_CENTER=15;
   KEY_GETCEL=16;
   KEY_PUTCEL=17;
+  KEY_GETCOLOR=18;
 
 var
   KeyMap:array [0..KEYCOUNT-1] of integer;
@@ -60,6 +61,7 @@ begin
   KeyMap[KEY_CENTER]:=INI.ReadInteger(KEYMAPSECTION,'Center',SDL_SCANCODE_C);
   KeyMap[KEY_GETCEL]:=INI.ReadInteger(KEYMAPSECTION,'GetCEL',SDL_SCANCODE_ESCAPE);
   KeyMap[KEY_PUTCEL]:=INI.ReadInteger(KEYMAPSECTION,'PutCEL',SDL_SCANCODE_GRAVE);
+  KeyMap[KEY_GETCOLOR]:=INI.ReadInteger(KEYMAPSECTION,'GetColor',SDL_SCANCODE_F1);
 end;
 
 procedure FillDefaultKeyMap;
@@ -82,6 +84,7 @@ begin
   KeyMap[KEY_CENTER]:=SDL_SCANCODE_C;
   KeyMap[KEY_GETCEL]:=SDL_SCANCODE_ESCAPE;
   KeyMap[KEY_PUTCEL]:=SDL_SCANCODE_GRAVE;
+  KeyMap[KEY_GETCOLOR]:=SDL_SCANCODE_F1;
 end;
 
 initialization

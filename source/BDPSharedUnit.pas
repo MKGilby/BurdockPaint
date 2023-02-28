@@ -45,18 +45,33 @@ const
   STATEDATAID=$53;
 
   // Message typeID constants
+
+  // No message, but buttons need one. Give them this.
   MSG_NONE=0;
+  // Toggle visibility of main Controls panel.
   MSG_TOGGLECONTROLS=1;
+  // Activate tool button, number held in IntValue.
   MSG_ACTIVATETOOL=2;
+  // Activate ink button, number held in IntValue.
   MSG_ACTIVATEINK=3;
+  // ConfirmQUIT windows finished, IntValue is 1 if really quit, 0 if not.
   MSG_QUIT=4;
+  // GETCEL or PUTCEL finished, reactivate selected tool.
   MSG_GETCELFINISHED=5;
+  // Holds mouse coordinates over drawarea in IntValue's lower and higher word.
   MSG_MOUSECOORDS=6;
+  // UNDO button pressed.
   MSG_UNDO=7;
+  // REDO button pressed.
   MSG_REDO=8;
+  // Set Undo/Redo buttons' state depending on Undosystem state.
   MSG_SETUNDOREDOBUTTON=9;
+  // Hide Controls, show PaletteEditor
   MSG_ACTIVATEPALETTEEDITOR=10;
+  // PICKCOL finished, IntValue holds the selected color index or -1 if no color selected.
   MSG_PICKEDCOLOR=11;
+  // KEY_GETCOLOR pressed, select color value under the cursor (if over drawarea).
+  MSG_SELECTCOLOR=12;
 
 
 var

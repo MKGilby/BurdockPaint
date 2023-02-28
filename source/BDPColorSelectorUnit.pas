@@ -14,6 +14,7 @@ type
     constructor Create(iTarget:TARGBImage;iLeft,iTop:integer);
     procedure Draw; override;
     function Click(Sender:TObject;x, y, buttons: integer): boolean;
+    function KeyDown(Sender:TObject;key:integer):boolean;
     procedure SetSelectedSlotTo(ColorIndex:integer);
   private
     fTarget:TARGBImage;
@@ -22,6 +23,7 @@ type
 //    fColors:array of integer;
     fParentX,fParentY:integer;
     fPickingColor:boolean;
+    function GetClickedIndex(x:integer):integer;
   published
     property ParentX:integer read fParentX write fParentX;
     property ParentY:integer read fParentY write fParentY;
@@ -29,7 +31,7 @@ type
 
 implementation
 
-uses BDPSharedUnit, BDPSettingsUnit, sdl2;
+uses BDPSharedUnit, BDPSettingsUnit, sdl2, BDPKeyMappingUnit;
 
 { TColorSelector }
 
@@ -46,6 +48,7 @@ begin
     if Settings.SelectedColors[i]=Settings.ActiveColorIndex then fSelectedIndex:=i;
   fTarget:=iTarget;
   OnClick:=Self.Click;
+  OnKeyDown:=Self.KeyDown;
   fPickingColor:=false;
 end;
 
@@ -65,16 +68,10 @@ begin
     (COLORSELECTORBOXSIZE-3)*(COLORSELECTORCOLORS-1)+3,
     COLORSELECTORBOXSIZE,
     OverlayImage.Palette[2]);
-{  x:=0;
-  for i:=0 to COLORSELECTORCOLORS-1 do begin
-    fTarget.Bar(fLeft+x-fParentX,fTop-fParentY,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[2]);
-    fTarget.Bar(fLeft+x-fParentX+3,fTop-fParentY+3,COLORSELECTORBOXSIZE-6,COLORSELECTORBOXSIZE-6,MainImage.Palette[Settings.SelectedColors[i]]);
-    x+=COLORSELECTORBOXSIZE-3;
-    if i=0 then x+=COLORSELECTORGAP;
-  end;}
+  // Draw highlights and color boxes
   x:=0;
   for i:=0 to COLORSELECTORCOLORS-1 do begin
-    if i=fSelectedIndex then begin
+    if Settings.SelectedColors[i]=Settings.ActiveColorIndex then begin
       if not fPickingColor then
         fTarget.Bar(fLeft+x-fParentX,fTop-fParentY,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[5])
       else
@@ -87,36 +84,37 @@ begin
 end;
 
 function TColorSelector.Click(Sender:TObject; x,y,buttons:integer):boolean;
-var i,cx:integer;
+var i:integer;
 begin
   if buttons=SDL_BUTTON_LEFT then begin
-    cx:=0;
-    x-=Left;
-    for i:=0 to COLORSELECTORCOLORS-1 do begin
-      if (cx+3<=x) and (cx+COLORSELECTORBOXSIZE-3>x) then begin
-        fSelectedIndex:=i;
-        Settings.ActiveColorIndex:=Settings.SelectedColors[i];
-      end;
-      cx+=COLORSELECTORBOXSIZE-3;
-      if i=0 then cx+=COLORSELECTORGAP;
+    i:=GetClickedIndex(x);
+    if i>-1 then begin
+      fSelectedIndex:=i;
+      Settings.ActiveColorIndex:=Settings.SelectedColors[i];
     end;
   end else if buttons=SDL_BUTTON_MIDDLE then begin
     MessageQueue.AddMessage(MSG_ACTIVATEPALETTEEDITOR);
   end else if buttons=SDL_BUTTON_RIGHT then begin
-    cx:=0;
-    x-=Left;
-    for i:=0 to COLORSELECTORCOLORS-1 do begin
-      if (cx+3<=x) and (cx+COLORSELECTORBOXSIZE-3>x) then begin
-        fSelectedIndex:=i;
-        Settings.ActiveColorIndex:=Settings.SelectedColors[i];
-      end;
-      cx+=COLORSELECTORBOXSIZE-3;
-      if i=0 then cx+=COLORSELECTORGAP;
+    i:=GetClickedIndex(x);
+    if i>0 then begin
+      fSelectedIndex:=i;
+      Settings.ActiveColorIndex:=Settings.SelectedColors[i];
+      ActiveTool:=Tools.ItemByName['PICKCOL'];
+      fPickingColor:=true;
     end;
-    ActiveTool:=Tools.ItemByName['PICKCOL'];
-    fPickingColor:=true;
   end;
   Result:=true;
+end;
+
+function TColorSelector.KeyDown(Sender:TObject; key:integer):boolean;
+begin
+  Result:=false;
+  if (key=KeyMap[KEY_GETCOLOR]) then begin
+    if not fPickingColor then begin
+      MessageQueue.AddMessage(MSG_SELECTCOLOR);
+    end;
+    Result:=true;
+  end;
 end;
 
 procedure TColorSelector.SetSelectedSlotTo(ColorIndex:integer);
@@ -128,6 +126,22 @@ begin
     end;
   end;
   fPickingColor:=false;
+end;
+
+function TColorSelector.GetClickedIndex(x:integer):integer;
+var cx,i:integer;
+begin
+  Result:=-1;
+  cx:=0;
+  x-=Left;
+  for i:=0 to COLORSELECTORCOLORS-1 do begin
+    if (cx+3<=x) and (cx+COLORSELECTORBOXSIZE-3>x) then begin
+      Result:=i;
+      break;
+    end;
+    cx+=COLORSELECTORBOXSIZE-3;
+    if i=0 then cx+=COLORSELECTORGAP;
+  end;
 end;
 
 

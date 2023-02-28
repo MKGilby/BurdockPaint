@@ -118,6 +118,13 @@ begin
             if msg.DataInt=0 then fQuitWindow.Visible:=false
             else quit:=true;
           end;
+          MSG_SELECTCOLOR:begin
+            SDL_GetMouseState(@mx,@my);
+            mx:=fDrawArea.MouseXToFrame(mx);
+            my:=fDrawArea.MouseYToFrame(my);
+            if (mx>=0) and (mx<MainImage.Width) and (my>=0) and (my<MainImage.Height) then
+              Settings.ActiveColorIndex:=MainImage.GetPixel(mx,my);
+          end;
         end;
       end;
     end;
@@ -151,6 +158,14 @@ begin
       end;
       keys[KeyMap[KEY_PUTCEL]]:=false;
     end;
+{    if keys[KeyMap[KEY_GETCOLOR]] then begin
+      SDL_GetMouseState(@mx,@my);
+      mx:=fDrawArea.MouseXToFrame(mx);
+      my:=fDrawArea.MouseYToFrame(my);
+      if (mx>=0) and (mx<MainImage.Width) and (my>=0) and (my<MainImage.Height) then
+        Settings.ActiveColorIndex:=MainImage.GetPixel(mx,my);
+      keys[KeyMap[KEY_GETCOLOR]]:=false;
+    end;}
   until quit;
 end;
 
