@@ -24,7 +24,8 @@ type
     function Click(Sender:TObject;x,y,buttons: integer):boolean;
     function FilledButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
     function ClearKeyColorButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
-    function UseAlphaButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
+    function ToolButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
+    function InkButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
     procedure SetMouseCoords(x,y:integer);
     function ProcessMessage(msg:TMessage):boolean;
   private
@@ -58,12 +59,12 @@ begin
   fTexture:=TStreamingTexture.Create(WINDOWWIDTH,CONTROLSHEIGHT);
   fTexture.ARGBImage.Clear;
 
-  msg.TypeID:=MSG_ACTIVATETOOL;
+  msg.TypeID:=MSG_NONE;
   msg.DataString:='';
+  msg.DataInt:=0;
   for i:=0 to 5 do begin
     atmT:=Tools[Tools.IndexOf(Settings.SelectedTools[i])];
     if atmT=nil then raise Exception.Create('Tool not found! ('+Settings.SelectedTools[i]+')');
-    msg.DataInt:=i;
     fToolButtons[i]:=TBDButton.Create(
       fTexture.ARGBImage,
       fLeft+TOOLBUTTONSLEFT+i mod 2*130,
@@ -76,16 +77,15 @@ begin
     fToolButtons[i].ParentX:=fLeft;
     fToolButtons[i].ParentY:=fTop;
     fToolButtons[i].ZIndex:=15;
+    fToolButtons[i].Tag:=i;
+    fToolButtons[i].OnClick:=Self.ToolButtonClick;
     AddChild(fToolButtons[i]);
   end;
   ActivateToolButton(Settings.ActiveTool);
 
-  msg.TypeID:=MSG_ACTIVATEINK;
-  msg.DataString:='';
   for i:=0 to 5 do begin
     atmi:=Inks[Inks.IndexOf(Settings.SelectedInks[i])];
     if atmT=nil then raise Exception.Create('Ink not found! ('+Settings.SelectedInks[i]+')');
-    msg.DataInt:=i;
     fInkButtons[i]:=TBDButton.Create(
       fTexture.ARGBImage,
       fLeft+InkButtonsLeft+i mod 2*130,
@@ -98,6 +98,8 @@ begin
     fInkButtons[i].ParentX:=fLeft;
     fInkButtons[i].ParentY:=fTop;
     fInkButtons[i].ZIndex:=15;
+    fInkButtons[i].Tag:=i;
+    fInkButtons[i].OnClick:=Self.InkButtonClick;
     AddChild(fInkButtons[i]);
   end;
   ActivateInkButton(Settings.ActiveInk);
@@ -204,7 +206,7 @@ begin
     // Don't change selected button, but refill ActiveTool
     for i:=0 to length(fToolButtons)-1 do
       if fToolButtons[i].Selected then
-        MessageQueue.AddMessage(MSG_ACTIVATETOOL,'',i);
+        ActiveTool:=TBDTool(fToolButtons[i].AssignedObject);
   end else
     raise Exception.Create(Format('ActivateToolButton: Index out of range! (%d)',[index]));
 end;
@@ -273,13 +275,18 @@ begin
   Result:=true;
 end;
 
-function TBDControls.UseAlphaButtonClick(Sender:TObject; x,y,buttons:integer
-  ):boolean;
+function TBDControls.ToolButtonClick(Sender:TObject; x,y,buttons:integer):boolean;
 begin
-  if Sender is TBDButton then with Sender as TBDButton do begin
-    fSelected:=not fSelected;
-    Settings.UseAlpha:=fSelected;
-  end;
+  if Sender is TBDButton then
+    ActivateToolButton((Sender as TBDButton).Tag);
+  ActiveTool.Move(fMouseX,fMouseY);
+  Result:=true;
+end;
+
+function TBDControls.InkButtonClick(Sender:TObject; x,y,buttons:integer):boolean;
+begin
+  if Sender is TBDButton then
+    ActivateInkButton((Sender as TBDButton).Tag);
   Result:=true;
 end;
 
@@ -297,10 +304,10 @@ begin
       Self.Visible:=not Self.Visible;
       Result:=true;
     end;
-    MSG_ACTIVATEINK:begin
+{    MSG_ACTIVATEINK:begin
       Self.ActivateInkButton(msg.DataInt);
       Result:=true;
-    end;
+    end;}
     MSG_GETCELFINISHED:begin
       Self.Visible:=true;
       Self.ActivateToolButton(-1);  // Puts the already selected tool into ActiveTool

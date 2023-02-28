@@ -105,11 +105,11 @@ begin
       msg:=MessageQueue.GetNextMessage;
       if not fControls.ProcessMessage(msg) then begin
         case msg.TypeID of
-          MSG_ACTIVATETOOL:begin
+{          MSG_ACTIVATETOOL:begin
             fControls.ActivateToolButton(msg.DataInt);
             SDL_GetMouseState(@mx,@my);
             ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
-          end;
+          end;}
           MSG_ACTIVATEPALETTEEDITOR:begin
             fControls.Visible:=false;
             fPaletteEditor.Visible:=true;

@@ -18,6 +18,8 @@ Todo:
 - FIX: Clicking the thin line beetween the key color and the other colors
   no longer invokes color picking for the selected color.
 - Pressing F1 changes the ActiveColorIndex to the color under the cursor.
+- Get rid of MSG_ACTIVATETOOL and MSG_ACTIVATEINK. Using the buttons TAG property
+  and OnClick event instead.
 
 2023.02.27
 - Undosystem now saves only region data instead of palette+region in region type
