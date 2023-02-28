@@ -1,12 +1,21 @@
 Todo:
-- Palette editor should activate the ColorPicker Tool in the background.
-  This tool should pick a color if left clicked on the drawarea and exit palette
-  editor when right clicked on the drawarea.
+- Pressing F1 should change ActiveColorIndex to color under the cursor.
+- Different highlight for ColorSelector color if PICKCOL is active.
+- Palette editor should activate the SelectColor Tool in the background.
+  This tool should select a color if left clicked on the drawarea and
+  exit palette editor when right clicked on the drawarea.
 - Create menu like in the original. (Not the same items.)
-- Right clicking on ColorSelector should invoke Color Picker Mode.
 - Autosave state in every 1 min.
 - Configurable autosave interval.
 
+
+2023.02.28
+- New tool: PickColor (PICKCOL). When activated, click anywhere on the draw area
+  to pick a color. That color is put on the MessageQueue in a MSG_PICKEDCOLOR message.
+- Right clicking on ColorSelector invokes PICKCOL, and the picked color
+  is put into the selected slot.
+- The picked colors are saved in INI file.
+- Middle click on ColorSelector to invoke PaletteEditor.
 
 2023.02.27
 - Undosystem now saves only region data instead of palette+region in region type
@@ -17,7 +26,7 @@ Todo:
 - ColorSelector selects color only by left clicking on it.
 - Removing some obsolete code and declarations here and there.
 - Button appearance can be changed in INI file. (Settings/ModernGraphics)
-- Right clicking on ColorSelector invokes Palette Editor. Cannot go back, you have
+- Right clicking on ColorSelector invokes PaletteEditor. Cannot go back, you have
   to quit (Q->Y).
 - Palette Editor shows the first 256 colors, highlights the active color.
 

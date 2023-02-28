@@ -5,7 +5,7 @@ unit BDPControlsUnit;
 interface
 
 uses
-  vcc_Container2, BDPButtonUnit, mk_sdl2, BDPMessageUnit;
+  vcc_Container2, BDPButtonUnit, mk_sdl2, BDPMessageUnit, BDPColorSelectorUnit;
 
 type
 
@@ -32,12 +32,13 @@ type
     fToolButtons:array[0..5] of TBDButton;
     fInkButtons:array[0..5] of TBDButton;
     fUndoButton,fRedoButton:TBDButton;
+    fColorSelector:TColorSelector;
     fMouseX,fMouseY:integer;
   end;
 
 implementation
 
-uses SysUtils, BDPSharedUnit, sdl2, BDPToolsUnit, BDPInksUnit, BDPColorSelectorUnit;
+uses SysUtils, BDPSharedUnit, sdl2, BDPToolsUnit, BDPInksUnit;
 
 { TBDControls }
 
@@ -47,7 +48,6 @@ var
   atmT:TBDTool;
   atmI:TBDInk;
   atmB:TBDButton;
-  atmC:TColorSelector;
   msg:TMessage;
 begin
   inherited Create;
@@ -137,12 +137,12 @@ begin
   atmB.ZIndex:=15;
   AddChild(atmB);
 
-  atmC:=TColorSelector.Create(fTexture.ARGBImage, fLeft+COLORSELECTORLEFT, fTop+COLORSELECTORTOP, 8);
-  atmC.ParentX:=fLeft;
-  atmC.ParentY:=fTop;
-  atmC.ZIndex:=15;
-  atmC.Name:='ColorSelector';
-  AddChild(atmC);
+  fColorSelector:=TColorSelector.Create(fTexture.ARGBImage, fLeft+COLORSELECTORLEFT, fTop+COLORSELECTORTOP);
+  fColorSelector.ParentX:=fLeft;
+  fColorSelector.ParentY:=fTop;
+  fColorSelector.ZIndex:=15;
+  fColorSelector.Name:='ColorSelector';
+  AddChild(fColorSelector);
 
   fVisible:=true;
   OnMouseEnter:=MouseEnter;
@@ -320,8 +320,13 @@ begin
       fUndoButton.Enabled:=UndoSystem.CanUndo;
       fRedoButton.Enabled:=UndoSystem.CanRedo;
     end;
+    MSG_PICKEDCOLOR:begin
+      fColorSelector.SetSelectedSlotTo(msg.DataInt);
+      Self.ActivateToolButton(-1);  // Puts the already selected tool into ActiveTool
+      InfoBar.ShowText('');
+      Result:=true;
+    end;
   end;
-
 end;
 
 end.

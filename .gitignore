@@ -37,3 +37,4 @@ backup/
 *.pas;9
 *.log
 source/BurdockPaint.exe
+source/state.bps
