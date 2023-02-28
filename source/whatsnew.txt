@@ -1,6 +1,5 @@
 Todo:
 - Pressing F1 should change ActiveColorIndex to color under the cursor.
-- Different highlight for ColorSelector color if PICKCOL is active.
 - Palette editor should activate the SelectColor Tool in the background.
   This tool should select a color if left clicked on the drawarea and
   exit palette editor when right clicked on the drawarea.
@@ -16,6 +15,7 @@ Todo:
   is put into the selected slot.
 - The picked colors are saved in INI file.
 - Middle click on ColorSelector to invoke PaletteEditor.
+- The currently "picked" color slot is highlighted with VibroColors.
 
 2023.02.27
 - Undosystem now saves only region data instead of palette+region in region type

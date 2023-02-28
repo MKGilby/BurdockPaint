@@ -111,7 +111,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="3"/>
         <TopLine Value="1033"/>
-        <CursorPos Y="1163"/>
+        <CursorPos X="75" Y="1163"/>
         <FoldState Value=" T7AAJ9 PiIk1J T3kO04815 pjJkQ0E[94FjC2A]9iXjN0A3]ISi52N4 pkAkG2R3]RZl406[R40jK056[s5a0J1 PCL0d"/>
         <UsageCount Value="111"/>
         <Loaded Value="True"/>
@@ -156,8 +156,8 @@
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="8"/>
-        <TopLine Value="70"/>
-        <CursorPos X="28" Y="90"/>
+        <TopLine Value="41"/>
+        <CursorPos X="55" Y="65"/>
         <UsageCount Value="62"/>
         <Loaded Value="True"/>
       </Unit>
@@ -378,18 +378,6 @@
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="BDPSharedUnit.pas"/>
-        <Caret Line="66" Column="39" TopLine="29"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPSharedUnit.pas"/>
-        <Caret Line="127" Column="14" TopLine="90"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPPaletteEditorUnit.pas"/>
-        <Caret Line="33"/>
-      </Position>
-      <Position>
         <Filename Value="BDPMainUnit.pas"/>
         <Caret Line="84" Column="62" TopLine="52"/>
       </Position>
@@ -496,6 +484,18 @@
       <Position>
         <Filename Value="BDPToolsUnit.pas"/>
         <Caret Line="150" Column="74" TopLine="99"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPColorSelectorUnit.pas"/>
+        <Caret Line="124" Column="24" TopLine="83"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPColorSelectorUnit.pas"/>
+        <Caret Line="93" TopLine="67"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPColorSelectorUnit.pas"/>
+        <Caret Line="81" TopLine="43"/>
       </Position>
     </JumpHistory>
     <RunParams>

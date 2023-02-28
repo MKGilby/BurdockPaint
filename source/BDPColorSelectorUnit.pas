@@ -21,6 +21,7 @@ type
     fSelectedIndex:integer;
 //    fColors:array of integer;
     fParentX,fParentY:integer;
+    fPickingColor:boolean;
   published
     property ParentX:integer read fParentX write fParentX;
     property ParentY:integer read fParentY write fParentY;
@@ -45,24 +46,41 @@ begin
     if Settings.SelectedColors[i]=Settings.ActiveColorIndex then fSelectedIndex:=i;
   fTarget:=iTarget;
   OnClick:=Self.Click;
+  fPickingColor:=false;
 end;
 
 procedure TColorSelector.Draw;
 var i,x:integer;
 begin
-  x:=0;
+  // Draw dark background for all slots
+  fTarget.Bar(
+    fLeft-fParentX,
+    fTop-fParentY,
+    COLORSELECTORBOXSIZE,
+    COLORSELECTORBOXSIZE,
+    OverlayImage.Palette[2]);
+  fTarget.Bar(
+    fLeft-fParentX+COLORSELECTORGAP+COLORSELECTORBOXSIZE-3,
+    fTop-fParentY,
+    (COLORSELECTORBOXSIZE-3)*(COLORSELECTORCOLORS-1)+3,
+    COLORSELECTORBOXSIZE,
+    OverlayImage.Palette[2]);
+{  x:=0;
   for i:=0 to COLORSELECTORCOLORS-1 do begin
     fTarget.Bar(fLeft+x-fParentX,fTop-fParentY,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[2]);
     fTarget.Bar(fLeft+x-fParentX+3,fTop-fParentY+3,COLORSELECTORBOXSIZE-6,COLORSELECTORBOXSIZE-6,MainImage.Palette[Settings.SelectedColors[i]]);
     x+=COLORSELECTORBOXSIZE-3;
     if i=0 then x+=COLORSELECTORGAP;
-  end;
+  end;}
   x:=0;
   for i:=0 to COLORSELECTORCOLORS-1 do begin
     if i=fSelectedIndex then begin
-      fTarget.Bar(fLeft+x-fParentX,fTop-fParentY,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[5]);
-      fTarget.Bar(fLeft+x-fParentX+3,fTop-fParentY+3,COLORSELECTORBOXSIZE-6,COLORSELECTORBOXSIZE-6,MainImage.Palette[Settings.SelectedColors[i]]);
+      if not fPickingColor then
+        fTarget.Bar(fLeft+x-fParentX,fTop-fParentY,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[5])
+      else
+        fTarget.Bar(fLeft+x-fParentX,fTop-fParentY,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[VibroColors.GetColorIndex])
     end;
+    fTarget.Bar(fLeft+x-fParentX+3,fTop-fParentY+3,COLORSELECTORBOXSIZE-6,COLORSELECTORBOXSIZE-6,MainImage.Palette[Settings.SelectedColors[i]]);
     x+=COLORSELECTORBOXSIZE-3;
     if i=0 then x+=COLORSELECTORGAP;
   end;
@@ -96,6 +114,7 @@ begin
       if i=0 then cx+=COLORSELECTORGAP;
     end;
     ActiveTool:=Tools.ItemByName['PICKCOL'];
+    fPickingColor:=true;
   end;
   Result:=true;
 end;
@@ -103,9 +122,12 @@ end;
 procedure TColorSelector.SetSelectedSlotTo(ColorIndex:integer);
 begin
   if (fSelectedIndex>=0) and (fSelectedIndex<COLORSELECTORCOLORS) then begin
-    Settings.SelectedColors[fSelectedIndex]:=ColorIndex;
-    Settings.ActiveColorIndex:=ColorIndex;
+    if (ColorIndex>=0) and (ColorIndex<MainImage.Palette.Size) then begin
+      Settings.SelectedColors[fSelectedIndex]:=ColorIndex;
+      Settings.ActiveColorIndex:=ColorIndex;
+    end;
   end;
+  fPickingColor:=false;
 end;
 
 
