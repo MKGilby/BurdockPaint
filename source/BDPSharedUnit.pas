@@ -22,7 +22,7 @@ const
   COORDSLEFT=WINDOWWIDTH-COORDSWIDTH;
   COORDSCENTER=COORDSLEFT+COORDSWIDTH div 2;
   NORMALBUTTONWIDTH=127;
-  SMALLBUTTONWIDTH=35;  // 27
+  SMALLBUTTONWIDTH=35;
   UNDOBUTTONSLEFT=3;
   UNDOBUTTONSTOP=36;
   TOOLBUTTONSLEFT=UNDOBUTTONSLEFT+NORMALBUTTONWIDTH+3;
@@ -46,7 +46,7 @@ const
 
   // Message typeID constants
 
-  // No message, but buttons need one. Give them this.
+  // Don't want to send message but buttons need one? Give them this.
   MSG_NONE=0;
   // Toggle visibility of main Controls panel.
   MSG_TOGGLECONTROLS=1;

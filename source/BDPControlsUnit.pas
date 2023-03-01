@@ -60,7 +60,7 @@ begin
   fTexture.ARGBImage.Clear;
 
   msg.TypeID:=MSG_NONE;
-  msg.DataString:='';
+//  msg.DataString:='';
   msg.DataInt:=0;
   for i:=0 to 5 do begin
     atmT:=Tools[Tools.IndexOf(Settings.SelectedTools[i])];

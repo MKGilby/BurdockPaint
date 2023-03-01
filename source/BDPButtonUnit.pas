@@ -115,7 +115,7 @@ function TBDButton.Click(Sender:TObject; x,y,buttons:integer):boolean;
 begin
   case buttons of
     1:begin  // Left click
-        if fMessage.TypeID<>MSG_NONE then MessageQueue.AddMessage(fMessage.TypeID,fMessage.DataString,fMessage.DataInt);
+        if fMessage.TypeID<>MSG_NONE then MessageQueue.AddMessage(fMessage);
       end;
   end;
   Result:=true;
