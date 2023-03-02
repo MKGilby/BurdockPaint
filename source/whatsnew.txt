@@ -1,7 +1,5 @@
 Todo:
-- Palette editor should activate the SelectColor Tool in the background.
-  This tool should select a color if left clicked on the drawarea and
-  exit palette editor when right clicked on the drawarea.
+- Right clicking on DrawArea should exit PaletteEditor.
 - Create menu like in the original. (Not the same items.)
 - Autosave state in every 1 min.
 - Configurable autosave interval.
@@ -13,6 +11,7 @@ Todo:
 - When invoking PaletteEditor, the sliders are set to the selected color's RGB values.
 - Clicking on the colors on the PaletteEditor changes the current color and sets
   the sliders accordingly.
+- After invoking PaletteEditor, clicking on the draw area selects current color.
 
 2023.03.01
 - Removed string data part from Messaging subsystem.

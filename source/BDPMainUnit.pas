@@ -90,7 +90,7 @@ begin
 end;
 
 procedure TMain.Run;
-var msg:TMessage;quit:boolean;mx,my:integer;
+var msg:TMessage;mres,quit:boolean;mx,my:integer;
 begin
   quit:=false;
   repeat
@@ -103,7 +103,9 @@ begin
     FlipNoLimit;
     while MessageQueue.HasNewMessage do begin
       msg:=MessageQueue.GetNextMessage;
-      if not fControls.ProcessMessage(msg) then begin
+      mres:=fControls.ProcessMessage(msg);
+      if not mres then mres:=fPaletteEditor.ProcessMessage(msg);
+      if not mres then begin
         case msg.TypeID of
           MSG_ACTIVATEPALETTEEDITOR:begin
             fControls.Hide;

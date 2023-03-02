@@ -304,7 +304,7 @@ begin
       Result:=true;
     end;
     MSG_GETCELFINISHED:begin
-      Self.Visible:=true;
+      Self.Show;
       Self.ActivateToolButton(-1);  // Puts the already selected tool into ActiveTool
       Result:=true;
     end;

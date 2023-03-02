@@ -72,6 +72,8 @@ const
   MSG_SETUNDOREDOBUTTON=9;
   // Hide Controls, show PaletteEditor
   MSG_ACTIVATEPALETTEEDITOR=10;
+  // ActiveColorIndex changed. Used in PaletteEditor
+  MSG_ACTIVECOLORINDEXCHANGED=11;
 
 
 var

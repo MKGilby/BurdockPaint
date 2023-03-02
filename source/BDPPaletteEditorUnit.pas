@@ -24,6 +24,9 @@ type
     procedure OnSliderGChange(Sender:TObject;newValue:integer);
     procedure OnSliderBChange(Sender:TObject;newValue:integer);
     procedure PaletteEditorShow(Sender:TObject);
+    procedure PaletteEditorHide(Sender:TObject);
+    procedure RefreshSliders;
+    function ProcessMessage(msg:TMessage):boolean;
   private
     fTexture:TStreamingTexture;
     fSliderR,fSliderG,fSliderB:TBDSlider;
@@ -148,6 +151,7 @@ end;
 
 function TBDPaletteEditor.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
 begin
+  Result:=false;
   x-=Left;
   y-=Top;
   if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
@@ -155,9 +159,9 @@ begin
     x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
     y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
     Settings.ActiveColorIndex:=y*32+x;
-    PaletteEditorShow(Self);
+    RefreshSliders;
+    Result:=true;
   end;
-  Result:=true;
 end;
 
 function TBDPaletteEditor.Click(Sender:TObject; x,y,buttons:integer):boolean;
@@ -182,9 +186,35 @@ end;
 
 procedure TBDPaletteEditor.PaletteEditorShow(Sender:TObject);
 begin
+  Self.Visible:=true;
+//  fSliderR.Visible:=true;
+  RefreshSliders;
+  ActiveTool:=Tools.ItemByName['SELCOL'];
+end;
+
+procedure TBDPaletteEditor.PaletteEditorHide(Sender:TObject);
+begin
+
+end;
+
+procedure TBDPaletteEditor.RefreshSliders;
+begin
   fSliderR.Position:=MainImage.Palette.ColorR[Settings.ActiveColorIndex];
   fSliderG.Position:=MainImage.Palette.ColorG[Settings.ActiveColorIndex];
   fSliderB.Position:=MainImage.Palette.ColorB[Settings.ActiveColorIndex];
+end;
+
+function TBDPaletteEditor.ProcessMessage(msg:TMessage):boolean;
+begin
+  Result:=false;
+  if Enabled then begin
+    case msg.TypeID of
+      MSG_ACTIVECOLORINDEXCHANGED:begin
+        RefreshSliders;
+        Result:=true;
+      end;
+    end;
+  end;
 end;
 
 end.

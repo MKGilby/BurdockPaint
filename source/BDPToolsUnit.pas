@@ -144,6 +144,14 @@ type
     procedure Draw; override;
   end;
 
+  { TBDToolSelectColor }
+
+  TBDToolSelectColor=class(TBDTool)
+    constructor Create; override;
+    function Click(x,y,button:integer):boolean; override;
+    procedure Draw; override;
+  end;
+
 implementation
 
 uses
@@ -214,6 +222,7 @@ begin
   AddObject('GETCEL',TBDToolGetCel.Create);
   AddObject('PUTCEL',TBDToolPutCel.Create);
   AddObject('PICKCOL',TBDToolPickColor.Create);
+  AddObject('SELCOL',TBDToolSelectColor.Create);
 end;
 
 // --------------------------------------------------------- [ TBDToolBox ] ---
@@ -1151,15 +1160,16 @@ constructor TBDToolPickColor.Create;
 begin
   inherited Create;
   fName:='PICKCOL';
-  fHint:=uppercase('Pick color for the selected color slot');
+  fHint:=uppercase('Pick color for the selected color slot.');
 end;
 
 function TBDToolPickColor.Click(x,y,button:integer):boolean;
 begin
   if button=SDL_BUTTON_LEFT then begin
-  if (x>=0) and (x<MainImage.Width) and (y>=0) and (y<MainImage.Height) then
-    MessageQueue.AddMessage(MSG_PICKEDCOLOR,'',MainImage.GetPixel(x,y));
-  end else if button=SDL_BUTTON_RIGHT then begin
+    if (x>=0) and (x<MainImage.Width) and (y>=0) and (y<MainImage.Height) then
+      MessageQueue.AddMessage(MSG_PICKEDCOLOR,'',MainImage.GetPixel(x,y));
+  end
+  else if button=SDL_BUTTON_RIGHT then begin
     MessageQueue.AddMessage(MSG_PICKEDCOLOR,'',-1);  // -1 means no change
   end;
   Result:=true;
@@ -1169,6 +1179,40 @@ procedure TBDToolPickColor.Draw;
 begin
   if (fX>=0) and (fX<MainImage.Width) and (fY>=0) and (fY<MainImage.Height) then begin
     InfoBar.ShowText('COLOR INDEX='+inttostr(MainImage.GetPixel(fX,fY)));
+  end else
+    InfoBar.ShowText('OUTSIDE OF DRAW AREA!');
+end;
+
+// ------------------------------------------------- [ TBDToolSelectColor ] ---
+
+constructor TBDToolSelectColor.Create;
+begin
+  inherited Create;
+  fName:='SELCOL';
+  fHint:=uppercase('Select color to draw.');
+end;
+
+function TBDToolSelectColor.Click(x,y,button:integer):boolean;
+begin
+  if button=SDL_BUTTON_LEFT then begin
+    if (x>=0) and (x<MainImage.Width) and (y>=0) and (y<MainImage.Height) then begin
+      Settings.ActiveColorIndex:=MainImage.GetPixel(x,y);
+      MessageQueue.AddMessage(MSG_ACTIVECOLORINDEXCHANGED);
+    end;
+  end;
+  Result:=true;
+end;
+
+procedure TBDToolSelectColor.Draw;
+var c:uint32;
+begin
+  if (fX>=0) and (fX<MainImage.Width) and (fY>=0) and (fY<MainImage.Height) then begin
+    c:=MainImage.GetPixel(fX,fY);
+    InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d)',
+    [c,MainImage.Palette.ColorR[c],
+    MainImage.Palette.ColorG[c],
+    MainImage.Palette.ColorB[c],
+    MainImage.Palette.ColorA[c]]));
   end else
     InfoBar.ShowText('OUTSIDE OF DRAW AREA!');
 end;

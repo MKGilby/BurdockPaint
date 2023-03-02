@@ -39,6 +39,8 @@ begin
   IncClickAreaSize:=COLORSLIDERHEIGHT;
   Font:=MM.Fonts['LightGray'];
   fArrowFont:=MM.Fonts['Black'];
+  Visible:=true;
+  Enabled:=true;
 end;
 
 procedure TBDSlider.Draw;
