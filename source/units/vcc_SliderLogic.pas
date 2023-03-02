@@ -24,7 +24,7 @@
 
 // Version info:
 //
-//  V1.00: Gilby - 2023.03.01
+//  V1.00: Gilby - 2023.03.01-02
 //    * Initial creation
 
 {$mode delphi}
@@ -37,6 +37,8 @@ interface
 uses Classes, MKMouse2, MKINIFile;
 
 type
+
+  TOnSliderPositionChangeEvent=procedure(Sender:TObject;newValue:integer) of object;
 
   { TSliderLogic }
 
@@ -55,6 +57,7 @@ type
     fDecClickAreaSize,fIncClickAreaSize:integer;
     fSlideAreaSize:integer;
     fOrgX:integer;
+    fOnChange:TOnSliderPositionChangeEvent;
     procedure fSetLeft(value:integer); virtual;
     procedure fSetTop(value:integer); virtual;
     procedure fSetWidth(value:integer);
@@ -71,6 +74,7 @@ type
     property MinValue:integer read fMinValue write fMinValue;
     property MaxValue:integer read fMaxValue write fMaxValue;
     property Position:integer read fPosition write fPosition;
+    property OnChange:TOnSliderPositionChangeEvent read fOnChange write fOnChange;
   end;
      
 implementation
@@ -100,6 +104,7 @@ begin
   OnMouseDown:=Self.MouseDown;
   OnMouseUp:=Self.MouseUp;
   OnMouseMove:=Self.MouseMove;
+  fOnChange:=nil;
 
   fState:=csMouseUp;
 end;
@@ -158,14 +163,21 @@ function TSliderLogic.MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
 begin
   x-=Left;
   if (x>=0) and (x<fDecClickAreaSize) then begin
-    if (fPosition>fMinValue) then dec(fPosition);
+    if (fPosition>fMinValue) then begin
+      dec(fPosition);
+      if Assigned(fOnChange) then fOnChange(Sender,fPosition);
+    end;
   end
   else if (x>=fDecClickAreaSize) and (x<fDecClickAreaSize+fSlideAreaSize) then begin
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*(x-fDecClickAreaSize) div (fSlideAreaSize-1);
+    if Assigned(fOnChange) then fOnChange(Sender,fPosition);
     fState:=csMouseDown;
   end
   else if (x>=fDecClickAreaSize+fSlideAreaSize) and (x<fWidth) then begin
-    if (fPosition<fMaxValue) then inc(fPosition);
+    if (fPosition<fMaxValue) then begin
+      inc(fPosition);
+      if Assigned(fOnChange) then fOnChange(Sender,fPosition);
+    end;
   end;
   Result:=true;
 end;
@@ -182,6 +194,7 @@ begin
   if (fState=csMouseDown) and (x>=fDecClickAreaSize) and (x<fDecClickAreaSize+fSlideAreaSize) then begin
     x:=x-fDecClickAreaSize;
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*x div (fSlideAreaSize-1);
+    if Assigned(fOnChange) then fOnChange(Sender,fPosition);
   end;
   Result:=true;
 end;

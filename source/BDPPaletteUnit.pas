@@ -60,10 +60,14 @@ type
     fMaxEntries:integer;
     function fGetColor(index:integer):uint32;
     function fGetColorA(index:integer):uint8;
-    function fGetColorB(index:integer):uint8;
-    function fGetColorG(index:integer):uint8;
     function fGetColorR(index:integer):uint8;
+    function fGetColorG(index:integer):uint8;
+    function fGetColorB(index:integer):uint8;
     procedure fSetColor(index:integer; value:uint32);
+    procedure fSetColorA(index:integer; value:uint8);
+    procedure fSetColorR(index:integer; value:uint8);
+    procedure fSetColorG(index:integer; value:uint8);
+    procedure fSetColorB(index:integer; value:uint8);
     // Creates a compressed stream that contains the data in V1 format.
     function CreateDataV1:TStream;
     // Creates a compressed stream that contains the data in V2 format.
@@ -79,10 +83,10 @@ type
 
   public
     property Colors[index:integer]:uint32 read fGetColor write fSetColor; default;
-    property ColorR[index:integer]:uint8 read fGetColorR;
-    property ColorG[index:integer]:uint8 read fGetColorG;
-    property ColorB[index:integer]:uint8 read fGetColorB;
-    property ColorA[index:integer]:uint8 read fGetColorA;
+    property ColorR[index:integer]:uint8 read fGetColorR write fSetColorR;
+    property ColorG[index:integer]:uint8 read fGetColorG write fSetColorG;
+    property ColorB[index:integer]:uint8 read fGetColorB write fSetColorB;
+    property ColorA[index:integer]:uint8 read fGetColorA write fSetColorA;
     property Size:integer read fMaxEntries;
   end;
 
@@ -425,6 +429,30 @@ procedure TBDPalette.fSetColor(index:integer; value:uint32);
 begin
   if (index>=0) and (index<fMaxEntries) then
     uint32((fEntries+index*4)^):=value;
+end;
+
+procedure TBDPalette.fSetColorA(index:integer; value:uint8);
+begin
+  if (index>=0) and (index<fMaxEntries) then
+    uint8((fEntries+index*4+3)^):=value;
+end;
+
+procedure TBDPalette.fSetColorR(index:integer; value:uint8);
+begin
+  if (index>=0) and (index<fMaxEntries) then
+    uint8((fEntries+index*4+2)^):=value;
+end;
+
+procedure TBDPalette.fSetColorG(index:integer; value:uint8);
+begin
+  if (index>=0) and (index<fMaxEntries) then
+    uint8((fEntries+index*4+1)^):=value;
+end;
+
+procedure TBDPalette.fSetColorB(index:integer; value:uint8);
+begin
+  if (index>=0) and (index<fMaxEntries) then
+    uint8((fEntries+index*4)^):=value;
 end;
 
 end.

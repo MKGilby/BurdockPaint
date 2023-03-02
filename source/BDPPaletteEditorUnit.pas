@@ -20,6 +20,9 @@ type
     function MouseMove(Sender:TObject;x,y:integer):boolean;
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
     function Click(Sender:TObject;x,y,buttons: integer):boolean;
+    procedure OnSliderRChange(Sender:TObject;newValue:integer);
+    procedure OnSliderGChange(Sender:TObject;newValue:integer);
+    procedure OnSliderBChange(Sender:TObject;newValue:integer);
   private
     fTexture:TStreamingTexture;
     fSliderR,fSliderG,fSliderB:TBDSlider;
@@ -60,6 +63,7 @@ begin
     Left:=COLORSLIDERSLEFT;Top:=Self.fTop+6;MinValue:=0;MaxValue:=255;Position:=32;
     ZIndex:=15;
     Name:='R-slider';
+    OnChange:=OnSliderRChange;
   end;
   AddChild(fSliderR);
 
@@ -68,6 +72,7 @@ begin
     Left:=COLORSLIDERSLEFT+COLORSLIDERWIDTH+3;Top:=Self.fTop+6;MinValue:=0;MaxValue:=255;Position:=32;
     ZIndex:=15;
     Name:='G-slider';
+    OnChange:=OnSliderGChange;
   end;
   AddChild(fSliderG);
 
@@ -76,6 +81,7 @@ begin
     Left:=COLORSLIDERSLEFT+2*(COLORSLIDERWIDTH+3);Top:=Self.fTop+6;MinValue:=0;MaxValue:=255;Position:=32;
     ZIndex:=15;
     Name:='B-slider';
+    OnChange:=OnSliderBChange;
   end;
   AddChild(fSliderB);
 
@@ -146,6 +152,21 @@ end;
 function TBDPaletteEditor.Click(Sender:TObject; x,y,buttons:integer):boolean;
 begin
   Result:=true;
+end;
+
+procedure TBDPaletteEditor.OnSliderRChange(Sender:TObject; newValue:integer);
+begin
+  MainImage.Palette.ColorR[Settings.ActiveColorIndex]:=newValue;
+end;
+
+procedure TBDPaletteEditor.OnSliderGChange(Sender:TObject; newValue:integer);
+begin
+  MainImage.Palette.ColorG[Settings.ActiveColorIndex]:=newValue;
+end;
+
+procedure TBDPaletteEditor.OnSliderBChange(Sender:TObject; newValue:integer);
+begin
+  MainImage.Palette.ColorB[Settings.ActiveColorIndex]:=newValue;
 end;
 
 end.

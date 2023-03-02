@@ -190,10 +190,6 @@
         <Filename Value="BDPSliderUnit.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
-      <Unit>
-        <Filename Value="units\vcc_ARGBSlider.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
