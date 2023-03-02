@@ -23,6 +23,9 @@
 //     * Changed Log.Trace to Log.LogDebug.
 //   V1.04 - 2023.02.26 - Gilby
 //     * Added Enabled property to TMouseObject.
+//   V1.05 - 2023.03.02 - Gilby
+//     * Added Show/Hide methods to TMouseObject.
+//     * Added OnShow and OnHide events.
 }
 
 {$ifdef fpc}
@@ -37,10 +40,13 @@ uses
   Classes, SDL2, StackUnit, fgl;
 
 type
+  TSimpleEvent=procedure(Sender:TObject) of object;
   TMouseButtonEvent=function(Sender:TObject;x,y,buttons:integer):boolean of object;
   TMouseMotionEvent=function(Sender:TObject;x,y:integer):boolean of object;
   TMouseWheelEvent=function(Sender:TObject;x,y,wheelx,wheely:integer):boolean of object;
   TKeyEvent=function(Sender:TObject;key:integer):boolean of object;
+
+  { TMouseObject }
 
   TMouseObject=class
     constructor Create;
@@ -49,6 +55,8 @@ type
     function HandleEvent(Event:PSDL_Event):boolean; virtual;
     procedure Draw; virtual; abstract;
     function IsOver(x,y:integer):boolean;
+    procedure Show;
+    procedure Hide;
   public
     OnMouseDown:TMouseButtonEvent;
     OnMouseUp:TMouseButtonEvent;
@@ -59,6 +67,8 @@ type
     OnMouseWheel:TMouseWheelEvent;
     OnKeyDown:TKeyEvent;
     OnKeyUp:TKeyEvent;
+    OnShow:TSimpleEvent;
+    OnHide:TSimpleEvent;
   protected
     fLeft,fTop,fWidth,fHeight,fZIndex:integer;
     over:boolean;
@@ -114,7 +124,7 @@ uses SysUtils, Logger, MK_SDL2;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.04';
+  Version='1.05';
 
 constructor TMouseObjects.Create;
 begin
@@ -239,6 +249,8 @@ begin
   OnMouseWheel:=nil;
   OnKeyDown:=nil;
   OnKeyUp:=nil;
+  OnShow:=nil;
+  OnHide:=nil;
 end;
 
 procedure TMouseObject.SetBounds(x1,y1,x2,y2:integer);
@@ -275,6 +287,22 @@ begin
 //  Log.LogStatus(Format('%s.IsOver(%d,%d) Bounds: %d,%d,%d,%d',[name,x,y,fLeft,fTop,fLeft+fWidth,fTop+fHeight]));
   Result:=(x>=fLeft) and (x<fLeft+fWidth) and (y>=fTop) and (y<fTop+fHeight);
 //  if Result then Log.LogStatus('Result=true') else Log.LogStatus('Result=false');
+end;
+
+procedure TMouseObject.Show;
+begin
+  if not fVisible then begin
+    fVisible:=true;
+    if Assigned(OnShow) then OnShow(Self);
+  end;
+end;
+
+procedure TMouseObject.Hide;
+begin
+  if fVisible then begin
+    fVisible:=false;
+    if Assigned(OnHide) then OnHide(Self);
+  end;
 end;
 
 function TMouseObject.HandleEvent(Event:PSDL_Event):boolean;

@@ -106,8 +106,8 @@ begin
       if not fControls.ProcessMessage(msg) then begin
         case msg.TypeID of
           MSG_ACTIVATEPALETTEEDITOR:begin
-            fControls.Visible:=false;
-            fPaletteEditor.Visible:=true;
+            fControls.Hide;
+            fPaletteEditor.Show;
           end;
           MSG_QUIT:begin
             if msg.DataInt=0 then fQuitWindow.Visible:=false

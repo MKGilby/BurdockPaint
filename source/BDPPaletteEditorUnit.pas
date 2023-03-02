@@ -23,6 +23,7 @@ type
     procedure OnSliderRChange(Sender:TObject;newValue:integer);
     procedure OnSliderGChange(Sender:TObject;newValue:integer);
     procedure OnSliderBChange(Sender:TObject;newValue:integer);
+    procedure PaletteEditorShow(Sender:TObject);
   private
     fTexture:TStreamingTexture;
     fSliderR,fSliderG,fSliderB:TBDSlider;
@@ -56,6 +57,7 @@ begin
   OnMouseMove:=MouseMove;
   OnMouseDown:=MouseDown;
   OnClick:=Click;
+  OnShow:=PaletteEditorShow;
   fName:='PaletteEditor';
 
   fSliderR:=TBDSlider.Create(fTexture.ARGBImage,fLeft,fTop);
@@ -167,6 +169,13 @@ end;
 procedure TBDPaletteEditor.OnSliderBChange(Sender:TObject; newValue:integer);
 begin
   MainImage.Palette.ColorB[Settings.ActiveColorIndex]:=newValue;
+end;
+
+procedure TBDPaletteEditor.PaletteEditorShow(Sender:TObject);
+begin
+  fSliderR.Position:=MainImage.Palette.ColorR[Settings.ActiveColorIndex];
+  fSliderG.Position:=MainImage.Palette.ColorG[Settings.ActiveColorIndex];
+  fSliderB.Position:=MainImage.Palette.ColorB[Settings.ActiveColorIndex];
 end;
 
 end.
