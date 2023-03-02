@@ -22,6 +22,7 @@ const
   COORDSLEFT=WINDOWWIDTH-COORDSWIDTH;
   COORDSCENTER=COORDSLEFT+COORDSWIDTH div 2;
   NORMALBUTTONWIDTH=127;
+  NORMALBUTTONHEIGHT=27;
   SMALLBUTTONWIDTH=35;
   UNDOBUTTONSLEFT=3;
   UNDOBUTTONSTOP=36;
@@ -36,6 +37,9 @@ const
   COLORSELECTORGAP=12;
   TOGGLEBUTTONSLEFT=INKBUTTONSLEFT+2*(NORMALBUTTONWIDTH+3);
   TOGGLEBUTTONSTOP=6;
+  COLORSLIDERSLEFT=240;
+  COLORSLIDERWIDTH=300;
+  COLORSLIDERHEIGHT=33;
 
   MAXPALETTEENTRIES=2048;  // Palette color count hard limit
   POSTPROCESSCOLOR=$FFF0;
@@ -112,7 +116,59 @@ begin
   MM.Fonts[pName].Size:=3;
 end;
 
-procedure CreateButtonGFX;
+procedure CreateArch(Height:integer;Prefix:string);
+const
+  ArchModern=
+    '.....xxx'+
+    '...xxxxx'+
+    '..xxxxxx'+
+    '.xxxxxx '+
+    '.xxxx   '+
+    'xxxx    '+
+    'xxxx    '+
+    'xxx     ';
+  ArchOriginal=
+    '......xx'+
+    '......xx'+
+    '......xx'+
+    '...xxx  '+
+    '...xxx  '+
+    '...xxx  '+
+    'xxx     '+
+    'xxx     ';
+var x,y:integer;c:uint32;fLeftImage,fRightImage:TARGBImage;s:string;
+begin
+  if Height<16 then begin
+    Height:=16;
+    Log.LogWarning('Cannot create Arch with less than 16 pixels height!');
+  end;
+  fLeftImage:=TARGBImage.Create(8,Height);
+  fLeftImage.Bar(0,0,fLeftImage.Width,fLeftImage.Height,0,0,0,0);
+  fRightImage:=TARGBImage.Create(8,Height);
+  fRightImage.Bar(0,0,fRightImage.Width,fRightImage.Height,0,0,0,0);
+  if Settings.ModernGraphics then s:=ArchModern else s:=ArchOriginal;
+  for y:=0 to 7 do
+    for x:=0 to 7 do begin
+      case s[x+y*8+1] of
+      '.':c:=OverlayImage.Palette[3];
+      'x':c:=OverlayImage.Palette[2];
+      ' ':c:=0;
+      end;
+      fLeftImage.PutPixel(x,y,c);
+      fLeftImage.PutPixel(x,Height-y-1,c);
+      fRightImage.PutPixel(7-x,y,c);
+      fRightImage.PutPixel(7-x,Height-y-1,c);
+    end;
+  if Height>16 then begin
+    fLeftImage.Bar(0,8,3,Height-16,OverlayImage.Palette[2]);
+    fRightImage.Bar(5,8,3,Height-16,OverlayImage.Palette[2]);
+  end;
+  MM.AddImage(fLeftImage,Prefix+'Left');
+  MM.AddImage(fRightImage,Prefix+'Right');
+  // Don't free images, MM will do that!
+end;
+
+{procedure CreateButtonGFX;
 const
   ArchModern=
     '.....xxx'+
@@ -156,6 +212,12 @@ begin
   MM.AddImage(fLeftImage,'ButtonLeft');
   MM.AddImage(fRightImage,'ButtonRight');
   // Don't free images, MM will do that!
+end;}
+
+procedure CreateButtonGFX;
+begin
+  CreateArch(27,'Button');
+  CreateArch(33,'Slider');
 end;
 
 procedure LoadState;
@@ -194,6 +256,7 @@ begin
   LoadSystemFont($40,4,4,'DarkRed');
   LoadSystemFont($ee,$ee,$ee,'White');
   LoadSystemFont($ee,$aa,$cc,'Pinky');
+  LoadSystemFont($9a,$9a,$9a,'LightGray');
   LoadSystemFont($40,$40,$40,'DarkGray');
   MM.Load('logofont.png','LogoFont');
   MM.LoadImage('burdock.png','Burdock');

@@ -7,6 +7,9 @@ Todo:
 - Configurable autosave interval.
 
 
+2023.03.02
+- Added sliders to PaletteEditor. They are not changing anything yet.
+
 2023.03.01
 - Removed string data part from Messaging subsystem.
 

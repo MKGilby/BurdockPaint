@@ -94,7 +94,7 @@ implementation
 uses SysUtils, MKToolBox, Logger;
      
 const
-  Fstr='vcc_ARGBButton.pas, ';
+  Fstr={$I %FILE%}+', ';
   Version='1.00';
 
 

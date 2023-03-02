@@ -1,7 +1,7 @@
 unit BDPColorSelectorUnit;
 
 {$mode Delphi}
-{$WARN 5024 off : Parameter "$1" not used}
+
 interface
 
 uses MKMouse2, ARGBImageUnit;

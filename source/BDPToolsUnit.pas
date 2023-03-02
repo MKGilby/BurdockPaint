@@ -1,7 +1,7 @@
 unit BDPToolsUnit;
 
 {$mode delphi}
-{$WARN 5024 off : Parameter "$1" not used}
+
 interface
 
 uses

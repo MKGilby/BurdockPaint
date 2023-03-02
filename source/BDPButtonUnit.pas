@@ -1,7 +1,6 @@
 unit BDPButtonUnit;
 
 {$mode Delphi}{$H+}
-{$WARN 5024 off : Parameter "$1" not used}
 
 interface
 
@@ -47,7 +46,7 @@ begin
   fLeft:=iX;
   fTop:=iY;
   fWidth:=iWidth;
-  fHeight:=27;
+  fHeight:=NORMALBUTTONHEIGHT;
   TextAlignX:=mjCenter;
   TextOffsetY:=2;
   Font:=MM.Fonts['Black'];

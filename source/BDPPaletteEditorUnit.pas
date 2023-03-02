@@ -5,7 +5,7 @@ unit BDPPaletteEditorUnit;
 interface
 
 uses
-  vcc_Container2, BDPButtonUnit, mk_sdl2, BDPMessageUnit;
+  vcc_Container2, BDPButtonUnit, mk_sdl2, BDPMessageUnit, BDPSliderUnit;
 
 type
 
@@ -22,6 +22,7 @@ type
     function Click(Sender:TObject;x,y,buttons: integer):boolean;
   private
     fTexture:TStreamingTexture;
+    fSliderR,fSliderG,fSliderB:TBDSlider;
   end;
 
 implementation
@@ -53,6 +54,30 @@ begin
   OnMouseDown:=MouseDown;
   OnClick:=Click;
   fName:='PaletteEditor';
+
+  fSliderR:=TBDSlider.Create(fTexture.ARGBImage,fLeft,fTop);
+  with fSliderR do begin
+    Left:=COLORSLIDERSLEFT;Top:=Self.fTop+6;MinValue:=0;MaxValue:=255;Position:=32;
+    ZIndex:=15;
+    Name:='R-slider';
+  end;
+  AddChild(fSliderR);
+
+  fSliderG:=TBDSlider.Create(fTexture.ARGBImage,fLeft,fTop);
+  with fSliderG do begin
+    Left:=COLORSLIDERSLEFT+COLORSLIDERWIDTH+3;Top:=Self.fTop+6;MinValue:=0;MaxValue:=255;Position:=32;
+    ZIndex:=15;
+    Name:='G-slider';
+  end;
+  AddChild(fSliderG);
+
+  fSliderB:=TBDSlider.Create(fTexture.ARGBImage,fLeft,fTop);
+  with fSliderB do begin
+    Left:=COLORSLIDERSLEFT+2*(COLORSLIDERWIDTH+3);Top:=Self.fTop+6;MinValue:=0;MaxValue:=255;Position:=32;
+    ZIndex:=15;
+    Name:='B-slider';
+  end;
+  AddChild(fSliderB);
 
 end;
 

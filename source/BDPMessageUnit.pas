@@ -7,7 +7,6 @@ interface
 type
   TMessage=record
     TypeID:integer;
-//    DataString:string;
     DataInt:integer;
   end;
 
@@ -48,7 +47,6 @@ procedure TMessageQueue.AddMessage(pTypeID:integer; pDataString:string;
 begin
   if not((fInPTR=fOutPTR-1) or ((fInPtr=length(fMessages)-1) and (fOutPTR=0))) then begin
     fMessages[fInPTR].TypeID:=pTypeID;
-//    fMessages[fInPTR].DataString:=pDataString;
     fMessages[fInPTR].DataInt:=pDataInt;
     inc(fInPTR);
     if fInPTR=length(fMessages) then fInPTR:=0;
