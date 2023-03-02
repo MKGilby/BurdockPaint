@@ -148,6 +148,15 @@ end;
 
 function TBDPaletteEditor.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
 begin
+  x-=Left;
+  y-=Top;
+  if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
+     (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
+    x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
+    y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
+    Settings.ActiveColorIndex:=y*32+x;
+    PaletteEditorShow(Self);
+  end;
   Result:=true;
 end;
 
