@@ -146,6 +146,7 @@ begin
   INI.WriteBool('Settings','ShowSplash',fShowSplash);
   INI.WriteInteger('Settings','UndoLimit',fUndoLimit);
   INI.WriteBool('Settings','ModernGraphics',fModernGraphics);
+  SaveKeyMap(INI);
   for i:=0 to COLORSELECTORCOLORS-1 do
     INI.WriteInteger('Colors',Format('Selected%d',[i]),fColorSelectorColors[i]);
   INI.WriteInteger('Colors','ActiveColor',fActiveColorIndex);

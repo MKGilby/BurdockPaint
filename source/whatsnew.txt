@@ -5,6 +5,10 @@ Todo:
 - Configurable autosave interval.
 
 
+2023.03.03
+- CreateRelease.bat added.
+- KeyMapping is saved back to INI file.
+
 2023.03.02
 - Added sliders to PaletteEditor. They are not changing anything yet.
 - Sliders now change the currently selected colors RGB channels.

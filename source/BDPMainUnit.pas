@@ -27,11 +27,12 @@ type
 implementation
 
 uses SysUtils, SDL2, BDPSharedUnit, MKToolbox, MKStream, MKMouse2, Logger,
-  BDPMessageUnit, BDPKeyMappingUnit, BDPToolsUnit;
+  BDPMessageUnit, BDPKeyMappingUnit, BDPToolsUnit, MAD4MidLevelUnit;
 
 { TMain }
 
 constructor TMain.Create(iVersion,iBuildDate:string);
+var MAD4:TMAD4MidLevel;
 begin
   // Set data directory path to allow running without datafile
   MKStreamOpener.AddDirectory('..\data',100);
@@ -41,6 +42,13 @@ begin
 {$ELSE}
 // Set logging level
   Log.SetLogLevel(llStatus);
+// Try to mount the main executable, it should contain the datafile at the end.
+  try
+    MAD4:=TMAD4MidLevel.Create(paramstr(0));
+    MKStreamOpener.AddOtherSource(MAD4, 0);
+  except
+    on exception do ;
+  end;
 {$ENDIF}
 
   MKStreamOpener.AddDirectory('.',0);

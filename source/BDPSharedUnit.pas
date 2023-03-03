@@ -149,12 +149,13 @@ begin
   fRightImage:=TARGBImage.Create(8,Height);
   fRightImage.Bar(0,0,fRightImage.Width,fRightImage.Height,0,0,0,0);
   if Settings.ModernGraphics then s:=ArchModern else s:=ArchOriginal;
+  c:=0;
   for y:=0 to 7 do
     for x:=0 to 7 do begin
       case s[x+y*8+1] of
-      '.':c:=OverlayImage.Palette[3];
-      'x':c:=OverlayImage.Palette[2];
-      ' ':c:=0;
+        '.':c:=OverlayImage.Palette[3];
+        'x':c:=OverlayImage.Palette[2];
+        ' ':c:=0;
       end;
       fLeftImage.PutPixel(x,y,c);
       fLeftImage.PutPixel(x,Height-y-1,c);
@@ -170,60 +171,14 @@ begin
   // Don't free images, MM will do that!
 end;
 
-{procedure CreateButtonGFX;
-const
-  ArchModern=
-    '.....xxx'+
-    '...xxxxx'+
-    '..xxxxxx'+
-    '.xxxxxx '+
-    '.xxxx   '+
-    'xxxx    '+
-    'xxxx    '+
-    'xxx     ';
-  ArchOriginal=
-    '......xx'+
-    '......xx'+
-    '......xx'+
-    '...xxx  '+
-    '...xxx  '+
-    '...xxx  '+
-    'xxx     '+
-    'xxx     ';
-var x,y:integer;c:uint32;fLeftImage,fRightImage:TARGBImage;s:string;
-begin
-  fLeftImage:=TARGBImage.Create(8,27);
-  fLeftImage.Bar(0,0,fLeftImage.Width,fLeftImage.Height,0,0,0,0);
-  fRightImage:=TARGBImage.Create(8,27);
-  fRightImage.Bar(0,0,fRightImage.Width,fRightImage.Height,0,0,0,0);
-  if Settings.ModernGraphics then s:=ArchModern else s:=ArchOriginal;
-  for y:=0 to 7 do
-    for x:=0 to 7 do begin
-      case s[x+y*8+1] of
-      '.':c:=OverlayImage.Palette[3];
-      'x':c:=OverlayImage.Palette[2];
-      ' ':c:=0;
-      end;
-      fLeftImage.PutPixel(x,y,c);
-      fLeftImage.PutPixel(x,26-y,c);
-      fRightImage.PutPixel(7-x,y,c);
-      fRightImage.PutPixel(7-x,26-y,c);
-    end;
-  fLeftImage.Bar(0,8,3,11,OverlayImage.Palette[2]);
-  fRightImage.Bar(5,8,3,11,OverlayImage.Palette[2]);
-  MM.AddImage(fLeftImage,'ButtonLeft');
-  MM.AddImage(fRightImage,'ButtonRight');
-  // Don't free images, MM will do that!
-end;}
-
 procedure CreateButtonGFX;
 begin
-  CreateArch(27,'Button');
-  CreateArch(33,'Slider');
+  CreateArch(NORMALBUTTONHEIGHT,'Button');
+  CreateArch(COLORSLIDERHEIGHT,'Slider');
 end;
 
 procedure LoadState;
-var size,curr:int64;b:byte;State:TStream;
+var size:int64;b:byte;State:TStream;
 begin
   if not FileExists(STATEFILE) then exit;
   State:=TFileStream.Create(STATEFILE,fmOpenRead or fmShareDenyNone);
@@ -232,7 +187,6 @@ begin
   if b<>STATEDATAID then raise Exception.Create(Format('ID is not for System state data! (%.2x)',[b]));
   size:=0;
   State.Read(Size,4);
-  curr:=State.Position;
   State.Read(b,1);
   MainImage.LoadFromStream(State);
   UndoSystem.LoadFromStream(State);
@@ -348,6 +302,7 @@ begin
     FreeAndNil(CELImage);
   end;
   if Assigned(Settings) then begin
+
     Settings.SaveToFile(SETTINGSFILE);
     FreeAndNil(Settings);
   end;

@@ -33,6 +33,7 @@ var
   KeyMap:array [0..KEYCOUNT-1] of integer;
 
 procedure LoadKeyMap(INI:TINIFile);
+procedure SaveKeyMap(INI:TINIFile);
 
 implementation
 
@@ -62,6 +63,29 @@ begin
   KeyMap[KEY_GETCEL]:=INI.ReadInteger(KEYMAPSECTION,'GetCEL',SDL_SCANCODE_ESCAPE);
   KeyMap[KEY_PUTCEL]:=INI.ReadInteger(KEYMAPSECTION,'PutCEL',SDL_SCANCODE_GRAVE);
   KeyMap[KEY_GETCOLOR]:=INI.ReadInteger(KEYMAPSECTION,'GetColor',SDL_SCANCODE_F1);
+end;
+
+procedure SaveKeyMap(INI:TINIFile);
+begin
+  INI.WriteInteger(KEYMAPSECTION,'Quit',KeyMap[KEY_QUIT]);
+  INI.WriteInteger(KEYMAPSECTION,'Yes',KeyMap[KEY_YES]);
+  INI.WriteInteger(KEYMAPSECTION,'No',KeyMap[KEY_NO]);
+  INI.WriteInteger(KEYMAPSECTION,'PanningUp1',KeyMap[KEY_PANNINGUP1]);
+  INI.WriteInteger(KEYMAPSECTION,'PanningUp2',KeyMap[KEY_PANNINGUP2]);
+  INI.WriteInteger(KEYMAPSECTION,'PanningDown1',KeyMap[KEY_PANNINGDOWN1]);
+  INI.WriteInteger(KEYMAPSECTION,'PanningDown2',KeyMap[KEY_PANNINGDOWN2]);
+  INI.WriteInteger(KEYMAPSECTION,'PanningLeft1',KeyMap[KEY_PANNINGLEFT1]);
+  INI.WriteInteger(KEYMAPSECTION,'PanningLeft2',KeyMap[KEY_PANNINGLEFT2]);
+  INI.WriteInteger(KEYMAPSECTION,'PanningRight1',KeyMap[KEY_PANNINGRIGHT1]);
+  INI.WriteInteger(KEYMAPSECTION,'PanningRight2',KeyMap[KEY_PANNINGRIGHT2]);
+  INI.WriteInteger(KEYMAPSECTION,'ZoomIn1',KeyMap[KEY_ZOOMIN1]);
+  INI.WriteInteger(KEYMAPSECTION,'ZoomIn2',KeyMap[KEY_ZOOMIN2]);
+  INI.WriteInteger(KEYMAPSECTION,'ZoomOut1',KeyMap[KEY_ZOOMOUT1]);
+  INI.WriteInteger(KEYMAPSECTION,'ZoomOut2',KeyMap[KEY_ZOOMOUT2]);
+  INI.WriteInteger(KEYMAPSECTION,'Center',KeyMap[KEY_CENTER]);
+  INI.WriteInteger(KEYMAPSECTION,'GetCEL',KeyMap[KEY_GETCEL]);
+  INI.WriteInteger(KEYMAPSECTION,'PutCEL',KeyMap[KEY_PUTCEL]);
+  INI.WriteInteger(KEYMAPSECTION,'GetColor',KeyMap[KEY_GETCOLOR]);
 end;
 
 procedure FillDefaultKeyMap;
