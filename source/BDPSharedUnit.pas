@@ -110,17 +110,6 @@ implementation
 
 uses Classes, SysUtils, MKRFont2Unit, Logger, MKStream;
 
-procedure LoadSystemFont(pR,pG,pB:integer;pName:string);
-begin
-  MM.Fonts.Add(TMKRFont.Create('system.mkr'),pName);
-  MM.Fonts[pName].SetColor(pR,pG,pB);
-  MM.Fonts[pName].SetColorKey(0,0,0);
-  MM.Fonts[pName].SpaceSpace:=5;
-  MM.Fonts[pName].LetterSpace:=1;
-  MM.Fonts[pName].Size:=3;
-end;
-
-procedure CreateArch(Height:integer;Prefix:string);
 const
   ArchModern=
     '.....xxx'+
@@ -140,6 +129,8 @@ const
     '...xxx  '+
     'xxx     '+
     'xxx     ';
+
+procedure CreateArchH(Height:integer;Prefix:string);
 var x,y:integer;c:uint32;fLeftImage,fRightImage:TARGBImage;s:string;
 begin
   if Height<16 then begin
@@ -171,6 +162,50 @@ begin
   MM.AddImage(fLeftImage,Prefix+'Left');
   MM.AddImage(fRightImage,Prefix+'Right');
   // Don't free images, MM will do that!
+end;
+
+procedure CreateArchV(Width:integer;Prefix:string);
+var x,y:integer;c:uint32;fTopImage,fBottomImage:TARGBImage;s:string;
+begin
+  if Width<16 then begin
+    Width:=16;
+    Log.LogWarning('Cannot create Arch with less than 16 pixels width!');
+  end;
+  fTopImage:=TARGBImage.Create(Width,8);
+  fTopImage.Bar(0,0,fTopImage.Width,fTopImage.Height,0,0,0,0);
+  fBottomImage:=TARGBImage.Create(Width,8);
+  fBottomImage.Bar(0,0,fBottomImage.Width,fBottomImage.Height,0,0,0,0);
+  if Settings.ModernGraphics then s:=ArchModern else s:=ArchOriginal;
+  c:=0;
+  for y:=0 to 7 do
+    for x:=0 to 7 do begin
+      case s[x+y*8+1] of
+        '.':c:=OverlayImage.Palette[3];
+        'x':c:=OverlayImage.Palette[2];
+        ' ':c:=0;
+      end;
+      fTopImage.PutPixel(x,y,c);
+      fTopImage.PutPixel(Width-x-1,y,c);
+      fBottomImage.PutPixel(x,7-y,c);
+      fBottomImage.PutPixel(Width-x-1,7-y,c);
+    end;
+  if Width>16 then begin
+    fTopImage.Bar(8,0,Width-16,3,OverlayImage.Palette[2]);
+    fBottomImage.Bar(8,5,Width-16,3,OverlayImage.Palette[2]);
+  end;
+  MM.AddImage(fTopImage,Prefix+'Top');
+  MM.AddImage(fBottomImage,Prefix+'Bottom');
+  // Don't free images, MM will do that!
+end;
+
+procedure LoadSystemFont(pR,pG,pB:integer;pName:string);
+begin
+  MM.Fonts.Add(TMKRFont.Create('system.mkr'),pName);
+  MM.Fonts[pName].SetColor(pR,pG,pB);
+  MM.Fonts[pName].SetColorKey(0,0,0);
+  MM.Fonts[pName].SpaceSpace:=5;
+  MM.Fonts[pName].LetterSpace:=1;
+  MM.Fonts[pName].Size:=3;
 end;
 
 procedure LoadState;
@@ -239,8 +274,9 @@ begin
   Log.LogStatus('  Creating information bar...');
   InfoBar:=TBDInfoBar.Create;
   Log.LogStatus('  Creating UI gfx...');
-  CreateArch(NORMALBUTTONHEIGHT,'Button');
-  CreateArch(COLORSLIDERHEIGHT,'Slider');
+  CreateArchH(NORMALBUTTONHEIGHT,'Button');
+  CreateArchH(COLORSLIDERHEIGHT,'Slider');
+  CreateArchV(COLORSLIDERHEIGHT,'Slider');
   Log.LogStatus('  Creating cursor...');
   Cursor:=TBDCursor.Create;
   VibroColors:=TBDVibroColors.Create(6,10);

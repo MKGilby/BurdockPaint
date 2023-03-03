@@ -8,6 +8,7 @@ Todo:
 - CreateRelease.bat added.
 - KeyMapping is saved back to INI file.
 - When in PaletteEditor, right clicking on DrawArea exits PaletteEditor.
+- Added a vertical slider to PaletteEditor, it will switch the palette banks. (Not yet doing it.)
 
 2023.03.02
 - Added sliders to PaletteEditor. They are not changing anything yet.

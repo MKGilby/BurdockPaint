@@ -32,7 +32,7 @@ uses SysUtils, SDL2, BDPSharedUnit, MKToolbox, MKStream, MKMouse2, Logger,
 { TMain }
 
 constructor TMain.Create(iVersion,iBuildDate:string);
-var MAD4:TMAD4MidLevel;
+{$IFNDEF DEBUG}var MAD4:TMAD4MidLevel;{$ENDIF}
 begin
   // Set data directory path to allow running without datafile
   MKStreamOpener.AddDirectory('..\data',100);

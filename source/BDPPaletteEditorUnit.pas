@@ -23,13 +23,15 @@ type
     procedure OnSliderRChange(Sender:TObject;newValue:integer);
     procedure OnSliderGChange(Sender:TObject;newValue:integer);
     procedure OnSliderBChange(Sender:TObject;newValue:integer);
+    procedure OnSliderBankChange(Sender:TObject;newValue:integer);
     procedure PaletteEditorShow(Sender:TObject);
     procedure PaletteEditorHide(Sender:TObject);
     procedure RefreshSliders;
     function ProcessMessage(msg:TMessage):boolean;
   private
     fTexture:TStreamingTexture;
-    fSliderR,fSliderG,fSliderB:TBDSlider;
+    fSliderR,fSliderG,fSliderB:TBDHorizontalSlider;
+    fSliderBank:TBDVerticalSlider;
   end;
 
 implementation
@@ -38,11 +40,10 @@ uses SysUtils, BDPSharedUnit, SDL2;
 
 const
   PALETTEEDITORHEIGHT=300;
-  PALETTESOCKETWIDTH=36;
+  PALETTESOCKETWIDTH=38;
   PALETTESOCKETHEIGHT=26;
   PALETTESOCKETSTOP=87;
   PALETTESOCKETSLEFT=3;
-
 
 { TBDPaletteEditor }
 
@@ -64,7 +65,7 @@ begin
   OnHide:=PaletteEditorHide;
   fName:='PaletteEditor';
 
-  fSliderR:=TBDSlider.Create(fTexture.ARGBImage,fLeft,fTop);
+  fSliderR:=TBDHorizontalSlider.Create(fTexture.ARGBImage,fLeft,fTop);
   with fSliderR do begin
     Left:=COLORSLIDERSLEFT;Top:=Self.fTop+6;MinValue:=0;MaxValue:=255;Position:=32;
     ZIndex:=15;
@@ -73,7 +74,7 @@ begin
   end;
   AddChild(fSliderR);
 
-  fSliderG:=TBDSlider.Create(fTexture.ARGBImage,fLeft,fTop);
+  fSliderG:=TBDHorizontalSlider.Create(fTexture.ARGBImage,fLeft,fTop);
   with fSliderG do begin
     Left:=COLORSLIDERSLEFT+COLORSLIDERWIDTH+3;Top:=Self.fTop+6;MinValue:=0;MaxValue:=255;Position:=32;
     ZIndex:=15;
@@ -82,7 +83,7 @@ begin
   end;
   AddChild(fSliderG);
 
-  fSliderB:=TBDSlider.Create(fTexture.ARGBImage,fLeft,fTop);
+  fSliderB:=TBDHorizontalSlider.Create(fTexture.ARGBImage,fLeft,fTop);
   with fSliderB do begin
     Left:=COLORSLIDERSLEFT+2*(COLORSLIDERWIDTH+3);Top:=Self.fTop+6;MinValue:=0;MaxValue:=255;Position:=32;
     ZIndex:=15;
@@ -91,6 +92,20 @@ begin
   end;
   AddChild(fSliderB);
 
+  fSliderBank:=TBDVerticalSlider.Create(fTexture.ARGBImage,fLeft,fTop);
+  with fSliderBank do begin
+    Left:=PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3+3;
+    Top:=Self.Top+PALETTESOCKETSTOP;
+    Width:=COLORSLIDERHEIGHT;
+    Height:=PALETTESOCKETHEIGHT*8+3;
+    MinValue:=1;
+    MaxValue:=8;
+    Position:=1;
+    ZIndex:=15;
+    Name:='Bank-slider';
+    OnChange:=OnSliderBankChange;
+  end;
+  AddChild(fSliderBank);
 end;
 
 destructor TBDPaletteEditor.Destroy;
@@ -183,6 +198,11 @@ end;
 procedure TBDPaletteEditor.OnSliderBChange(Sender:TObject; newValue:integer);
 begin
   MainImage.Palette.ColorB[Settings.ActiveColorIndex]:=newValue;
+end;
+
+procedure TBDPaletteEditor.OnSliderBankChange(Sender:TObject; newValue:integer);
+begin
+
 end;
 
 procedure TBDPaletteEditor.PaletteEditorShow(Sender:TObject);
