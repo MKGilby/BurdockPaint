@@ -119,6 +119,10 @@ begin
             fControls.Hide;
             fPaletteEditor.Show;
           end;
+          MSG_DEACTIVATEPALETTEEDITOR:begin
+            fPaletteEditor.Hide;
+            fControls.Show;
+          end;
           MSG_QUIT:begin
             if msg.DataInt=0 then fQuitWindow.Visible:=false
             else quit:=true;

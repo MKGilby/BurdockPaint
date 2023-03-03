@@ -75,6 +75,7 @@ type
     keyhandled:boolean;
     fName:string;
     fSelected, fClicked, fVisible, fEnabled:boolean;
+    procedure fSetVisible(value:boolean); virtual;
   private
     fTag:integer;
     procedure fSetWidth(value:integer);
@@ -90,7 +91,7 @@ type
     property Height:integer read fHeight write fSetHeight;
     property ZIndex:integer read fZIndex write fZIndex;
     property Tag:integer read fTag write fTag;
-    property Visible:boolean read fVisible write fVisible;
+    property Visible:boolean read fVisible write fSetVisible;
     property Enabled:boolean read fEnabled write fEnabled;
   end;
 
@@ -291,16 +292,16 @@ end;
 
 procedure TMouseObject.Show;
 begin
-  if not fVisible then begin
-    fVisible:=true;
+  if not Visible then begin
+    Visible:=true;
     if Assigned(OnShow) then OnShow(Self);
   end;
 end;
 
 procedure TMouseObject.Hide;
 begin
-  if fVisible then begin
-    fVisible:=false;
+  if Visible then begin
+    Visible:=false;
     if Assigned(OnHide) then OnHide(Self);
   end;
 end;
@@ -382,6 +383,11 @@ begin
   if value<0 then value:=32;
   if fTop+value>=PrimaryWindow.Window.h then value:=PrimaryWindow.Window.h-fTop;
   fHeight:=value;
+end;
+
+procedure TMouseObject.fSetVisible(value:boolean);
+begin
+  if fVisible<>value then fVisible:=value;
 end;
 
 initialization

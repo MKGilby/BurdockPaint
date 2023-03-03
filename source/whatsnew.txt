@@ -1,5 +1,4 @@
 Todo:
-- Right clicking on DrawArea should exit PaletteEditor.
 - Create menu like in the original. (Not the same items.)
 - Autosave state in every 1 min.
 - Configurable autosave interval.
@@ -8,6 +7,7 @@ Todo:
 2023.03.03
 - CreateRelease.bat added.
 - KeyMapping is saved back to INI file.
+- When in PaletteEditor, right clicking on DrawArea exits PaletteEditor.
 
 2023.03.02
 - Added sliders to PaletteEditor. They are not changing anything yet.

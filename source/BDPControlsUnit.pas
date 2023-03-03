@@ -28,6 +28,7 @@ type
     function InkButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
     procedure SetMouseCoords(x,y:integer);
     function ProcessMessage(msg:TMessage):boolean;
+    procedure ControlsShow(Sender:TObject);
   private
     fTexture:TStreamingTexture;
     fToolButtons:array[0..5] of TBDButton;
@@ -58,6 +59,14 @@ begin
   fHeight:=CONTROLSHEIGHT;
   fTexture:=TStreamingTexture.Create(WINDOWWIDTH,CONTROLSHEIGHT);
   fTexture.ARGBImage.Clear;
+  fVisible:=true;
+  OnMouseEnter:=MouseEnter;
+  OnMouseLeave:=MouseLeave;
+  OnMouseMove:=MouseMove;
+  OnMouseDown:=MouseDown;
+  OnClick:=Click;
+  OnShow:=ControlsShow;
+  fName:='Controls';
 
   msg.TypeID:=MSG_NONE;
   msg.DataInt:=0;
@@ -144,14 +153,6 @@ begin
   fColorSelector.ZIndex:=15;
   fColorSelector.Name:='ColorSelector';
   AddChild(fColorSelector);
-
-  fVisible:=true;
-  OnMouseEnter:=MouseEnter;
-  OnMouseLeave:=MouseLeave;
-  OnMouseMove:=MouseMove;
-  OnMouseDown:=MouseDown;
-  OnClick:=Click;
-  fName:='Controls';
 end;
 
 destructor TBDControls.Destroy;
@@ -305,7 +306,7 @@ begin
     end;
     MSG_GETCELFINISHED:begin
       Self.Show;
-      Self.ActivateToolButton(-1);  // Puts the already selected tool into ActiveTool
+//      Self.ActivateToolButton(-1);  // Puts the already selected tool into ActiveTool
       Result:=true;
     end;
     MSG_MOUSECOORDS:begin
@@ -329,6 +330,12 @@ begin
       Result:=true;
     end;
   end;
+end;
+
+procedure TBDControls.ControlsShow(Sender:TObject);
+begin
+  ActivateToolButton(-1);
+  InfoBar.ShowText('');
 end;
 
 end.

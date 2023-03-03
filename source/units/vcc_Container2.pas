@@ -49,6 +49,8 @@
 //  V1.02: Gilby - 2023.02.13
 //    * Improved logging.
 //    * Removed commented out parts.
+//  V1.03: Gilby - 2023.03.03
+//    * Added OnShow and OnHide events.
 
 {$mode delphi}{$H+}
 
@@ -73,7 +75,7 @@ type
     function HandleEvent(Event:PSDL_Event):boolean; override;
   private
     fChilds:TMouseObjectList;
-    procedure fSetVisible(pValue:boolean);
+    procedure fSetVisible(pValue:boolean); override;
   public
     property Left:integer read fLeft write fLeft;
     property Top:integer read fTop write fTop;
@@ -154,8 +156,10 @@ end;
 procedure TContainer.fSetVisible(pValue:boolean);
 var i:integer;
 begin
+  inherited ;
   for i:=0 to fChilds.Count-1 do
     fChilds[i].Visible:=pValue;
+
   fVisible:=pValue;
 end;
 

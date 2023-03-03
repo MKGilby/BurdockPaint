@@ -1199,6 +1199,9 @@ begin
       Settings.ActiveColorIndex:=MainImage.GetPixel(x,y);
       MessageQueue.AddMessage(MSG_ACTIVECOLORINDEXCHANGED);
     end;
+  end else
+  if button=SDL_BUTTON_RIGHT then begin
+    MessageQueue.AddMessage(MSG_DEACTIVATEPALETTEEDITOR);
   end;
   Result:=true;
 end;

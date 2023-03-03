@@ -61,6 +61,7 @@ begin
   OnMouseDown:=MouseDown;
   OnClick:=Click;
   OnShow:=PaletteEditorShow;
+  OnHide:=PaletteEditorHide;
   fName:='PaletteEditor';
 
   fSliderR:=TBDSlider.Create(fTexture.ARGBImage,fLeft,fTop);
@@ -186,7 +187,7 @@ end;
 
 procedure TBDPaletteEditor.PaletteEditorShow(Sender:TObject);
 begin
-  Self.Visible:=true;
+  inherited Show;
 //  fSliderR.Visible:=true;
   RefreshSliders;
   ActiveTool:=Tools.ItemByName['SELCOL'];
@@ -194,7 +195,7 @@ end;
 
 procedure TBDPaletteEditor.PaletteEditorHide(Sender:TObject);
 begin
-
+  inherited Hide;
 end;
 
 procedure TBDPaletteEditor.RefreshSliders;

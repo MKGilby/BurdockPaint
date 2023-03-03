@@ -74,6 +74,8 @@ const
   MSG_ACTIVATEPALETTEEDITOR=10;
   // ActiveColorIndex changed. Used in PaletteEditor
   MSG_ACTIVECOLORINDEXCHANGED=11;
+  // Hide PaletteEditor, show Controls
+  MSG_DEACTIVATEPALETTEEDITOR=12;
 
 
 var
@@ -171,12 +173,6 @@ begin
   // Don't free images, MM will do that!
 end;
 
-procedure CreateButtonGFX;
-begin
-  CreateArch(NORMALBUTTONHEIGHT,'Button');
-  CreateArch(COLORSLIDERHEIGHT,'Slider');
-end;
-
 procedure LoadState;
 var size:int64;b:byte;State:TStream;
 begin
@@ -194,7 +190,6 @@ begin
     CELImage:=TBDImage.Create(16,16);
     CELImage.LoadFromStream(State);
   end;
-//  State.Position:=curr+size;
   FreeAndNil(State);
 end;
 
@@ -243,8 +238,9 @@ begin
   CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,0);
   Log.LogStatus('  Creating information bar...');
   InfoBar:=TBDInfoBar.Create;
-  Log.LogStatus('  Creating button gfx...');
-  CreateButtonGFX;
+  Log.LogStatus('  Creating UI gfx...');
+  CreateArch(NORMALBUTTONHEIGHT,'Button');
+  CreateArch(COLORSLIDERHEIGHT,'Slider');
   Log.LogStatus('  Creating cursor...');
   Cursor:=TBDCursor.Create;
   VibroColors:=TBDVibroColors.Create(6,10);
