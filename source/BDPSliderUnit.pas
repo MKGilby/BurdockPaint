@@ -14,6 +14,7 @@ type
   TBDVerticalSlider=class(TARGBVerticalSlider)
     constructor Create(iTarget:TARGBImage;iOfsX:integer=0;iOfsY:integer=0);
     procedure Draw; override;
+    function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
   private
     fTopImage,fBottomImage:TARGBImage;
     fArrowFont:TFont;
@@ -51,6 +52,7 @@ begin
   fArrowFont:=MM.Fonts['Black'];
   Visible:=true;
   Enabled:=true;
+  OnMouseWheel:=MouseWheel;
 end;
 
 procedure TBDVerticalSlider.Draw;
@@ -67,6 +69,19 @@ begin
   fArrowFont.OutText(fTarget,#128,fOnImageLeft+fWidth div 2,fOnImageTop+(fDecClickAreaSize-Font.Height) div 2+1,mjCenter);
   fArrowFont.OutText(fTarget,#130,fOnImageLeft+fWidth div 2,fOnImageTop+fDecClickAreaSize+fSlideAreaSize+(fIncClickAreaSize-Font.Height) div 2+1,mjCenter);
   fFont.OutText(fTarget, inttostr(Position),fOnImageLeft+fWidth div 2,p+(SLIDERKNOBWIDTH-Font.Height) div 2,mjCenter);
+end;
+
+function TBDVerticalSlider.MouseWheel(Sender: TObject; x, y, wheelx, wheely: integer): boolean;
+begin
+  if (wheely<0) then begin
+    fPosition-=wheely;
+    if fPosition>fMaxValue then fPosition:=fMaxValue;
+  end else
+  if (wheely>0) then begin
+    fPosition-=wheely;
+    if fPosition<fMinValue then fPosition:=fMinValue;
+  end;
+  Result:=true;
 end;
 
 { TBDHorizontalSlider }

@@ -1,8 +1,15 @@
 Todo:
+- Mouse wheel over the palette colors should switch banks.
+- Add mouse wheel support to horizontal sliders.
 - Create menu like in the original. (Not the same items.)
 - Autosave state in every 1 min.
 - Configurable autosave interval.
 
+
+2023.03.06
+- You can change the vertical slider with mouse wheel.
+- The vertical slider in PaletteEditor switches banks.
+- Using the mouse wheel over the PaletteEditor no longer zooms DrawArea.
 
 2023.03.03
 - CreateRelease.bat added.

@@ -26,6 +26,8 @@
 //   V1.05 - 2023.03.02 - Gilby
 //     * Added Show/Hide methods to TMouseObject.
 //     * Added OnShow and OnHide events.
+//   V1.06 - 2023.03.06 - Gilby
+//     * OnMouseWheel events are passed only objects under the mouse.
 }
 
 {$ifdef fpc}
@@ -125,7 +127,7 @@ uses SysUtils, Logger, MK_SDL2;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.05';
+  Version='1.06';
 
 constructor TMouseObjects.Create;
 begin
@@ -168,6 +170,7 @@ begin
     SDL_MOUSEMOTION:Log.LogDebug('MouseMotion');
     SDL_KEYDOWN:Log.LogDebug('KeyDown');
     SDL_KEYUP:Log.LogDebug('KeyUp');
+    SDL_MOUSEWHEEL:Log.LogDebug('MouseWheel');
   end;
   if Count>0 then begin
     i:=Count-1;
@@ -356,7 +359,7 @@ begin
         end;
     end;
     SDL_MOUSEWHEEL:begin
-      if Assigned(OnMouseWheel) then Result:=OnMouseWheel(Self,nx,ny,Event.wheel.x,Event.wheel.y);
+      if IsOver(nx,ny) and Assigned(OnMouseWheel) then Result:=OnMouseWheel(Self,nx,ny,Event.wheel.x,Event.wheel.y);
     end;
     SDL_KEYDOWN:begin
       if Assigned(OnKeyDown) then Result:=OnKeyDown(Self,Event.Key.keysym.scancode);

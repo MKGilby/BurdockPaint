@@ -19,6 +19,7 @@ type
     function MouseLeave(Sender:TObject;x,y:integer):boolean;
     function MouseMove(Sender:TObject;x,y:integer):boolean;
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
+    function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
     function Click(Sender:TObject;x,y,buttons: integer):boolean;
     procedure OnSliderRChange(Sender:TObject;newValue:integer);
     procedure OnSliderGChange(Sender:TObject;newValue:integer);
@@ -60,6 +61,7 @@ begin
   OnMouseLeave:=MouseLeave;
   OnMouseMove:=MouseMove;
   OnMouseDown:=MouseDown;
+  OnMouseWheel:=MouseWheel;
   OnClick:=Click;
   OnShow:=PaletteEditorShow;
   OnHide:=PaletteEditorHide;
@@ -126,12 +128,13 @@ begin
       PALETTESOCKETWIDTH*32+3,
       PALETTESOCKETHEIGHT*8+3,
       OverlayImage.Palette.Colors[2]);
-    fTexture.ARGBImage.bar(
-      PALETTESOCKETSLEFT+(Settings.ActiveColorIndex mod 32)*PALETTESOCKETWIDTH,
-      PALETTESOCKETSTOP+(Settings.ActiveColorIndex div 32)*PALETTESOCKETHEIGHT,
-      PALETTESOCKETWIDTH+3,
-      PALETTESOCKETHEIGHT+3,
-      OverlayImage.Palette.Colors[5]);
+    if (Settings.ActiveColorIndex div 256)+1=fSliderBank.Position then
+      fTexture.ARGBImage.bar(
+        PALETTESOCKETSLEFT+(Settings.ActiveColorIndex mod 32)*PALETTESOCKETWIDTH,
+        PALETTESOCKETSTOP+(Settings.ActiveColorIndex div 32)*PALETTESOCKETHEIGHT,
+        PALETTESOCKETWIDTH+3,
+        PALETTESOCKETHEIGHT+3,
+        OverlayImage.Palette.Colors[5]);
 
     for i:=0 to 255 do begin
       fTexture.ARGBImage.Bar(
@@ -139,7 +142,7 @@ begin
         PALETTESOCKETSTOP+(i div 32)*PALETTESOCKETHEIGHT+3,
         PALETTESOCKETWIDTH-3,
         PALETTESOCKETHEIGHT-3,
-        MainImage.Palette.Colors[i]);
+        MainImage.Palette.Colors[i+(fSliderBank.Position-1)*256]);
     end;
     inherited Draw;
     fTexture.Update;
@@ -178,6 +181,11 @@ begin
     RefreshSliders;
     Result:=true;
   end;
+end;
+
+function TBDPaletteEditor.MouseWheel(Sender: TObject; x, y, wheelx, wheely: integer): boolean;
+begin
+  Result:=true;
 end;
 
 function TBDPaletteEditor.Click(Sender:TObject; x,y,buttons:integer):boolean;
