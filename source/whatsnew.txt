@@ -7,6 +7,9 @@ Todo:
 
 
 2023.03.06
+- Moved the vertical slider's mouse wheel event to the vcc_SliderLogic unit, where it belongs.
+
+2023.03.06
 - You can change the vertical slider with mouse wheel.
 - The vertical slider in PaletteEditor switches banks.
 - Using the mouse wheel over the PaletteEditor no longer zooms DrawArea.

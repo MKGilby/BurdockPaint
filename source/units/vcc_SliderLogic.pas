@@ -25,9 +25,12 @@
 // Version info:
 //
 //  V1.00: Gilby - 2023.03.01-02
-//    * Initial creation
+//    * Initial creation.
 //  V1.01: Gilby - 2023.03.03
-//    * Added vertical slider
+//    * Added vertical slider.
+//  V1.02: Gilby - 2023.03.03
+//    * Added response to MouseWheel event in TVerticalSliderLogic.
+//    * Added InvertWheel property to TVerticalSliderLogic.
 
 {$mode delphi}
 {$smartlink on}
@@ -89,6 +92,7 @@ type
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
     function MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
     function MouseMove(Sender:TObject;x,y:integer):boolean;
+    function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
 //    function OnClick(x,y,buttons:integer):boolean;
   protected
     fState:TSliderMouseState;
@@ -97,6 +101,7 @@ type
     fDecClickAreaSize,fIncClickAreaSize:integer;
     fSlideAreaSize:integer;
     fOnChange:TOnSliderPositionChangeEvent;
+    fInvertWheel:boolean;
     procedure fSetLeft(value:integer); virtual;
     procedure fSetTop(value:integer); virtual;
     procedure fSetWidth(value:integer);
@@ -113,6 +118,7 @@ type
     property MinValue:integer read fMinValue write fMinValue;
     property MaxValue:integer read fMaxValue write fMaxValue;
     property Position:integer read fPosition write fPosition;
+    property InvertWheel:boolean read fInvertWheel write fInvertWheel;
     property OnChange:TOnSliderPositionChangeEvent read fOnChange write fOnChange;
   end;
 
@@ -122,7 +128,7 @@ uses SysUtils, Font2Unit, MKToolBox, Logger;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.01';
+  Version='1.02';
 
 
 { THorizontalSliderLogic }
@@ -256,6 +262,7 @@ begin
   fDecClickAreaSize:=16;
   fIncClickAreaSize:=16;
   fSlideAreaSize:=fHeight-fDecClickAreaSize-fIncClickAreaSize;
+  fInvertWheel:=false;
 
   OnMouseEnter:=Self.DefaultOnMouseEnter;
   OnMouseLeave:=Self.DefaultOnMouseLeave;
@@ -315,6 +322,27 @@ begin
     y:=y-fDecClickAreaSize;
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*y div (fSlideAreaSize-1);
     if Assigned(fOnChange) then fOnChange(Sender,fPosition);
+  end;
+  Result:=true;
+end;
+
+function TVerticalSliderLogic.MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
+begin
+  if (wheely<0) and not fInvertWheel then begin
+    fPosition-=wheely;
+    if fPosition>fMaxValue then fPosition:=fMaxValue;
+  end else
+  if (wheely>0) and fInvertWheel then begin
+    fPosition+=wheely;
+    if fPosition>fMaxValue then fPosition:=fMaxValue;
+  end else
+  if (wheely>0) and not fInvertWheel then begin
+    fPosition-=wheely;
+    if fPosition<fMinValue then fPosition:=fMinValue;
+  end else
+  if (wheely<0) and fInvertWheel then begin
+    fPosition+=wheely;
+    if fPosition<fMinValue then fPosition:=fMinValue;
   end;
   Result:=true;
 end;
