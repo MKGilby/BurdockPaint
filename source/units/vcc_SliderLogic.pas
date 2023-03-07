@@ -31,6 +31,12 @@
 //  V1.02: Gilby - 2023.03.03
 //    * Added response to MouseWheel event in TVerticalSliderLogic.
 //    * Added InvertWheel property to TVerticalSliderLogic.
+//      Inverts scrolling direction on both axes.
+//      Default setting is false.
+//    * Added CrossWheels property to TVerticalSliderLogic.
+//      Allows using both wheels for both type of sliders.
+//      Default setting is true.
+//    * OnChange only called when the fPosition value really changes.
 
 {$mode delphi}
 {$smartlink on}
@@ -56,6 +62,7 @@ type
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
     function MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
     function MouseMove(Sender:TObject;x,y:integer):boolean;
+    function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
 //    function OnClick(x,y,buttons:integer):boolean;
   protected
     fState:TSliderMouseState;
@@ -64,6 +71,8 @@ type
     fDecClickAreaSize,fIncClickAreaSize:integer;
     fSlideAreaSize:integer;
     fOnChange:TOnSliderPositionChangeEvent;
+    fInvertWheel,
+    fCrossWheels:boolean;
     procedure fSetLeft(value:integer); virtual;
     procedure fSetTop(value:integer); virtual;
     procedure fSetWidth(value:integer);
@@ -80,6 +89,8 @@ type
     property MinValue:integer read fMinValue write fMinValue;
     property MaxValue:integer read fMaxValue write fMaxValue;
     property Position:integer read fPosition write fPosition;
+    property InvertWheel:boolean read fInvertWheel write fInvertWheel;
+    property CrossWheels:boolean read fCrossWheels write fCrossWheels;
     property OnChange:TOnSliderPositionChangeEvent read fOnChange write fOnChange;
   end;
      
@@ -101,7 +112,8 @@ type
     fDecClickAreaSize,fIncClickAreaSize:integer;
     fSlideAreaSize:integer;
     fOnChange:TOnSliderPositionChangeEvent;
-    fInvertWheel:boolean;
+    fInvertWheel,
+    fCrossWheels:boolean;
     procedure fSetLeft(value:integer); virtual;
     procedure fSetTop(value:integer); virtual;
     procedure fSetWidth(value:integer);
@@ -119,6 +131,7 @@ type
     property MaxValue:integer read fMaxValue write fMaxValue;
     property Position:integer read fPosition write fPosition;
     property InvertWheel:boolean read fInvertWheel write fInvertWheel;
+    property CrossWheels:boolean read fCrossWheels write fCrossWheels;
     property OnChange:TOnSliderPositionChangeEvent read fOnChange write fOnChange;
   end;
 
@@ -146,12 +159,15 @@ begin
   fDecClickAreaSize:=16;
   fIncClickAreaSize:=16;
   fSlideAreaSize:=fWidth-fDecClickAreaSize-fIncClickAreaSize;
+  fInvertWheel:=false;
+  fCrossWheels:=true;
 
   OnMouseEnter:=Self.DefaultOnMouseEnter;
   OnMouseLeave:=Self.DefaultOnMouseLeave;
   OnMouseDown:=Self.MouseDown;
   OnMouseUp:=Self.MouseUp;
   OnMouseMove:=Self.MouseMove;
+  OnMouseWheel:=Self.MouseWheel;
   fOnChange:=nil;
 
   fState:=csMouseUp;
@@ -169,25 +185,21 @@ begin
 end;
 
 function THorizontalSliderLogic.MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
+var pre:integer;
 begin
   x-=Left;
+  pre:=fPosition;
   if (x>=0) and (x<fDecClickAreaSize) then begin
-    if (fPosition>fMinValue) then begin
-      dec(fPosition);
-      if Assigned(fOnChange) then fOnChange(Sender,fPosition);
-    end;
+    if (fPosition>fMinValue) then dec(fPosition);
   end
   else if (x>=fDecClickAreaSize) and (x<fDecClickAreaSize+fSlideAreaSize) then begin
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*(x-fDecClickAreaSize) div (fSlideAreaSize-1);
-    if Assigned(fOnChange) then fOnChange(Sender,fPosition);
     fState:=csMouseDown;
   end
   else if (x>=fDecClickAreaSize+fSlideAreaSize) and (x<fWidth) then begin
-    if (fPosition<fMaxValue) then begin
-      inc(fPosition);
-      if Assigned(fOnChange) then fOnChange(Sender,fPosition);
-    end;
+    if (fPosition<fMaxValue) then inc(fPosition);
   end;
+  if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
   Result:=true;
 end;
 
@@ -198,13 +210,29 @@ begin
 end;
 
 function THorizontalSliderLogic.MouseMove(Sender:TObject; x,y:integer):boolean;
+var pre:integer;
 begin
   x-=Left;
   if (fState=csMouseDown) and (x>=fDecClickAreaSize) and (x<fDecClickAreaSize+fSlideAreaSize) then begin
+    pre:=fPosition;
     x:=x-fDecClickAreaSize;
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*x div (fSlideAreaSize-1);
-    if Assigned(fOnChange) then fOnChange(Sender,fPosition);
+    if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
   end;
+  Result:=true;
+end;
+
+function THorizontalSliderLogic.MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
+var pre:integer;
+begin
+  // If only the y wheel rolled and CrossWheels enabled, use that.
+  if (wheelx=0) and fCrossWheels then wheelx:=wheely;
+  if fInvertWheel then wheelx:=-wheelx;
+  pre:=fPosition;
+  fPosition+=wheelx;
+  if fPosition>fMaxValue then fPosition:=fMaxValue;
+  if fPosition<fMinValue then fPosition:=fMinValue;
+  if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Self,fPosition);
   Result:=true;
 end;
 
@@ -263,12 +291,14 @@ begin
   fIncClickAreaSize:=16;
   fSlideAreaSize:=fHeight-fDecClickAreaSize-fIncClickAreaSize;
   fInvertWheel:=false;
+  fCrossWheels:=true;
 
   OnMouseEnter:=Self.DefaultOnMouseEnter;
   OnMouseLeave:=Self.DefaultOnMouseLeave;
   OnMouseDown:=Self.MouseDown;
   OnMouseUp:=Self.MouseUp;
   OnMouseMove:=Self.MouseMove;
+  OnMouseWheel:=Self.MouseWheel;
   fOnChange:=nil;
 
   fState:=csMouseUp;
@@ -287,25 +317,21 @@ begin
 end;
 
 function TVerticalSliderLogic.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
+var pre:integer;
 begin
   y-=Top;
+  pre:=fPosition;
   if (y>=0) and (y<fDecClickAreaSize) then begin
-    if (fPosition>fMinValue) then begin
-      dec(fPosition);
-      if Assigned(fOnChange) then fOnChange(Sender,fPosition);
-    end;
+    if (fPosition>fMinValue) then dec(fPosition);
   end
   else if (y>=fDecClickAreaSize) and (y<fDecClickAreaSize+fSlideAreaSize) then begin
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*(x-fDecClickAreaSize) div (fSlideAreaSize-1);
-    if Assigned(fOnChange) then fOnChange(Sender,fPosition);
     fState:=csMouseDown;
   end
   else if (y>=fDecClickAreaSize+fSlideAreaSize) and (y<fHeight) then begin
-    if (fPosition<fMaxValue) then begin
-      inc(fPosition);
-      if Assigned(fOnChange) then fOnChange(Sender,fPosition);
-    end;
+    if (fPosition<fMaxValue) then inc(fPosition);
   end;
+  if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
   Result:=true;
 end;
 
@@ -316,34 +342,29 @@ begin
 end;
 
 function TVerticalSliderLogic.MouseMove(Sender:TObject; x,y:integer):boolean;
+var pre:integer;
 begin
   y-=Top;
   if (fState=csMouseDown) and (y>=fDecClickAreaSize) and (y<fDecClickAreaSize+fSlideAreaSize) then begin
+    pre:=fPosition;
     y:=y-fDecClickAreaSize;
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*y div (fSlideAreaSize-1);
-    if Assigned(fOnChange) then fOnChange(Sender,fPosition);
+    if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
   end;
   Result:=true;
 end;
 
 function TVerticalSliderLogic.MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
+var pre:integer;
 begin
-  if (wheely<0) and not fInvertWheel then begin
-    fPosition-=wheely;
-    if fPosition>fMaxValue then fPosition:=fMaxValue;
-  end else
-  if (wheely>0) and fInvertWheel then begin
-    fPosition+=wheely;
-    if fPosition>fMaxValue then fPosition:=fMaxValue;
-  end else
-  if (wheely>0) and not fInvertWheel then begin
-    fPosition-=wheely;
-    if fPosition<fMinValue then fPosition:=fMinValue;
-  end else
-  if (wheely<0) and fInvertWheel then begin
-    fPosition+=wheely;
-    if fPosition<fMinValue then fPosition:=fMinValue;
-  end;
+  // If only the x wheel rolled and CrossWheels enabled, use that.
+  if (wheely=0) and fCrossWheels then wheely:=wheelx;
+  if fInvertWheel then wheely:=-wheely;
+  pre:=fPosition;
+  fPosition-=wheely;
+  if fPosition>fMaxValue then fPosition:=fMaxValue;
+  if fPosition<fMinValue then fPosition:=fMinValue;
+  if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Self,fPosition);
   Result:=true;
 end;
 

@@ -51,7 +51,6 @@ begin
   fArrowFont:=MM.Fonts['Black'];
   Visible:=true;
   Enabled:=true;
-  OnMouseWheel:=MouseWheel;
 end;
 
 procedure TBDVerticalSlider.Draw;
