@@ -1,12 +1,14 @@
 Todo:
-- Mouse wheel over the palette colors should switch banks.
-- Add mouse wheel support to horizontal sliders.
+- Add gradients.
 - Create menu like in the original. (Not the same items.)
 - Autosave state in every 1 min.
 - Configurable autosave interval.
 
 
-2023.03.06
+2023.03.08
+- Using mouse wheel over the palette colors in PaletteEditor switches banks.
+
+2023.03.07
 - Moved the vertical slider's mouse wheel event to the vcc_SliderLogic unit, where it belongs.
 - Added wheel event to the horizontal slider too.
 

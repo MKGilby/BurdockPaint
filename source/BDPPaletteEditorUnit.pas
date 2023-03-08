@@ -185,6 +185,12 @@ end;
 
 function TBDPaletteEditor.MouseWheel(Sender: TObject; x, y, wheelx, wheely: integer): boolean;
 begin
+  x-=Left;
+  y-=Top;
+  if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
+     (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
+    fSliderBank.MouseWheel(fSliderBank,x,y,wheelx,wheely);
+  end;
   Result:=true;
 end;
 
