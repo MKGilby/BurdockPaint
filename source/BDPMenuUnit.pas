@@ -59,7 +59,7 @@ begin
   Left:=iLeft;
   Top:=0;
   Width:=180;
-  Height:=MENUHEIGHT;
+  Height:=TOPMENUHEIGHT;
   fTexture:=TStreamingTexture.Create(fWidth,fHeight);
   fTexture.ARGBImage.Clear;
   fTexture.Update;
@@ -84,15 +84,20 @@ procedure TSubMenu.Draw;
 var i:integer;
 begin
   if fVisible then begin
-    fTexture.ARGBImage.Bar(0,0,(length(fName)+2)*18,MENUHEIGHT-3,OverlayImage.Palette[4]);
+    fTexture.ARGBImage.Bar(0,0,(length(fName)+2)*18,TOPMENUHEIGHT-3,OverlayImage.Palette[4]);
     MM.Fonts['Red'].OutText(fTexture.ARGBImage,fName,18,3,0);
-    fTexture.ARGBImage.Bar(0,MENUHEIGHT-3,fWidth,3,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(0,MENUHEIGHT-3,3,fHeight-MENUHEIGHT,OverlayImage.Palette[2]);
+    fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,fWidth,3,OverlayImage.Palette[2]);
+    fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,3,fHeight-TOPMENUHEIGHT,OverlayImage.Palette[2]);
     fTexture.ARGBImage.Bar(0,fHeight-3,fWidth,3,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(fWidth-3,MENUHEIGHT-3,3,fHeight-MENUHEIGHT,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(3,MENUHEIGHT,fWidth-6,fHeight-MENUHEIGHT-3,OverlayImage.Palette[3]);
+    fTexture.ARGBImage.Bar(fWidth-3,TOPMENUHEIGHT-3,3,fHeight-TOPMENUHEIGHT,OverlayImage.Palette[2]);
+    fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT,fWidth-6,fHeight-TOPMENUHEIGHT-3,OverlayImage.Palette[3]);
+    if fSelected>-1 then
+      fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT+fSelected*SUBMENULINEHEIGHT,fWidth-6,SUBMENULINEHEIGHT,OverlayImage.Palette[4]);
     for i:=0 to fItems.Count-1 do
-      MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i],9,3+i*21+MENUHEIGHT,0);
+      if i<>fSelected then
+        MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i],9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0)
+      else
+        MM.Fonts['Red'].OutText(fTexture.ARGBImage,fItems[i],9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0);
     fTexture.Update;
     PutTexture(fLeft,fTop,fTexture);
   end;
@@ -100,6 +105,7 @@ end;
 
 function TSubMenu.MouseMove(Sender:TObject; x,y:integer):boolean;
 begin
+  fSelected:=(y-TOPMENUHEIGHT) div SUBMENULINEHEIGHT;
   Result:=true;
 end;
 
@@ -115,6 +121,7 @@ end;
 
 procedure TSubMenu.MouseLeave(Sender:TObject);
 begin
+  fSelected:=-1;
   Visible:=false;
 end;
 
@@ -139,7 +146,7 @@ begin
   if (length(fName)+2)*18>w then w:=(length(fName)+2)*18;
   for i:=0 to fItems.Count-1 do
     if (length(fItems[i])+1)*18>w then w:=(length(fItems[i])+1)*18;
-  h:=MENUHEIGHT+fItems.Count*21+3;
+  h:=TOPMENUHEIGHT+fItems.Count*SUBMENULINEHEIGHT+3;
   if (w<>fWidth) or (h<>fHeight) then begin
     fWidth:=w;
     fHeight:=h;
@@ -158,7 +165,7 @@ begin
   Left:=0;
   Top:=0;
   Width:=WINDOWWIDTH;
-  Height:=MENUHEIGHT;
+  Height:=TOPMENUHEIGHT;
   Name:='MainMenu';
   fTexture:=TStreamingTexture.Create(fWidth,fHeight);
   fTexture.ARGBImage.Clear;
@@ -227,13 +234,13 @@ var x,i:integer;
 begin
   if fVisible then begin
     fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[3]);
-    fTexture.ARGBImage.Bar(0,MENUHEIGHT-3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[2]);
+    fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[2]);
     x:=0;
     for i:=0 to fItems.Count-1 do begin
       if fSelected<>i then
         MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i],x+18,3,0)
       else begin
-        fTexture.ARGBImage.Bar(x,0,(length(fItems[i])+2)*18,MENUHEIGHT-3,OverlayImage.Palette[4]);
+        fTexture.ARGBImage.Bar(x,0,(length(fItems[i])+2)*18,TOPMENUHEIGHT-3,OverlayImage.Palette[4]);
         MM.Fonts['Red'].OutText(fTexture.ARGBImage,fItems[i],x+18,3,0);
       end;
       x+=(length(fItems[i])+2)*18;
@@ -260,6 +267,7 @@ begin
     if pre<>-1 then fSubMenus[pre].Visible:=false;
     if fSelected<>-1 then fSubMenus[fSelected].Visible:=true;
   end;
+  if (fSelected<>-1) and not fSubMenus[fSelected].Visible then fSubMenus[fSelected].Visible:=true;
   Result:=true;
 end;
 
