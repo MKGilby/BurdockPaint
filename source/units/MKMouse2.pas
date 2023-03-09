@@ -28,6 +28,9 @@
 //     * Added OnShow and OnHide events.
 //   V1.06 - 2023.03.06 - Gilby
 //     * OnMouseWheel events are passed only objects under the mouse.
+//   V1.07 - 2023.03.09 - Gilby
+//     * MouseObjects.Sort fix.
+//     * Making OnMouseEnter and OnMouseLeave better.
 }
 
 {$ifdef fpc}
@@ -64,8 +67,8 @@ type
     OnMouseUp:TMouseButtonEvent;
     OnClick:TMouseButtonEvent;
     OnMouseMove:TMouseMotionEvent;
-    OnMouseEnter:TMouseMotionEvent;
-    OnMouseLeave:TMouseMotionEvent;
+    OnMouseEnter:TSimpleEvent;
+    OnMouseLeave:TSimpleEvent;
     OnMouseWheel:TMouseWheelEvent;
     OnKeyDown:TKeyEvent;
     OnKeyUp:TKeyEvent;
@@ -116,6 +119,9 @@ type
     fStack:TStack;
     fTop:integer;
     fSoftDelete:boolean;
+    fLastOverIndex:integer;
+  public
+    property LastOverIndex:integer read fLastOverIndex;
   end;
 
 var
@@ -127,7 +133,7 @@ uses SysUtils, Logger, MK_SDL2;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.06';
+  Version='1.07';
 
 constructor TMouseObjects.Create;
 begin
@@ -135,6 +141,7 @@ begin
   fStack:=TStack.Create;
   fTop:=0;
   fSoftDelete:=false;
+  fLastOverIndex:=-1;
 end;
 
 destructor TMouseObjects.Destroy;
@@ -158,7 +165,7 @@ begin
 end;
 
 function TMouseObjects.HandleEvent(Event:PSDL_Event):boolean;
-var i:integer;
+var i,overindex:integer;
 begin
   fSoftDelete:=true;
   Result:=false;
@@ -172,10 +179,12 @@ begin
     SDL_KEYUP:Log.LogDebug('KeyUp');
     SDL_MOUSEWHEEL:Log.LogDebug('MouseWheel');
   end;
+  overindex:=-1;
   if Count>0 then begin
     i:=Count-1;
     while (i>=fTop) and (i<Count) and not(Result) do begin
       Log.LogDebug('Passing event to object number '+inttostr(i)+' ('+Self[i].Name+')');
+      if (overindex=-1) and (Self[i].Visible) and (Self[i].IsOver(Event^.motion.x,Event^.motion.y)) then overindex:=i;
       if Self[i]<>nil then
         Result:=Self[i].HandleEvent(Event);
       dec(i);
@@ -186,6 +195,18 @@ begin
       else
         Log.LogDebug('Event handled by an object that invalidated itself.');
     end else Log.LogDebug('Event not handled by any objects.');
+
+    // This part checks if the control under the mouse is changed and
+    // call OnMouseLeave and OnMouseEnter accordingly.
+    if (Event^.type_=SDL_MOUSEMOTION) and (overindex<>fLastOverIndex) then begin
+      if fLastOverIndex>-1 then
+        if Assigned(Self[fLastOverIndex].OnMouseLeave) then
+          Self[fLastOverIndex].OnMouseLeave(Self[fLastOverIndex]);
+      if overindex>-1 then
+        if Assigned(Self[overindex].OnMouseEnter) then
+          Self[overindex].OnMouseEnter(Self[overindex]);
+      fLastOverIndex:=overindex;
+    end;
   end;
   fSoftDelete:=false;
   for i:=Count-1 downto fTop do
@@ -234,7 +255,7 @@ begin
   // Yep, it's only a quick bubblesort solution.
   // I will improve it if there will be speed problems.
   for i:=0 to Count-2 do
-    for j:=i to Count-2 do
+    for j:=Count-2 downto i do
       if Self[j].ZIndex>Self[j+1].ZIndex then Exchange(j,j+1);
 end;
 
@@ -344,19 +365,7 @@ begin
     end;
     SDL_MOUSEMOTION:with Event^.Button do begin
       Log.LogDebug('Event: MouseMotion');
-      if IsOver(nx,ny) then begin
-        if Assigned(OnMouseMove) then Result:=OnMouseMove(Self,nx,ny);
-        if not over then begin
-          //Result:=false;     // don't know why this is here
-          if Assigned(OnMouseEnter) then OnMouseEnter(Self,nx,ny);
-          over:=true;
-        end;
-      end else
-        if over then begin
-          //Result:=false;     // don't know why this is here
-          if Assigned(OnMouseLeave) then OnMouseLeave(Self,nx,ny);
-          over:=false;
-        end;
+      if IsOver(nx,ny) and Assigned(OnMouseMove) then Result:=OnMouseMove(Self,nx,ny);
     end;
     SDL_MOUSEWHEEL:begin
       if IsOver(nx,ny) and Assigned(OnMouseWheel) then Result:=OnMouseWheel(Self,nx,ny,Event.wheel.x,Event.wheel.y);

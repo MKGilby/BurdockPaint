@@ -17,8 +17,8 @@ type
     procedure Draw; override;
     procedure ActivateToolButton(index:integer);
     procedure ActivateInkButton(index:integer);
-    function MouseEnter(Sender:TObject;x,y:integer):boolean;
-    function MouseLeave(Sender:TObject;x,y:integer):boolean;
+    procedure MouseEnter(Sender:TObject);
+    procedure MouseLeave(Sender:TObject);
     function MouseMove(Sender:TObject;x,y:integer):boolean;
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
     function Click(Sender:TObject;x,y,buttons: integer):boolean;
@@ -227,17 +227,15 @@ begin
     raise Exception.Create(Format('ActivateInkButton: Index out of range! (%d)',[index]));
 end;
 
-function TBDControls.MouseEnter(Sender:TObject; x,y:integer):boolean;
+procedure TBDControls.MouseEnter(Sender:TObject);
 begin
   if fVisible then SDL_ShowCursor(SDL_ENABLE);
   InfoBar.ShowText('');
-  Result:=false;
 end;
 
-function TBDControls.MouseLeave(Sender:TObject; x,y:integer):boolean;
+procedure TBDControls.MouseLeave(Sender:TObject);
 begin
   if fVisible then SDL_ShowCursor(SDL_DISABLE);
-  Result:=false;
 end;
 
 function TBDControls.MouseMove(Sender:TObject; x,y:integer):boolean;

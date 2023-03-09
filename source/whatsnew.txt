@@ -1,12 +1,18 @@
 Todo:
 - Add gradients.
+- Hide menu when not needed.
 - Create menu like in the original. (Not the same items.)
 - Autosave state in every 1 min.
 - Configurable autosave interval.
 
 
+2023.03.09
+- Submenu opens when hovering mouse on menu. Moving to another menu or outside
+  the menu bar or submenu hides the submenu.
+
 2023.03.08
 - Using mouse wheel over the palette colors in PaletteEditor switches banks.
+- Menu appears in the top row of the screen.
 
 2023.03.07
 - Moved the vertical slider's mouse wheel event to the vcc_SliderLogic unit, where it belongs.

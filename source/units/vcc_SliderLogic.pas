@@ -37,6 +37,8 @@
 //      Allows using both wheels for both type of sliders.
 //      Default setting is true.
 //    * OnChange only called when the fPosition value really changes.
+//  V1.03: Gilby - 2023.03.09
+//    * Following changes in MKMouse2
 
 {$mode delphi}
 {$smartlink on}
@@ -57,8 +59,7 @@ type
 
   THorizontalSliderLogic=class(TMouseObject)
     constructor Create; overload;
-    function DefaultOnMouseEnter(Sender:TObject;x,y:integer):boolean;
-    function DefaultOnMouseLeave(Sender:TObject;x,y:integer):boolean;
+    procedure MouseLeave(Sender:TObject);
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
     function MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
     function MouseMove(Sender:TObject;x,y:integer):boolean;
@@ -98,8 +99,7 @@ type
 
   TVerticalSliderLogic=class(TMouseObject)
     constructor Create; overload;
-    function DefaultOnMouseEnter(Sender:TObject;x,y:integer):boolean;
-    function DefaultOnMouseLeave(Sender:TObject;x,y:integer):boolean;
+    procedure MouseLeave(Sender:TObject);
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
     function MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
     function MouseMove(Sender:TObject;x,y:integer):boolean;
@@ -141,7 +141,7 @@ uses SysUtils, Font2Unit, MKToolBox, Logger;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.02';
+  Version='1.03';
 
 
 { THorizontalSliderLogic }
@@ -162,8 +162,7 @@ begin
   fInvertWheel:=false;
   fCrossWheels:=true;
 
-  OnMouseEnter:=Self.DefaultOnMouseEnter;
-  OnMouseLeave:=Self.DefaultOnMouseLeave;
+  OnMouseLeave:=Self.MouseLeave;
   OnMouseDown:=Self.MouseDown;
   OnMouseUp:=Self.MouseUp;
   OnMouseMove:=Self.MouseMove;
@@ -173,15 +172,9 @@ begin
   fState:=csMouseUp;
 end;
 
-function THorizontalSliderLogic.DefaultOnMouseEnter(Sender:TObject;x,y:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function THorizontalSliderLogic.DefaultOnMouseLeave(Sender:TObject;x,y:integer):boolean;
+procedure THorizontalSliderLogic.MouseLeave(Sender:TObject);
 begin
   fState:=csMouseUp;
-  Result:=true;
 end;
 
 function THorizontalSliderLogic.MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
@@ -293,8 +286,7 @@ begin
   fInvertWheel:=false;
   fCrossWheels:=true;
 
-  OnMouseEnter:=Self.DefaultOnMouseEnter;
-  OnMouseLeave:=Self.DefaultOnMouseLeave;
+  OnMouseLeave:=Self.MouseLeave;
   OnMouseDown:=Self.MouseDown;
   OnMouseUp:=Self.MouseUp;
   OnMouseMove:=Self.MouseMove;
@@ -304,16 +296,9 @@ begin
   fState:=csMouseUp;
 end;
 
-function TVerticalSliderLogic.DefaultOnMouseEnter(Sender:TObject; x,y:integer
-  ):boolean;
-begin
-  Result:=true;
-end;
-
-function TVerticalSliderLogic.DefaultOnMouseLeave(Sender:TObject; x,y:integer):boolean;
+procedure TVerticalSliderLogic.MouseLeave(Sender:TObject);
 begin
   fState:=csMouseUp;
-  Result:=true;
 end;
 
 function TVerticalSliderLogic.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;

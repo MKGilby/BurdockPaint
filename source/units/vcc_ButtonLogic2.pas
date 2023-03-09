@@ -43,6 +43,8 @@
 //
 //  V1.00: Gilby - 2023.01.16-20
 //    * Initial creation from vcc_Button
+//  V1.01: Gilby - 2023.03.09
+//    * Following changes in MKMouse2
 
 {$mode delphi}
 {$smartlink on}
@@ -60,10 +62,10 @@ type
   TButtonLogic=class(TMouseObject)
     constructor Create; overload;
     constructor Create(iINI:TINIFile;iSection:string); overload;
-    function DefaultOnMouseEnter(Sender:TObject;{%H-}x,{%H-}y:integer):boolean;
-    function DefaultOnMouseLeave(Sender:TObject;{%H-}x,{%H-}y:integer):boolean;
-    function DefaultOnMouseDown(Sender:TObject;{%H-}x,{%H-}y,{%H-}buttons:integer):boolean;
-    function DefaultOnMouseUp(Sender:TObject;{%H-}x,{%H-}y,{%H-}buttons:integer):boolean;
+    procedure DefaultOnMouseEnter(Sender:TObject);
+    procedure DefaultOnMouseLeave(Sender:TObject);
+    function DefaultOnMouseDown(Sender:TObject;x,y,buttons:integer):boolean;
+    function DefaultOnMouseUp(Sender:TObject;x,y,buttons:integer):boolean;
 //    function OnClick(x,y,buttons:integer):boolean;
   protected
     fState:(cNormal,cHighlighted,cButtonDown);
@@ -93,7 +95,7 @@ uses SysUtils, Font2Unit, MKToolBox, Logger;
      
 const
   Fstr='vcc_ButtonLogic.pas, ';
-  Version='1.00';
+  Version='1.01';
 
 constructor TButtonLogic.Create;
 begin
@@ -183,17 +185,15 @@ begin
   end;
 end;
 
-function TButtonLogic.DefaultOnMouseEnter(Sender:TObject;x,y:integer):boolean;
+procedure TButtonLogic.DefaultOnMouseEnter(Sender:TObject);
 begin
   fState:=cHighLighted;
-  Result:=true;
 end;
 
-function TButtonLogic.DefaultOnMouseLeave(Sender:TObject;x,y:integer):boolean;
+procedure TButtonLogic.DefaultOnMouseLeave(Sender:TObject);
 begin
   fState:=cNormal;
   fClicked:=false;
-  Result:=true;
 end;
 
 function TButtonLogic.DefaultOnMouseDown(Sender:TObject;x,y,buttons:integer):boolean;

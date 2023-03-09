@@ -16,8 +16,8 @@ type
     constructor Create(iTarget:TARGBImage); overload;
     destructor Destroy; override;
     procedure Draw; override;
-    function MouseEnter(Sender:TObject;x,y:integer):boolean;
-    function MouseLeave(Sender:TObject;x,y:integer):boolean;
+    procedure MouseEnter(Sender:TObject);
+    procedure MouseLeave(Sender:TObject);
     function Click(Sender:TObject;x, y, buttons: integer): boolean;
   private
     fParentX,fParentY:integer;
@@ -98,16 +98,14 @@ begin
     fFont2.OutText(fTarget,fCaption,fTextAlignPointX-fParentX,fTextAlignPointY+fTextOffsetY-fParentY,fTextAlignX);
 end;
 
-function TBDButton.MouseEnter(Sender:TObject; x,y:integer):boolean;
+procedure TBDButton.MouseEnter(Sender:TObject);
 begin
   InfoBar.ShowText(fHint);
-  Result:=true;
 end;
 
-function TBDButton.MouseLeave(Sender:TObject; x,y:integer):boolean;
+procedure TBDButton.MouseLeave(Sender:TObject);
 begin
   InfoBar.ShowText('');
-  Result:=true;
 end;
 
 function TBDButton.Click(Sender:TObject; x,y,buttons:integer):boolean;

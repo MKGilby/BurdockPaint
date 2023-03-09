@@ -20,7 +20,8 @@ type
     function MouseDown(Sender:TObject;{%H-}x,{%H-}y,buttons:integer):boolean;
     function MouseUp(Sender:TObject;{%H-}x,{%H-}y,buttons:integer):boolean;
     function MouseMove(Sender:TObject;x,y:integer):boolean;
-    function MouseWheel(Sender:TObject;x,y,{%H-}wheelx,wheely:integer):boolean;
+    function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
+    procedure MouseEnter(Sender:TObject);
     function KeyDown(Sender:TObject;key:integer):boolean;
     function KeyUp(Sender:TObject;key:integer):boolean;
     function MouseXToFrame(x:integer):integer;
@@ -61,6 +62,7 @@ begin
   OnMouseDown:=Self.MouseDown;
   OnMouseUp:=Self.MouseUp;
   OnMouseMove:=Self.MouseMove;
+  OnMouseEnter:=Self.MouseEnter;
   OnMouseWheel:=Self.MouseWheel;
   OnKeyDown:=Self.KeyDown;
   OnKeyUp:=Self.KeyUp;
@@ -194,6 +196,11 @@ begin
     fZoomLeft:=mx-(x div fZoomTimes);
     fZoomTop:=my-(y div fZoomTimes);
   end;
+end;
+
+procedure TBDDrawArea.MouseEnter(Sender:TObject);
+begin
+  SDL_ShowCursor(SDL_DISABLE);
 end;
 
 function TBDDrawArea.KeyDown(Sender:TObject; key:integer):boolean;

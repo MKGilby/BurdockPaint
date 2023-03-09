@@ -15,8 +15,8 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure Draw; override;
-    function MouseEnter(Sender:TObject;x,y:integer):boolean;
-    function MouseLeave(Sender:TObject;x,y:integer):boolean;
+    procedure MouseEnter(Sender:TObject);
+    procedure MouseLeave(Sender:TObject);
     function MouseMove(Sender:TObject;x,y:integer):boolean;
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
     function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
@@ -150,17 +150,15 @@ begin
   end;
 end;
 
-function TBDPaletteEditor.MouseEnter(Sender:TObject; x,y:integer):boolean;
+procedure TBDPaletteEditor.MouseEnter(Sender:TObject);
 begin
   if fVisible then SDL_ShowCursor(SDL_ENABLE);
   InfoBar.ShowText('');
-  Result:=false;
 end;
 
-function TBDPaletteEditor.MouseLeave(Sender:TObject; x,y:integer):boolean;
+procedure TBDPaletteEditor.MouseLeave(Sender:TObject);
 begin
   if fVisible then SDL_ShowCursor(SDL_DISABLE);
-  Result:=false;
 end;
 
 function TBDPaletteEditor.MouseMove(Sender:TObject; x,y:integer):boolean;

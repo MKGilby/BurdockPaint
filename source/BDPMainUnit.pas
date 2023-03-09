@@ -5,7 +5,7 @@ unit BDPMainUnit;
 interface
 
 uses mk_sdl2, BDPControlsUnit, BDPDrawAreaUnit, BDPConfirmQuitUnit,
-  BDPSplashScreenUnit, BDPPaletteEditorUnit;
+  BDPSplashScreenUnit, BDPPaletteEditorUnit, BDPMenuUnit;
 
 type
 
@@ -22,6 +22,7 @@ type
     fPaletteEditor:TBDPaletteEditor;
     fSplashScreen:TBDSplashScreen;
     fQuitWindow:TConfirmQuitWindow;
+    fMainMenu:TMainMenu;
   end;
 
 implementation
@@ -82,11 +83,16 @@ begin
     fSplashScreen.ZIndex:=MaxLongint-1;
     MouseObjects.Add(fSplashScreen);
   end;
+  fMainMenu:=TMainMenu.Create;
+  fMainMenu.ZIndex:=10;
+  fMainMenu.Visible:=true;
+  MouseObjects.Add(fMainMenu);
   MouseObjects.Sort;
 end;
 
 destructor TMain.Destroy;
 begin
+  if Assigned(fMainMenu) then FreeAndNil(fMainMenu);
   if Assigned(fSplashScreen) then FreeAndNil(fSplashScreen);
   if Assigned(fQuitWindow) then FreeAndNil(fQuitWindow);
   if Assigned(fPaletteEditor) then FreeAndNil(fPaletteEditor);
@@ -108,6 +114,7 @@ begin
     MouseObjects.Draw;
     InfoBar.Draw;
     MM.Fonts['Pinky'].OutText('FPS: '+st(fps,3,'0'),WINDOWWIDTH-141,3,0);
+    MM.Fonts['Pinky'].OutText('LOI: '+st(MouseObjects.LastOverIndex,3,'0'),WINDOWWIDTH-282-16,3,0);
     FlipNoLimit;
     while MessageQueue.HasNewMessage do begin
       msg:=MessageQueue.GetNextMessage;
