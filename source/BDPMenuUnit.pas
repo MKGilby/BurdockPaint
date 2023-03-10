@@ -203,7 +203,7 @@ begin
 
   atm:=TSubMenu.Create(x);
   atm.Name:=fItems[1];
-  atm.AddItem('CLEAR',msg);
+  atm.AddItem('CLEAR',TMessage.Init(MSG_CLEARPICTURE,0));
   atm.AddItem('RESIZE',msg);
   atm.AddItem('EXPORT',msg);
   atm.Visible:=false;

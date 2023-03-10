@@ -64,7 +64,7 @@ const
   MSG_QUIT=4;
   // GETCEL or PUTCEL finished, reactivate selected tool.
   MSG_GETCELFINISHED=5;
-  // Open CEL file
+  // Open CEL file. Menu:CEL/Load
   MSG_OPENCEL=6;
   // UNDO button pressed.
   MSG_UNDO=7;
@@ -78,6 +78,8 @@ const
   MSG_ACTIVECOLORINDEXCHANGED=11;
   // Hide PaletteEditor, show Controls
   MSG_DEACTIVATEPALETTEEDITOR=12;
+  // Clear image to key color. Menu:Picture/Clear
+  MSG_CLEARPICTURE=13;
 
 
 var
