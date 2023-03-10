@@ -304,13 +304,8 @@ begin
     end;
     MSG_GETCELFINISHED:begin
       Self.Show;
-//      Self.ActivateToolButton(-1);  // Puts the already selected tool into ActiveTool
       Result:=true;
     end;
-{    MSG_MOUSECOORDS:begin
-      Self.SetMouseCoords(msg.DataInt and $7fff,(msg.DataInt and $7fff0000) shr 16);
-      Result:=true;
-    end;}
     MSG_UNDO:begin
       UndoSystem.Undo;
     end;

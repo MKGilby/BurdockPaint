@@ -3,7 +3,7 @@ Todo:
   - Create a mechanism to set up OpenDialog for each file type.
     OR
   - Create multiple OpenDialogs for each type and show appropiate dialog when needed.
-- Load the CEL is something is selected in the OpenDialog.
+- Ask for color fit when loading a CEL file.
 - Add gradients.
 - Hide menu when not needed.
 - Autosave state in every 1 min.
@@ -12,11 +12,13 @@ Todo:
 
 2023.03.10
 - SubMenu items insert a message into queue when clicked.
-- Clicking on CEL/Load invokes the windows standard open file dialog. (Won't open anything yet.)
+- Clicking on CEL/Load invokes the windows standard open file dialog.
 - MSG_MOUSECOORDS messages are removed. They caused queue overflow because when
   a file dialog was open, but the mouse moved over drawarea, SDL accumulated the
   events and fired all at once when the dialog was closed. Coordinates are read
   from DrawArea and passed to Controls in main loop instead.
+- Browsing an original AAT CEL file and click open will load the file into CELImage.
+  It doesn't yet color fits the loaded CEL.
 
 2023.03.09
 - Submenu opens when hovering mouse on menu. Moving to another menu or outside

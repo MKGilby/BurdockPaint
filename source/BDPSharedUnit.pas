@@ -64,8 +64,8 @@ const
   MSG_QUIT=4;
   // GETCEL or PUTCEL finished, reactivate selected tool.
   MSG_GETCELFINISHED=5;
-  // Holds mouse coordinates over drawarea in IntValue's lower and higher word.
-//  MSG_MOUSECOORDS=6;
+  // Open CEL file
+  MSG_OPENCEL=6;
   // UNDO button pressed.
   MSG_UNDO=7;
   // REDO button pressed.
@@ -78,8 +78,6 @@ const
   MSG_ACTIVECOLORINDEXCHANGED=11;
   // Hide PaletteEditor, show Controls
   MSG_DEACTIVATEPALETTEEDITOR=12;
-  // Open CEL file
-  MSG_OPENCEL=13;
 
 
 var
@@ -255,7 +253,7 @@ begin
   MessageQueue:=TMessageQueue.Create(32);
   Log.LogStatus('  Creating main image...');
   MainImage:=TBDImage.Create(320,200);
-  MainImage.Palette.LoadCOL('ntsc.col',0);
+  MainImage.Palette.LoadCOL('files\ntsc.col',0);
   for i:=1 to 15 do
     MainImage.Circle(i*20,random(160)+20,random(10)+15,i);
   Log.LogStatus('  Creating overlay image...');

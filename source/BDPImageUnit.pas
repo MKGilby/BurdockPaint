@@ -14,6 +14,8 @@ type
   TBDImage=class
     constructor Create(iWidth,iHeight:integer);
     destructor Destroy; override;
+
+    // ---------------- Drawing operations -------------------
     // Changes one pixel in the frame. Sets changed area accordingly.
     procedure PutPixel(x,y:integer;ColorIndex:word);
     // Gets colorindex of pixel.
@@ -50,6 +52,7 @@ type
     // Puts a part of another image onto image, using the specified colorkey.
     procedure PutImagePart(x,y,sx,sy,w,h:integer; SourceImage:TBDImage; colorkey:word=65535);
 
+    // -------------- Rendering operations --------------------
     // Renders the image onto a Texture.
     // TextureLeft, TextureTop   : The topleft position of the image on the target texture
     // RenderWidth, RenderHeight : The dimensions of rendering in IMAGE pixels
@@ -81,6 +84,7 @@ type
     // Zoom                      : Zoom level (1->1x, 2->2x, 3->4x, 4->8x)
     procedure RenderToScreenAsOverlay(ScreenLeft,ScreenTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
 
+    // ------------- File/Stream operations ----------------
     // Saves the raw image data (=array of colorindices) into a file. Used for debugging.
     procedure SaveRawDataToFile(fn:string);
     // Saves image to file, including palette data.
@@ -96,9 +100,13 @@ type
     // Write whole image data to stream.
     // (probably later will be added method to save only a region)
     procedure SaveWholeImageDataToStream(Target:TStream);
-    // Read whole image data from stream
+    // Read whole image data from stream.
     // (probably later will be added method to load only a region)
     procedure LoadWholeImageDataFromStream(Source:TStream);
+    // Imports a legacy AAT CEL file.
+    procedure ImportCEL(aFilename:string); overload;
+    // Imports a legacy AAT CEL file from stream.
+    procedure ImportCEL(Source:TStream); overload;
   private
     // Image position (used for CELImage, leave on 0,0 otherwise)
     fLeft,fTop:integer;
@@ -914,6 +922,57 @@ begin
   fData:=Getmem(fDataSize);
   Xs.Read(fData^,fDataSize);
   FreeAndNil(Xs);
+end;
+
+procedure TBDImage.ImportCEL(aFilename:string);
+var Xs:TStream;
+begin
+  Xs:=TFileStream.Create(aFilename,fmOpenRead or fmShareDenyNone);
+  ImportCel(Xs);
+  FreeAndNil(Xs);
+end;
+
+procedure TBDImage.ImportCEL(Source:TStream);
+var wi,he:word;
+    i,j:longint;
+    atm:byte;
+    pp:pointer;
+    colorarray:array[0..2] of byte;
+begin
+  wi:=0;he:=0;
+  Source.Read(wi,2);   // Image Identifier Field
+  if wi<>$9119 then begin
+    Log.LogWarning('Not a .CEL file!');
+    exit;
+  end;
+  Source.Read(wi,2);
+  Source.Read(he,2);
+  Source.Position:=32;
+  fPalette.Resize(256);
+  colorarray[0]:=0;
+  for i:=0 to 255 do begin
+    Source.Read(colorarray[0],3);
+    fPalette.ColorR[i]:=colorarray[0]*4;
+    fPalette.ColorG[i]:=colorarray[1]*4;
+    fPalette.ColorB[i]:=colorarray[2]*4;
+    fPalette.ColorA[i]:=255;
+  end;
+
+  fWidth:=wi;
+  fHeight:=he;
+
+  Freemem(fData);
+  fDataSize:=fWidth*fHeight*2;
+  fData:=Getmem(fDataSize);
+
+  pp:=fData;
+  atm:=0;
+  for j:=0 to he-1 do
+    for i:=0 to wi-1 do begin
+      Source.Read(atm,1);
+      word(pp^):=atm;
+      inc(pp,2);
+    end;
 end;
 
 end.

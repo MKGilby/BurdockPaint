@@ -29,7 +29,7 @@ type
 implementation
 
 uses SysUtils, SDL2, BDPSharedUnit, MKToolbox, MKStream, MKMouse2, Logger,
-  BDPMessageUnit, BDPKeyMappingUnit, BDPToolsUnit, MAD4MidLevelUnit;
+  BDPMessageUnit, BDPKeyMappingUnit, BDPToolsUnit, MAD4MidLevelUnit, BDPImageUnit;
 
 { TMain }
 
@@ -150,15 +150,15 @@ begin
               Settings.ActiveColorIndex:=MainImage.GetPixel(mx,my);
           end;
           MSG_OPENCEL:begin
-            MessageQueue.LogMessages;
-            fOpenDialog.Execute;
+            if fOpenDialog.Execute then begin
+              if not assigned(CELImage) then CELImage:=TBDImage.Create(16,16);
+              CELImage.ImportCEL(fOpenDialog.FileName);
+            end;
           end;
         end;
       end;
     end;
-    Log.LogDebug('Before HandleMessages.');
     HandleMessages;
-    Log.LogDebug('After HandleMessages.');
     fControls.SetMouseCoords(fDrawArea.FrameX,fDrawArea.FrameY);
     if keys[KeyMap[KEY_QUIT]] then begin
       fQuitWindow.Visible:=true;

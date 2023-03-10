@@ -376,7 +376,7 @@ begin
   if fMaxEntries>newSize then
     move(p^,fEntries^,newSize*4)
   else begin
-    move(p^,fEntries^,fMaxEntries);
+    move(p^,fEntries^,fMaxEntries*4);
     for i:=fMaxEntries to newSize-1 do
       uint32((fEntries+i*4)^):=0;
   end;
