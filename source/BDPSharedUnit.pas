@@ -64,8 +64,8 @@ const
   MSG_QUIT=4;
   // GETCEL or PUTCEL finished, reactivate selected tool.
   MSG_GETCELFINISHED=5;
-  // Open CEL file. Menu:CEL/Load
-  MSG_OPENCEL=6;
+  // Load CEL file. Menu:CEL/Load
+  MSG_LOADCEL=6;
   // UNDO button pressed.
   MSG_UNDO=7;
   // REDO button pressed.
@@ -80,7 +80,8 @@ const
   MSG_DEACTIVATEPALETTEEDITOR=12;
   // Clear image to key color. Menu:Picture/Clear
   MSG_CLEARPICTURE=13;
-
+  // Release CEL image. Menu:CEL/Release
+  MSG_RELEASECEL=14;
 
 var
   MM:TMediaManager;  // MediaManager to hold fonts and internal images

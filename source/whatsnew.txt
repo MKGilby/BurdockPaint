@@ -20,6 +20,7 @@ Todo:
   events and fired all at once when the dialog was closed. Coordinates are read
   from DrawArea and passed to Controls in main loop instead.
 - Clicking on Picture/Clear clears MainImage to key color.
+- Clicking on CEL/Release frees up CELImage. This operation is not UNDOable!
 
 2023.03.09
 - Submenu opens when hovering mouse on menu. Moving to another menu or outside

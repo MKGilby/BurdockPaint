@@ -215,11 +215,11 @@ begin
   atm.Name:=fItems[2];
   atm.AddItem('GET',msg);
   atm.AddItem('PUT',msg);
-  atm.AddItem('RELEASE',msg);
+  atm.AddItem('RELEASE',TMessage.Init(MSG_RELEASECEL,0));
   atm.AddItem('ROTATE',msg);
   atm.AddItem('FLIP V',msg);
   atm.AddItem('FLIP H',msg);
-  atm.AddItem('LOAD',TMessage.Init(MSG_OPENCEL,0));
+  atm.AddItem('LOAD',TMessage.Init(MSG_LOADCEL,0));
   atm.AddItem('SAVE',msg);
   atm.AddItem('EXPORT',msg);
   atm.Visible:=false;

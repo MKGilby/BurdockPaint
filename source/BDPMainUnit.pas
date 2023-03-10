@@ -149,7 +149,7 @@ begin
             if (mx>=0) and (mx<MainImage.Width) and (my>=0) and (my<MainImage.Height) then
               Settings.ActiveColorIndex:=MainImage.GetPixel(mx,my);
           end;
-          MSG_OPENCEL:begin
+          MSG_LOADCEL:begin
             if fOpenDialog.Execute then begin
               if not assigned(CELImage) then CELImage:=TBDImage.Create(16,16);
               CELImage.ImportCEL(fOpenDialog.FileName);
@@ -159,6 +159,9 @@ begin
             UndoSystem.AddImageUndo(0,0,MainImage.Width,MainImage.Height);
             MainImage.Bar(0,0,MainImage.Width,MainImage.Height,Settings.SelectedColors[0]);
             UndoSystem.AddImageRedoToLastUndo(0,0,MainImage.Width,MainImage.Height);
+          end;
+          MSG_RELEASECEL:begin
+            if Assigned(CELImage) then FreeAndNil(CELImage);
           end;
         end;
       end;
