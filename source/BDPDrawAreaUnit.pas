@@ -36,6 +36,9 @@ type
     fPanDir,fPanFase:integer;
     fMousePanning:integer;  // 0 - false, 1 - waiting for move or mouseup, 2 - was move, really panning
     fPanX,fPanY,fPanX2,fPanY2:integer;
+  public
+    property FrameX:integer read fFrameX;
+    property FrameY:integer read fFrameY;
   end;
 
 
@@ -164,7 +167,7 @@ begin
   fFrameX:=MouseXToFrame(x);
   fFrameY:=MouseYToFrame(y);
   ActiveTool.Move(fFrameX,fFrameY);
-  MessageQueue.AddMessage(MSG_MOUSECOORDS,'',(fFrameX and $7fff)+(fFrameY and $7fff)<<16);
+//  MessageQueue.AddMessage(MSG_MOUSECOORDS,'',(fFrameX and $7fff)+(fFrameY and $7fff)<<16);
   Result:=ActiveTool.MouseMove(fFrameX,fFrameY,buttons);
   if not Result then begin
     if fMousePanning=1 then fMousePanning:=2;

@@ -1,9 +1,22 @@
 Todo:
+- Make decision:
+  - Create a mechanism to set up OpenDialog for each file type.
+    OR
+  - Create multiple OpenDialogs for each type and show appropiate dialog when needed.
+- Load the CEL is something is selected in the OpenDialog.
 - Add gradients.
 - Hide menu when not needed.
 - Autosave state in every 1 min.
 - Configurable autosave interval.
 
+
+2023.03.10
+- SubMenu items insert a message into queue when clicked.
+- Clicking on CEL/Load invokes the windows standard open file dialog. (Won't open anything yet.)
+- MSG_MOUSECOORDS messages are removed. They caused queue overflow because when
+  a file dialog was open, but the mouse moved over drawarea, SDL accumulated the
+  events and fired all at once when the dialog was closed. Coordinates are read
+  from DrawArea and passed to Controls in main loop instead.
 
 2023.03.09
 - Submenu opens when hovering mouse on menu. Moving to another menu or outside

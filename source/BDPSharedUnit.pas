@@ -65,7 +65,7 @@ const
   // GETCEL or PUTCEL finished, reactivate selected tool.
   MSG_GETCELFINISHED=5;
   // Holds mouse coordinates over drawarea in IntValue's lower and higher word.
-  MSG_MOUSECOORDS=6;
+//  MSG_MOUSECOORDS=6;
   // UNDO button pressed.
   MSG_UNDO=7;
   // REDO button pressed.
@@ -78,6 +78,8 @@ const
   MSG_ACTIVECOLORINDEXCHANGED=11;
   // Hide PaletteEditor, show Controls
   MSG_DEACTIVATEPALETTEEDITOR=12;
+  // Open CEL file
+  MSG_OPENCEL=13;
 
 
 var

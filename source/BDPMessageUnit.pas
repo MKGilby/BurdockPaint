@@ -5,9 +5,13 @@ unit BDPMessageUnit;
 interface
 
 type
+
+  { TMessage }
+
   TMessage=record
     TypeID:integer;
     DataInt:integer;
+    constructor Init(iTypeID,iDataInt:integer);
   end;
 
   { TMessageQueue }
@@ -19,6 +23,7 @@ type
     procedure AddMessage(pMessage:TMessage); overload;
     function HasNewMessage:boolean;
     function GetNextMessage:TMessage;
+    procedure LogMessages;
   private
     fMessages:array of TMessage;
     fInPTR,fOutPTR:integer;
@@ -26,7 +31,15 @@ type
 
 implementation
 
-uses SysUtils;
+uses SysUtils, Logger;
+
+{ TMessage }
+
+constructor TMessage.Init(iTypeID,iDataInt:integer);
+begin
+  TypeID:=iTypeID;
+  DataInt:=iDataInt;
+end;
 
 { TMessageQueue }
 
@@ -42,16 +55,17 @@ begin
   inherited Destroy;
 end;
 
-procedure TMessageQueue.AddMessage(pTypeID:integer; pDataString:string;
-  pDataInt:integer);
+procedure TMessageQueue.AddMessage(pTypeID:integer; pDataString:string; pDataInt:integer);
 begin
   if not((fInPTR=fOutPTR-1) or ((fInPtr=length(fMessages)-1) and (fOutPTR=0))) then begin
     fMessages[fInPTR].TypeID:=pTypeID;
     fMessages[fInPTR].DataInt:=pDataInt;
     inc(fInPTR);
     if fInPTR=length(fMessages) then fInPTR:=0;
-  end else
+  end else begin
+    LogMessages;
     raise Exception.Create('Message queue overflow!');
+  end;
 end;
 
 procedure TMessageQueue.AddMessage(pMessage:TMessage);
@@ -77,6 +91,17 @@ begin
     if fOutPTR=length(fMessages) then fOutPTR:=0;
   end else
     raise Exception.Create('Message queue underflow!');
+end;
+
+procedure TMessageQueue.LogMessages;
+var i:integer;
+begin
+  i:=fOutPTR;
+  while i<>fInPTR do with fMessages[i] do begin
+    Log.LogDebug(Format('%d. TypeID: %d, DataInt: %d',[i,TypeID,DataInt]));
+    inc(i);
+    if i=length(fMessages) then i:=0;
+  end;
 end;
 
 end.

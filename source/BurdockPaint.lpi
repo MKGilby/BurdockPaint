@@ -19,7 +19,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="9"/>
-      <BuildNr Value="12"/>
+      <BuildNr Value="13"/>
       <Attributes pvaPreRelease="True"/>
       <StringTable CompanyName="MKSZTSZ" LegalCopyright="Freeware" ProductName="BurdockPaint"/>
     </VersionInfo>
@@ -105,6 +105,11 @@
     <RunParams>
       <FormatVersion Value="2"/>
     </RunParams>
+    <RequiredPackages>
+      <Item>
+        <PackageName Value="LCL"/>
+      </Item>
+    </RequiredPackages>
     <Units>
       <Unit>
         <Filename Value="BurdockPaint.lpr"/>

@@ -5,7 +5,7 @@ unit BDPMainUnit;
 interface
 
 uses mk_sdl2, BDPControlsUnit, BDPDrawAreaUnit, BDPConfirmQuitUnit,
-  BDPSplashScreenUnit, BDPPaletteEditorUnit, BDPMenuUnit;
+  BDPSplashScreenUnit, BDPPaletteEditorUnit, BDPMenuUnit, Dialogs;
 
 type
 
@@ -23,6 +23,7 @@ type
     fSplashScreen:TBDSplashScreen;
     fQuitWindow:TConfirmQuitWindow;
     fMainMenu:TMainMenu;
+    fOpenDialog:TOpenDialog;
   end;
 
 implementation
@@ -88,10 +89,17 @@ begin
   fMainMenu.Visible:=true;
   MouseObjects.Add(fMainMenu);
   MouseObjects.Sort;
+  fOpenDialog:=TOpenDialog.Create(nil);
+  fOpenDialog.Filter:='CEL files|*.bdc|Legacy CEL files|*.cel';
+  fOpenDialog.FilterIndex:=0;
+  fOpenDialog.Name:='OpenDialog';
+  fOpenDialog.Title:='Open file';
+  fOpenDialog.InitialDir:=ExtractFilePath(ParamStr(0));
 end;
 
 destructor TMain.Destroy;
 begin
+  if Assigned(fOpenDialog) then FreeAndNil(fOpenDialog);
   if Assigned(fMainMenu) then FreeAndNil(fMainMenu);
   if Assigned(fSplashScreen) then FreeAndNil(fSplashScreen);
   if Assigned(fQuitWindow) then FreeAndNil(fQuitWindow);
@@ -141,10 +149,17 @@ begin
             if (mx>=0) and (mx<MainImage.Width) and (my>=0) and (my<MainImage.Height) then
               Settings.ActiveColorIndex:=MainImage.GetPixel(mx,my);
           end;
+          MSG_OPENCEL:begin
+            MessageQueue.LogMessages;
+            fOpenDialog.Execute;
+          end;
         end;
       end;
     end;
+    Log.LogDebug('Before HandleMessages.');
     HandleMessages;
+    Log.LogDebug('After HandleMessages.');
+    fControls.SetMouseCoords(fDrawArea.FrameX,fDrawArea.FrameY);
     if keys[KeyMap[KEY_QUIT]] then begin
       fQuitWindow.Visible:=true;
       keys[KeyMap[KEY_QUIT]]:=false;

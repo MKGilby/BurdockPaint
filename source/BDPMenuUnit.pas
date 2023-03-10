@@ -4,7 +4,7 @@ unit BDPMenuUnit;
 
 interface
 
-uses Classes, mk_sdl2, MKMouse2, fgl;
+uses Classes, mk_sdl2, MKMouse2, fgl, BDPMessageUnit;
 
 type
 
@@ -18,10 +18,11 @@ type
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
     procedure MouseEnter(Sender:TObject);
     procedure MouseLeave(Sender:TObject);
-    procedure AddItem(item:string);
+    procedure AddItem(item:string;msg:TMessage);
   private
     fTexture:TStreamingTexture;
     fItems:TStringList;
+    fMessages:array of TMessage;
     fSelected:integer;
     procedure fSetName(value:string);
     procedure RecreateTexture;
@@ -64,6 +65,7 @@ begin
   fTexture.ARGBImage.Clear;
   fTexture.Update;
   fItems:=TStringList.Create;
+  SetLength(fMessages,0);
   fSelected:=-1;
   ZIndex:=9;
   Enabled:=true;
@@ -111,6 +113,12 @@ end;
 
 function TSubMenu.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
 begin
+  fSelected:=(y-TOPMENUHEIGHT) div SUBMENULINEHEIGHT;
+  if (fSelected>=0) and (fSelected<fItems.Count) then begin
+    MessageQueue.AddMessage(fMessages[fSelected]);
+    fSelected:=-1;
+    Visible:=false;
+  end;
   Result:=true;
 end;
 
@@ -125,10 +133,12 @@ begin
   Visible:=false;
 end;
 
-procedure TSubMenu.AddItem(item:string);
+procedure TSubMenu.AddItem(item:string; msg:TMessage);
 begin
   if item<>'' then begin
     fItems.Add(item);
+    SetLength(fMessages,Length(fMessages)+1);
+    fMessages[length(fMessages)-1]:=msg;
     RecreateTexture;
   end;
 end;
@@ -160,7 +170,7 @@ end;
 { TMainMenu }
 
 constructor TMainMenu.Create;
-var atm:TSubMenu;x:integer;
+var atm:TSubMenu;x:integer;msg:TMessage;
 begin
   Left:=0;
   Top:=0;
@@ -180,11 +190,12 @@ begin
 
   atm:=TSubMenu.Create(x);
   atm.Name:=fItems[0];
-  atm.AddItem('NEW');
-  atm.AddItem('OPEN');
-  atm.AddItem('SAVE');
-  atm.AddItem('SETTINGS');
-  atm.AddItem('QUIT');
+  msg.TypeID:=MSG_NONE;
+  atm.AddItem('NEW',msg);
+  atm.AddItem('OPEN',msg);
+  atm.AddItem('SAVE',msg);
+  atm.AddItem('SETTINGS',msg);
+  atm.AddItem('QUIT',msg);
   atm.Visible:=false;
   fSubMenus.Add(atm);
   x+=(length(fItems[0])+2)*18;
@@ -192,9 +203,9 @@ begin
 
   atm:=TSubMenu.Create(x);
   atm.Name:=fItems[1];
-  atm.AddItem('CLEAR');
-  atm.AddItem('RESIZE');
-  atm.AddItem('EXPORT');
+  atm.AddItem('CLEAR',msg);
+  atm.AddItem('RESIZE',msg);
+  atm.AddItem('EXPORT',msg);
   atm.Visible:=false;
   fSubMenus.Add(atm);
   x+=(length(fItems[1])+2)*18;
@@ -202,12 +213,15 @@ begin
 
   atm:=TSubMenu.Create(x);
   atm.Name:=fItems[2];
-  atm.AddItem('GET');
-  atm.AddItem('PUT');
-  atm.AddItem('RELEASE');
-  atm.AddItem('ROTATE');
-  atm.AddItem('FLIP V');
-  atm.AddItem('FLIP H');
+  atm.AddItem('GET',msg);
+  atm.AddItem('PUT',msg);
+  atm.AddItem('RELEASE',msg);
+  atm.AddItem('ROTATE',msg);
+  atm.AddItem('FLIP V',msg);
+  atm.AddItem('FLIP H',msg);
+  atm.AddItem('LOAD',TMessage.Init(MSG_OPENCEL,0));
+  atm.AddItem('SAVE',msg);
+  atm.AddItem('EXPORT',msg);
   atm.Visible:=false;
   fSubMenus.Add(atm);
   x+=(length(fItems[2])+2)*18;
