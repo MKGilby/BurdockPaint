@@ -299,11 +299,7 @@ begin
   Result:=false;
   case msg.TypeID of
     MSG_TOGGLECONTROLS:begin
-      Self.Visible:=not Self.Visible;
-      Result:=true;
-    end;
-    MSG_GETCELFINISHED:begin
-      Self.Show;
+      if Self.Visible then Self.Hide else Self.Show;
       Result:=true;
     end;
     MSG_UNDO:begin

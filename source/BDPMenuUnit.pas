@@ -213,7 +213,7 @@ begin
 
   atm:=TSubMenu.Create(x);
   atm.Name:=fItems[2];
-  atm.AddItem('GET',msg);
+  atm.AddItem('GET',TMessage.Init(MSG_GETCEL,0));
   atm.AddItem('PUT',msg);
   atm.AddItem('RELEASE',TMessage.Init(MSG_RELEASECEL,0));
   atm.AddItem('ROTATE',msg);

@@ -31,6 +31,9 @@
 //   V1.07 - 2023.03.09 - Gilby
 //     * MouseObjects.Sort fix.
 //     * Making OnMouseEnter and OnMouseLeave better.
+//   V1.08 - 2023.03.10 - Gilby
+//     * Making OnClick better.
+//       Only call OnClick when MouseDown and MouseUp occurs over the same control.
 }
 
 {$ifdef fpc}
@@ -119,7 +122,8 @@ type
     fStack:TStack;
     fTop:integer;
     fSoftDelete:boolean;
-    fLastOverIndex:integer;
+    fLastOverIndex,
+    fLastMouseDownIndex:integer;
   public
     property LastOverIndex:integer read fLastOverIndex;
   end;
@@ -133,7 +137,7 @@ uses SysUtils, Logger, MK_SDL2;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.07';
+  Version='1.08';
 
 constructor TMouseObjects.Create;
 begin
@@ -142,6 +146,7 @@ begin
   fTop:=0;
   fSoftDelete:=false;
   fLastOverIndex:=-1;
+  fLastMouseDownIndex:=-1;
 end;
 
 destructor TMouseObjects.Destroy;
@@ -184,7 +189,10 @@ begin
     i:=Count-1;
     while (i>=fTop) and (i<Count) and not(Result) do begin
       Log.LogDebug('Passing event to object number '+inttostr(i)+' ('+Self[i].Name+')');
-      if (overindex=-1) and (Self[i].Visible) and (Self[i].IsOver(Event^.motion.x,Event^.motion.y)) then overindex:=i;
+      if (overindex=-1) and (Self[i].Visible) and (Self[i].IsOver(Event^.motion.x,Event^.motion.y)) then begin
+        overindex:=i;
+        if Event^.type_=SDL_MOUSEBUTTONDOWN then fLastMouseDownIndex:=i;
+      end;
       if Self[i]<>nil then
         Result:=Self[i].HandleEvent(Event);
       dec(i);
@@ -206,6 +214,15 @@ begin
         if Assigned(Self[overindex].OnMouseEnter) then
           Self[overindex].OnMouseEnter(Self[overindex]);
       fLastOverIndex:=overindex;
+    end;
+    if (Event^.type_=SDL_MOUSEBUTTONUP) and (fLastMouseDownIndex>-1) then begin
+      if (overindex=fLastMouseDownIndex) then begin
+        if Assigned(Self[overindex].OnClick) then begin
+          Log.LogDebug('Click on object number '+inttostr(overindex)+' ('+Self[overindex].Name+')');
+          Self[overindex].OnClick(Self[overindex],Event^.button.x,Event^.button.y,Event^.button.button);
+        end;
+      end;
+      fLastMouseDownIndex:=-1;
     end;
   end;
   fSoftDelete:=false;
@@ -316,7 +333,7 @@ end;
 
 procedure TMouseObject.Show;
 begin
-  if not Visible then begin
+  if not Self.Visible then begin
     Visible:=true;
     if Assigned(OnShow) then OnShow(Self);
   end;
@@ -359,8 +376,8 @@ begin
       Log.LogDebug('Event: MouseButtonUp');
       if IsOver(nx,ny) then begin
         if Assigned(OnMouseUp) then Result:=OnMouseUp(Self,nx,ny,Button);
-        if Assigned(OnClick) then
-          if OnClick(Self,nx,ny,Button) then Result:=true;
+{        if Assigned(OnClick) then
+          if OnClick(Self,nx,ny,Button) then Result:=true;}
       end;
     end;
     SDL_MOUSEMOTION:with Event^.Button do begin

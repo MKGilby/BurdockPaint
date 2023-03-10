@@ -82,6 +82,8 @@ const
   MSG_CLEARPICTURE=13;
   // Release CEL image. Menu:CEL/Release
   MSG_RELEASECEL=14;
+  // Get CEL image. Menu:CEL/Get
+  MSG_GETCEL=15;
 
 var
   MM:TMediaManager;  // MediaManager to hold fonts and internal images

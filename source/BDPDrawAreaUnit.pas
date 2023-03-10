@@ -16,9 +16,9 @@ type
     destructor Destroy; override;
     procedure CenterImage;
     procedure Draw; override;
-    function Click(Sender:TObject;{%H-}x,{%H-}y,{%H-}buttons:integer):boolean;
-    function MouseDown(Sender:TObject;{%H-}x,{%H-}y,buttons:integer):boolean;
-    function MouseUp(Sender:TObject;{%H-}x,{%H-}y,buttons:integer):boolean;
+    function Click(Sender:TObject;x,y,buttons:integer):boolean;
+    function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
+    function MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
     function MouseMove(Sender:TObject;x,y:integer):boolean;
     function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
     procedure MouseEnter(Sender:TObject);
@@ -117,7 +117,7 @@ end;
 
 function TBDDrawArea.Click(Sender:TObject; x,y,buttons:integer):boolean;
 begin
-  Result:=false;
+  Result:=ActiveTool.Click(MouseXToFrame(x),MouseYToFrame(y),buttons);
 end;
 
 function TBDDrawArea.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
@@ -146,8 +146,8 @@ begin
   mx:=MouseXToFrame(x);
   my:=MouseYToFrame(y);
   Result:=ActiveTool.MouseUp(mx,my,buttons);
-  if not Result then begin
-    Result:=ActiveTool.Click(mx,my,buttons);
+{  if not Result then begin
+    Result:=ActiveTool.Click(mx,my,buttons);}
     if not Result then begin
       if buttons=SDL_BUTTON_RIGHT then begin
         if fMousePanning=1 then MessageQueue.AddMessage(MSG_TOGGLECONTROLS);
@@ -155,7 +155,7 @@ begin
       end;
       Result:=true;
     end else fMousePanning:=0;
-  end;
+//  end;
 end;
 
 function TBDDrawArea.MouseMove(Sender:TObject; x,y:integer):boolean;

@@ -21,6 +21,9 @@ Todo:
   from DrawArea and passed to Controls in main loop instead.
 - Clicking on Picture/Clear clears MainImage to key color.
 - Clicking on CEL/Release frees up CELImage. This operation is not UNDOable!
+- GetCEL hides and shows MainMenu beside Controls.
+- Clicking on CEL/Get invokes GetCEL tool.
+- BUG: The whole fControls stopped working.
 
 2023.03.09
 - Submenu opens when hovering mouse on menu. Moving to another menu or outside

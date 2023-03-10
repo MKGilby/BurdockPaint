@@ -163,6 +163,17 @@ begin
           MSG_RELEASECEL:begin
             if Assigned(CELImage) then FreeAndNil(CELImage);
           end;
+          MSG_GETCEL:begin
+            fControls.Hide;
+            fMainMenu.Hide;
+            SDL_ShowCursor(SDL_DISABLE);
+            ActiveTool:=Tools.ItemByName['GETCEL'];
+            ActiveTool.Move(fDrawArea.FrameX,fDrawArea.FrameY);
+          end;
+          MSG_GETCELFINISHED:begin
+            fControls.Show;
+            fMainMenu.Show;
+          end;
         end;
       end;
     end;
