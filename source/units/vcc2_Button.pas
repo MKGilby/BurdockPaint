@@ -2,23 +2,20 @@
 
    MKSZTSZ Visual Component Collection for SDL2
 
-                   Simple Text Button for ARGBImage
+                                 Simple Text Button
 
   --------------------------------------------------
 
   -[Disclaimer]-------------------------------------
 
-             You can freely distribute it
-             under the GNU GPL Version 2.
-
-  Written by Gilby/MKSZTSZ
-  Hungary, 2023
+   Written by Gilby/MKSZTSZ               Freeware!
+   Hungary, 2023
 
   --------------------------------------------------
 
   -[Description]------------------------------------
 
-   It is a simple pushbutton logic.
+   It is a simple pushbutton.
 
    You can set it up
      - from an .INI file,
@@ -45,41 +42,34 @@
 
 // Version info:
 //
-//  V1.00: Gilby - 2023.01.16
-//    * Initial creation from vcc_Button
+//  V1.00: Gilby - 2023.03.14
+//    * Initial creation form vcc_Button2
 
 {$mode delphi}
 {$smartlink on}
 
-unit vcc_ARGBButton;
+unit vcc2_Button;
 
 interface
 
-uses Classes, vcc_ButtonLogic2, MKINIFile, Font2Unit, FontList2Unit, ARGBImageUnit;
+uses Classes, vcc2_ButtonLogic, MKINIFile, Font2Unit, FontList2Unit, mk_sdl2;
 
 type
 
-  { TARGBButton }
+  { TButton }
 
-  TARGBButton=class(TButtonLogic)
-    constructor Create(iTarget:TARGBImage); overload;
-    constructor Create(iTarget:TARGBImage;iINI:TINIFile;iSection:string;
-      iFontList:TFontList); overload;
+  TButton=class(TButtonLogic)
+    constructor Create; overload;
+    constructor Create(iINI:TINIFile;iSection:string;iFontList:TFontList); overload;
     procedure Draw; override;
-    function DefaultOnMouseEnter(Sender:TObject;{%H-}x,{%H-}y,{%H-}buttons:integer):boolean;
-    function DefaultOnMouseLeave(Sender:TObject;{%H-}x,{%H-}y,{%H-}buttons:integer):boolean;
-    function DefaultOnMouseDown(Sender:TObject;{%H-}x,{%H-}y,{%H-}buttons:integer):boolean;
-    function DefaultOnMouseUp(Sender:TObject;{%H-}x,{%H-}y,{%H-}buttons:integer):boolean;
-//    function OnClick(x,y,buttons:integer):boolean;
   protected
-    fTarget:TARGBImage;
     fFont:TFont;
     fBorderColor,
     fNormalColor,
     fHighlightedColor,
     fPushedColor:uint32;
     procedure fSetTop(value:integer);
-    procedure fSetHeight(value:integer);
+    procedure fSetHeight(value:integer); override;
     procedure fSetFont(font:TFont);
   public
     property Font:TFont read fFont write fSetFont;
@@ -99,14 +89,9 @@ const
 
 
 
-constructor TARGBButton.Create(iTarget:TARGBImage);
+constructor TButton.Create;
 begin
   inherited Create;
-  fTarget:=iTarget;
-  fLeft:=0;
-  fTop:=0;
-  fWidth:=64;
-  fHeight:=24;
   fTextAlignX:=mjLeft;
   fTextAlignPointX:=fLeft+2;
   fTextAlignPointY:=fTop+2;
@@ -117,22 +102,12 @@ begin
   fNormalColor:=$ff202020;
   fHighlightedColor:=$ff808080;
   fPushedColor:=$ff010101;
-
-  OnMouseEnter:=Self.DefaultOnMouseEnter;
-  OnMouseLeave:=Self.DefaultOnMouseLeave;
-  OnMouseDown:=Self.DefaultOnMouseDown;
-  OnMouseUp:=Self.DefaultOnMouseUp;
-
-  fState:=cNormal;
-  fClicked:=false;
 end;
 
-constructor TARGBButton.Create(iTarget:TARGBImage; iINI:TINIFile;
-  iSection:string; iFontList:TFontList);
+constructor TButton.Create(iINI:TINIFile; iSection:string; iFontList:TFontList);
 var s:string;
 begin
   inherited Create;
-  fTarget:=iTarget;
   Left:=iINI.ReadInteger(iSection,'Left',0);
   Top:=iINI.ReadInteger(iSection,'Top',0);
   Width:=iINI.ReadInteger(iSection,'Width',0);;
@@ -151,80 +126,55 @@ begin
   NormalColor:=iINI.ReadUInt32(iSection,'NormalColor',$ff202020);
   HighlightedColor:=iINI.ReadUInt32(iSection,'HighlightedColor',$ff808080);
   PushedColor:=iINI.ReadUInt32(iSection,'PushedColor',$ff010101);
-  OnMouseEnter:=Self.DefaultOnMouseEnter;
-  OnMouseLeave:=Self.DefaultOnMouseLeave;
-  OnMouseDown:=Self.DefaultOnMouseDown;
-  OnMouseUp:=Self.DefaultOnMouseUp;
+  OnMouseEnter:=Self.MouseEnter;
+  OnMouseLeave:=Self.MouseLeave;
+  OnMouseDown:=Self.MouseDown;
+  OnMouseUp:=Self.MouseUp;
 
   fState:=cNormal;
   fClicked:=false;
 end;
 
-procedure TARGBButton.fSetTop(value:integer);
+procedure TButton.fSetTop(value:integer);
 begin
   fTop:=value;
   if Assigned(fFont) then
     fTextAlignPointY:=fTop+(fHeight-fFont.Height) div 2;
 end;
 
-procedure TARGBButton.fSetHeight(value:integer);
+procedure TButton.fSetHeight(value:integer);
 begin
-  fHeight:=value;
+  inherited fSetHeight(value);
   if Assigned(fFont) then
     fTextAlignPointY:=fTop+(fHeight-fFont.Height) div 2;
 end;
 
-procedure TARGBButton.fSetFont(font:TFont);
+procedure TButton.fSetFont(font:TFont);
 begin
   fFont:=font;
   fTextAlignPointY:=fTop+(fHeight-fFont.Height) div 2;
 end;
 
-function TARGBButton.DefaultOnMouseEnter(Sender:TObject;x,y,buttons:integer):boolean;
-begin
-  fState:=cHighLighted;
-  Result:=true;
-end;
-
-procedure TARGBButton.Draw;
+procedure TButton.Draw;
 
   procedure DrawButton(color:uint32);
   begin
-    fTarget.Rectangle(fLeft,fTop,fWidth,fHeight,fBorderColor);
-    fTarget.Bar(fLeft+1,fTop+1,fWidth-2,fHeight-2,color);
+    fTexture.ARGBImage.Rectangle(0,0,fWidth,fHeight,fBorderColor);
+    fTexture.ARGBImage.Bar(1,1,fWidth-2,fHeight-2,color);
   end;
 
 begin
-  case fState of
-    cNormal:DrawButton(fNormalColor);
-    cHighlighted:DrawButton(fHighlightedColor);
-    cButtonDown:DrawButton(fPushedColor);
+  if fVisible then begin
+    case fState of
+      cNormal:DrawButton(fNormalColor);
+      cHighlighted:DrawButton(fHighlightedColor);
+      cButtonDown:DrawButton(fPushedColor);
+    end;
+    fFont.OutText(fTexture.ARGBImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX);
+    fTexture.Update;
+    PutTexture(fLeft,fTop,fTexture);
   end;
-  fFont.OutText(fTarget,fCaption,fTextAlignPointX,fTextAlignPointY+fTextOffsetY,fTextAlignX);
 end;
-
-function TARGBButton.DefaultOnMouseLeave(Sender:TObject;x,y,buttons:integer):boolean;
-begin
-  fState:=cNormal;
-  fClicked:=false;
-  Result:=true;
-end;
-
-function TARGBButton.DefaultOnMouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-begin
-  fState:=cButtonDown;
-  Result:=true;
-end;
-
-function TARGBButton.DefaultOnMouseUp(Sender:TObject;x,y,buttons:integer):boolean;
-begin
-  fState:=cHighLighted;
-  Result:=true;
-end;
-
-{function TARGBButton.OnClick(x,y,buttons:integer):boolean;
-begin
-end;}
 
 initialization
   Log.LogStatus(Fstr+'version '+Version,'uses');

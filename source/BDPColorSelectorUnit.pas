@@ -4,82 +4,74 @@ unit BDPColorSelectorUnit;
 
 interface
 
-uses MKMouse2, ARGBImageUnit;
+uses vcc2_VisibleControl;
 
 type
 
   { TColorSelector }
 
-  TColorSelector=class(TMouseObject)
-    constructor Create(iTarget:TARGBImage;iLeft,iTop:integer);
+  TColorSelector=class(TVisibleControl)
+    constructor Create(iLeft,iTop:integer);
     procedure Draw; override;
     function Click(Sender:TObject;x, y, buttons: integer): boolean;
     function KeyDown(Sender:TObject;key:integer):boolean;
     procedure SetSelectedSlotTo(ColorIndex:integer);
   private
-    fTarget:TARGBImage;
-//    fColorCount:integer;
     fSelectedIndex:integer;
-//    fColors:array of integer;
-    fParentX,fParentY:integer;
     fPickingColor:boolean;
     function GetClickedIndex(x:integer):integer;
-  published
-    property ParentX:integer read fParentX write fParentX;
-    property ParentY:integer read fParentY write fParentY;
   end;
 
 implementation
 
-uses BDPSharedUnit, BDPSettingsUnit, sdl2, BDPKeyMappingUnit;
+uses BDPSharedUnit, BDPSettingsUnit, sdl2, mk_sdl2, BDPKeyMappingUnit;
 
 { TColorSelector }
 
-constructor TColorSelector.Create(iTarget:TARGBImage;iLeft,iTop:integer);
+constructor TColorSelector.Create(iLeft,iTop:integer);
 var i:integer;
 begin
   inherited Create;
   fLeft:=iLeft;
   fTop:=iTop;
-  fWidth:=COLORSELECTORCOLORS*(COLORSELECTORBOXSIZE-3)+COLORSELECTORGAP;
-  fHeight:=COLORSELECTORBOXSIZE;
+  Width:=COLORSELECTORCOLORS*(COLORSELECTORBOXSIZE-3)+COLORSELECTORGAP+3;
+  Height:=COLORSELECTORBOXSIZE;
   fSelectedIndex:=0;
   for i:=0 to COLORSELECTORCOLORS-1 do
     if Settings.SelectedColors[i]=Settings.ActiveColorIndex then fSelectedIndex:=i;
-  fTarget:=iTarget;
   OnClick:=Self.Click;
   OnKeyDown:=Self.KeyDown;
+  fTexture.ARGBImage.Bar(0,0,fTexture.Width,fTexture.Height,OverlayImage.Palette[3]);
   fPickingColor:=false;
 end;
 
 procedure TColorSelector.Draw;
 var i,x:integer;
 begin
-  // Draw dark background for all slots
-  fTarget.Bar(
-    fLeft-fParentX,
-    fTop-fParentY,
-    COLORSELECTORBOXSIZE,
-    COLORSELECTORBOXSIZE,
-    OverlayImage.Palette[2]);
-  fTarget.Bar(
-    fLeft-fParentX+COLORSELECTORGAP+COLORSELECTORBOXSIZE-3,
-    fTop-fParentY,
-    (COLORSELECTORBOXSIZE-3)*(COLORSELECTORCOLORS-1)+3,
-    COLORSELECTORBOXSIZE,
-    OverlayImage.Palette[2]);
-  // Draw highlights and color boxes
-  x:=0;
-  for i:=0 to COLORSELECTORCOLORS-1 do begin
-    if Settings.SelectedColors[i]=Settings.ActiveColorIndex then begin
-      if not fPickingColor then
-        fTarget.Bar(fLeft+x-fParentX,fTop-fParentY,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[5])
-      else
-        fTarget.Bar(fLeft+x-fParentX,fTop-fParentY,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[VibroColors.GetColorIndex])
+  if fVisible then begin
+    // Draw dark background for all slots
+    fTexture.ARGBImage.Bar(0,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[2]);
+    fTexture.ARGBImage.Bar(
+      COLORSELECTORGAP+COLORSELECTORBOXSIZE-3,
+      0,
+      (COLORSELECTORBOXSIZE-3)*(COLORSELECTORCOLORS-1)+3,
+      COLORSELECTORBOXSIZE,
+      OverlayImage.Palette[2]);
+    // Draw highlights and color boxes
+    x:=0;
+    for i:=0 to COLORSELECTORCOLORS-1 do begin
+      if Settings.SelectedColors[i]=Settings.ActiveColorIndex then begin
+        if not fPickingColor then
+          fTexture.ARGBImage.Bar(x,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[5])
+        else
+          fTexture.ARGBImage.Bar(x,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[VibroColors.GetColorIndex])
+      end;
+      fTexture.ARGBImage.Bar(x+3,3,COLORSELECTORBOXSIZE-6,COLORSELECTORBOXSIZE-6,MainImage.Palette[Settings.SelectedColors[i]]);
+      x+=COLORSELECTORBOXSIZE-3;
+      if i=0 then x+=COLORSELECTORGAP;
     end;
-    fTarget.Bar(fLeft+x-fParentX+3,fTop-fParentY+3,COLORSELECTORBOXSIZE-6,COLORSELECTORBOXSIZE-6,MainImage.Palette[Settings.SelectedColors[i]]);
-    x+=COLORSELECTORBOXSIZE-3;
-    if i=0 then x+=COLORSELECTORGAP;
+    fTexture.Update;
+    PutTexture(fLeft,fTop,fTexture);
   end;
 end;
 

@@ -66,44 +66,42 @@ begin
   OnShow:=PaletteEditorShow;
   OnHide:=PaletteEditorHide;
   fName:='PaletteEditor';
+  ZIndex:=LEVEL1CONTROLS_ZINDEX;
 
-  fSliderR:=TBDHorizontalSlider.Create(fTexture.ARGBImage,fLeft,fTop);
+  fSliderR:=TBDHorizontalSlider.Create(fLeft+COLORSLIDERSLEFT,fTop+6);
   with fSliderR do begin
-    Left:=COLORSLIDERSLEFT;Top:=Self.fTop+6;MinValue:=0;MaxValue:=255;Position:=32;
-    ZIndex:=15;
+    MinValue:=0;MaxValue:=255;Position:=32;
+    ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
     Name:='R-slider';
     OnChange:=OnSliderRChange;
   end;
   AddChild(fSliderR);
 
-  fSliderG:=TBDHorizontalSlider.Create(fTexture.ARGBImage,fLeft,fTop);
+  fSliderG:=TBDHorizontalSlider.Create(fLeft+COLORSLIDERSLEFT+COLORSLIDERWIDTH+3,fTop+6);
   with fSliderG do begin
-    Left:=COLORSLIDERSLEFT+COLORSLIDERWIDTH+3;Top:=Self.fTop+6;MinValue:=0;MaxValue:=255;Position:=32;
-    ZIndex:=15;
+    MinValue:=0;MaxValue:=255;Position:=32;
+    ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
     Name:='G-slider';
     OnChange:=OnSliderGChange;
   end;
   AddChild(fSliderG);
 
-  fSliderB:=TBDHorizontalSlider.Create(fTexture.ARGBImage,fLeft,fTop);
+  fSliderB:=TBDHorizontalSlider.Create(fLeft+COLORSLIDERSLEFT+2*(COLORSLIDERWIDTH+3),fTop+6);
   with fSliderB do begin
-    Left:=COLORSLIDERSLEFT+2*(COLORSLIDERWIDTH+3);Top:=Self.fTop+6;MinValue:=0;MaxValue:=255;Position:=32;
-    ZIndex:=15;
+    MinValue:=0;MaxValue:=255;Position:=32;
+    ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
     Name:='B-slider';
     OnChange:=OnSliderBChange;
   end;
   AddChild(fSliderB);
 
-  fSliderBank:=TBDVerticalSlider.Create(fTexture.ARGBImage,fLeft,fTop);
+  fSliderBank:=TBDVerticalSlider.Create(PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3+3,Self.Top+PALETTESOCKETSTOP);
   with fSliderBank do begin
-    Left:=PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3+3;
-    Top:=Self.Top+PALETTESOCKETSTOP;
-    Width:=COLORSLIDERHEIGHT;
     Height:=PALETTESOCKETHEIGHT*8+3;
     MinValue:=1;
     MaxValue:=8;
     Position:=1;
-    ZIndex:=15;
+    ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
     Name:='Bank-slider';
     OnChange:=OnSliderBankChange;
   end;
@@ -144,7 +142,7 @@ begin
         PALETTESOCKETHEIGHT-3,
         MainImage.Palette.Colors[i+(fSliderBank.Position-1)*256]);
     end;
-    inherited Draw;
+//    inherited Draw;
     fTexture.Update;
     PutTexture(fLeft,fTop,fTexture);
   end;
@@ -152,13 +150,13 @@ end;
 
 procedure TBDPaletteEditor.MouseEnter(Sender:TObject);
 begin
-  if fVisible then SDL_ShowCursor(SDL_ENABLE);
+//  if fVisible then SDL_ShowCursor(SDL_ENABLE);
   InfoBar.ShowText('');
 end;
 
 procedure TBDPaletteEditor.MouseLeave(Sender:TObject);
 begin
-  if fVisible then SDL_ShowCursor(SDL_DISABLE);
+//  if fVisible then SDL_ShowCursor(SDL_DISABLE);
 end;
 
 function TBDPaletteEditor.MouseMove(Sender:TObject; x,y:integer):boolean;

@@ -22,6 +22,7 @@ type
     function MouseMove(Sender:TObject;x,y:integer):boolean;
     function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
     procedure MouseEnter(Sender:TObject);
+    procedure MouseLeave(Sender:TObject);
     function KeyDown(Sender:TObject;key:integer):boolean;
     function KeyUp(Sender:TObject;key:integer):boolean;
     function MouseXToFrame(x:integer):integer;
@@ -66,11 +67,13 @@ begin
   OnMouseUp:=Self.MouseUp;
   OnMouseMove:=Self.MouseMove;
   OnMouseEnter:=Self.MouseEnter;
+  OnMouseLeave:=Self.MouseLeave;
   OnMouseWheel:=Self.MouseWheel;
   OnKeyDown:=Self.KeyDown;
   OnKeyUp:=Self.KeyUp;
   fTexture:=TStreamingTexture.Create(WINDOWWIDTH,WINDOWHEIGHT);
   SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
+  ZIndex:=DRAWAREA_ZINDEX;
 end;
 
 destructor TBDDrawArea.Destroy;
@@ -204,6 +207,11 @@ end;
 procedure TBDDrawArea.MouseEnter(Sender:TObject);
 begin
   SDL_ShowCursor(SDL_DISABLE);
+end;
+
+procedure TBDDrawArea.MouseLeave(Sender:TObject);
+begin
+  SDL_ShowCursor(SDL_ENABLE);
 end;
 
 function TBDDrawArea.KeyDown(Sender:TObject; key:integer):boolean;

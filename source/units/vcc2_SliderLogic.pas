@@ -17,37 +17,24 @@
 
    It is a slider visual component logic, doesn't
    offer drawing.
-   For visible button see vcc_ARGBSlider.
+   For visible slider see vcc2_Slider.
 
   --------------------------------------------------
 }
 
 // Version info:
 //
-//  V1.00: Gilby - 2023.03.01-02
-//    * Initial creation.
-//  V1.01: Gilby - 2023.03.03
-//    * Added vertical slider.
-//  V1.02: Gilby - 2023.03.03
-//    * Added response to MouseWheel event in TVerticalSliderLogic.
-//    * Added InvertWheel property to TVerticalSliderLogic.
-//      Inverts scrolling direction on both axes.
-//      Default setting is false.
-//    * Added CrossWheels property to TVerticalSliderLogic.
-//      Allows using both wheels for both type of sliders.
-//      Default setting is true.
-//    * OnChange only called when the fPosition value really changes.
-//  V1.03: Gilby - 2023.03.09
-//    * Following changes in MKMouse2
+//  V1.00: Gilby - 2023.03.15
+//    * Initial creation from vcc_SliderLogic.
 
 {$mode delphi}
 {$smartlink on}
 
-unit vcc_SliderLogic;
+unit vcc2_SliderLogic;
 
 interface
 
-uses Classes, MKMouse2, MKINIFile;
+uses Classes, vcc2_VisibleControl, MKMouse2, MKINIFile;
 
 type
 
@@ -57,7 +44,7 @@ type
 
   { THorizontalSliderLogic }
 
-  THorizontalSliderLogic=class(TMouseObject)
+  THorizontalSliderLogic=class(TVisibleControl)
     constructor Create; overload;
     procedure MouseLeave(Sender:TObject);
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
@@ -74,17 +61,11 @@ type
     fOnChange:TOnSliderPositionChangeEvent;
     fInvertWheel,
     fCrossWheels:boolean;
-    procedure fSetLeft(value:integer); virtual;
-    procedure fSetTop(value:integer); virtual;
-    procedure fSetWidth(value:integer);
-    procedure fSetHeight(value:integer);
+    procedure fSetWidth(value:integer); override;
     procedure fSetDecClickAreaSize(value:integer);
     procedure fSetIncClickAreaSize(value:integer);
   public
-    property Left:integer read fLeft write fSetLeft;
-    property Top:integer read fTop write fSetTop;
     property Width:integer read fWidth write fSetWidth;
-    property Height:integer read fHeight write fSetHeight;
     property DecClickAreaSize:integer read fDecClickAreaSize write fSetDecClickAreaSize;
     property IncClickAreaSize:integer read fIncClickAreaSize write fSetIncClickAreaSize;
     property MinValue:integer read fMinValue write fMinValue;
@@ -97,7 +78,7 @@ type
      
   { TVerticalSliderLogic }
 
-  TVerticalSliderLogic=class(TMouseObject)
+  TVerticalSliderLogic=class(TVisibleControl)
     constructor Create; overload;
     procedure MouseLeave(Sender:TObject);
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
@@ -114,16 +95,10 @@ type
     fOnChange:TOnSliderPositionChangeEvent;
     fInvertWheel,
     fCrossWheels:boolean;
-    procedure fSetLeft(value:integer); virtual;
-    procedure fSetTop(value:integer); virtual;
-    procedure fSetWidth(value:integer);
-    procedure fSetHeight(value:integer);
+    procedure fSetHeight(value:integer); override;
     procedure fSetDecClickAreaSize(value:integer);
     procedure fSetIncClickAreaSize(value:integer);
   public
-    property Left:integer read fLeft write fSetLeft;
-    property Top:integer read fTop write fSetTop;
-    property Width:integer read fWidth write fSetWidth;
     property Height:integer read fHeight write fSetHeight;
     property DecClickAreaSize:integer read fDecClickAreaSize write fSetDecClickAreaSize;
     property IncClickAreaSize:integer read fIncClickAreaSize write fSetIncClickAreaSize;
@@ -137,11 +112,11 @@ type
 
 implementation
 
-uses SysUtils, Font2Unit, MKToolBox, Logger;
+uses SysUtils, MKToolBox, Logger;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.03';
+  Version='1.00';
 
 
 { THorizontalSliderLogic }
@@ -229,27 +204,12 @@ begin
   Result:=true;
 end;
 
-procedure THorizontalSliderLogic.fSetLeft(value:integer);
-begin
-  fLeft:=value;
-end;
-
-procedure THorizontalSliderLogic.fSetTop(value:integer);
-begin
-  fTop:=value;
-end;
-
 procedure THorizontalSliderLogic.fSetWidth(value:integer);
 begin
   if (value>0) and (value-fDecClickAreaSize-fIncClickAreaSize>0) then begin
-    fWidth:=value;
+    inherited fSetWidth(value);
     fSlideAreaSize:=fWidth-fDecClickAreaSize-fIncClickAreaSize;
   end;
-end;
-
-procedure THorizontalSliderLogic.fSetHeight(value:integer);
-begin
-  if fHeight>0 then fHeight:=value;
 end;
 
 procedure THorizontalSliderLogic.fSetDecClickAreaSize(value:integer);
@@ -310,7 +270,7 @@ begin
     if (fPosition>fMinValue) then dec(fPosition);
   end
   else if (y>=fDecClickAreaSize) and (y<fDecClickAreaSize+fSlideAreaSize) then begin
-    fPosition:=(fMinValue)+(fMaxValue-fMinValue)*(x-fDecClickAreaSize) div (fSlideAreaSize-1);
+    fPosition:=(fMinValue)+(fMaxValue-fMinValue)*(y-fDecClickAreaSize) div (fSlideAreaSize-1);
     fState:=csMouseDown;
   end
   else if (y>=fDecClickAreaSize+fSlideAreaSize) and (y<fHeight) then begin
@@ -353,25 +313,10 @@ begin
   Result:=true;
 end;
 
-procedure TVerticalSliderLogic.fSetLeft(value:integer);
-begin
-  fLeft:=value;
-end;
-
-procedure TVerticalSliderLogic.fSetTop(value:integer);
-begin
-  fTop:=value;
-end;
-
-procedure TVerticalSliderLogic.fSetWidth(value:integer);
-begin
-  if value>0 then fWidth:=value;
-end;
-
 procedure TVerticalSliderLogic.fSetHeight(value:integer);
 begin
   if (value>0) and (value-fDecClickAreaSize-fIncClickAreaSize>0) then begin
-    fHeight:=value;
+    inherited fSetHeight(value);
     fSlideAreaSize:=fHeight-fDecClickAreaSize-fIncClickAreaSize;
   end;
 end;

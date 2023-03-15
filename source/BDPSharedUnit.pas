@@ -46,6 +46,14 @@ const
   MAXPALETTEENTRIES=2048;  // Palette color count hard limit
   POSTPROCESSCOLOR=$FFF0;
 
+  // ZIndex of DrawArea
+  DRAWAREA_ZINDEX=0;
+  // ZIndex on Controls, PaletteEditor, Menu
+  LEVEL1CONTROLS_ZINDEX=100;
+  // ZIndex of popup dialogs (ConfirmQuit, etc.)
+  MODALDIALOG_ZINDEX=9999;
+
+
   STATEFILE='state.bps';
   SETTINGSFILE='BurdockPaint.ini';
   STATEDATAID=$53;

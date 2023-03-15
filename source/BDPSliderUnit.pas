@@ -5,14 +5,14 @@ unit BDPSliderUnit;
 interface
 
 uses
-  vcc_ARGBSlider, ARGBImageUnit, Font2Unit;
+  vcc2_Slider, ARGBImageUnit, Font2Unit;
 
 type
 
   { TBDVerticalSlider }
 
-  TBDVerticalSlider=class(TARGBVerticalSlider)
-    constructor Create(iTarget:TARGBImage;iOfsX:integer=0;iOfsY:integer=0);
+  TBDVerticalSlider=class(TVerticalSlider)
+    constructor Create(iLeft,iTop:integer);
     procedure Draw; override;
   private
     fTopImage,fBottomImage:TARGBImage;
@@ -21,8 +21,8 @@ type
 
   { TBDHorizontalSlider }
 
-  TBDHorizontalSlider=class(TARGBHorizontalSlider)
-    constructor Create(iTarget:TARGBImage;iOfsX:integer=0;iOfsY:integer=0);
+  TBDHorizontalSlider=class(THorizontalSlider)
+    constructor Create(iLeft,iTop:integer);
     procedure Draw; override;
   private
     fLeftImage,fRightImage:TARGBImage;
@@ -31,20 +31,22 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit;
+uses SysUtils, mk_sdl2, BDPSharedUnit;
 
 const
   SLIDERKNOBWIDTH=57;
 
 { TBDVerticalSlider }
 
-constructor TBDVerticalSlider.Create(iTarget:TARGBImage; iOfsX:integer; iOfsY:integer);
+constructor TBDVerticalSlider.Create(iLeft,iTop:integer);
 begin
-  inherited Create(iTarget,iOfsX,iOfsY);
+  inherited Create;
   fTopImage:=MM.Images.ItemByName['SliderTop'];
   fBottomImage:=MM.Images.ItemByName['SliderBottom'];
-  fHeight:=COLORSLIDERWIDTH;
-  fWidth:=COLORSLIDERHEIGHT;
+  Left:=iLeft;
+  Top:=iTop;
+  Height:=COLORSLIDERWIDTH;
+  Width:=COLORSLIDERHEIGHT;
   DecClickAreaSize:=COLORSLIDERHEIGHT;
   IncClickAreaSize:=COLORSLIDERHEIGHT;
   Font:=MM.Fonts['LightGray'];
@@ -56,27 +58,36 @@ end;
 procedure TBDVerticalSlider.Draw;
 var p:integer;
 begin
-  fTarget.Bar(fOnImageLeft,fOnImageTop+8,3,fHeight-16,OverlayImage.Palette[2]);
-  fTarget.Bar(fOnImageLeft+fWidth-3,fOnImageTop+8,3,fHeight-16,OverlayImage.Palette[2]);
-  fTarget.Bar(fOnImageLeft+3,fOnImageTop+fDecClickAreaSize-3,fWidth-6,3,OverlayImage.Palette[2]);
-  fTarget.Bar(fOnImageLeft+3,fOnImageTop+fDecClickAreaSize+fSlideAreaSize,fWidth-6,3,OverlayImage.Palette[2]);
-  p:=fOnImageTop+fDecClickAreaSize+3+((fSlideAreaSize-SLIDERKNOBWIDTH-6)*(Position-MinValue) div (MaxValue-MinValue));
-  fTarget.Bar(fOnImageLeft+6,p,fWidth-12,SLIDERKNOBWIDTH,OverlayImage.Palette[1]);
-  fTopImage.CopyTo(0,0,fTopImage.Width,fTopImage.Height,fOnImageLeft,fOnImageTop,fTarget,true);
-  fBottomImage.CopyTo(0,0,fBottomImage.Width,fBottomImage.Height,fOnImageLeft,fOnImageTop+fHeight-8,fTarget,true);
-  fArrowFont.OutText(fTarget,#128,fOnImageLeft+fWidth div 2,fOnImageTop+(fDecClickAreaSize-Font.Height) div 2+1,mjCenter);
-  fArrowFont.OutText(fTarget,#130,fOnImageLeft+fWidth div 2,fOnImageTop+fDecClickAreaSize+fSlideAreaSize+(fIncClickAreaSize-Font.Height) div 2+1,mjCenter);
-  fFont.OutText(fTarget, inttostr(Position),fOnImageLeft+fWidth div 2,p+(SLIDERKNOBWIDTH-Font.Height) div 2,mjCenter);
+  if Visible then begin
+    with fTexture.ARGBImage do begin
+      Bar(0,0,fWidth,fHeight,OverlayImage.Palette[3]);
+      Bar(0,8,3,fHeight-16,OverlayImage.Palette[2]);
+      Bar(fWidth-3,8,3,fHeight-16,OverlayImage.Palette[2]);
+      Bar(3,fDecClickAreaSize-3,fWidth-6,3,OverlayImage.Palette[2]);
+      Bar(3,fDecClickAreaSize+fSlideAreaSize,fWidth-6,3,OverlayImage.Palette[2]);
+      p:=fDecClickAreaSize+3+((fSlideAreaSize-SLIDERKNOBWIDTH-6)*(Position-MinValue) div (MaxValue-MinValue));
+      Bar(6,p,fWidth-12,SLIDERKNOBWIDTH,OverlayImage.Palette[1]);
+    end;
+    fTopImage.CopyTo(0,0,fTopImage.Width,fTopImage.Height,0,0,fTexture.ARGBImage,true);
+    fBottomImage.CopyTo(0,0,fBottomImage.Width,fBottomImage.Height,0,fHeight-8,fTexture.ARGBImage,true);
+    fArrowFont.OutText(fTexture.ARGBImage,#128,fWidth div 2,(fDecClickAreaSize-Font.Height) div 2+1,mjCenter);
+    fArrowFont.OutText(fTexture.ARGBImage,#130,fWidth div 2,fDecClickAreaSize+fSlideAreaSize+(fIncClickAreaSize-Font.Height) div 2+1,mjCenter);
+    fFont.OutText(fTexture.ARGBImage,inttostr(Position),fWidth div 2,p+(SLIDERKNOBWIDTH-Font.Height) div 2,mjCenter);
+    fTexture.Update;
+    PutTexture(fLeft,fTop,fTexture);
+  end;
 end;
 
 { TBDHorizontalSlider }
 
-constructor TBDHorizontalSlider.Create(iTarget:TARGBImage; iOfsX:integer; iOfsY:integer);
+constructor TBDHorizontalSlider.Create(iLeft,iTop:integer);
 begin
-  inherited Create(iTarget,iOfsX,iOfsY);
+  inherited Create;
   fLeftImage:=MM.Images.ItemByName['SliderLeft'];
   fRightImage:=MM.Images.ItemByName['SliderRight'];
-  fHeight:=COLORSLIDERHEIGHT;
+  Left:=iLeft;
+  Top:=iTop;
+  Height:=COLORSLIDERHEIGHT;
   Width:=COLORSLIDERWIDTH;
   DecClickAreaSize:=COLORSLIDERHEIGHT;
   IncClickAreaSize:=COLORSLIDERHEIGHT;
@@ -89,18 +100,24 @@ end;
 procedure TBDHorizontalSlider.Draw;
 var p:integer;
 begin
-  fTarget.Bar(fOnImageLeft+8,fOnImageTop,fWidth-16,3,OverlayImage.Palette[2]);
-  fTarget.Bar(fOnImageLeft+8,fOnImageTop+fHeight-3,fWidth-16,3,OverlayImage.Palette[2]);
-  fTarget.Bar(fOnImageLeft+fDecClickAreaSize-3,fOnImageTop+3,3,fHeight-6,OverlayImage.Palette[2]);
-  fTarget.Bar(fOnImageLeft+fDecClickAreaSize+fSlideAreaSize,fOnImageTop+3,3,fHeight-6,OverlayImage.Palette[2]);
-  p:=fOnImageLeft+fDecClickAreaSize+3+((fSlideAreaSize-SLIDERKNOBWIDTH-6)*(Position-MinValue) div (MaxValue-MinValue));
-  fTarget.Bar(p,fOnImageTop+6,SLIDERKNOBWIDTH,fHeight-12,OverlayImage.Palette[1]);
-  fLeftImage.CopyTo(0,0,fLeftImage.Width,fLeftImage.Height,fOnImageLeft,fOnImageTop,fTarget,true);
-  fRightImage.CopyTo(0,0,fRightImage.Width,fRightImage.Height,fOnImageLeft+fWidth-8,fOnImageTop,fTarget,true);
-  fArrowFont.OutText(fTarget,#131,fOnImageLeft+COLORSLIDERHEIGHT div 2,fOnImageTop+9,1);
-  fArrowFont.OutText(fTarget,#129,fOnImageLeft+fDecClickAreaSize+fSlideAreaSize+COLORSLIDERHEIGHT div 2,fOnImageTop+9,1);
-  fFont.OutText(fTarget, inttostr(Position), p+SLIDERKNOBWIDTH div 2,fOnImageTop+9,1);
-
+  if Visible then begin
+    with fTexture.ARGBImage do begin
+      Bar(0,0,fWidth,fHeight,OverlayImage.Palette[3]);
+      Bar(8,0,fWidth-16,3,OverlayImage.Palette[2]);
+      Bar(8,fHeight-3,fWidth-16,3,OverlayImage.Palette[2]);
+      Bar(fDecClickAreaSize-3,3,3,fHeight-6,OverlayImage.Palette[2]);
+      Bar(fDecClickAreaSize+fSlideAreaSize,3,3,fHeight-6,OverlayImage.Palette[2]);
+      p:=fDecClickAreaSize+3+((fSlideAreaSize-SLIDERKNOBWIDTH-6)*(Position-MinValue) div (MaxValue-MinValue));
+      Bar(p,6,SLIDERKNOBWIDTH,fHeight-12,OverlayImage.Palette[1]);
+    end;
+    fLeftImage.CopyTo(0,0,fLeftImage.Width,fLeftImage.Height,0,0,fTexture.ARGBImage,true);
+    fRightImage.CopyTo(0,0,fRightImage.Width,fRightImage.Height,fWidth-8,0,fTexture.ARGBImage,true);
+    fArrowFont.OutText(fTexture.ARGBImage,#131,COLORSLIDERHEIGHT div 2,9,1);
+    fArrowFont.OutText(fTexture.ARGBImage,#129,fDecClickAreaSize+fSlideAreaSize+COLORSLIDERHEIGHT div 2,9,1);
+    fFont.OutText(fTexture.ARGBImage, inttostr(Position), p+SLIDERKNOBWIDTH div 2,9,1);
+    fTexture.Update;
+    PutTexture(fLeft,fTop,fTexture);
+  end;
 end;
 
 end.

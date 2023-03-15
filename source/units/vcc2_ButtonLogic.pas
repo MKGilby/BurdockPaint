@@ -8,65 +8,44 @@
 
   -[Disclaimer]-------------------------------------
 
-             You can freely distribute it
-             under the GNU GPL Version 2.
-
-  Written by Gilby/MKSZTSZ
-  Hungary, 2023
+   Written by Gilby/MKSZTSZ               Freeware!
+   Hungary, 2023
 
   --------------------------------------------------
 
   -[Description]------------------------------------
 
-   It is a simple pushbutton logic, doesn't offer drawing.
-   For visible button see vcc_ARGBImageButton.
-
-   You can set it up
-     - from an .INI file,
-     - or from code, assigning values to properties.
-
-   A valid INI section:
-
-   [Button]
-   Left=280
-   Top=228
-   Width=80
-   Height=24
-   TextAlignX=Center
-   TextOffsetY=1
-   Caption=Test
+   It is a simple pushbutton logic, doesn't offer
+   drawing. For visible button see vcc2_Button.
 
   --------------------------------------------------
 }
 
 // Version info:
 //
-//  V1.00: Gilby - 2023.01.16-20
-//    * Initial creation from vcc_Button
-//  V1.01: Gilby - 2023.03.09
-//    * Following changes in MKMouse2
+//  V1.00: Gilby - 2023.03.14
+//    * Initial creation from vcc_Button2
 
 {$mode delphi}
 {$smartlink on}
 
-unit vcc_ButtonLogic2;
+unit vcc2_ButtonLogic;
 
 interface
 
-uses Classes, MKMouse2, MKINIFile;
+uses vcc2_VisibleControl, MKINIFile;
 
 type
 
   { TButtonLogic }
 
-  TButtonLogic=class(TMouseObject)
+  TButtonLogic=class(TVisibleControl)
     constructor Create; overload;
     constructor Create(iINI:TINIFile;iSection:string); overload;
-    procedure DefaultOnMouseEnter(Sender:TObject);
-    procedure DefaultOnMouseLeave(Sender:TObject);
-    function DefaultOnMouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-    function DefaultOnMouseUp(Sender:TObject;x,y,buttons:integer):boolean;
-//    function OnClick(x,y,buttons:integer):boolean;
+    procedure MouseEnter(Sender:TObject);
+    procedure MouseLeave(Sender:TObject);
+    function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
+    function MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
   protected
     fState:(cNormal,cHighlighted,cButtonDown);
     fTextAlignX,
@@ -76,14 +55,12 @@ type
     fCaption:string;
     procedure fSetLeft(value:integer);
     procedure fSetTop(value:integer);
-    procedure fSetWidth(value:integer);
-    procedure fSetHeight(value:integer);
+    procedure fSetWidth(value:integer); override;
     procedure fSetTextAlignX(value:integer);
   public
     property Left:integer read fLeft write fSetLeft;
     property Top:integer read fTop write fSetTop;
     property Width:integer read fWidth write fSetWidth;
-    property Height:integer read fHeight write fSetHeight;
     property TextAlignX:integer read fTextAlignX write fSetTextAlignX;
     property TextOffsetY:integer read fTextOffsetY write fTextOffsetY;
     property Caption:string read fCaption write fCaption;
@@ -94,8 +71,8 @@ implementation
 uses SysUtils, Font2Unit, MKToolBox, Logger;
      
 const
-  Fstr='vcc_ButtonLogic.pas, ';
-  Version='1.01';
+  Fstr={$I %FILE%}+', ';
+  Version='1.00';
 
 constructor TButtonLogic.Create;
 begin
@@ -110,10 +87,10 @@ begin
   fTextOffsetY:=0;
   fCaption:='OK';
 
-  OnMouseEnter:=Self.DefaultOnMouseEnter;
-  OnMouseLeave:=Self.DefaultOnMouseLeave;
-  OnMouseDown:=Self.DefaultOnMouseDown;
-  OnMouseUp:=Self.DefaultOnMouseUp;
+  OnMouseEnter:=Self.MouseEnter;
+  OnMouseLeave:=Self.MouseLeave;
+  OnMouseDown:=Self.MouseDown;
+  OnMouseUp:=Self.MouseUp;
 
   fState:=cNormal;
   fClicked:=false;
@@ -133,10 +110,10 @@ begin
 
   Caption:=iINI.ReadString(iSection,'Caption','OK');
 
-  OnMouseEnter:=Self.DefaultOnMouseEnter;
-  OnMouseLeave:=Self.DefaultOnMouseLeave;
-  OnMouseDown:=Self.DefaultOnMouseDown;
-  OnMouseUp:=Self.DefaultOnMouseUp;
+  OnMouseEnter:=Self.MouseEnter;
+  OnMouseLeave:=Self.MouseLeave;
+  OnMouseDown:=Self.MouseDown;
+  OnMouseUp:=Self.MouseUp;
 
   fState:=cNormal;
   fClicked:=false;
@@ -154,24 +131,17 @@ end;
 
 procedure TButtonLogic.fSetWidth(value:integer);
 begin
-  if value>0 then begin
-    fWidth:=value;
-    case fTextAlignX of
-      mjLeft:fTextAlignPointX:=fLeft;
-      mjCenter:fTextAlignPointX:=fLeft+fWidth div 2;
-      mjRight:fTextAlignPointX:=fLeft+fWidth-1;
-    end;
+  inherited fSetWidth(value);
+  case fTextAlignX of
+    mjLeft:fTextAlignPointX:=fLeft;
+    mjCenter:fTextAlignPointX:=fLeft+fWidth div 2;
+    mjRight:fTextAlignPointX:=fLeft+fWidth-1;
   end;
 end;
 
 procedure TButtonLogic.fSetTop(value:integer);
 begin
   fTop:=value;
-end;
-
-procedure TButtonLogic.fSetHeight(value:integer);
-begin
-  fHeight:=value;
 end;
 
 procedure TButtonLogic.fSetTextAlignX(value:integer);
@@ -185,24 +155,24 @@ begin
   end;
 end;
 
-procedure TButtonLogic.DefaultOnMouseEnter(Sender:TObject);
+procedure TButtonLogic.MouseEnter(Sender:TObject);
 begin
   fState:=cHighLighted;
 end;
 
-procedure TButtonLogic.DefaultOnMouseLeave(Sender:TObject);
+procedure TButtonLogic.MouseLeave(Sender:TObject);
 begin
   fState:=cNormal;
   fClicked:=false;
 end;
 
-function TButtonLogic.DefaultOnMouseDown(Sender:TObject;x,y,buttons:integer):boolean;
+function TButtonLogic.MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
 begin
   fState:=cButtonDown;
   Result:=true;
 end;
 
-function TButtonLogic.DefaultOnMouseUp(Sender:TObject;x,y,buttons:integer):boolean;
+function TButtonLogic.MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
 begin
   fState:=cHighLighted;
   Result:=true;

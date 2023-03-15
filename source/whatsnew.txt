@@ -10,6 +10,20 @@ Todo:
 - Configurable autosave interval.
 
 
+2023.03.15
+- Sliders are visible again.
+- BUG: Sliders don't receive MouseWheel event.
+
+2023.03.14
+- Color selector visible and works again.
+- Still working under the hood.
+
+2023.03.11
+- Big rework under the hood regarding mouse events and visual components,
+  so a few things are broken now:
+  - Color selector is not visible.
+  - Sliders are not visible. (If somehow you can invoke palette editor.)
+
 2023.03.10
 - SubMenu items insert a message into queue when clicked.
 - Clicking on CEL/Load invokes the windows standard open file dialog. Browsing an

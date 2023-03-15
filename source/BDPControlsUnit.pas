@@ -66,6 +66,7 @@ begin
   OnMouseDown:=MouseDown;
   OnClick:=Click;
   OnShow:=ControlsShow;
+  ZIndex:=LEVEL1CONTROLS_ZINDEX;
   fName:='Controls';
 
   msg.TypeID:=MSG_NONE;
@@ -74,7 +75,6 @@ begin
     atmT:=Tools[Tools.IndexOf(Settings.SelectedTools[i])];
     if atmT=nil then raise Exception.Create('Tool not found! ('+Settings.SelectedTools[i]+')');
     fToolButtons[i]:=TBDButton.Create(
-      fTexture.ARGBImage,
       fLeft+TOOLBUTTONSLEFT+i mod 2*130,
       fTop+TOOLBUTTONSTOP+i div 2*30,
       NORMALBUTTONWIDTH,
@@ -82,9 +82,9 @@ begin
       atmT.Hint,
       msg,
       atmT);
-    fToolButtons[i].ParentX:=fLeft;
-    fToolButtons[i].ParentY:=fTop;
-    fToolButtons[i].ZIndex:=15;
+//    fToolButtons[i].ParentX:=fLeft;
+//    fToolButtons[i].ParentY:=fTop;
+    fToolButtons[i].ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
     fToolButtons[i].Tag:=i;
     fToolButtons[i].OnClick:=Self.ToolButtonClick;
     AddChild(fToolButtons[i]);
@@ -95,7 +95,6 @@ begin
     atmi:=Inks[Inks.IndexOf(Settings.SelectedInks[i])];
     if atmT=nil then raise Exception.Create('Ink not found! ('+Settings.SelectedInks[i]+')');
     fInkButtons[i]:=TBDButton.Create(
-      fTexture.ARGBImage,
       fLeft+InkButtonsLeft+i mod 2*130,
       fTop+InkButtonsTop+i div 2*30,
       NORMALBUTTONWIDTH,
@@ -103,9 +102,9 @@ begin
       atmI.Hint,
       msg,
       atmI);
-    fInkButtons[i].ParentX:=fLeft;
-    fInkButtons[i].ParentY:=fTop;
-    fInkButtons[i].ZIndex:=15;
+//    fInkButtons[i].ParentX:=fLeft;
+//    fInkButtons[i].ParentY:=fTop;
+    fInkButtons[i].ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
     fInkButtons[i].Tag:=i;
     fInkButtons[i].OnClick:=Self.InkButtonClick;
     AddChild(fInkButtons[i]);
@@ -113,44 +112,42 @@ begin
   ActivateInkButton(Settings.ActiveInk);
 
   msg.TypeID:=MSG_UNDO;
-  fUndoButton:=TBDButton.Create(fTexture.ARGBImage, fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP,
+  fUndoButton:=TBDButton.Create(fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP,
     NORMALBUTTONWIDTH, 'UNDO', 'UNDO LAST OPERATION', msg);
-  fUndoButton.ParentX:=fLeft;
-  fUndoButton.ParentY:=fTop;
-  fUndoButton.ZIndex:=15;
+//  fUndoButton.ParentX:=fLeft;
+//  fUndoButton.ParentY:=fTop;
+  fUndoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(fUndoButton);
 
   msg.TypeID:=MSG_REDO;
-  fRedoButton:=TBDButton.Create(fTexture.ARGBImage, fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP+30,
+  fRedoButton:=TBDButton.Create(fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP+30,
     NORMALBUTTONWIDTH, 'REDO', 'REDO LAST UNDOED OPERATION', msg);
-  fRedoButton.ParentX:=fLeft;
-  fRedoButton.ParentY:=fTop;
-  fRedoButton.ZIndex:=15;
+//  fRedoButton.ParentX:=fLeft;
+//  fRedoButton.ParentY:=fTop;
+  fRedoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(fRedoButton);
 
   msg.TypeID:=MSG_NONE;
-  atmB:=TBDButton.Create(fTexture.ARGBImage, fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP,
+  atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP,
     SMALLBUTTONWIDTH, 'F', 'FILL SHAPES', msg);
   atmB.Selected:=Settings.FillShapes;
   atmB.OnClick:=FilledButtonClick;
-  atmB.ParentX:=fLeft;
-  atmB.ParentY:=fTop;
-  atmB.ZIndex:=15;
+//  atmB.ParentX:=fLeft;
+//  atmB.ParentY:=fTop;
+  atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(atmB);
 
-  atmB:=TBDButton.Create(fTexture.ARGBImage, fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+30,
+  atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+30,
     SMALLBUTTONWIDTH, 'K', 'CLEAR KEY COLOR', msg);
   atmB.Selected:=Settings.ClearKeyColor;
   atmB.OnClick:=ClearKeyColorButtonClick;
-  atmB.ParentX:=fLeft;
-  atmB.ParentY:=fTop;
-  atmB.ZIndex:=15;
+//  atmB.ParentX:=fLeft;
+//  atmB.ParentY:=fTop;
+  atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(atmB);
 
-  fColorSelector:=TColorSelector.Create(fTexture.ARGBImage, fLeft+COLORSELECTORLEFT, fTop+COLORSELECTORTOP);
-  fColorSelector.ParentX:=fLeft;
-  fColorSelector.ParentY:=fTop;
-  fColorSelector.ZIndex:=15;
+  fColorSelector:=TColorSelector.Create(fLeft+COLORSELECTORLEFT, fTop+COLORSELECTORTOP);
+  fColorSelector.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fColorSelector.Name:='ColorSelector';
   AddChild(fColorSelector);
 end;
@@ -182,7 +179,7 @@ begin
         MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'Y=OUT',COORDSCENTER,CONTROLSHEIGHT-54,1);
       MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'C=?',COORDSCENTER,CONTROLSHEIGHT-24,1);
     end;
-    inherited Draw;
+//    inherited Draw;
     fTexture.Update;
     PutTexture(fLeft,fTop,fTexture);
   end;
@@ -229,13 +226,11 @@ end;
 
 procedure TBDControls.MouseEnter(Sender:TObject);
 begin
-  if fVisible then SDL_ShowCursor(SDL_ENABLE);
   InfoBar.ShowText('');
 end;
 
 procedure TBDControls.MouseLeave(Sender:TObject);
 begin
-  if fVisible then SDL_ShowCursor(SDL_DISABLE);
 end;
 
 function TBDControls.MouseMove(Sender:TObject; x,y:integer):boolean;

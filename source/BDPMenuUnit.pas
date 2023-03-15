@@ -4,28 +4,27 @@ unit BDPMenuUnit;
 
 interface
 
-uses Classes, mk_sdl2, MKMouse2, fgl, BDPMessageUnit;
+uses Classes, mk_sdl2, MKMouse2, fgl, BDPMessageUnit, vcc2_VisibleControl;
 
 type
 
   { TSubMenu }
 
-  TSubMenu=class(TMouseObject)
+  TSubMenu=class(TVisibleControl)
     constructor Create(iLeft:integer);
     destructor Destroy; override;
     procedure Draw; override;
     function MouseMove(Sender:TObject;x,y:integer):boolean;
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-    procedure MouseEnter(Sender:TObject);
+//    procedure MouseEnter(Sender:TObject);
     procedure MouseLeave(Sender:TObject);
     procedure AddItem(item:string;msg:TMessage);
   private
-    fTexture:TStreamingTexture;
     fItems:TStringList;
     fMessages:array of TMessage;
     fSelected:integer;
     procedure fSetName(value:string);
-    procedure RecreateTexture;
+    procedure Resize;
   public
     property Name:string read fName write fSetName;
   end;
@@ -34,16 +33,14 @@ type
 
   { TMainMenu }
 
-  TMainMenu=class(TMouseObject)
+  TMainMenu=class(TVisibleControl)
     constructor Create;
     destructor Destroy; override;
     procedure Draw; override;
     function MouseMove(Sender:TObject;x,y:integer):boolean;
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-    procedure MouseEnter(Sender:TObject);
     procedure MouseLeave(Sender:TObject);
   private
-    fTexture:TStreamingTexture;
     fSubMenus:TSubMenuList;
     fItems:TStringList;
     fSelected:integer;
@@ -51,34 +48,31 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, SDL2;
+uses SysUtils, BDPSharedUnit;
 
 { TSubMenu }
 
 constructor TSubMenu.Create(iLeft:integer);
 begin
+  inherited Create;
   Left:=iLeft;
   Top:=0;
   Width:=180;
   Height:=TOPMENUHEIGHT;
-  fTexture:=TStreamingTexture.Create(fWidth,fHeight);
-  fTexture.ARGBImage.Clear;
-  fTexture.Update;
   fItems:=TStringList.Create;
   SetLength(fMessages,0);
   fSelected:=-1;
-  ZIndex:=9;
+  ZIndex:=LEVEL1CONTROLS_ZINDEX-1;
   Enabled:=true;
   OnMouseDown:=MouseDown;
   OnMouseMove:=MouseMove;
   OnMouseLeave:=MouseLeave;
-  OnMouseEnter:=MouseEnter;
+//  OnMouseEnter:=MouseEnter;
 end;
 
 destructor TSubMenu.Destroy;
 begin
   if Assigned(fItems) then FreeAndNil(fItems);
-  if Assigned(fTexture) then FreeAndNil(fTexture);
   inherited Destroy;
 end;
 
@@ -122,11 +116,6 @@ begin
   Result:=true;
 end;
 
-procedure TSubMenu.MouseEnter(Sender:TObject);
-begin
-  if fVisible then SDL_ShowCursor(SDL_ENABLE);
-end;
-
 procedure TSubMenu.MouseLeave(Sender:TObject);
 begin
   fSelected:=-1;
@@ -139,17 +128,17 @@ begin
     fItems.Add(item);
     SetLength(fMessages,Length(fMessages)+1);
     fMessages[length(fMessages)-1]:=msg;
-    RecreateTexture;
+    Resize;
   end;
 end;
 
 procedure TSubMenu.fSetName(value:string);
 begin
   fName:=value;
-  RecreateTexture;
+  Resize;
 end;
 
-procedure TSubMenu.RecreateTexture;
+procedure TSubMenu.Resize;
 var i,w,h:integer;
 begin
   w:=0;
@@ -160,10 +149,11 @@ begin
   if (w<>fWidth) or (h<>fHeight) then begin
     fWidth:=w;
     fHeight:=h;
-    if Assigned(fTexture) then FreeAndNil(fTexture);
+    RecreateTexture;
+{    if Assigned(fTexture) then FreeAndNil(fTexture);
     fTexture:=TStreamingTexture.Create(fWidth,fHeight);
     fTexture.ARGBImage.Clear;
-    fTexture.Update;
+    fTexture.Update;}
   end;
 end;
 
@@ -177,15 +167,13 @@ begin
   Width:=WINDOWWIDTH;
   Height:=TOPMENUHEIGHT;
   Name:='MainMenu';
-  fTexture:=TStreamingTexture.Create(fWidth,fHeight);
-  fTexture.ARGBImage.Clear;
-  fTexture.Update;
   fItems:=TStringList.Create;
   fItems.Add('FILE');
   fItems.Add('PICTURE');
   fItems.Add('CEL');
   fSubMenus:=TSubMenuList.Create;
   fSubMenus.FreeObjects:=true;
+  ZIndex:=LEVEL1CONTROLS_ZINDEX;
   x:=0;
 
   atm:=TSubMenu.Create(x);
@@ -232,14 +220,13 @@ begin
   OnMouseDown:=MouseDown;
   OnMouseMove:=MouseMove;
   OnMouseLeave:=MouseLeave;
-  OnMouseEnter:=MouseEnter;
+//  OnMouseEnter:=MouseEnter;
 end;
 
 destructor TMainMenu.Destroy;
 begin
   if Assigned(fSubMenus) then FreeAndNil(fSubMenus);
   if Assigned(fItems) then FreeAndNil(fItems);
-  if Assigned(fTexture) then FreeAndNil(fTexture);
   inherited Destroy;
 end;
 
@@ -288,11 +275,6 @@ end;
 function TMainMenu.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
 begin
   Result:=true;
-end;
-
-procedure TMainMenu.MouseEnter(Sender:TObject);
-begin
-  if fVisible then SDL_ShowCursor(SDL_ENABLE);
 end;
 
 procedure TMainMenu.MouseLeave(Sender:TObject);

@@ -4,23 +4,21 @@ unit BDPButtonUnit;
 
 interface
 
-uses vcc_ARGBButton, Font2Unit, ARGBImageUnit, BDPMessageUnit;
+uses vcc2_Button, Font2Unit, ARGBImageUnit, BDPMessageUnit;
 
 type
 
   { TBDButton }
 
-  TBDButton=class(TARGBButton)
-    constructor Create(iTarget:TARGBImage;iX,iY,iWidth:integer;iCaption,iHint:string;
+  TBDButton=class(TButton)
+    constructor Create(iX,iY,iWidth:integer;iCaption,iHint:string;
           iClickMessage:TMessage;iAssignedobject:TObject=nil); overload;
-    constructor Create(iTarget:TARGBImage); overload;
-    destructor Destroy; override;
+    constructor Create; overload;
     procedure Draw; override;
     procedure MouseEnter(Sender:TObject);
     procedure MouseLeave(Sender:TObject);
     function Click(Sender:TObject;x, y, buttons: integer): boolean;
   private
-    fParentX,fParentY:integer;
     fHint:string;
     fAssignedObject:TObject;
     fLeftImage,fRightImage:TARGBImage;
@@ -29,20 +27,18 @@ type
   published
     property Hint:string read fHint write fHint;
     property AssignedObject:TObject read fAssignedObject write fAssignedObject;
-    property ParentX:integer read fParentX write fParentX;
-    property ParentY:integer read fParentY write fParentY;
   end;
 
 implementation
 
-uses BDPSharedUnit;
+uses BDPSharedUnit, mk_sdl2;
 
 { TBDButton }
 
-constructor TBDButton.Create(iTarget:TARGBImage; iX,iY,iWidth:integer;
+constructor TBDButton.Create(iX,iY,iWidth:integer;
   iCaption,iHint:string; iClickMessage:TMessage; iAssignedobject:TObject);
 begin
-  Create(iTarget);
+  Create;
   fLeft:=iX;
   fTop:=iY;
   fWidth:=iWidth;
@@ -57,45 +53,41 @@ begin
   fAssignedObject:=iAssignedobject;
   fLeftImage:=MM.Images.ItemByName['ButtonLeft'];
   fRightImage:=MM.Images.ItemByName['ButtonRight'];
-  fParentX:=0;
-  fParentY:=0;
   fMessage:=iClickMessage;
+  RecreateTexture;
 end;
 
-constructor TBDButton.Create(iTarget:TARGBImage);
+constructor TBDButton.Create;
 begin
-  inherited Create(iTarget);
+  inherited Create;
   fSelected:=false;
   OnMouseEnter:=Self.MouseEnter;
   OnMouseLeave:=Self.MouseLeave;
   OnClick:=Self.Click;
 end;
 
-destructor TBDButton.Destroy;
-begin
-  inherited Destroy;
-end;
-
 procedure TBDButton.Draw;
 begin
-  fTarget.Bar(fLeft+8-fParentX,fTop-fParentY,fWidth-16,3,OverlayImage.Palette[2]);
-  if fSelected then
-    fTarget.Bar(fLeft-fParentX+3,fTop-fParentY+3,fWidth-6,21,OverlayImage.Palette[4])
-  else begin
-    if fEnabled then
-      fTarget.Bar(fLeft-fParentX+3,fTop-fParentY+3,fWidth-6,21,OverlayImage.Palette[3])
+  if Visible then begin
+    fTexture.ARGBImage.Bar(8,0,fWidth-16,3,OverlayImage.Palette[2]);
+    if fSelected then
+      fTexture.ARGBImage.Bar(3,3,fWidth-6,21,OverlayImage.Palette[4])
+    else begin
+      if fEnabled then
+        fTexture.ARGBImage.Bar(3,3,fWidth-6,21,OverlayImage.Palette[3])
+      else
+        fTexture.ARGBImage.Bar(3,3,fWidth-6,21,OverlayImage.Palette[2]);
+    end;
+    fTexture.ARGBImage.Bar(8,24,fWidth-16,3,OverlayImage.Palette[2]);
+    fLeftImage.CopyTo(0,0,fLeftImage.Width,fLeftImage.Height,0,0,fTexture.ARGBImage,true);
+    fRightImage.CopyTo(0,0,fRightImage.Width,fRightImage.Height,fWidth-8,0,fTexture.ARGBImage,true);
+    if not fSelected then
+      fFont.OutText(fTexture.ARGBImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX)
     else
-      fTarget.Bar(fLeft-fParentX+3,fTop-fParentY+3,fWidth-6,21,OverlayImage.Palette[2]);
+      fFont2.OutText(fTexture.ARGBImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX);
+    fTexture.Update;
+    PutTexture(fLeft,fTop,fTexture);
   end;
-  fTarget.Bar(fLeft-fParentX+8,fTop-fParentY+24,fWidth-16,3,OverlayImage.Palette[2]);
-  fLeftImage.CopyTo(0,0,fLeftImage.Width,fLeftImage.Height,fLeft-fParentX,fTop-fParentY,fTarget,true);
-  fRightImage.CopyTo(0,0,fRightImage.Width,fRightImage.Height,fLeft-fParentX+fWidth-8,fTop-fParentY,fTarget,true);
-//  Log.LogDebug(fCaption);
-//  Log.LogDebug(Format('AlignPointX: %d, TextOffsetX: %d, AlignPointY: %d, TextOffsetY: %d',[fAlignPointX,fTextOffsetX,fAlignPointY,fTextOffsetY]));
-  if not fSelected then
-    fFont.OutText(fTarget,fCaption,fTextAlignPointX-fParentX,fTextAlignPointY+fTextOffsetY-fParentY,fTextAlignX)
-  else
-    fFont2.OutText(fTarget,fCaption,fTextAlignPointX-fParentX,fTextAlignPointY+fTextOffsetY-fParentY,fTextAlignX);
 end;
 
 procedure TBDButton.MouseEnter(Sender:TObject);

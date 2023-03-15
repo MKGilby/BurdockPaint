@@ -59,25 +59,23 @@ begin
   msg.TypeID:=MSG_QUIT;
   msg.DataInt:=1;
   atmB:=TBDButton.Create(
-    fTexture.ARGBImage,
     fWindowLeft+QUITWINDOWWIDTH div 4-NORMALBUTTONWIDTH div 2,
     fWindowTop+48,
     NORMALBUTTONWIDTH,
     'YES','',msg);
-  atmB.ParentX:=fWindowLeft;
-  atmB.Parenty:=fWindowTop;
+//  atmB.ParentX:=fWindowLeft;
+//  atmB.Parenty:=fWindowTop;
   atmB.ZIndex:=MaxLongint;
   atmB.OnKeyDown:=KeyDownYes;
   AddChild(atmB);
   msg.DataInt:=0;
   atmB:=TBDButton.Create(
-    fTexture.ARGBImage,
     fWindowLeft+QUITWINDOWWIDTH div 4*3-NORMALBUTTONWIDTH div 2,
     fWindowTop+48,
     NORMALBUTTONWIDTH,
     'NO','',msg);
-  atmB.ParentX:=fWindowLeft;
-  atmB.Parenty:=fWindowTop;
+//  atmB.ParentX:=fWindowLeft;
+//  atmB.Parenty:=fWindowTop;
   atmB.ZIndex:=MaxLongint;
   atmB.OnKeyDown:=KeyDownNo;
   AddChild(atmB);
@@ -99,7 +97,6 @@ end;
 procedure TConfirmQuitWindow.Draw;
 begin
   if fVisible then begin
-    inherited Draw;
     fTexture.Update;
     PutTexture(fWindowLeft,fWindowTop,fTexture);
   end;

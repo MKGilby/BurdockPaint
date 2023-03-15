@@ -66,29 +66,24 @@ begin
 
   LoadAssets;
   fDrawArea:=TBDDrawArea.Create;
-  fDrawArea.ZIndex:=0;
   MouseObjects.Add(fDrawArea);
   fControls:=TBDControls.Create;
-  fControls.ZIndex:=10;
   MouseObjects.Add(fControls);
   fPaletteEditor:=TBDPaletteEditor.Create;
-  fPaletteEditor.ZIndex:=10;
   fPaletteEditor.Visible:=false;
   MouseObjects.Add(fPaletteEditor);
   fQuitWindow:=TConfirmQuitWindow.Create;
-  fQuitWindow.ZIndex:=MaxLongint-1;
   fQuitWindow.Visible:=false;
   MouseObjects.Add(fQuitWindow);
   if Settings.ShowSplash then begin
     fSplashScreen:=TBDSplashScreen.Create;
-    fSplashScreen.ZIndex:=MaxLongint-1;
     MouseObjects.Add(fSplashScreen);
   end;
   fMainMenu:=TMainMenu.Create;
-  fMainMenu.ZIndex:=10;
   fMainMenu.Visible:=true;
   MouseObjects.Add(fMainMenu);
   MouseObjects.Sort;
+  MouseObjects.List;
   fOpenDialog:=TOpenDialog.Create(nil);
   fOpenDialog.Filter:='CEL files|*.bdc|Legacy CEL files|*.cel';
   fOpenDialog.FilterIndex:=0;
@@ -115,6 +110,8 @@ procedure TMain.Run;
 var msg:TMessage;mres,quit:boolean;mx,my:integer;
 begin
   quit:=false;
+//  fQuitWindow.Visible:=true;
+  MouseObjects.List;
   repeat
     SDL_SetRenderDrawColor(PrimaryWindow.Renderer,48,12,24,255);
     SDL_RenderClear(fMainWindow.Renderer);
