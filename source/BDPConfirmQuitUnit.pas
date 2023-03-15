@@ -5,7 +5,7 @@ unit BDPConfirmQuitUnit;
 interface
 
 uses
-  vcc_Container2, mk_sdl2, MKMouse2;
+  vcc2_Container, mk_sdl2, MKMouse2;
 
 type
 

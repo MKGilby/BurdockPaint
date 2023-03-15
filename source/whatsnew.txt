@@ -13,6 +13,9 @@ Todo:
 2023.03.15
 - Sliders are visible again.
 - BUG: Sliders don't receive MouseWheel event.
+- Added and wired Alpha slider.
+- Changed target architecture to x64.
+- Changed SDL2 libraries to SDL2-for-Pascal (more up to date).
 
 2023.03.14
 - Color selector visible and works again.

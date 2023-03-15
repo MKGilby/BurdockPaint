@@ -38,6 +38,8 @@
 //     * Rework of Event handling. No handleevent will be passed for MouseObjects,
 //       only the appropiate On... event handler will be called if assigned.
 //     * Expanded MouseObjects.List with coordinates and Visible/Enabled properties.
+//   V1.10 - 2023.03.15 - Gilby
+//     * Changes to make compatible with the new SDL2.
 }
 
 {$ifdef fpc}
@@ -140,7 +142,7 @@ uses SysUtils, Logger, MK_SDL2;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.09';
+  Version='1.10';
 
 constructor TMouseObjects.Create;
 begin
@@ -306,9 +308,9 @@ begin
   Log.LogDebug(Format('Mouse objects listing starts... (fTop=%d, Count=%d)',[fTop,Count]),Istr);
   for i:=fTop to Count-1 do begin
     if Self[i]<>nil then with Self[i] do begin
-      Log.LogDebug(Format('%d. %s (%d,%d,%d,%d) ZIndex=%d',[i,fName,fLeft,fTop,fWidth,fHeight,fZIndex]));
-      if Visible then Log.LogDebug('  Visible.') else Log.LogDebug('  Not visible.');
-      if Enabled then Log.LogDebug('  Enabled.') else Log.LogDebug('  Not enabled.');
+      Log.LogDebug(Format('%d. %s (%d,%d,%d,%d)',[i,fName,fLeft,fTop,fWidth,fHeight]));
+      if Visible then Log.LogDebug('  Visible.',Istr) else Log.LogDebug('  Not visible.');
+      if Enabled then Log.LogDebug('  Enabled.',Istr) else Log.LogDebug('  Not enabled.');
     end else
       Log.LogDebug(inttostr(i)+'. <nil>',Istr);
   end;
@@ -446,14 +448,14 @@ end;
 procedure TMouseObject.fSetWidth(value:integer);
 begin
   if value<0 then value:=32;
-  if fLeft+value>=PrimaryWindow.Window.w then value:=PrimaryWindow.Window.w-fLeft;
+  if fLeft+value>=PrimaryWindow.Width then value:=PrimaryWindow.Width-fLeft;
   fWidth:=value;
 end;
 
 procedure TMouseObject.fSetHeight(value:integer);
 begin
   if value<0 then value:=32;
-  if fTop+value>=PrimaryWindow.Window.h then value:=PrimaryWindow.Window.h-fTop;
+  if fTop+value>=PrimaryWindow.Height then value:=PrimaryWindow.Height-fTop;
   fHeight:=value;
 end;
 

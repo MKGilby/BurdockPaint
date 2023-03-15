@@ -5,7 +5,7 @@ unit BDPControlsUnit;
 interface
 
 uses
-  vcc_Container2, BDPButtonUnit, mk_sdl2, BDPMessageUnit, BDPColorSelectorUnit;
+  vcc2_Container, BDPButtonUnit, mk_sdl2, BDPMessageUnit, BDPColorSelectorUnit;
 
 type
 

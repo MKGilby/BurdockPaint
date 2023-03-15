@@ -5,7 +5,7 @@ unit BDPPaletteEditorUnit;
 interface
 
 uses
-  vcc_Container2, BDPButtonUnit, mk_sdl2, BDPMessageUnit, BDPSliderUnit;
+  vcc2_Container, BDPButtonUnit, mk_sdl2, BDPMessageUnit, BDPSliderUnit;
 
 type
 
@@ -24,6 +24,7 @@ type
     procedure OnSliderRChange(Sender:TObject;newValue:integer);
     procedure OnSliderGChange(Sender:TObject;newValue:integer);
     procedure OnSliderBChange(Sender:TObject;newValue:integer);
+    procedure OnSliderAChange(Sender:TObject;newValue:integer);
     procedure OnSliderBankChange(Sender:TObject;newValue:integer);
     procedure PaletteEditorShow(Sender:TObject);
     procedure PaletteEditorHide(Sender:TObject);
@@ -31,7 +32,7 @@ type
     function ProcessMessage(msg:TMessage):boolean;
   private
     fTexture:TStreamingTexture;
-    fSliderR,fSliderG,fSliderB:TBDHorizontalSlider;
+    fSliderR,fSliderG,fSliderB,fSliderA:TBDHorizontalSlider;
     fSliderBank:TBDVerticalSlider;
   end;
 
@@ -43,7 +44,7 @@ const
   PALETTEEDITORHEIGHT=300;
   PALETTESOCKETWIDTH=38;
   PALETTESOCKETHEIGHT=26;
-  PALETTESOCKETSTOP=87;
+  PALETTESOCKETSTOP=PALETTEEDITORHEIGHT-213;
   PALETTESOCKETSLEFT=3;
 
 { TBDPaletteEditor }
@@ -94,6 +95,15 @@ begin
     OnChange:=OnSliderBChange;
   end;
   AddChild(fSliderB);
+
+  fSliderA:=TBDHorizontalSlider.Create(fLeft+COLORSLIDERSLEFT+3*(COLORSLIDERWIDTH+3),fTop+6);
+  with fSliderA do begin
+    MinValue:=0;MaxValue:=255;Position:=255;
+    ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+    Name:='A-slider';
+    OnChange:=OnSliderAChange;
+  end;
+  AddChild(fSliderA);
 
   fSliderBank:=TBDVerticalSlider.Create(PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3+3,Self.Top+PALETTESOCKETSTOP);
   with fSliderBank do begin
@@ -208,6 +218,11 @@ end;
 procedure TBDPaletteEditor.OnSliderBChange(Sender:TObject; newValue:integer);
 begin
   MainImage.Palette.ColorB[Settings.ActiveColorIndex]:=newValue;
+end;
+
+procedure TBDPaletteEditor.OnSliderAChange(Sender:TObject; newValue:integer);
+begin
+  MainImage.Palette.ColorA[Settings.ActiveColorIndex]:=newValue;
 end;
 
 procedure TBDPaletteEditor.OnSliderBankChange(Sender:TObject; newValue:integer);
