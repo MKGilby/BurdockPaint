@@ -1,6 +1,6 @@
 { -[Name]-------------------------------------------
 
-             MKSZTSZ MediaManager class
+             MKSZTSZ GFXManager class
 
   -[Disclaimer]-------------------------------------
 
@@ -16,52 +16,23 @@
       - Animations (from PNG)
       - Masks      (from PNG)
       - Fonts      (from TGA and PNG)
-      - Musics     (from MP3 and multiple MOD formats)
 
   --------------------------------------------------
 }
 
 // Version info:
 //
-//  V1.00: Gilby - 2020.06.25
-//     * Initial creation
-//  V1.01: Gilby - 2020.07.10
-//     + AddImage added (similar to load but processes an already loaded ARGBImage)
-//  V1.02: Gilby - 2021.01.06
-//     * In Load and AddImage you can specify if you want to create Texture
-//       from the ARGBImage even if it doesn't contain animations.
-//       (Default=false)
-//  V1.03: Gilby - 2021.04.16
-//     * Incorporated masks into MediaManager.
-//     + AddMask method added.
-//     * Load and AddImage behaviour now can be controlled by flags.
-//       See MM_ constants for more info.
-//  V1.04: Gilby - 2021.10.10
-//     * Incorporated fonts into MediaManager.
-//     * Incorporated musics into MediaManager.
-//  V1.05: Gilby - 2022.06.23
-//     * Reworked for new Animation logic
-//  V1.06: Gilby - 2022.08.10
-//     * Animations now hold a reference to the original image when created by
-//       Load or LoadImage
-//  V1.07: Gilby - 2022.08.31
-//     * Incorporated waves into MediaManager.
-//     + Added TreatMP3AsMusic:boolean property;
-//         if true, load will add MP3-s to Musics,
-//         if false, load will add MP3-s to Waves.
-//       Default value is true.
-//     + Added Assigned checks in destructor.
-//  V1.08: Gilby - 2022.11.17
-//     * The lists inside the MediaManager are now case sensitive.
+//  V1.00: Gilby - 2023.03.16
+//     * Initial creation from MediaManager
 
-unit MediaManagerUnit;
+unit GFXManagerUnit;
 
 {$mode delphi}{$H+}
 
 interface
 
 uses Lists, ARGBImageUnit, mk_sdl2, AnimationDataUnit, Mask2Unit, FontList2Unit,
-  MusicListUnit, WaveListUnit, Animation2Unit, Bass;
+  Animation2Unit;
 
 const
   // Create texture from image even when there's no animation data
@@ -92,15 +63,13 @@ type
   TMasks=TNamedList<TMask>;
   TAnimationDWTs=TNamedList<TAnimationDataWithTexture>;
 
-  { TMediaManager }
+  { TGFXManager }
 
-  TMediaManager=class
+  TGFXManager=class
     constructor Create;
     destructor Destroy; override;
     procedure Load(pFilename:string;pName:string='';pFlags:integer=0);
     procedure LoadImage(pFilename:string;pName:string='';pFlags:integer=0);
-    procedure LoadMusic(pFilename:string;pName:string='');
-    procedure LoadWave(pFilename:string;pName:string='';pVolume:Float=1);
     procedure AddImage(pImage:TARGBImage;pImageName:string;pFlags:integer=0);
     procedure AddMask(pMask:TMask;pMaskName:string);
     // If you get animation with this, the TAnimation instance will be freed
@@ -113,18 +82,12 @@ type
     fAnimationDWTs:TAnimationDWTs;
     fMasks:TMasks;
     fFonts:TFontList;
-    fMusics:TMusicList;
-    fWaves:TWaveList;
-    fTreatMP3AsMusic:boolean;
   public
     property Images:TImages read fImages;
     property Textures:TTextures read fTextures;
     property Animations:TAnimationDWTs read fAnimationDWTs;
     property Masks:TMasks read fMasks;
     property Fonts:TFontList read fFonts;
-    property Musics:TMusicList read fMusics;
-    property Waves:TWaveList read fWaves;
-    property TreatMP3AsMusic:boolean read fTreatMP3AsMusic write fTreatMP3AsMusic;
   end;
 
 implementation
@@ -133,7 +96,7 @@ uses SysUtils, Logger, Font2Unit, MKToolbox;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.08';
+  Version='1.00';
 
 { TAnimationDataWithTexture }
 
@@ -150,7 +113,7 @@ begin
   Result:=TAnimation.Create(fTexture,fAnimationData);
 end;
 
-constructor TMediaManager.Create;
+constructor TGFXManager.Create;
 begin
   fImages:=TImages.Create;
   fImages.CaseSensitive:=true;
@@ -164,17 +127,10 @@ begin
   fMasks.CaseSensitive:=true;
   fFonts:=TFontList.Create;
   fFonts.CaseSensitive:=true;
-  fMusics:=TMusicList.Create;
-  fMusics.CaseSensitive:=true;
-  fWaves:=TWaveList.Create;
-  fWaves.CaseSensitive:=true;
-  fTreatMP3AsMusic:=true;
 end;
 
-destructor TMediaManager.Destroy;
+destructor TGFXManager.Destroy;
 begin
-  if Assigned(fWaves) then FreeAndNil(fWaves);
-  if Assigned(fMusics) then FreeAndNil(fMusics);
   if Assigned(fFonts) then FreeAndNil(fFonts);
   if Assigned(fMasks) then FreeAndNil(fMasks);
   if Assigned(fAnimationDWTs) then FreeAndNil(fAnimationDWTs);
@@ -184,22 +140,19 @@ begin
   inherited ;
 end;
 
-procedure TMediaManager.Load(pFilename:string;pName:string='';pFlags:integer=0);
+procedure TGFXManager.Load(pFilename:string;pName:string='';pFlags:integer=0);
 var ext:string;i:integer;
 begin
   ext:=uppercase(ExtractFileExt(pFilename));
   if length(ext)>1 then delete(ext,1,1);
-  if fTreatMP3AsMusic then i:=2 else i:=3;
-  i:=strtoint(decode(ext,Format('PNG,1,TGA,1,BMP,1,CEL,1,GSD,1,MO3,2,MP3,%d,WAV,3,0',[i])));
+  i:=strtoint(decode(ext,'PNG,1,TGA,1,BMP,1,CEL,1,GSD,1,0'));
   case i of
     1:LoadImage(pFilename,pName,pFlags);
-    2:LoadMusic(pFilename,pName);
-    3:LoadWave(pFilename,pName);
-    else raise Exception.Create(Format('MediaManager: Unknown file extension! (%s)',[pFilename]));
+    else raise Exception.Create(Format('GFXManager: Unknown file extension! (%s)',[pFilename]));
   end;
 end;
 
-procedure TMediaManager.LoadImage(pFilename:string;pName:string;pFlags:integer=0);
+procedure TGFXManager.LoadImage(pFilename:string;pName:string;pFlags:integer=0);
 var atmI:TARGBImage;
 begin
   atmI:=TARGBImage.Create(pFilename);
@@ -207,18 +160,7 @@ begin
   AddImage(atmI,pName,pFlags);
 end;
 
-procedure TMediaManager.LoadMusic(pFilename:string;pName:string);
-begin
-  Musics.Add(pFilename,pName);
-end;
-
-procedure TMediaManager.LoadWave(pFilename: string; pName: string;
-  pVolume: Float);
-begin
-  Waves.Add(pFilename,pName,pVolume);
-end;
-
-procedure TMediaManager.AddImage(pImage:TARGBImage;pImageName:string;pFlags:integer=0);
+procedure TGFXManager.AddImage(pImage:TARGBImage;pImageName:string;pFlags:integer=0);
 var
   atmT:TTexture;
   atmA:TAnimationDataWithTexture;
@@ -251,12 +193,12 @@ begin
   end;
 end;
 
-procedure TMediaManager.AddMask(pMask:TMask;pMaskName:string);
+procedure TGFXManager.AddMask(pMask:TMask;pMaskName:string);
 begin
   fMasks.AddObject(pMaskName,pMask);
 end;
 
-function TMediaManager.SpawnAnimation(pAnimationName: string): TAnimation;
+function TGFXManager.SpawnAnimation(pAnimationName: string): TAnimation;
 begin
   Result:=fAnimationDWTs.ItemByName[pAnimationName].SpawnAnimation;
   fSpawnedAnimations.AddObject(Result.Name,Result);

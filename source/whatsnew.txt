@@ -10,6 +10,10 @@ Todo:
 - Configurable autosave interval.
 
 
+2023.03.16
+- MediaManager is reduced to GFXManager to remove the dependency on BASS.DLL.
+  Should switch Bass to SDL2 but that's out of this project's scope.
+
 2023.03.15
 - Sliders are visible again.
 - BUG: Sliders don't receive MouseWheel event.

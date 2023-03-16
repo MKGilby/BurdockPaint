@@ -4,7 +4,7 @@ unit BDPSharedUnit;
 
 interface
 
-uses MediaManagerUnit, mk_sdl2, ARGBImageUnit, BDPInfoBarUnit, BDPImageUnit,
+uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, BDPInfoBarUnit, BDPImageUnit,
   BDPSettingsUnit, BDPMessageUnit, BDPCursorUnit, BDPToolsUnit, BDPInksUnit,
   BDPPaletteUnit, BDPUndoUnit;
 
@@ -94,7 +94,7 @@ const
   MSG_GETCEL=15;
 
 var
-  MM:TMediaManager;  // MediaManager to hold fonts and internal images
+  MM:TGFXManager;  // MediaManager to hold fonts and internal images
   InfoBar:TBDInfoBar;  // The information bar on the top of the screen
   MainImage:TBDImage;  // The image we are working on
   OverlayImage:TBDImage;  // The image where the tools draw its things
@@ -250,7 +250,7 @@ begin
   Settings:=TSettings.Create;
   Settings.LoadFromFile(SETTINGSFILE);
   Log.LogStatus('Loading and creating assets...');
-  MM:=TMediaManager.Create;
+  MM:=TGFXManager.Create;
   Log.LogStatus('  Loading fonts...');
   LoadSystemFont(4,4,4,'Black');
   LoadSystemFont($c7,4,4,'Red');
