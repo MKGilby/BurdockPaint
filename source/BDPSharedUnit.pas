@@ -54,6 +54,7 @@ const
   MODALDIALOG_ZINDEX=9999;
 
 
+  DATAFILE='BurdockPaint.data';
   STATEFILE='state.bps';
   SETTINGSFILE='BurdockPaint.ini';
   STATEDATAID=$53;

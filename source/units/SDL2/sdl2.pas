@@ -126,7 +126,11 @@ interface
 const
 
   {$IFDEF WINDOWS}
-    SDL_LibName = 'SDL2.dll';
+    {$IFDEF CPUx86_64}
+      SDL_LibName = 'SDL2_x64.dll';
+    {$else}
+      SDL_LibName = 'SDL2_x86.dll';
+    {$ENDIF}
   {$ENDIF}
 
   {$IFDEF UNIX}
