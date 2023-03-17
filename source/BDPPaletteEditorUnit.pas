@@ -40,13 +40,6 @@ implementation
 
 uses SysUtils, BDPSharedUnit, SDL2;
 
-const
-  PALETTEEDITORHEIGHT=300;
-  PALETTESOCKETWIDTH=38;
-  PALETTESOCKETHEIGHT=26;
-  PALETTESOCKETSTOP=PALETTEEDITORHEIGHT-213;
-  PALETTESOCKETSLEFT=3;
-
 { TBDPaletteEditor }
 
 constructor TBDPaletteEditor.Create;
@@ -69,7 +62,7 @@ begin
   fName:='PaletteEditor';
   ZIndex:=LEVEL1CONTROLS_ZINDEX;
 
-  fSliderR:=TBDHorizontalSlider.Create(fLeft+COLORSLIDERSLEFT,fTop+6);
+  fSliderR:=TBDHorizontalSlider.Create(fLeft+COLORSLIDERSLEFT,fTop+COLORSLIDERSTOP);
   with fSliderR do begin
     MinValue:=0;MaxValue:=255;Position:=32;
     ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
@@ -78,7 +71,7 @@ begin
   end;
   AddChild(fSliderR);
 
-  fSliderG:=TBDHorizontalSlider.Create(fLeft+COLORSLIDERSLEFT+COLORSLIDERWIDTH+3,fTop+6);
+  fSliderG:=TBDHorizontalSlider.Create(fLeft+COLORSLIDERSLEFT+COLORSLIDERWIDTH+3,fTop+COLORSLIDERSTOP);
   with fSliderG do begin
     MinValue:=0;MaxValue:=255;Position:=32;
     ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
@@ -87,7 +80,7 @@ begin
   end;
   AddChild(fSliderG);
 
-  fSliderB:=TBDHorizontalSlider.Create(fLeft+COLORSLIDERSLEFT+2*(COLORSLIDERWIDTH+3),fTop+6);
+  fSliderB:=TBDHorizontalSlider.Create(fLeft+COLORSLIDERSLEFT+2*(COLORSLIDERWIDTH+3),fTop+COLORSLIDERSTOP);
   with fSliderB do begin
     MinValue:=0;MaxValue:=255;Position:=32;
     ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
@@ -96,7 +89,7 @@ begin
   end;
   AddChild(fSliderB);
 
-  fSliderA:=TBDHorizontalSlider.Create(fLeft+COLORSLIDERSLEFT+3*(COLORSLIDERWIDTH+3),fTop+6);
+  fSliderA:=TBDHorizontalSlider.Create(fLeft+COLORSLIDERSLEFT+3*(COLORSLIDERWIDTH+3),fTop+COLORSLIDERSTOP);
   with fSliderA do begin
     MinValue:=0;MaxValue:=255;Position:=255;
     ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
@@ -248,6 +241,7 @@ begin
   fSliderR.Position:=MainImage.Palette.ColorR[Settings.ActiveColorIndex];
   fSliderG.Position:=MainImage.Palette.ColorG[Settings.ActiveColorIndex];
   fSliderB.Position:=MainImage.Palette.ColorB[Settings.ActiveColorIndex];
+  fSliderA.Position:=MainImage.Palette.ColorA[Settings.ActiveColorIndex];
 end;
 
 function TBDPaletteEditor.ProcessMessage(msg:TMessage):boolean;

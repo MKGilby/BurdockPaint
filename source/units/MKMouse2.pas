@@ -175,7 +175,7 @@ begin
 end;
 
 function TMouseObjects.HandleEvent(Event:PSDL_Event):boolean;
-var i,overindex:integer;
+var i,overindex,mx,my:integer;
 begin
   fSoftDelete:=true;
   Result:=false;
@@ -204,53 +204,48 @@ begin
         end;
         dec(i);
       end;
-    end else
-    // Mouse events are passed only for the visible control under the mouse.
-    if (Event^.type_=SDL_MOUSEBUTTONDOWN) or (Event^.type_=SDL_MOUSEBUTTONUP) or
-       (Event^.type_=SDL_MOUSEMOTION) or (Event^.type_=SDL_MOUSEWHEEL) then begin
-      while (i>=fTop) and (i<Count) and not(Result) do begin
-        if Assigned(Self[i]) and Self[i].Visible then begin
-          Log.LogDebug('Trying object number '+inttostr(i)+' ('+Self[i].Name+')');
-          if (overindex=-1) and (Self[i].IsOver(Event^.motion.x,Event^.motion.y)) then begin
-            overindex:=i;
-            if Event^.type_=SDL_MOUSEBUTTONDOWN then fLastMouseDownIndex:=i;
+    end else begin
+      if (Event^.type_=SDL_MOUSEBUTTONDOWN) or (Event^.type_=SDL_MOUSEBUTTONUP) or
+         (Event^.type_=SDL_MOUSEMOTION) then begin
+        mx:=event.motion.x;
+        my:=event.motion.y
+      end else
+      if (Event^.type_=SDL_MOUSEWHEEL) then begin
+        mx:=event.wheel.mouse_x;
+        my:=event.wheel.mouse_y;
+      end;
+
+      // Mouse events are passed only for the visible control under the mouse.
+      if (Event^.type_=SDL_MOUSEBUTTONDOWN) or (Event^.type_=SDL_MOUSEBUTTONUP) or
+         (Event^.type_=SDL_MOUSEMOTION) or (Event^.type_=SDL_MOUSEWHEEL) then begin
+        while (i>=fTop) and (i<Count) and not(Result) do begin
+          if Assigned(Self[i]) and Self[i].Visible then begin
+            Log.LogDebug('Trying object number '+inttostr(i)+' ('+Self[i].Name+')');
+            if (overindex=-1) and (Self[i].IsOver(mx,my)) then begin
+              overindex:=i;
+              if Event^.type_=SDL_MOUSEBUTTONDOWN then fLastMouseDownIndex:=i;
+            end;
+          end;
+          dec(i);
+        end;
+        if overindex>-1 then begin
+          case Event^.type_ of
+            SDL_MOUSEBUTTONDOWN:
+              if Assigned(Self[overindex].OnMouseDown) then
+                Self[overindex].OnMouseDown(Self[overindex],mx,my,Event.button.button);
+            SDL_MOUSEBUTTONUP:
+              if Assigned(Self[overindex].OnMouseUp) then
+                Self[overindex].OnMouseUp(Self[overindex],mx,my,Event.button.button);
+            SDL_MOUSEMOTION:
+              if Assigned(Self[overindex].OnMouseMove) then
+                Self[overindex].OnMouseMove(Self[overindex],mx,my);
+            SDL_MOUSEWHEEL:
+              if Assigned(Self[overindex].OnMouseWheel) then
+                Self[overindex].OnMouseWheel(Self[overindex],mx,my,Event^.wheel.x,Event^.wheel.y);
           end;
         end;
-        dec(i);
-      end;
-      if overindex>-1 then begin
-        case Event^.type_ of
-          SDL_MOUSEBUTTONDOWN:
-            if Assigned(Self[overindex].OnMouseDown) then
-              Self[overindex].OnMouseDown(Self[overindex],Event^.motion.x,Event^.motion.y,Event.button.button);
-          SDL_MOUSEBUTTONUP:
-            if Assigned(Self[overindex].OnMouseUp) then
-              Self[overindex].OnMouseUp(Self[overindex],Event^.motion.x,Event^.motion.y,Event.button.button);
-          SDL_MOUSEMOTION:
-            if Assigned(Self[overindex].OnMouseMove) then
-              Self[overindex].OnMouseMove(Self[overindex],Event^.motion.x,Event^.motion.y);
-          SDL_MOUSEWHEEL:
-            if Assigned(Self[overindex].OnMouseWheel) then
-              Self[overindex].OnMouseWheel(Self[overindex],Event^.motion.x,Event^.motion.y,Event^.wheel.x,Event^.wheel.y);
-        end;
       end;
     end;
-{    while (i>=fTop) and (i<Count) and not(Result) do begin
-      Log.LogDebug('Passing event to object number '+inttostr(i)+' ('+Self[i].Name+')');
-      if (overindex=-1) and (Self[i].Visible) and (Self[i].IsOver(Event^.motion.x,Event^.motion.y)) then begin
-        overindex:=i;
-        if Event^.type_=SDL_MOUSEBUTTONDOWN then fLastMouseDownIndex:=i;
-      end;
-      if Self[i]<>nil then
-        Result:=Self[i].HandleEvent(Event);
-      dec(i);
-    end;
-    if Result then begin
-      if Self[i+1]<>nil then
-        Log.LogDebug('Event handled by object number '+inttostr(i+1)+' ('+Self[i+1].Name+')')
-      else
-        Log.LogDebug('Event handled by an object that invalidated itself.');
-    end else Log.LogDebug('Event not handled by any objects.');}
 
     // This part checks if the control under the mouse is changed and
     // call OnMouseLeave and OnMouseEnter accordingly.

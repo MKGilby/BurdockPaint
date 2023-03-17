@@ -40,3 +40,4 @@ source/BurdockPaint.exe
 source/state.bps
 _release/
 source/BurdockPaint.data
+*.obj

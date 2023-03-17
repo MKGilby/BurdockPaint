@@ -44,7 +44,7 @@ begin
 {$ELSE}
 // Set logging level
   Log.SetLogLevel(llStatus);
-// Try to mount the main executable, it should contain the datafile at the end.
+// Try to mount the datafile.
   try
     MAD4:=TMAD4MidLevel.Create(DATAFILE);
     MKStreamOpener.AddOtherSource(MAD4, 0);
