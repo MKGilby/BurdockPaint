@@ -60,11 +60,13 @@ begin
     // Draw highlights and color boxes
     x:=0;
     for i:=0 to COLORSELECTORCOLORS-1 do begin
-      if Settings.SelectedColors[i]=Settings.ActiveColorIndex then begin
-        if not fPickingColor then
+      if not fPickingColor then begin
+        if Settings.SelectedColors[i]=Settings.ActiveColorIndex then begin
           fTexture.ARGBImage.Bar(x,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[5])
-        else
-          fTexture.ARGBImage.Bar(x,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[VibroColors.GetColorIndex])
+        end
+      end else begin
+        if i=fSelectedIndex then
+          fTexture.ARGBImage.Bar(x,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[VibroColors.GetColorIndex]);
       end;
       fTexture.ARGBImage.Bar(x+3,3,COLORSELECTORBOXSIZE-6,COLORSELECTORBOXSIZE-6,MainImage.Palette[Settings.SelectedColors[i]]);
       x+=COLORSELECTORBOXSIZE-3;
@@ -88,7 +90,7 @@ begin
     MessageQueue.AddMessage(MSG_ACTIVATEPALETTEEDITOR);
   end else if buttons=SDL_BUTTON_RIGHT then begin
     i:=GetClickedIndex(x);
-    if i>0 then begin
+    if i>-1 then begin
       fSelectedIndex:=i;
       Settings.ActiveColorIndex:=Settings.SelectedColors[i];
       ActiveTool:=Tools.ItemByName['PICKCOL'];
