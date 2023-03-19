@@ -127,6 +127,15 @@ begin
       if not mres then mres:=fPaletteEditor.ProcessMessage(msg);
       if not mres then begin
         case msg.TypeID of
+          MSG_TOGGLECONTROLS:begin
+            if fControls.Visible then begin
+              fControls.Hide;
+              fMainMenu.Hide;
+            end else begin
+              fControls.Show;
+              fMainMenu.Show;
+            end;
+          end;
           MSG_ACTIVATEPALETTEEDITOR:begin
             fControls.Hide;
             fPaletteEditor.Show;

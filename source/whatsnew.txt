@@ -16,6 +16,8 @@ Todo:
   clicking any of it caused all of them to appear as color picking target.
 - Fix: When right clicked on drawarea to cancel color picking, ToggleControls
   also occured.
+- Fix: When right clicked to cancel any tool, ToggleControls also occured.
+- ToggleControls now toggles MainMenu too, to let the user see the whole window.
 
 2023.03.17
 - Color sliders moved just above the palette block in PaletteEditor.

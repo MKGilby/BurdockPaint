@@ -37,6 +37,7 @@ type
   TBDToolBox=class(TBDTool)
     constructor Create; override;
     function Click(x,y,button:integer):boolean; override;
+    function MouseUp(x,y,button:integer):boolean; override;
     procedure Draw; override;
     procedure Clear; override;
   private
@@ -50,6 +51,7 @@ type
   TBDToolCircle=class(TBDTool)
     constructor Create; override;
     function Click(x,y,button:integer):boolean; override;
+    function MouseUp(x,y,button:integer):boolean; override;
     procedure Draw; override;
     procedure Clear; override;
   private
@@ -86,6 +88,7 @@ type
   TBDToolFillTo=class(TBDTool)
     constructor Create; override;
     function Click(x,y,button:integer):boolean; override;
+    function MouseUp(x,y,button:integer):boolean; override;
     procedure Draw; override;
   private
     fLeft,fTop,fRight,fBottom:integer;
@@ -98,6 +101,7 @@ type
   TBDToolLine=class(TBDTool)
     constructor Create; override;
     function Click(x,y,button:integer):boolean; override;
+    function MouseUp(x,y,button:integer):boolean; override;
     procedure Draw; override;
     procedure Clear; override;
   private
@@ -117,6 +121,7 @@ type
   TBDToolGetCel=class(TBDTool)
     constructor Create; override;
     function Click(x,y,button:integer):boolean; override;
+    function MouseUp(x,y,button:integer):boolean; override;
     procedure Draw; override;
     procedure Clear; override;
   private
@@ -129,6 +134,7 @@ type
     constructor Create; override;
     procedure Initialize;
     function Click(x,y,button:integer):boolean; override;
+    function MouseUp(x,y,button:integer):boolean; override;
     procedure Draw; override;
     procedure Clear; override;
   private
@@ -275,6 +281,11 @@ begin
   else Result:=false;
 end;
 
+function TBDToolBox.MouseUp(x,y,button:integer):boolean;
+begin
+  Result:=fState>0;
+end;
+
 procedure TBDToolBox.Draw;
 begin
   case fState of
@@ -375,6 +386,11 @@ begin
       Result:=true;
     end else Result:=false
   end else Result:=false;
+end;
+
+function TBDToolCircle.MouseUp(x,y,button:integer):boolean;
+begin
+  Result:=fState>0;
 end;
 
 procedure TBDToolCircle.Draw;
@@ -695,6 +711,11 @@ begin
   else Result:=false;
 end;
 
+function TBDToolFillTo.MouseUp(x,y,button:integer):boolean;
+begin
+  Result:=fState>0;
+end;
+
 procedure TBDToolFillTo.Draw;
 begin
   case fState of
@@ -856,6 +877,11 @@ begin
       Result:=true;
     end else Result:=false
   end else Result:=false;
+end;
+
+function TBDToolLine.MouseUp(x,y,button:integer):boolean;
+begin
+  Result:=fState>0;
 end;
 
 procedure TBDToolLine.Draw;
@@ -1035,6 +1061,11 @@ begin
   else Result:=false;
 end;
 
+function TBDToolGetCel.MouseUp(x,y,button:integer):boolean;
+begin
+  Result:=true;
+end;
+
 procedure TBDToolGetCel.Draw;
 begin
   case fState of
@@ -1111,6 +1142,11 @@ begin
     fState:=-1;
     MessageQueue.AddMessage(MSG_GETCELFINISHED);
   end;
+  Result:=true;
+end;
+
+function TBDToolPutCel.MouseUp(x,y,button:integer):boolean;
+begin
   Result:=true;
 end;
 

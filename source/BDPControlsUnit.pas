@@ -293,10 +293,6 @@ function TBDControls.ProcessMessage(msg: TMessage): boolean;
 begin
   Result:=false;
   case msg.TypeID of
-    MSG_TOGGLECONTROLS:begin
-      if Self.Visible then Self.Hide else Self.Show;
-      Result:=true;
-    end;
     MSG_UNDO:begin
       UndoSystem.Undo;
     end;
