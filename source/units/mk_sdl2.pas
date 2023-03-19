@@ -34,6 +34,11 @@
 //      + LogicalWidth and LogicalHeight added to TWindow.
 //   V1.08 - 2022.05.13
 //      * StreamingTexture update uses SDL_LockTexture now.
+//   V1.09 - 2023.03.19
+//      + Added Terminate. Check this in every loop, if true, close the program.
+//      + Added FlipNoLimit. This fLipping will not limit the fps and updates
+//        the FPS counter. Will fully use one cpu core.
+
 
 {$ifdef fpc}
   {$mode delphi}
@@ -48,12 +53,12 @@ uses
   Classes, Windows, SDL2, ARGBImageUnit;
 
 const 
-//  MKSDL_2X2Pixels = $08000000;
-//  MKSDL_SecondarySurface = $04000000;
   MouseX:word=0;
   MouseY:word=0;
   MouseButtonDown:boolean=false;
   MouseButton:integer=0;
+
+  Terminate:boolean=false;
 
 type
   TWindow=class
@@ -124,11 +129,9 @@ var
   procedure ClearKeys;
   function TimeLeft : UInt32;   // From Kichy's Oxygene spriteenginedemo...
   procedure SetFPS(value:uint32);
-//  function SDL_Color(r,g,b:word):TSDL_Color;
   function GetDesktopSize:TRect;
   procedure RegisterEventHandler(EventHandlerProc:TEventHandlerProc);
   procedure UnRegisterEventHandler(EventHandlerProc:TEventHandlerProc);
-//  procedure CenterWindow(mode:boolean=false);
 
   procedure Bar(x,y,w,h,r,g,b:integer;a:integer=255);
   procedure Rectangle(x,y,w,h,r,g,b:integer;a:integer=255);
@@ -141,39 +144,18 @@ var
   procedure PutTexturePart(x,y,sx,sy,w,h:integer;Texture:TTexture); overload;
   procedure PutTexturePart(sx,sy,sw,sh,tx,ty,tw,th:integer;Texture:TTexture); overload;
 
-{
-// Image handling 
-  procedure GetImage(x,y:word;Image:TImage);
-//  procedure SaveImage(image:PImage;filename:string);
-  function CreateGSDFromImage(Source:TImage):TStream; overload;
-  function CreateGSDFromImage(Source:string):TStream; overload;
-  function CreateRawPictureFromImage(Source:TImage):TRawPicture;
-//  function ShrinkImage4(source:PImage):PImage;
-//  function ShrinkImageN(source:PImage;n2:integer):PImage;
-//  procedure FillImage(target,source:PImage);
-
-// Basic drawing 
-  procedure ImageLine(x1,y1,x2,y2:integer;image:TImage); overload;
-  procedure ClearScreen(r,g,b:byte);
-  function GetPixel(x,y:integer):Uint32;
-  procedure PutPixel(x,y:integer;r,g,b:byte); overload;
-  procedure PutPixel(x,y:integer;Pixel:Uint32); overload;
-}
 implementation
 
 uses SysUtils, Logger;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.08';
+  Version='1.09';
 
 type
   TEventHandlers=array of TEventHandlerProc;
 
-//const
-//  PrimaryWindow : TWindow = nil;
-
-var 
+var
   Event : TSDL_Event;
 //  KeyBuffer : array[0..254] of char;
 //  KBiP,KBoP : byte;
@@ -423,8 +405,8 @@ begin
     if not EventHandled then begin
       case event.type_ of
         SDL_QUITEV : begin
-          SDL_Quit;
-          halt(2);
+          Terminate:=true;
+//          SDL_Quit;
         end;
         SDL_KEYDOWN: begin
           keys[Event.Key.keysym.scancode]:=true;
