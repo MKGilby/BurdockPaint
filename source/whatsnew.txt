@@ -14,6 +14,8 @@ Todo:
 - Fix: You couldn't right click the key color to pick another color in color selector.
 - Fix: When the same color appears more than once in the color selector, right
   clicking any of it caused all of them to appear as color picking target.
+- Fix: When right clicked on drawarea to cancel color picking, ToggleControls
+  also occured.
 
 2023.03.17
 - Color sliders moved just above the palette block in PaletteEditor.

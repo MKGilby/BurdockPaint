@@ -62,7 +62,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="177"/>
         <CursorPos X="36" Y="379"/>
-        <UsageCount Value="199"/>
+        <UsageCount Value="202"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -71,16 +71,16 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="935"/>
         <CursorPos Y="962"/>
-        <UsageCount Value="198"/>
+        <UsageCount Value="201"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="BDPDrawAreaUnit.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="5"/>
-        <TopLine Value="43"/>
-        <CursorPos X="26" Y="76"/>
-        <UsageCount Value="190"/>
+        <TopLine Value="142"/>
+        <CursorPos X="3" Y="157"/>
+        <UsageCount Value="193"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -89,7 +89,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="127"/>
         <CursorPos X="3" Y="149"/>
-        <UsageCount Value="188"/>
+        <UsageCount Value="191"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -98,7 +98,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="33"/>
         <CursorPos Y="66"/>
-        <UsageCount Value="177"/>
+        <UsageCount Value="180"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -107,16 +107,18 @@
         <EditorIndex Value="-1"/>
         <CursorPos Y="21"/>
         <FoldState Value=" T7AC2 T3K0{yp"/>
-        <UsageCount Value="176"/>
+        <UsageCount Value="179"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="BDPToolsUnit.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="1004"/>
-        <CursorPos Y="1036"/>
-        <UsageCount Value="174"/>
+        <TopLine Value="1152"/>
+        <CursorPos X="15" Y="1175"/>
+        <FoldState Value=" T7UB2911 PiSjWL T3kW04A pj0jU0C5 piXjG0E4]9giO2B7 pkRjZ2N4]9AkG2R3]RZl4063[s5K056]9Fja0J143 Pfj60v"/>
+        <UsageCount Value="177"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -125,7 +127,7 @@
         <EditorIndex Value="7"/>
         <TopLine Value="94"/>
         <CursorPos Y="116"/>
-        <UsageCount Value="173"/>
+        <UsageCount Value="176"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -133,7 +135,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="17" Y="8"/>
-        <UsageCount Value="161"/>
+        <UsageCount Value="164"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -142,7 +144,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="3"/>
         <CursorPos Y="37"/>
-        <UsageCount Value="154"/>
+        <UsageCount Value="157"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -150,17 +152,16 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="17" Y="8"/>
-        <UsageCount Value="137"/>
+        <UsageCount Value="140"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="BDPColorSelectorUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
         <TopLine Value="46"/>
         <CursorPos Y="75"/>
-        <UsageCount Value="125"/>
+        <UsageCount Value="128"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -169,7 +170,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="132"/>
         <CursorPos Y="273"/>
-        <UsageCount Value="115"/>
+        <UsageCount Value="118"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -178,7 +179,7 @@
         <EditorIndex Value="6"/>
         <TopLine Value="216"/>
         <CursorPos Y="231"/>
-        <UsageCount Value="88"/>
+        <UsageCount Value="91"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -187,7 +188,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="38"/>
         <CursorPos X="53" Y="63"/>
-        <UsageCount Value="80"/>
+        <UsageCount Value="83"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -196,7 +197,7 @@
         <EditorIndex Value="8"/>
         <TopLine Value="139"/>
         <CursorPos X="32" Y="176"/>
-        <UsageCount Value="53"/>
+        <UsageCount Value="56"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -466,7 +467,7 @@
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="22">
+    <JumpHistory HistoryIndex="23">
       <Position>
         <Filename Value="BDPPaletteEditorUnit.pas"/>
         <Caret Line="100" Column="11" TopLine="76"/>
@@ -558,6 +559,10 @@
       <Position>
         <Filename Value="BDPControlsUnit.pas"/>
         <Caret Line="8" Column="17" TopLine="7"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPToolsUnit.pas"/>
+        <Caret Line="143" Column="10" TopLine="109"/>
       </Position>
     </JumpHistory>
     <RunParams>

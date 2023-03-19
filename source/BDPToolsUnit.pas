@@ -10,14 +10,13 @@ uses
 type
   TBDTool=class
     constructor Create; virtual;
-    destructor Destroy; override;
     procedure Draw; virtual; // Draw helping lines, refresh infobar
     procedure Clear; virtual;  // Clear helping lines!
     procedure Move(x,y:integer);
-    function MouseDown({%H-}x,{%H-}y,{%H-}buttons:integer):boolean; virtual;
-    function MouseMove({%H-}x,{%H-}y,{%H-}buttons:integer):boolean; virtual;
-    function MouseUp({%H-}x,{%H-}y,{%H-}buttons:integer):boolean; virtual;
-    function Click({%H-}x,{%H-}y,{%H-}buttons:integer):boolean; virtual;   // Handle clicks
+    function MouseDown(x,y,buttons:integer):boolean; virtual;
+    function MouseMove(x,y,buttons:integer):boolean; virtual;
+    function MouseUp(x,y,buttons:integer):boolean; virtual;
+    function Click(x,y,buttons:integer):boolean; virtual;   // Handle clicks
   protected
     fState:integer;  // 0 - Waiting for first click, 1 - waiting for second click, etc.
     fX,fY:integer;  // Current position from Move
@@ -141,6 +140,7 @@ type
   TBDToolPickColor=class(TBDTool)
     constructor Create; override;
     function Click(x,y,button:integer):boolean; override;
+    function MouseUp(x,y,button:integer):boolean; override;
     procedure Draw; override;
   end;
 
@@ -163,11 +163,6 @@ constructor TBDTool.Create;
 begin
   fState:=0;
   fPinnable:=false;
-end;
-
-destructor TBDTool.Destroy;
-begin
-  inherited ;
 end;
 
 procedure TBDTool.Draw;
@@ -1172,6 +1167,11 @@ begin
   else if button=SDL_BUTTON_RIGHT then begin
     MessageQueue.AddMessage(MSG_PICKEDCOLOR,'',-1);  // -1 means no change
   end;
+  Result:=true;
+end;
+
+function TBDToolPickColor.MouseUp(x,y,button:integer):boolean;
+begin
   Result:=true;
 end;
 
