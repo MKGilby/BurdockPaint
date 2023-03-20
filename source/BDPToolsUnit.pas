@@ -1219,10 +1219,10 @@ function TBDToolPickColor.Click(x,y,button:integer):boolean;
 begin
   if button=SDL_BUTTON_LEFT then begin
     if (x>=0) and (x<MainImage.Width) and (y>=0) and (y<MainImage.Height) then
-      MessageQueue.AddMessage(MSG_PICKEDCOLOR,'',MainImage.GetPixel(x,y));
+      MessageQueue.AddMessage(MSG_PICKEDCOLOR,MainImage.GetPixel(x,y));
   end
   else if button=SDL_BUTTON_RIGHT then begin
-    MessageQueue.AddMessage(MSG_PICKEDCOLOR,'',-1);  // -1 means no change
+    MessageQueue.AddMessage(MSG_PICKEDCOLOR,-1);  // -1 means no change
   end;
   Result:=true;
 end;

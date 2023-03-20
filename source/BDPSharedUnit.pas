@@ -70,7 +70,7 @@ const
 
   // Don't want to send message but buttons need one? Give them this.
   MSG_NONE=0;
-  // Toggle visibility of main Controls panel.
+  // Toggle visibility of main Controls panel and MainMenu.
   MSG_TOGGLECONTROLS=1;
   // PICKCOL finished, IntValue holds the selected color index or -1 if no color selected.
   MSG_PICKEDCOLOR=2;
@@ -82,20 +82,24 @@ const
   MSG_GETCELFINISHED=5;
   // Load CEL file. Menu:CEL/Load
   MSG_LOADCEL=6;
+  // Hide PaletteEditor, show Controls and MainMenu
+  MSG_DEACTIVATEPALETTEEDITOR=7;
+  // Flip the CEL. 0 - Vertical, 1 - Horizontal. Menu:CEL/FLIP V and /FLIP H
+  MSG_FLIPCEL=8;
   // Set Undo/Redo buttons' state depending on Undosystem state.
   MSG_SETUNDOREDOBUTTON=9;
   // Hide Controls, show PaletteEditor
   MSG_ACTIVATEPALETTEEDITOR=10;
   // ActiveColorIndex changed. Used in PaletteEditor
   MSG_ACTIVECOLORINDEXCHANGED=11;
-  // Hide PaletteEditor, show Controls
-  MSG_DEACTIVATEPALETTEEDITOR=12;
   // Clear image to key color. Menu:Picture/Clear
   MSG_CLEARPICTURE=13;
   // Release CEL image. Menu:CEL/Release
   MSG_RELEASECEL=14;
   // Get CEL image. Menu:CEL/Get
   MSG_GETCEL=15;
+  // Show CEL image. Hides Controls and MainMenu then activates SHOWCEL tool.
+  MSG_SHOWCEL=16;
 
 var
   MM:TGFXManager;  // MediaManager to hold fonts and internal images

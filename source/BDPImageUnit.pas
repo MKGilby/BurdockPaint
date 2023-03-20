@@ -48,9 +48,14 @@ type
     // Puts another image onto image, using the specified colorkey.
     // Sets changed area accordingly.
     procedure PutImage(x,y:integer;frame:TBDImage;colorkey:word=65535);
-
     // Puts a part of another image onto image, using the specified colorkey.
     procedure PutImagePart(x,y,sx,sy,w,h:integer; SourceImage:TBDImage; colorkey:word=65535);
+
+    // -------------- Transforming operations --------------------
+    // Flips the image vertically
+    procedure FlipV;
+    // Flips the image horizontally
+    procedure FlipH;
 
     // -------------- Rendering operations --------------------
     // Renders the image onto a Texture.
@@ -629,6 +634,36 @@ begin
     if fChangedArea.Top>clip2.y1 then fChangedArea.Top:=clip2.y1;
     if fChangedArea.Bottom<clip2.y1+clip2.he-1 then fChangedArea.Bottom:=clip2.y1+clip2.he-1;
     fChanged:=true;
+  end;
+end;
+
+procedure TBDImage.FlipV;
+var buffer:pointer;i,j:integer;
+begin
+  buffer:=getmem(fWidth*2);
+  i:=0;
+  j:=fHeight-1;
+  while i<j do begin
+    move((fData+i*fWidth*2)^,buffer^,fWidth*2);
+    move((fData+j*fWidth*2)^,(fData+i*fWidth*2)^,fWidth*2);
+    move(buffer^,(fData+j*fWidth*2)^,fWidth*2);
+    inc(i);dec(j);
+  end;
+  Freemem(buffer);
+end;
+
+procedure TBDImage.FlipH;
+var i,j,y:integer;w:word;
+begin
+  i:=0;
+  j:=fWidth-1;
+  while i<j do begin
+    for y:=0 to fHeight-1 do begin
+      w:=word((fData+(y*fWidth+i)*2)^);
+      word((fData+(y*fWidth+i)*2)^):=word((fData+(y*fWidth+j)*2)^);
+      word((fData+(y*fWidth+j)*2)^):=w;
+    end;
+    inc(i);dec(j);
   end;
 end;
 

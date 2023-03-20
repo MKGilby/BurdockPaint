@@ -105,7 +105,7 @@ end;
 function TConfirmQuitWindow.KeyDownYes(Sender:TObject; key:integer):boolean;
 begin
   if key=KeyMap[KEY_YES] then begin
-    MessageQueue.AddMessage(MSG_QUIT,'',1);
+    MessageQueue.AddMessage(MSG_QUIT,1);
     Result:=true;
   end else Result:=false;
 end;
@@ -113,7 +113,7 @@ end;
 function TConfirmQuitWindow.KeyDownNo(Sender:TObject; key:integer):boolean;
 begin
   if key=KeyMap[KEY_NO] then begin
-    MessageQueue.AddMessage(MSG_QUIT,'',0);
+    MessageQueue.AddMessage(MSG_QUIT,0);
     Result:=true;
   end else Result:=false;
 end;

@@ -19,6 +19,8 @@ Todo:
   loading or modifying cel.
 - The loaded CEL is always moved to 0,0. After loading CEL the CEL is visible
   for a short time.
+- Fix: MessageQueue.AddMessage still accepted string value but did nothing with it.
+- CEL/Flip V and CEL/Flip H works.
 
 2023.03.19
 - Fix: When right clicked on drawarea to cancel color picking, ToggleControls

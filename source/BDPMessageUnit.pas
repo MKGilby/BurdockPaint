@@ -19,7 +19,7 @@ type
   TMessageQueue=class
     constructor Create(iQueueSize:integer);
     destructor Destroy; override;
-    procedure AddMessage(pTypeID:integer;pDataString:string='';pDataInt:integer=-1); overload;
+    procedure AddMessage(pTypeID:integer;pDataInt:integer=-1); overload;
     procedure AddMessage(pMessage:TMessage); overload;
     function HasNewMessage:boolean;
     function GetNextMessage:TMessage;
@@ -55,7 +55,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TMessageQueue.AddMessage(pTypeID:integer; pDataString:string; pDataInt:integer);
+procedure TMessageQueue.AddMessage(pTypeID:integer; pDataInt:integer);
 begin
   if not((fInPTR=fOutPTR-1) or ((fInPtr=length(fMessages)-1) and (fOutPTR=0))) then begin
     fMessages[fInPTR].TypeID:=pTypeID;

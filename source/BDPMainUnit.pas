@@ -161,10 +161,7 @@ begin
               CELImage.ImportCEL(fOpenDialog.FileName);
               CELImage.Left:=0;
               CELImage.Top:=0;
-              fControls.Hide;
-              fMainMenu.Hide;
-              ActiveTool:=Tools.ItemByName['SHOWCEL'];
-              ActiveTool.Initialize;
+              MessageQueue.AddMessage(MSG_SHOWCEL);
             end;
           end;
           MSG_CLEARPICTURE:begin
@@ -186,6 +183,18 @@ begin
           MSG_GETCELFINISHED:begin
             fControls.Show;
             fMainMenu.Show;
+          end;
+          MSG_FLIPCEL:begin
+            if msg.DataInt=0 then CELImage.FlipV
+            else if msg.DataInt=1 then CelImage.FlipH
+            else raise Exception.Create('Invalid FLIPCEL message parameter!');
+            MessageQueue.AddMessage(MSG_SHOWCEL);
+          end;
+          MSG_SHOWCEL:begin
+            fControls.Hide;
+            fMainMenu.Hide;
+            ActiveTool:=Tools.ItemByName['SHOWCEL'];
+            ActiveTool.Initialize;
           end;
         end;
       end;
