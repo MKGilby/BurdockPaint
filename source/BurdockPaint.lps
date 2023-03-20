@@ -68,11 +68,10 @@
       <Unit>
         <Filename Value="BDPImageUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="657"/>
-        <CursorPos X="16" Y="687"/>
-        <FoldState Value=" T3kQ0r5 pidkO0Y4]9cjF0M[94gjV0p]Rj2k10D013]BSkS0k7[c4kE0R2 Pi4b0I"/>
+        <TopLine Value="526"/>
+        <CursorPos Y="672"/>
+        <FoldState Value=" T3kQ0r5 pidkO0Y4]9cjF0M[94gjV0p]Rj2k10D3]94jP0i[j4Zk50C5 PjPj60K"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit>
@@ -114,9 +113,10 @@
       <Unit>
         <Filename Value="BDPToolsUnit.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="1174"/>
-        <CursorPos X="44" Y="1225"/>
+        <TopLine Value="1152"/>
+        <CursorPos Y="1192"/>
         <UsageCount Value="184"/>
         <Loaded Value="True"/>
       </Unit>

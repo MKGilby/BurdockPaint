@@ -1188,6 +1188,7 @@ begin
           CELHelperImage.PutImage(CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,CELImage,Settings.SelectedColors[0])
         else
           CELHelperImage.PutImage(CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,CELImage);
+        InfoBar.ShowText(Format('%d,%d (%d,%d)',[CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,fX-fSX,fY-fSY]));
       end;
   end;
 end;

@@ -3,6 +3,9 @@ Todo:
   - Create a mechanism to set up OpenDialog for each file type.
     OR
   - Create multiple OpenDialogs for each type and show appropiate dialog when needed.
+- Add SaveDialog.
+- Add save to CEL.
+- Add export to CEL.
 - Ask for color fit when loading a CEL file.
 - Add gradients.
 - Hide menu when not needed.
@@ -25,6 +28,8 @@ Todo:
   CEL is not magnified when OK clicked. You can use key 2, 3 and 5 to select
   magnification, Enter to "OK" and Escape to "Cancel".
 - Magnification works.
+- PutCEL now shows CEL's top-left coordinate and the relative position to
+  original place.
 
 2023.03.19
 - Fix: When right clicked on drawarea to cancel color picking, ToggleControls
