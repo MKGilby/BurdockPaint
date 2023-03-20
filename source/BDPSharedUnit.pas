@@ -100,6 +100,11 @@ const
   MSG_GETCEL=15;
   // Show CEL image. Hides Controls and MainMenu then activates SHOWCEL tool.
   MSG_SHOWCEL=16;
+  // Magnify CEL image. A modal window appears where you can select beetween
+  // 2x 3x and 5x magnification and can cancel the whole operation.
+  MSG_OPENMAGNIFYCELDIALOG=17;
+  // Response from Magnify CEL dialog. Data contains magnification or 0 if cancelled.
+  MSG_MAGNIFYCEL=18;
 
 var
   MM:TGFXManager;  // MediaManager to hold fonts and internal images

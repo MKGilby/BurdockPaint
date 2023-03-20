@@ -21,6 +21,9 @@ Todo:
   for a short time.
 - Fix: MessageQueue.AddMessage still accepted string value but did nothing with it.
 - CEL/Flip V and CEL/Flip H works.
+- Magnify CEL dialog appears when selecting CEL/Magnify. Dialog items work, but
+  CEL is not magnified when OK clicked. You can use key 2, 3 and 5 to select
+  magnification, Enter to "OK" and Escape to "Cancel".
 
 2023.03.19
 - Fix: When right clicked on drawarea to cancel color picking, ToggleControls

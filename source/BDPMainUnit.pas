@@ -5,7 +5,8 @@ unit BDPMainUnit;
 interface
 
 uses mk_sdl2, BDPControlsUnit, BDPDrawAreaUnit, BDPConfirmQuitUnit,
-  BDPSplashScreenUnit, BDPPaletteEditorUnit, BDPMenuUnit, Dialogs;
+  BDPSplashScreenUnit, BDPPaletteEditorUnit, BDPMenuUnit, Dialogs,
+  BDPMagnifyDialogUnit;
 
 type
 
@@ -21,9 +22,10 @@ type
     fDrawArea:TBDDrawArea;
     fPaletteEditor:TBDPaletteEditor;
     fSplashScreen:TBDSplashScreen;
-    fQuitWindow:TConfirmQuitWindow;
+    fQuitWindow:TConfirmQuitDialog;
     fMainMenu:TMainMenu;
     fOpenDialog:TOpenDialog;
+    fMagnifyDialog:TMagnifyCELDialog;
   end;
 
 implementation
@@ -72,7 +74,7 @@ begin
   fPaletteEditor:=TBDPaletteEditor.Create;
   fPaletteEditor.Visible:=false;
   MouseObjects.Add(fPaletteEditor);
-  fQuitWindow:=TConfirmQuitWindow.Create;
+  fQuitWindow:=TConfirmQuitDialog.Create;
   fQuitWindow.Visible:=false;
   MouseObjects.Add(fQuitWindow);
   if Settings.ShowSplash then begin
@@ -82,18 +84,22 @@ begin
   fMainMenu:=TMainMenu.Create;
   fMainMenu.Visible:=true;
   MouseObjects.Add(fMainMenu);
-  MouseObjects.Sort;
-  MouseObjects.List;
   fOpenDialog:=TOpenDialog.Create(nil);
   fOpenDialog.Filter:='CEL files|*.bdc|Legacy CEL files|*.cel';
   fOpenDialog.FilterIndex:=0;
   fOpenDialog.Name:='OpenDialog';
   fOpenDialog.Title:='Open file';
   fOpenDialog.InitialDir:=ExtractFilePath(ParamStr(0));
+  fMagnifyDialog:=TMagnifyCELDialog.Create;
+  fMagnifyDialog.Visible:=false;
+  MouseObjects.Add(fMagnifyDialog);
+  MouseObjects.Sort;
+  MouseObjects.List;
 end;
 
 destructor TMain.Destroy;
 begin
+  if Assigned(fMagnifyDialog) then FreeAndNil(fMagnifyDialog);
   if Assigned(fOpenDialog) then FreeAndNil(fOpenDialog);
   if Assigned(fMainMenu) then FreeAndNil(fMainMenu);
   if Assigned(fSplashScreen) then FreeAndNil(fSplashScreen);
@@ -195,6 +201,12 @@ begin
             fMainMenu.Hide;
             ActiveTool:=Tools.ItemByName['SHOWCEL'];
             ActiveTool.Initialize;
+          end;
+          MSG_OPENMAGNIFYCELDIALOG:begin
+            fMagnifyDialog.Show;
+          end;
+          MSG_MAGNIFYCEL:begin
+            fMagnifyDialog.Hide;
           end;
         end;
       end;

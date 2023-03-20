@@ -81,7 +81,6 @@ begin
   OnMouseDown:=MouseDown;
   OnMouseMove:=MouseMove;
   OnMouseLeave:=MouseLeave;
-//  OnMouseEnter:=MouseEnter;
 end;
 
 procedure TSubMenu.Draw;
@@ -162,10 +161,6 @@ begin
     fWidth:=w;
     fHeight:=h;
     RecreateTexture;
-{    if Assigned(fTexture) then FreeAndNil(fTexture);
-    fTexture:=TStreamingTexture.Create(fWidth,fHeight);
-    fTexture.ARGBImage.Clear;
-    fTexture.Update;}
   end;
 end;
 
@@ -219,8 +214,7 @@ begin
   atm.AddItem('ROTATE',msg,false);
   atm.AddItem('FLIP V',TMessage.Init(MSG_FLIPCEL,0));
   atm.AddItem('FLIP H',TMessage.Init(MSG_FLIPCEL,1));
-  atm.AddItem('MAGNIFY 2X',msg,false);
-  atm.AddItem('MAGNIFY 3X',msg,false);
+  atm.AddItem('MAGNIFY',TMessage.Init(MSG_OPENMAGNIFYCELDIALOG,0));
   atm.AddItem('LOAD',TMessage.Init(MSG_LOADCEL,0));
   atm.AddItem('SAVE',msg,false);
   atm.AddItem('EXPORT',msg,false);
@@ -234,7 +228,6 @@ begin
   OnMouseDown:=MouseDown;
   OnMouseMove:=MouseMove;
   OnMouseLeave:=MouseLeave;
-//  OnMouseEnter:=MouseEnter;
 end;
 
 destructor TMainMenu.Destroy;

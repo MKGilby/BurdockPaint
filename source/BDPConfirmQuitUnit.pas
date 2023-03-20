@@ -9,9 +9,9 @@ uses
 
 type
 
-  { TConfirmQuitWindow }
+  { TConfirmQuitDialog }
 
-  TConfirmQuitWindow=class(TContainer)
+  TConfirmQuitDialog=class(TContainer)
     constructor Create;
     destructor Destroy; override;
     procedure Draw; override;
@@ -39,9 +39,9 @@ const
   QUITWINDOWWIDTH=480;
   QUITWINDOWHEIGHT=96;
 
-{ TConfirmQuitWindow }
+{ TConfirmQuitDialog }
 
-constructor TConfirmQuitWindow.Create;
+constructor TConfirmQuitDialog.Create;
 var atmB:TBDButton;msg:TMessage;
 begin
   inherited Create;
@@ -56,6 +56,7 @@ begin
   fTexture.ARGBImage.Bar(0,fTexture.ARGBImage.Height-3,fTexture.ARGBImage.Width,3,OverlayImage.Palette[2]);
   fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,OverlayImage.Palette[3]);
   MM.Fonts['Black'].OutText(fTexture.ARGBImage,'EXIT BURDOCK PAINT?',QUITWINDOWWIDTH div 2,16,1);
+  fTexture.Update;
   msg.TypeID:=MSG_QUIT;
   msg.DataInt:=1;
   atmB:=TBDButton.Create(
@@ -63,8 +64,6 @@ begin
     fWindowTop+48,
     NORMALBUTTONWIDTH,
     'YES','',msg);
-//  atmB.ParentX:=fWindowLeft;
-//  atmB.Parenty:=fWindowTop;
   atmB.ZIndex:=MaxLongint;
   atmB.OnKeyDown:=KeyDownYes;
   AddChild(atmB);
@@ -74,8 +73,6 @@ begin
     fWindowTop+48,
     NORMALBUTTONWIDTH,
     'NO','',msg);
-//  atmB.ParentX:=fWindowLeft;
-//  atmB.Parenty:=fWindowTop;
   atmB.ZIndex:=MaxLongint;
   atmB.OnKeyDown:=KeyDownNo;
   AddChild(atmB);
@@ -88,21 +85,19 @@ begin
   OnKeyUp:=KeyUp;
 end;
 
-destructor TConfirmQuitWindow.Destroy;
+destructor TConfirmQuitDialog.Destroy;
 begin
   if Assigned(fTexture) then FreeAndNil(fTexture);
   inherited Destroy;
 end;
 
-procedure TConfirmQuitWindow.Draw;
+procedure TConfirmQuitDialog.Draw;
 begin
-  if fVisible then begin
-    fTexture.Update;
+  if fVisible then
     PutTexture(fWindowLeft,fWindowTop,fTexture);
-  end;
 end;
 
-function TConfirmQuitWindow.KeyDownYes(Sender:TObject; key:integer):boolean;
+function TConfirmQuitDialog.KeyDownYes(Sender:TObject; key:integer):boolean;
 begin
   if key=KeyMap[KEY_YES] then begin
     MessageQueue.AddMessage(MSG_QUIT,1);
@@ -110,7 +105,7 @@ begin
   end else Result:=false;
 end;
 
-function TConfirmQuitWindow.KeyDownNo(Sender:TObject; key:integer):boolean;
+function TConfirmQuitDialog.KeyDownNo(Sender:TObject; key:integer):boolean;
 begin
   if key=KeyMap[KEY_NO] then begin
     MessageQueue.AddMessage(MSG_QUIT,0);
@@ -118,40 +113,37 @@ begin
   end else Result:=false;
 end;
 
-function TConfirmQuitWindow.MouseMove(Sender:TObject; x,y:integer):boolean;
+function TConfirmQuitDialog.MouseMove(Sender:TObject; x,y:integer):boolean;
 begin
   Result:=true;
 end;
 
-function TConfirmQuitWindow.Click(Sender:TObject; x,y,buttons:integer):boolean;
+function TConfirmQuitDialog.Click(Sender:TObject; x,y,buttons:integer):boolean;
 begin
   Result:=true;
 end;
 
-function TConfirmQuitWindow.MouseDown(Sender:TObject; x,y,buttons:integer
-  ):boolean;
+function TConfirmQuitDialog.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
 begin
   Result:=true;
 end;
 
-function TConfirmQuitWindow.MouseUp(Sender:TObject; x,y,buttons:integer
-  ):boolean;
+function TConfirmQuitDialog.MouseUp(Sender:TObject; x,y,buttons:integer):boolean;
 begin
   Result:=true;
 end;
 
-function TConfirmQuitWindow.MouseWheel(Sender:TObject; x,y,wheelx,wheely:integer
-  ):boolean;
+function TConfirmQuitDialog.MouseWheel(Sender:TObject; x,y,wheelx,wheely:integer):boolean;
 begin
   Result:=true;
 end;
 
-function TConfirmQuitWindow.KeyDown(Sender:TObject; key:integer):boolean;
+function TConfirmQuitDialog.KeyDown(Sender:TObject; key:integer):boolean;
 begin
   Result:=true;
 end;
 
-function TConfirmQuitWindow.KeyUp(Sender:TObject; key:integer):boolean;
+function TConfirmQuitDialog.KeyUp(Sender:TObject; key:integer):boolean;
 begin
   Result:=true;
 end;
