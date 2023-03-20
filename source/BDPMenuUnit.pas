@@ -8,20 +8,26 @@ uses Classes, mk_sdl2, MKMouse2, fgl, BDPMessageUnit, vcc2_VisibleControl;
 
 type
 
+  { TSubMenuItem }
+
+  TSubMenuItem=record
+    _name:string;
+    _message:TMessage;
+    _enabled:boolean;
+    constructor Init(iName:string;iMessage:TMessage);
+  end;
+
   { TSubMenu }
 
   TSubMenu=class(TVisibleControl)
     constructor Create(iLeft:integer);
-    destructor Destroy; override;
     procedure Draw; override;
     function MouseMove(Sender:TObject;x,y:integer):boolean;
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-//    procedure MouseEnter(Sender:TObject);
     procedure MouseLeave(Sender:TObject);
-    procedure AddItem(item:string;msg:TMessage);
+    procedure AddItem(item:string;msg:TMessage;enabled:boolean=true);
   private
-    fItems:TStringList;
-    fMessages:array of TMessage;
+    fItems:array of TSubMenuItem;
     fSelected:integer;
     procedure fSetName(value:string);
     procedure Resize;
@@ -50,6 +56,15 @@ implementation
 
 uses SysUtils, BDPSharedUnit;
 
+{ TSubMenuItem }
+
+constructor TSubMenuItem.Init(iName:string; iMessage:TMessage);
+begin
+  _name:=iName;
+  _message:=iMessage;
+  _enabled:=true;
+end;
+
 { TSubMenu }
 
 constructor TSubMenu.Create(iLeft:integer);
@@ -59,8 +74,7 @@ begin
   Top:=0;
   Width:=180;
   Height:=TOPMENUHEIGHT;
-  fItems:=TStringList.Create;
-  SetLength(fMessages,0);
+  SetLength(fItems,0);
   fSelected:=-1;
   ZIndex:=LEVEL1CONTROLS_ZINDEX-1;
   Enabled:=true;
@@ -68,12 +82,6 @@ begin
   OnMouseMove:=MouseMove;
   OnMouseLeave:=MouseLeave;
 //  OnMouseEnter:=MouseEnter;
-end;
-
-destructor TSubMenu.Destroy;
-begin
-  if Assigned(fItems) then FreeAndNil(fItems);
-  inherited Destroy;
 end;
 
 procedure TSubMenu.Draw;
@@ -89,11 +97,15 @@ begin
     fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT,fWidth-6,fHeight-TOPMENUHEIGHT-3,OverlayImage.Palette[3]);
     if fSelected>-1 then
       fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT+fSelected*SUBMENULINEHEIGHT,fWidth-6,SUBMENULINEHEIGHT,OverlayImage.Palette[4]);
-    for i:=0 to fItems.Count-1 do
-      if i<>fSelected then
-        MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i],9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0)
-      else
-        MM.Fonts['Red'].OutText(fTexture.ARGBImage,fItems[i],9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0);
+    for i:=0 to Length(fItems)-1 do begin
+      if fItems[i]._enabled then begin
+        if i<>fSelected then
+          MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i]._name,9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0)
+        else
+          MM.Fonts['Red'].OutText(fTexture.ARGBImage,fItems[i]._name,9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0);
+      end else
+        MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,fItems[i]._name,9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0);
+    end;
     fTexture.Update;
     PutTexture(fLeft,fTop,fTexture);
   end;
@@ -108,8 +120,8 @@ end;
 function TSubMenu.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
 begin
   fSelected:=(y-TOPMENUHEIGHT) div SUBMENULINEHEIGHT;
-  if (fSelected>=0) and (fSelected<fItems.Count) then begin
-    MessageQueue.AddMessage(fMessages[fSelected]);
+  if (fSelected>=0) and (fSelected<Length(fItems)) and (fItems[fSelected]._enabled) then begin
+    MessageQueue.AddMessage(fItems[fSelected]._message);
     fSelected:=-1;
     Visible:=false;
   end;
@@ -122,12 +134,12 @@ begin
   Visible:=false;
 end;
 
-procedure TSubMenu.AddItem(item:string; msg:TMessage);
+procedure TSubMenu.AddItem(item:string; msg:TMessage; enabled:boolean);
 begin
   if item<>'' then begin
-    fItems.Add(item);
-    SetLength(fMessages,Length(fMessages)+1);
-    fMessages[length(fMessages)-1]:=msg;
+    SetLength(fItems,Length(fItems)+1);
+    fItems[Length(fItems)-1]:=TSubMenuItem.Init(item,msg);
+    fItems[Length(fItems)-1]._enabled:=enabled;
     Resize;
   end;
 end;
@@ -143,9 +155,9 @@ var i,w,h:integer;
 begin
   w:=0;
   if (length(fName)+2)*18>w then w:=(length(fName)+2)*18;
-  for i:=0 to fItems.Count-1 do
-    if (length(fItems[i])+1)*18>w then w:=(length(fItems[i])+1)*18;
-  h:=TOPMENUHEIGHT+fItems.Count*SUBMENULINEHEIGHT+3;
+  for i:=0 to Length(fItems)-1 do
+    if (length(fItems[i]._name)+1)*18>w then w:=(length(fItems[i]._name)+1)*18;
+  h:=TOPMENUHEIGHT+Length(fItems)*SUBMENULINEHEIGHT+3;
   if (w<>fWidth) or (h<>fHeight) then begin
     fWidth:=w;
     fHeight:=h;
@@ -179,11 +191,11 @@ begin
   atm:=TSubMenu.Create(x);
   atm.Name:=fItems[0];
   msg.TypeID:=MSG_NONE;
-  atm.AddItem('NEW',msg);
-  atm.AddItem('OPEN',msg);
-  atm.AddItem('SAVE',msg);
-  atm.AddItem('SETTINGS',msg);
-  atm.AddItem('QUIT',msg);
+  atm.AddItem('NEW',msg,false);
+  atm.AddItem('OPEN',msg,false);
+  atm.AddItem('SAVE',msg,false);
+  atm.AddItem('SETTINGS',msg,false);
+  atm.AddItem('QUIT',TMessage.Init(MSG_QUIT,1));
   atm.Visible:=false;
   fSubMenus.Add(atm);
   x+=(length(fItems[0])+2)*18;
@@ -192,8 +204,8 @@ begin
   atm:=TSubMenu.Create(x);
   atm.Name:=fItems[1];
   atm.AddItem('CLEAR',TMessage.Init(MSG_CLEARPICTURE,0));
-  atm.AddItem('RESIZE',msg);
-  atm.AddItem('EXPORT',msg);
+  atm.AddItem('RESIZE',msg,false);
+  atm.AddItem('EXPORT',msg,false);
   atm.Visible:=false;
   fSubMenus.Add(atm);
   x+=(length(fItems[1])+2)*18;
@@ -202,14 +214,14 @@ begin
   atm:=TSubMenu.Create(x);
   atm.Name:=fItems[2];
   atm.AddItem('GET',TMessage.Init(MSG_GETCEL,0));
-  atm.AddItem('PUT',msg);
+  atm.AddItem('PUT',msg,false);
   atm.AddItem('RELEASE',TMessage.Init(MSG_RELEASECEL,0));
-  atm.AddItem('ROTATE',msg);
-  atm.AddItem('FLIP V',msg);
-  atm.AddItem('FLIP H',msg);
+  atm.AddItem('ROTATE',msg,false);
+  atm.AddItem('FLIP V',msg,false);
+  atm.AddItem('FLIP H',msg,false);
   atm.AddItem('LOAD',TMessage.Init(MSG_LOADCEL,0));
-  atm.AddItem('SAVE',msg);
-  atm.AddItem('EXPORT',msg);
+  atm.AddItem('SAVE',msg,false);
+  atm.AddItem('EXPORT',msg,false);
   atm.Visible:=false;
   fSubMenus.Add(atm);
   x+=(length(fItems[2])+2)*18;
