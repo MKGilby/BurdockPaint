@@ -96,7 +96,7 @@ procedure TBDDrawArea.Draw;
 begin
   MainImage.RenderToTexture(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
   ActiveTool.Draw;
-  if ActiveTool.Name='PUTCEL' then
+  if (ActiveTool.Name='PUTCEL') or (ActiveTool.Name='SHOWCEL') then
     CELHelperImage.RenderToTextureAsOverlay(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
   OverlayImage.RenderToTextureAsOverlay(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
   fTexture.Update;

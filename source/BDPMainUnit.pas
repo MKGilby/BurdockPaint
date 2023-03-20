@@ -159,6 +159,12 @@ begin
             if fOpenDialog.Execute then begin
               if not assigned(CELImage) then CELImage:=TBDImage.Create(16,16);
               CELImage.ImportCEL(fOpenDialog.FileName);
+              CELImage.Left:=0;
+              CELImage.Top:=0;
+              fControls.Hide;
+              fMainMenu.Hide;
+              ActiveTool:=Tools.ItemByName['SHOWCEL'];
+              ActiveTool.Initialize;
             end;
           end;
           MSG_CLEARPICTURE:begin
@@ -209,7 +215,7 @@ begin
         fControls.Hide;
         fMainMenu.Hide;
         ActiveTool:=Tools.ItemByName['PUTCEL'];
-        TBDToolPutCel(ActiveTool).Initialize;
+        ActiveTool.Initialize;
         SDL_GetMouseState(@mx,@my);
         ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
       end else begin
@@ -218,14 +224,6 @@ begin
       end;
       keys[KeyMap[KEY_PUTCEL]]:=false;
     end;
-{    if keys[KeyMap[KEY_GETCOLOR]] then begin
-      SDL_GetMouseState(@mx,@my);
-      mx:=fDrawArea.MouseXToFrame(mx);
-      my:=fDrawArea.MouseYToFrame(my);
-      if (mx>=0) and (mx<MainImage.Width) and (my>=0) and (my<MainImage.Height) then
-        Settings.ActiveColorIndex:=MainImage.GetPixel(mx,my);
-      keys[KeyMap[KEY_GETCOLOR]]:=false;
-    end;}
   until quit;
 end;
 

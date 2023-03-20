@@ -15,6 +15,10 @@ Todo:
 - SubMenuItems now can be disabled. (Appears in grey and remains grey when the
   mouse points it.)
 - File/Quit works, but it quits instantly without asking anything.
+- Added CELSHOW tool. It shows CEL for a short interval (1s). Useful after
+  loading or modifying cel.
+- The loaded CEL is always moved to 0,0. After loading CEL the CEL is visible
+  for a short time.
 
 2023.03.19
 - Fix: When right clicked on drawarea to cancel color picking, ToggleControls

@@ -8,8 +8,12 @@ uses
   Classes, SysUtils, Lists, BDPImageUnit;
 
 type
+
+  { TBDTool }
+
   TBDTool=class
     constructor Create; virtual;
+    procedure Initialize; virtual; // If the tool needs some initialization before every use
     procedure Draw; virtual; // Draw helping lines, refresh infobar
     procedure Clear; virtual;  // Clear helping lines!
     procedure Move(x,y:integer);
@@ -132,7 +136,7 @@ type
 
   TBDToolPutCel=class(TBDTool)
     constructor Create; override;
-    procedure Initialize;
+    procedure Initialize; override;
     function Click(x,y,button:integer):boolean; override;
     function MouseUp(x,y,button:integer):boolean; override;
     procedure Draw; override;
@@ -158,6 +162,17 @@ type
     procedure Draw; override;
   end;
 
+  { TBDToolShowCEL }
+
+  TBDToolShowCEL=class(TBDTool)
+    constructor Create; override;
+    procedure Initialize; override;
+    procedure Draw; override;
+    procedure Clear; override;
+  private
+    fStartTime:UInt64;
+  end;
+
 implementation
 
 uses
@@ -169,6 +184,11 @@ constructor TBDTool.Create;
 begin
   fState:=0;
   fPinnable:=false;
+end;
+
+procedure TBDTool.Initialize;
+begin
+  // Do nothing. Override if the Tool needs initializing before every use.
 end;
 
 procedure TBDTool.Draw;
@@ -224,6 +244,7 @@ begin
   AddObject('PUTCEL',TBDToolPutCel.Create);
   AddObject('PICKCOL',TBDToolPickColor.Create);
   AddObject('SELCOL',TBDToolSelectColor.Create);
+  AddObject('SHOWCEL',TBDToolShowCEL.Create);
 end;
 
 // --------------------------------------------------------- [ TBDToolBox ] ---
@@ -1254,6 +1275,42 @@ begin
     MainImage.Palette.ColorA[c]]));
   end else
     InfoBar.ShowText('OUTSIDE OF DRAW AREA!');
+end;
+
+// ----------------------------------------------------- [ TBDToolShowCEL ] ---
+
+constructor TBDToolShowCEL.Create;
+begin
+  inherited Create;
+  fName:='SHOWCEL';
+  fHint:=uppercase('Shows CEL for 2 secs.');
+end;
+
+procedure TBDToolShowCEL.Initialize;
+begin
+  CELHelperImage.Palette.CopyColorsFrom(CELImage.Palette);
+  CELHelperImage.Palette.Resize(CELHelperImage.Palette.Size+1);
+  CELHelperImage.Palette[CELHelperImage.Palette.Size]:=0;
+  CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,CELHelperImage.Palette.Size);
+  fStartTime:=GetTickCount64;
+end;
+
+procedure TBDToolShowCEL.Draw;
+begin
+  OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,VibroColors.GetColorIndex);
+  if Settings.ClearKeyColor then
+    CELHelperImage.PutImage(CELImage.Left,CELImage.Top,CELImage,Settings.SelectedColors[0])
+  else
+    CELHelperImage.PutImage(CELImage.Left,CELImage.Top,CELImage);
+  if GetTickCount64-fStartTime>1000 then begin
+    MessageQueue.AddMessage(MSG_GETCELFINISHED);
+  end;
+end;
+
+procedure TBDToolShowCEL.Clear;
+begin
+  OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,0);
+  CELHelperImage.BarWH(CELImage.Left,CELImage.Top,CELImage.Width,CELImage.Height,CELHelperImage.Palette.Size);
 end;
 
 end.
