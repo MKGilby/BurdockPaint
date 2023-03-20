@@ -42,7 +42,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, sdl2, BDPToolsUnit, BDPInksUnit;
+uses SysUtils, BDPSharedUnit, BDPToolsUnit, BDPInksUnit;
 
 { TBDControls }
 

@@ -207,6 +207,10 @@ begin
           end;
           MSG_MAGNIFYCEL:begin
             fMagnifyDialog.Hide;
+            if msg.DataInt in [2..8] then begin
+              CELImage.Magnify(msg.DataInt);
+              MessageQueue.AddMessage(MSG_SHOWCEL);
+            end;
           end;
         end;
       end;

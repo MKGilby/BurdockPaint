@@ -56,6 +56,8 @@ type
     procedure FlipV;
     // Flips the image horizontally
     procedure FlipH;
+    // Magnifies the image. Valid parameters are 2..8.
+    procedure Magnify(factor:integer);
 
     // -------------- Rendering operations --------------------
     // Renders the image onto a Texture.
@@ -665,6 +667,28 @@ begin
     end;
     inc(i);dec(j);
   end;
+end;
+
+procedure TBDImage.Magnify(factor:integer);
+var oldData,p:pointer;oldWidth,oldHeight,i,j:integer;
+begin
+  if factor in [2..8] then begin
+    oldData:=fData;
+    oldHeight:=fHeight;
+    oldWidth:=fWidth;
+    fWidth:=fWidth*factor;
+    fHeight:=fHeight*factor;
+    fData:=Getmem(fWidth*fHeight*2);
+    p:=oldData;
+
+    for j:=0 to oldHeight-1 do
+      for i:=0 to oldWidth-1 do begin
+        BarWH(i*factor,j*factor,factor,factor,byte(p^));
+        inc(p,2);
+      end;
+
+    freemem(oldData);
+  end else raise Exception.Create(Format('Invalid magnify factor! (%d)',[factor]));
 end;
 
 procedure TBDImage.RenderToTexture(Target:TStreamingTexture;
