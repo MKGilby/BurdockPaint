@@ -82,10 +82,6 @@ const
   MSG_GETCELFINISHED=5;
   // Load CEL file. Menu:CEL/Load
   MSG_LOADCEL=6;
-  // UNDO button pressed.
-  MSG_UNDO=7;
-  // REDO button pressed.
-  MSG_REDO=8;
   // Set Undo/Redo buttons' state depending on Undosystem state.
   MSG_SETUNDOREDOBUTTON=9;
   // Hide Controls, show PaletteEditor

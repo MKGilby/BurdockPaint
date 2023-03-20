@@ -26,6 +26,8 @@ type
     function ClearKeyColorButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
     function ToolButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
     function InkButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
+    function UndoButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
+    function RedoButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
     procedure SetMouseCoords(x,y:integer);
     function ProcessMessage(msg:TMessage):boolean;
     procedure ControlsShow(Sender:TObject);
@@ -82,8 +84,6 @@ begin
       atmT.Hint,
       msg,
       atmT);
-//    fToolButtons[i].ParentX:=fLeft;
-//    fToolButtons[i].ParentY:=fTop;
     fToolButtons[i].ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
     fToolButtons[i].Tag:=i;
     fToolButtons[i].OnClick:=Self.ToolButtonClick;
@@ -102,8 +102,6 @@ begin
       atmI.Hint,
       msg,
       atmI);
-//    fInkButtons[i].ParentX:=fLeft;
-//    fInkButtons[i].ParentY:=fTop;
     fInkButtons[i].ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
     fInkButtons[i].Tag:=i;
     fInkButtons[i].OnClick:=Self.InkButtonClick;
@@ -111,20 +109,16 @@ begin
   end;
   ActivateInkButton(Settings.ActiveInk);
 
-  msg.TypeID:=MSG_UNDO;
   fUndoButton:=TBDButton.Create(fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP,
     NORMALBUTTONWIDTH, 'UNDO', 'UNDO LAST OPERATION', msg);
-//  fUndoButton.ParentX:=fLeft;
-//  fUndoButton.ParentY:=fTop;
   fUndoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fUndoButton.OnClick:=UndoButtonClick;
   AddChild(fUndoButton);
 
-  msg.TypeID:=MSG_REDO;
   fRedoButton:=TBDButton.Create(fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP+30,
     NORMALBUTTONWIDTH, 'REDO', 'REDO LAST UNDOED OPERATION', msg);
-//  fRedoButton.ParentX:=fLeft;
-//  fRedoButton.ParentY:=fTop;
   fRedoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fRedoButton.OnClick:=RedoButtonClick;
   AddChild(fRedoButton);
 
   msg.TypeID:=MSG_NONE;
@@ -132,8 +126,6 @@ begin
     SMALLBUTTONWIDTH, 'F', 'FILL SHAPES', msg);
   atmB.Selected:=Settings.FillShapes;
   atmB.OnClick:=FilledButtonClick;
-//  atmB.ParentX:=fLeft;
-//  atmB.ParentY:=fTop;
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(atmB);
 
@@ -141,8 +133,6 @@ begin
     SMALLBUTTONWIDTH, 'K', 'CLEAR KEY COLOR', msg);
   atmB.Selected:=Settings.ClearKeyColor;
   atmB.OnClick:=ClearKeyColorButtonClick;
-//  atmB.ParentX:=fLeft;
-//  atmB.ParentY:=fTop;
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(atmB);
 
@@ -283,6 +273,18 @@ begin
   Result:=true;
 end;
 
+function TBDControls.UndoButtonClick(Sender:TObject; x,y,buttons:integer):boolean;
+begin
+  UndoSystem.Undo;
+  Result:=true;
+end;
+
+function TBDControls.RedoButtonClick(Sender:TObject; x,y,buttons:integer):boolean;
+begin
+  UndoSystem.Redo;
+  Result:=true;
+end;
+
 procedure TBDControls.SetMouseCoords(x,y:integer);
 begin
   if x and $7000<>$7000 then fMouseX:=x else fMouseX:=x-32768;
@@ -293,12 +295,6 @@ function TBDControls.ProcessMessage(msg: TMessage): boolean;
 begin
   Result:=false;
   case msg.TypeID of
-    MSG_UNDO:begin
-      UndoSystem.Undo;
-    end;
-    MSG_REDO:begin
-      UndoSystem.Redo;
-    end;
     MSG_SETUNDOREDOBUTTON:begin
       fUndoButton.Enabled:=UndoSystem.CanUndo;
       fRedoButton.Enabled:=UndoSystem.CanRedo;

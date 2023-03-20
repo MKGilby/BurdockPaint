@@ -10,15 +10,20 @@ Todo:
 - Configurable autosave interval.
 
 
-2023.03.18
-- Fix: You couldn't right click the key color to pick another color in color selector.
-- Fix: When the same color appears more than once in the color selector, right
-  clicking any of it caused all of them to appear as color picking target.
+2023.03.20
+- Undo/Redo buttons now uses OnClick event instead of the MessageQueue.
+
+2023.03.19
 - Fix: When right clicked on drawarea to cancel color picking, ToggleControls
   also occured.
 - Fix: When right clicked to cancel any tool, ToggleControls also occured.
 - ToggleControls now toggles MainMenu too, to let the user see the whole window.
 - Closing the window with red X now shuts down app correctly.
+
+2023.03.18
+- Fix: You couldn't right click the key color to pick another color in color selector.
+- Fix: When the same color appears more than once in the color selector, right
+  clicking any of it caused all of them to appear as color picking target.
 
 2023.03.17
 - Color sliders moved just above the palette block in PaletteEditor.
