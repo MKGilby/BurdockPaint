@@ -13,6 +13,9 @@ Todo:
 - Configurable autosave interval.
 
 
+2023.03.21
+- Some tools didn't clear the Infobar after them. Fixed.
+
 2023.03.20
 - Undo/Redo buttons now uses OnClick event instead of the MessageQueue.
 - SubMenuItems now can be disabled. (Appears in grey and remains grey when the

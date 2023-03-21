@@ -289,14 +289,16 @@ begin
             end;
           end;
           UndoSystem.AddImageRedoToLastUndo(fSX,fSY,x-fSX+1,y-fSY+1);
-          Result:=true;
+          InfoBar.ShowText('');
           fState:=0;
+          Result:=true;
         end;
     end;
   end
   else if Button=SDL_BUTTON_RIGHT then
     if fState>0 then begin
       fState:=0;
+      InfoBar.ShowText('');
       Result:=true;
     end else Result:=false
   else Result:=false;
@@ -396,6 +398,7 @@ begin
             ActiveInk.PostProcess;
           end;
           UndoSystem.AddImageRedoToLastUndo(fSX-r,fSY-r,r*2+1,r*2+1);
+          InfoBar.ShowText('');
           Result:=true;
           fState:=0;
         end;
@@ -404,6 +407,7 @@ begin
   else if Button=SDL_BUTTON_RIGHT then begin  // Right button
     if fState>0 then begin
       fState:=0;
+      InfoBar.ShowText('');
       Result:=true;
     end else Result:=false
   end else Result:=false;
@@ -889,6 +893,7 @@ begin
           UndoSystem.AddImageRedoToLastUndo(Left,Top,Width,Height);
           Result:=true;
           fState:=0;
+          InfoBar.ShowText('');
         end;
     end;
   end
@@ -896,6 +901,7 @@ begin
     if fState>0 then begin
       fState:=0;
       Result:=true;
+      InfoBar.ShowText('');
     end else Result:=false
   end else Result:=false;
 end;
@@ -1056,10 +1062,10 @@ begin
           fSY:=y;
           Result:=true;
           fState:=1;
-          Log.Trace(Format('GETCEL1 fSX=%d, fSY=%d',[fSX,fSY]));
+//          Log.Trace(Format('GETCEL1 fSX=%d, fSY=%d',[fSX,fSY]));
         end;
       1:begin
-          Log.Trace(Format('GETCEL2 fSX=%d, fSY=%d, x=%d, y=%d',[fSX,fSY,x,y]));
+//          Log.Trace(Format('GETCEL2 fSX=%d, fSY=%d, x=%d, y=%d',[fSX,fSY,x,y]));
           if x<fSX then begin i:=x;x:=fSX;fSX:=i;end;
           if y<fSY then begin i:=y;y:=fSY;fSY:=i;end;
           if Assigned(CELImage) then FreeAndNil(CELImage);
