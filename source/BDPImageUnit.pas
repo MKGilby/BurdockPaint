@@ -58,6 +58,8 @@ type
     procedure FlipH;
     // Magnifies the image. Valid parameters are 2..8.
     procedure Magnify(factor:integer);
+    // Rotates the image by quads*90 degrees clockwise.
+    procedure Rotate(quads:integer);
 
     // -------------- Rendering operations --------------------
     // Renders the image onto a Texture.
@@ -689,6 +691,57 @@ begin
 
     freemem(oldData);
   end else raise Exception.Create(Format('Invalid magnify factor! (%d)',[factor]));
+end;
+
+procedure TBDImage.Rotate(quads:integer);
+var x,y:integer;s,t,p:pointer;
+begin
+  case quads mod 4 of
+    0:;   // No rotate
+    1:begin // Rotate 90°
+        p:=GetMem(fWidth*fHeight*2);
+        s:=fData+(fHeight-1)*fWidth*2;
+        t:=p;
+
+        for x:=0 to fWidth-1 do begin
+          for y:=0 to fHeight-1 do begin
+            word(t^):=word(s^);
+//            move(s^,t^,2);
+            t+=2;
+            s-=fWidth*2;
+          end;
+          s:=s+(fHeight*fWidth*2)+2;
+        end;
+        x:=fWidth;fWidth:=fHeight;fHeight:=x;
+      end;
+    2:begin  // Rotate 180°
+        s:=fData+(fWidth*fHeight-1)*2;
+        t:=p;
+        for x:=0 to fWidth*fHeight-1 do begin
+          word(t^):=word(s^);
+//          move(s^,t^,2);
+          s-=2;
+          t+=2;
+        end;
+      end;
+    3:begin                   // Rotate 270° (or 90° anti-clockwise)
+        s:=fData+(fWidth-1)*2;
+        t:=p;
+
+        for x:=0 to fWidth-1 do begin
+          for y:=0 to fHeight-1 do begin
+            word(t^):=word(s^);
+//            move(s^,t^,2);
+            t+=2;
+            s+=fWidth*2;
+          end;
+          s:=s-(fHeight*fWidth*2)-2;
+        end;
+        x:=fWidth;fWidth:=fHeight;fHeight:=x;
+      end;
+  end;
+  freemem(fData);
+  fData:=p;
 end;
 
 procedure TBDImage.RenderToTexture(Target:TStreamingTexture;

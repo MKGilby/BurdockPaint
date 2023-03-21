@@ -6,7 +6,7 @@ interface
 
 uses mk_sdl2, BDPControlsUnit, BDPDrawAreaUnit, BDPConfirmQuitUnit,
   BDPSplashScreenUnit, BDPPaletteEditorUnit, BDPMenuUnit, Dialogs,
-  BDPMagnifyDialogUnit;
+  BDPMagnifyDialogUnit, BDPRotateDialogUnit;
 
 type
 
@@ -26,6 +26,7 @@ type
     fMainMenu:TMainMenu;
     fOpenDialog:TOpenDialog;
     fMagnifyDialog:TMagnifyCELDialog;
+    fRotateDialog:TRotateCELDialog;
   end;
 
 implementation
@@ -93,12 +94,16 @@ begin
   fMagnifyDialog:=TMagnifyCELDialog.Create;
   fMagnifyDialog.Visible:=false;
   MouseObjects.Add(fMagnifyDialog);
+  fRotateDialog:=TRotateCELDialog.Create;
+  fRotateDialog.Visible:=false;
+  MouseObjects.Add(fRotateDialog);
   MouseObjects.Sort;
   MouseObjects.List;
 end;
 
 destructor TMain.Destroy;
 begin
+  if Assigned(fRotateDialog) then FreeAndNil(fRotateDialog);
   if Assigned(fMagnifyDialog) then FreeAndNil(fMagnifyDialog);
   if Assigned(fOpenDialog) then FreeAndNil(fOpenDialog);
   if Assigned(fMainMenu) then FreeAndNil(fMainMenu);
@@ -209,6 +214,16 @@ begin
             fMagnifyDialog.Hide;
             if msg.DataInt in [2..8] then begin
               CELImage.Magnify(msg.DataInt);
+              MessageQueue.AddMessage(MSG_SHOWCEL);
+            end;
+          end;
+          MSG_OPENROTATECELDIALOG:begin
+            fRotateDialog.Show;
+          end;
+          MSG_ROTATECEL:begin
+            fRotateDialog.Hide;
+            if msg.DataInt in [1..3] then begin
+              CELImage.Rotate(msg.DataInt);
               MessageQueue.AddMessage(MSG_SHOWCEL);
             end;
           end;

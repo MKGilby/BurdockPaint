@@ -31,8 +31,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, BDPMessageUnit, BDPKeyMappingUnit,
-  SDL2;
+uses SysUtils, BDPSharedUnit, BDPMessageUnit, BDPKeyMappingUnit, SDL2;
 
 const
   MAGNIFYDIALOGWIDTH=480;
@@ -72,7 +71,7 @@ begin
     AddChild(fMagnifyButtons[i]);
   end;
   atmB:=TBDButton.Create(
-    fWindowLeft+MAGNIFYDIALOGWIDTH div 4-NORMALBUTTONWIDTH div 2,
+    fWindowLeft+MAGNIFYDIALOGWIDTH div 3-NORMALBUTTONWIDTH div 2,
     fWindowTop+84,
     NORMALBUTTONWIDTH,
     'OK','MAGNIFY CEL',msg);
@@ -82,7 +81,7 @@ begin
   msg.TypeID:=MSG_MAGNIFYCEL;
   msg.DataInt:=0;
   atmB:=TBDButton.Create(
-    fWindowLeft+(MAGNIFYDIALOGWIDTH div 4*3)-NORMALBUTTONWIDTH div 2,
+    fWindowLeft+(MAGNIFYDIALOGWIDTH div 3*2)-NORMALBUTTONWIDTH div 2,
     fWindowTop+84,
     NORMALBUTTONWIDTH,
     'CANCEL','DON''T MAGNIFY CEL',msg);

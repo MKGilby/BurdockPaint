@@ -40,6 +40,8 @@
 //     * Expanded MouseObjects.List with coordinates and Visible/Enabled properties.
 //   V1.10 - 2023.03.15 - Gilby
 //     * Changes to make compatible with the new SDL2.
+//   V1.10a - 2023.03.21 - Gilby
+//     * Following field name changes in SDL2.
 }
 
 {$ifdef fpc}
@@ -142,7 +144,7 @@ uses SysUtils, Logger, MK_SDL2;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.10';
+  Version='1.10a';
 
 constructor TMouseObjects.Create;
 begin
@@ -211,8 +213,8 @@ begin
         my:=event.motion.y
       end else
       if (Event^.type_=SDL_MOUSEWHEEL) then begin
-        mx:=event.wheel.mouse_x;
-        my:=event.wheel.mouse_y;
+        mx:=event.wheel.mouseX;
+        my:=event.wheel.mouseY;
       end;
 
       // Mouse events are passed only for the visible control under the mouse.

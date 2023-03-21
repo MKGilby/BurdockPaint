@@ -97,7 +97,6 @@ begin
 end;
 
 constructor TButtonLogic.Create(iINI:TINIFile; iSection:string);
-var s:string;
 begin
   inherited Create;
   Left:=iINI.ReadInteger(iSection,'Left',0);

@@ -211,7 +211,7 @@ begin
   atm.AddItem('GET',TMessage.Init(MSG_GETCEL,0));
   atm.AddItem('PUT',msg,false);
   atm.AddItem('RELEASE',TMessage.Init(MSG_RELEASECEL,0));
-  atm.AddItem('ROTATE',msg,false);
+  atm.AddItem('ROTATE',TMessage.Init(MSG_OPENROTATECELDIALOG,0));
   atm.AddItem('FLIP V',TMessage.Init(MSG_FLIPCEL,0));
   atm.AddItem('FLIP H',TMessage.Init(MSG_FLIPCEL,1));
   atm.AddItem('MAGNIFY',TMessage.Init(MSG_OPENMAGNIFYCELDIALOG,0));
