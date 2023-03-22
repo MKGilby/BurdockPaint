@@ -4,29 +4,19 @@ unit BDPRotateDialogUnit;
 
 interface
 
-uses vcc2_Container, mk_sdl2, BDPButtonUnit;
+uses BDPModalDialogUnit, BDPButtonUnit;
 
 type
 
   { TRotateCELDialog }
 
-  TRotateCELDialog=class(TContainer)
+  TRotateCELDialog=class(TModalDialog)
     constructor Create;
-    destructor Destroy; override;
-    procedure Draw; override;
-    function MouseMove(Sender:TObject;x,y:integer):boolean;
-    function Click(Sender:TObject;x,y,buttons: integer):boolean;
-    function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
     function KeyDown(Sender:TObject;key:integer):boolean;
-    function KeyUp(Sender:TObject;key:integer):boolean;
     function RotateButtonClick(Sender:TObject;x,y,buttons:integer):boolean;
     function OKButtonClick(Sender:TObject;x,y,buttons:integer):boolean;
   private
-    fTexture:TStreamingTexture;
     fRotateButtons:array[0..2] of TBDButton;
-    fWindowLeft,fWindowTop:integer;
   end;
 
 
@@ -44,12 +34,8 @@ constructor TRotateCELDialog.Create;
 const ROTATES:array[0..2] of integer=(90,180,270);
 var atmb:TBDButton;msg:TMessage;i:integer;
 begin
-  inherited Create;
-  SetBoundsWH(0,0,WINDOWWIDTH,WINDOWHEIGHT);
+  inherited Create(ROTATEDIALOGWIDTH,ROTATEDIALOGHEIGHT);
   fName:='Rotate CEL';
-  fWindowLeft:=(WINDOWWIDTH-ROTATEDIALOGWIDTH) div 2;
-  fWindowTop:=(WINDOWHEIGHT-ROTATEDIALOGHEIGHT) div 2;
-  fTexture:=TStreamingTexture.Create(ROTATEDIALOGWIDTH,ROTATEDIALOGHEIGHT);
   fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,OverlayImage.Palette[2]);
   fTexture.ARGBImage.Bar(0,0,3,fTexture.ARGBImage.Height,OverlayImage.Palette[2]);
   fTexture.ARGBImage.Bar(fTexture.ARGBImage.Width-3,0,3,fTexture.ARGBImage.Height,OverlayImage.Palette[2]);
@@ -64,7 +50,7 @@ begin
       fWindowTop+48,
       NORMALBUTTONWIDTH,
       inttostr(ROTATES[i]),'',msg);
-    fRotateButtons[i].ZIndex:=MaxLongint;
+    fRotateButtons[i].ZIndex:=MODALDIALOG_ZINDEX+1;
     fRotateButtons[i].Tag:=i;
     fRotateButtons[i].OnClick:=RotateButtonClick;
     if i=0 then fRotateButtons[i].Selected:=true;
@@ -75,7 +61,7 @@ begin
     fWindowTop+84,
     NORMALBUTTONWIDTH,
     'OK','ROTATE CEL',msg);
-  atmb.ZIndex:=MaxLongint;
+  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   atmb.OnClick:=OKButtonClick;
   AddChild(atmB);
   msg.TypeID:=MSG_ROTATECEL;
@@ -85,46 +71,9 @@ begin
     fWindowTop+84,
     NORMALBUTTONWIDTH,
     'CANCEL','DON''T ROTATE CEL',msg);
-  atmb.ZIndex:=MaxLongint;
+  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
   OnKeyDown:=KeyDown;
-end;
-
-destructor TRotateCELDialog.Destroy;
-begin
-  if Assigned(fTexture) then FreeAndNil(fTexture);
-  inherited Destroy;
-end;
-
-procedure TRotateCELDialog.Draw;
-begin
-  if fVisible then
-    PutTexture(fWindowLeft,fWindowTop,fTexture);
-end;
-
-function TRotateCELDialog.MouseMove(Sender:TObject; x,y:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TRotateCELDialog.Click(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TRotateCELDialog.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TRotateCELDialog.MouseUp(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TRotateCELDialog.MouseWheel(Sender:TObject; x,y,wheelx,wheely:integer):boolean;
-begin
-  Result:=true;
 end;
 
 function TRotateCELDialog.KeyDown(Sender:TObject; key:integer):boolean;
@@ -155,11 +104,6 @@ begin
     else if fRotateButtons[2].Selected then
       MessageQueue.AddMessage(MSG_ROTATECEL,3);
   end;
-  Result:=true;
-end;
-
-function TRotateCELDialog.KeyUp(Sender:TObject; key:integer):boolean;
-begin
   Result:=true;
 end;
 

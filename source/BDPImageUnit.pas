@@ -715,6 +715,7 @@ begin
         x:=fWidth;fWidth:=fHeight;fHeight:=x;
       end;
     2:begin  // Rotate 180°
+        p:=GetMem(fWidth*fHeight*2);
         s:=fData+(fWidth*fHeight-1)*2;
         t:=p;
         for x:=0 to fWidth*fHeight-1 do begin
@@ -725,6 +726,7 @@ begin
         end;
       end;
     3:begin                   // Rotate 270° (or 90° anti-clockwise)
+        p:=GetMem(fWidth*fHeight*2);
         s:=fData+(fWidth-1)*2;
         t:=p;
 

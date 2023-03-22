@@ -4,29 +4,19 @@ unit BDPMagnifyDialogUnit;
 
 interface
 
-uses vcc2_Container, mk_sdl2, BDPButtonUnit;
+uses BDPModalDialogUnit, BDPButtonUnit;
 
 type
 
   { TMagnifyCELDialog }
 
-  TMagnifyCELDialog=class(TContainer)
+  TMagnifyCELDialog=class(TModalDialog)
     constructor Create;
-    destructor Destroy; override;
-    procedure Draw; override;
-    function MouseMove(Sender:TObject;x,y:integer):boolean;
-    function Click(Sender:TObject;x,y,buttons: integer):boolean;
-    function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
     function KeyDown(Sender:TObject;key:integer):boolean;
-    function KeyUp(Sender:TObject;key:integer):boolean;
     function MagnifyButtonClick(Sender:TObject;x,y,buttons:integer):boolean;
     function OKButtonClick(Sender:TObject;x,y,buttons:integer):boolean;
   private
-    fTexture:TStreamingTexture;
     fMagnifyButtons:array[0..2] of TBDButton;
-    fWindowLeft,fWindowTop:integer;
   end;
 
 implementation
@@ -44,12 +34,8 @@ constructor TMagnifyCELDialog.Create;
 const MAGNIFIES:array[0..2] of integer=(2,3,5);
 var atmb:TBDButton;msg:TMessage;i:integer;
 begin
-  inherited Create;
-  SetBoundsWH(0,0,WINDOWWIDTH,WINDOWHEIGHT);
+  inherited Create(MAGNIFYDIALOGWIDTH,MAGNIFYDIALOGHEIGHT);
   fName:='Magnify CEL';
-  fWindowLeft:=(WINDOWWIDTH-MAGNIFYDIALOGWIDTH) div 2;
-  fWindowTop:=(WINDOWHEIGHT-MAGNIFYDIALOGHEIGHT) div 2;
-  fTexture:=TStreamingTexture.Create(MAGNIFYDIALOGWIDTH,MAGNIFYDIALOGHEIGHT);
   fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,OverlayImage.Palette[2]);
   fTexture.ARGBImage.Bar(0,0,3,fTexture.ARGBImage.Height,OverlayImage.Palette[2]);
   fTexture.ARGBImage.Bar(fTexture.ARGBImage.Width-3,0,3,fTexture.ARGBImage.Height,OverlayImage.Palette[2]);
@@ -64,7 +50,7 @@ begin
       fWindowTop+48,
       XBUTTONWIDTH,
       inttostr(MAGNIFIES[i])+'X','',msg);
-    fMagnifyButtons[i].ZIndex:=MaxLongint;
+    fMagnifyButtons[i].ZIndex:=MODALDIALOG_ZINDEX+1;
     fMagnifyButtons[i].Tag:=i;
     fMagnifyButtons[i].OnClick:=MagnifyButtonClick;
     if i=0 then fMagnifyButtons[i].Selected:=true;
@@ -75,7 +61,7 @@ begin
     fWindowTop+84,
     NORMALBUTTONWIDTH,
     'OK','MAGNIFY CEL',msg);
-  atmb.ZIndex:=MaxLongint;
+  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   atmb.OnClick:=OKButtonClick;
   AddChild(atmB);
   msg.TypeID:=MSG_MAGNIFYCEL;
@@ -85,46 +71,9 @@ begin
     fWindowTop+84,
     NORMALBUTTONWIDTH,
     'CANCEL','DON''T MAGNIFY CEL',msg);
-  atmb.ZIndex:=MaxLongint;
+  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
   OnKeyDown:=KeyDown;
-end;
-
-destructor TMagnifyCELDialog.Destroy;
-begin
-  if Assigned(fTexture) then FreeAndNil(fTexture);
-  inherited Destroy;
-end;
-
-procedure TMagnifyCELDialog.Draw;
-begin
-  if fVisible then
-    PutTexture(fWindowLeft,fWindowTop,fTexture);
-end;
-
-function TMagnifyCELDialog.MouseMove(Sender:TObject; x,y:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TMagnifyCELDialog.Click(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TMagnifyCELDialog.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TMagnifyCELDialog.MouseUp(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TMagnifyCELDialog.MouseWheel(Sender:TObject; x,y,wheelx,wheely:integer):boolean;
-begin
-  Result:=true;
 end;
 
 function TMagnifyCELDialog.KeyDown(Sender:TObject; key:integer):boolean;
@@ -155,11 +104,6 @@ begin
     else if fMagnifyButtons[2].Selected then
       MessageQueue.AddMessage(MSG_MAGNIFYCEL,5);
   end;
-  Result:=true;
-end;
-
-function TMagnifyCELDialog.KeyUp(Sender:TObject; key:integer):boolean;
-begin
   Result:=true;
 end;
 
