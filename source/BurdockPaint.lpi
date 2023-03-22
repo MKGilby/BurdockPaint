@@ -164,7 +164,7 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPConfirmQuitUnit.pas"/>
+        <Filename Value="BDPModalDialogsUnit.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>

@@ -16,6 +16,7 @@ Todo:
 2023.03.22
 - Modal dialogs are reworked, less code to create a new one.
 - Fix in rotate, 180 and 270 crashed.
+- Modal dialog units are merged into one file.
 
 2023.03.21
 - Some tools didn't clear the Infobar after them. Fixed.

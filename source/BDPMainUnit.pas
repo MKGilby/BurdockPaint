@@ -4,9 +4,8 @@ unit BDPMainUnit;
 
 interface
 
-uses mk_sdl2, BDPControlsUnit, BDPDrawAreaUnit, BDPConfirmQuitUnit,
-  BDPSplashScreenUnit, BDPPaletteEditorUnit, BDPMenuUnit, Dialogs,
-  BDPMagnifyDialogUnit, BDPRotateDialogUnit;
+uses mk_sdl2, BDPControlsUnit, BDPDrawAreaUnit, BDPModalDialogsUnit,
+  BDPSplashScreenUnit, BDPPaletteEditorUnit, BDPMenuUnit, Dialogs;
 
 type
 
