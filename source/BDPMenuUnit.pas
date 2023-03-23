@@ -26,11 +26,14 @@ type
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
     procedure MouseLeave(Sender:TObject);
     procedure AddItem(item:string;msg:TMessage;enabled:boolean=true);
+    procedure DisableItem(item:string);
+    procedure EnableItem(item:string);
   private
     fItems:array of TSubMenuItem;
     fSelected:integer;
     procedure fSetName(value:string);
     procedure Resize;
+    procedure SetItemEnabled(item:string;value:boolean);
   public
     property Name:string read fName write fSetName;
   end;
@@ -43,6 +46,8 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure Draw; override;
+    procedure EnableCELSubMenusWithActiveCEL;
+    procedure DisableCELSubMenusWithActiveCEL;
     function MouseMove(Sender:TObject;x,y:integer):boolean;
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
     procedure MouseLeave(Sender:TObject);
@@ -143,6 +148,16 @@ begin
   end;
 end;
 
+procedure TSubMenu.DisableItem(item:string);
+begin
+  SetItemEnabled(item,false);
+end;
+
+procedure TSubMenu.EnableItem(item:string);
+begin
+  SetItemEnabled(item,true);
+end;
+
 procedure TSubMenu.fSetName(value:string);
 begin
   fName:=value;
@@ -162,6 +177,16 @@ begin
     fHeight:=h;
     RecreateTexture;
   end;
+end;
+
+procedure TSubMenu.SetItemEnabled(item:string; value:boolean);
+var i:integer;
+begin
+  for i:=0 to length(fItems)-1 do
+    if fItems[i]._name=item then begin
+      fItems[i]._enabled:=value;
+      break;
+    end;
 end;
 
 { TMainMenu }
@@ -257,6 +282,38 @@ begin
     end;
     fTexture.Update;
     PutTexture(fLeft,fTop,fTexture);
+  end;
+end;
+
+procedure TMainMenu.EnableCELSubMenusWithActiveCEL;
+var submenu:TSubMenu;
+begin
+  submenu:=fSubMenus[fItems.IndexOf('CEL')];
+  if Assigned(submenu) then begin
+//    submenu.EnableItem('PUT');
+    submenu.EnableItem('RELEASE');
+    submenu.EnableItem('ROTATE');
+    submenu.EnableItem('FLIP V');
+    submenu.EnableItem('FLIP H');
+    submenu.EnableItem('MAGNIFY');
+//    submenu.EnableItem('SAVE');
+//    submenu.EnableItem('EXPORT');
+  end;
+end;
+
+procedure TMainMenu.DisableCELSubMenusWithActiveCEL;
+var submenu:TSubMenu;
+begin
+  submenu:=fSubMenus[fItems.IndexOf('CEL')];
+  if Assigned(submenu) then begin
+    submenu.DisableItem('PUT');
+    submenu.DisableItem('RELEASE');
+    submenu.DisableItem('ROTATE');
+    submenu.DisableItem('FLIP V');
+    submenu.DisableItem('FLIP H');
+    submenu.DisableItem('MAGNIFY');
+    submenu.DisableItem('SAVE');
+    submenu.DisableItem('EXPORT');
   end;
 end;
 

@@ -79,7 +79,7 @@ const
   // ConfirmQUIT windows finished, IntValue is 1 if really quit, 0 if not.
   MSG_QUIT=4;
   // GETCEL or PUTCEL finished, reactivate selected tool.
-  MSG_GETCELFINISHED=5;
+  MSG_RESTORECONTROLS=5;
   // Load CEL file. Menu:CEL/Load
   MSG_LOADCEL=6;
   // Hide PaletteEditor, show Controls and MainMenu
@@ -109,6 +109,8 @@ const
   MSG_OPENROTATECELDIALOG=19;
   // Response from Rotate CEL dialog. Rotate data*90 degrees clockwise.
   MSG_ROTATECEL=20;
+  // GetCEL tool finished *successfully*. We should enable menus associated with CEL.
+  MSG_GETCELFINISHED=21;
 
 var
   MM:TGFXManager;  // MediaManager to hold fonts and internal images

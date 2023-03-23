@@ -15,6 +15,8 @@ Todo:
 
 2023.03.23
 - Code cleanup in MainUnit.
+- When you release CEL, all menus requiring active CEL are disabled.
+- When you get or load a CEL, all menus requiring active CEL are enabled.
 
 2023.03.22
 - Modal dialogs are reworked, less code to create a new one.

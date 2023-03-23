@@ -1082,7 +1082,7 @@ begin
   end
   else if Button=SDL_BUTTON_RIGHT then begin
     fState:=0;
-    MessageQueue.AddMessage(MSG_GETCELFINISHED);
+    MessageQueue.AddMessage(MSG_RESTORECONTROLS);
     Result:=true;
   end
   else Result:=false;
@@ -1161,13 +1161,13 @@ begin
           else
             MainImage.PutImage(CELImage.Left,CELImage.Top,CELImage);
           UndoSystem.AddImageRedoToLastUndo(CelImage.Left,Celimage.Top,CelImage.Width,CELImage.Height);
-          MessageQueue.AddMessage(MSG_GETCELFINISHED);
+          MessageQueue.AddMessage(MSG_RESTORECONTROLS);
         end;
     end;
   end else
   if button=SDL_BUTTON_RIGHT then begin
     fState:=-1;
-    MessageQueue.AddMessage(MSG_GETCELFINISHED);
+    MessageQueue.AddMessage(MSG_RESTORECONTROLS);
   end;
   Result:=true;
 end;
@@ -1310,7 +1310,7 @@ begin
   else
     CELHelperImage.PutImage(CELImage.Left,CELImage.Top,CELImage);
   if GetTickCount64-fStartTime>1000 then begin
-    MessageQueue.AddMessage(MSG_GETCELFINISHED);
+    MessageQueue.AddMessage(MSG_RESTORECONTROLS);
   end;
 end;
 

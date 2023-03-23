@@ -67,6 +67,7 @@ begin
   SetFPS(60);
 
   LoadAssets;
+
   fDrawArea:=TBDDrawArea.Create;
   fControls:=TBDControls.Create;
   fPaletteEditor:=TBDPaletteEditor.Create;
@@ -76,6 +77,7 @@ begin
     MouseObjects.Add(fSplashScreen);
   end;
   fMainMenu:=TMainMenu.Create;
+  if not Assigned(CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   fMagnifyDialog:=TMagnifyCELDialog.Create;
   fRotateDialog:=TRotateCELDialog.Create;
   MouseObjects.Sort;
@@ -160,6 +162,7 @@ begin
               CELImage.ImportCEL(fOpenDialog.FileName);
               CELImage.Left:=0;
               CELImage.Top:=0;
+              fMainMenu.EnableCELSubMenusWithActiveCEL;
               MessageQueue.AddMessage(MSG_SHOWCEL);
             end;
           end;
@@ -170,6 +173,7 @@ begin
           end;
           MSG_RELEASECEL:begin
             if Assigned(CELImage) then FreeAndNil(CELImage);
+            fMainMenu.DisableCELSubMenusWithActiveCEL;
           end;
           MSG_GETCEL:begin
             fControls.Hide;
@@ -179,9 +183,13 @@ begin
             SDL_GetMouseState(@mx,@my);
             ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
           end;
-          MSG_GETCELFINISHED:begin
+          MSG_RESTORECONTROLS:begin
             fControls.Show;
             fMainMenu.Show;
+          end;
+          MSG_GETCELFINISHED:begin
+            fMainMenu.EnableCELSubMenusWithActiveCEL;
+            MessageQueue.AddMessage(MSG_RESTORECONTROLS);
           end;
           MSG_FLIPCEL:begin
             if msg.DataInt=0 then CELImage.FlipV
