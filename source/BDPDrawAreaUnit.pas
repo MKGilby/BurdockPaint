@@ -74,6 +74,7 @@ begin
   fTexture:=TStreamingTexture.Create(WINDOWWIDTH,WINDOWHEIGHT);
   SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
   ZIndex:=DRAWAREA_ZINDEX;
+  MouseObjects.Add(Self);
 end;
 
 destructor TBDDrawArea.Destroy;

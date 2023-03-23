@@ -47,6 +47,7 @@ begin
   OnKeyDown:=KeyDown;
   OnKeyUp:=KeyUp;
   ZIndex:=MODALDIALOG_ZINDEX;
+  fVisible:=false;
 end;
 
 destructor TModalDialog.Destroy;

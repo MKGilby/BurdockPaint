@@ -38,7 +38,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, SDL2;
+uses SysUtils, BDPSharedUnit, SDL2, MKMouse2;
 
 { TBDPaletteEditor }
 
@@ -60,6 +60,7 @@ begin
   OnShow:=PaletteEditorShow;
   OnHide:=PaletteEditorHide;
   fName:='PaletteEditor';
+  fVisible:=false;
   ZIndex:=LEVEL1CONTROLS_ZINDEX;
 
   fSliderR:=TBDHorizontalSlider.Create(fLeft+COLORSLIDERSLEFT,fTop+COLORSLIDERSTOP);
@@ -109,6 +110,7 @@ begin
     OnChange:=OnSliderBankChange;
   end;
   AddChild(fSliderBank);
+  MouseObjects.Add(Self);
 end;
 
 destructor TBDPaletteEditor.Destroy;

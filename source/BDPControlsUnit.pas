@@ -42,7 +42,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, BDPToolsUnit, BDPInksUnit;
+uses SysUtils, BDPSharedUnit, BDPToolsUnit, BDPInksUnit, MKMouse2;
 
 { TBDControls }
 
@@ -140,6 +140,7 @@ begin
   fColorSelector.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fColorSelector.Name:='ColorSelector';
   AddChild(fColorSelector);
+  MouseObjects.Add(Self);
 end;
 
 destructor TBDControls.Destroy;

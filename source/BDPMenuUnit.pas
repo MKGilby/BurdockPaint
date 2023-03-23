@@ -181,8 +181,9 @@ begin
   fSubMenus:=TSubMenuList.Create;
   fSubMenus.FreeObjects:=true;
   ZIndex:=LEVEL1CONTROLS_ZINDEX;
-  x:=0;
+  fVisible:=true;
 
+  x:=0;
   atm:=TSubMenu.Create(x);
   atm.Name:=fItems[0];
   msg.TypeID:=MSG_NONE;
@@ -228,6 +229,7 @@ begin
   OnMouseDown:=MouseDown;
   OnMouseMove:=MouseMove;
   OnMouseLeave:=MouseLeave;
+  MouseObjects.Add(Self);
 end;
 
 destructor TMainMenu.Destroy;

@@ -68,43 +68,32 @@ begin
 
   LoadAssets;
   fDrawArea:=TBDDrawArea.Create;
-  MouseObjects.Add(fDrawArea);
   fControls:=TBDControls.Create;
-  MouseObjects.Add(fControls);
   fPaletteEditor:=TBDPaletteEditor.Create;
-  fPaletteEditor.Visible:=false;
-  MouseObjects.Add(fPaletteEditor);
   fQuitWindow:=TConfirmQuitDialog.Create;
-  fQuitWindow.Visible:=false;
-  MouseObjects.Add(fQuitWindow);
   if Settings.ShowSplash then begin
     fSplashScreen:=TBDSplashScreen.Create;
     MouseObjects.Add(fSplashScreen);
   end;
   fMainMenu:=TMainMenu.Create;
-  fMainMenu.Visible:=true;
-  MouseObjects.Add(fMainMenu);
+  fMagnifyDialog:=TMagnifyCELDialog.Create;
+  fRotateDialog:=TRotateCELDialog.Create;
+  MouseObjects.Sort;
+  MouseObjects.List;
+
   fOpenDialog:=TOpenDialog.Create(nil);
   fOpenDialog.Filter:='CEL files|*.bdc|Legacy CEL files|*.cel';
   fOpenDialog.FilterIndex:=0;
   fOpenDialog.Name:='OpenDialog';
   fOpenDialog.Title:='Open file';
   fOpenDialog.InitialDir:=ExtractFilePath(ParamStr(0));
-  fMagnifyDialog:=TMagnifyCELDialog.Create;
-  fMagnifyDialog.Visible:=false;
-  MouseObjects.Add(fMagnifyDialog);
-  fRotateDialog:=TRotateCELDialog.Create;
-  fRotateDialog.Visible:=false;
-  MouseObjects.Add(fRotateDialog);
-  MouseObjects.Sort;
-  MouseObjects.List;
 end;
 
 destructor TMain.Destroy;
 begin
+  if Assigned(fOpenDialog) then FreeAndNil(fOpenDialog);
   if Assigned(fRotateDialog) then FreeAndNil(fRotateDialog);
   if Assigned(fMagnifyDialog) then FreeAndNil(fMagnifyDialog);
-  if Assigned(fOpenDialog) then FreeAndNil(fOpenDialog);
   if Assigned(fMainMenu) then FreeAndNil(fMainMenu);
   if Assigned(fSplashScreen) then FreeAndNil(fSplashScreen);
   if Assigned(fQuitWindow) then FreeAndNil(fQuitWindow);

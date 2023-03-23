@@ -41,7 +41,7 @@ type
 implementation
 
 uses
-  SysUtils, BDPSharedUnit, BDPMessageUnit, BDPKeyMappingUnit, sdl2;
+  SysUtils, BDPSharedUnit, BDPMessageUnit, BDPKeyMappingUnit, sdl2, MKMouse2;
 
 const
   QUITDIALOGWIDTH=480;
@@ -84,6 +84,7 @@ begin
   atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
   OnKeyDown:=KeyDown;
+  MouseObjects.Add(Self);
 end;
 
 function TConfirmQuitDialog.KeyDown(Sender:TObject; key:integer):boolean;
@@ -141,6 +142,7 @@ begin
   atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
   OnKeyDown:=KeyDown;
+  MouseObjects.Add(Self);
 end;
 
 function TMagnifyCELDialog.KeyDown(Sender:TObject; key:integer):boolean;
@@ -239,6 +241,7 @@ begin
   atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
   OnKeyDown:=KeyDown;
+  MouseObjects.Add(Self);
 end;
 
 function TRotateCELDialog.KeyDown(Sender:TObject; key:integer):boolean;

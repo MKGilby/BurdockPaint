@@ -196,14 +196,6 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPMagnifyDialogUnit.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="BDPRotateDialogUnit.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
         <Filename Value="BDPModalDialogUnit.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>

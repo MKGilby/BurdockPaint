@@ -13,6 +13,9 @@ Todo:
 - Configurable autosave interval.
 
 
+2023.03.23
+- Code cleanup in MainUnit.
+
 2023.03.22
 - Modal dialogs are reworked, less code to create a new one.
 - Fix in rotate, 180 and 270 crashed.
