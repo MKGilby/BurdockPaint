@@ -111,6 +111,8 @@ const
   MSG_ROTATECEL=20;
   // GetCEL tool finished *successfully*. We should enable menus associated with CEL.
   MSG_GETCELFINISHED=21;
+  // Put CEL image. Menu:CEL/Put
+  MSG_PUTCEL=22;
 
 var
   MM:TGFXManager;  // MediaManager to hold fonts and internal images

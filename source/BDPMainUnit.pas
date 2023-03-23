@@ -26,6 +26,8 @@ type
     fOpenDialog:TOpenDialog;
     fMagnifyDialog:TMagnifyCELDialog;
     fRotateDialog:TRotateCELDialog;
+    procedure HideMainControls;
+    procedure ShowMainControls;
   end;
 
 implementation
@@ -129,13 +131,10 @@ begin
       if not mres then begin
         case msg.TypeID of
           MSG_TOGGLECONTROLS:begin
-            if fControls.Visible then begin
-              fControls.Hide;
-              fMainMenu.Hide;
-            end else begin
-              fControls.Show;
-              fMainMenu.Show;
-            end;
+            if fControls.Visible then
+              HideMainControls
+            else
+              ShowMainControls;
           end;
           MSG_ACTIVATEPALETTEEDITOR:begin
             fControls.Hide;
@@ -176,16 +175,14 @@ begin
             fMainMenu.DisableCELSubMenusWithActiveCEL;
           end;
           MSG_GETCEL:begin
-            fControls.Hide;
-            fMainMenu.Hide;
+            HideMainControls;
             SDL_ShowCursor(SDL_DISABLE);
             ActiveTool:=Tools.ItemByName['GETCEL'];
             SDL_GetMouseState(@mx,@my);
             ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
           end;
           MSG_RESTORECONTROLS:begin
-            fControls.Show;
-            fMainMenu.Show;
+            ShowMainControls;
           end;
           MSG_GETCELFINISHED:begin
             fMainMenu.EnableCELSubMenusWithActiveCEL;
@@ -198,8 +195,7 @@ begin
             MessageQueue.AddMessage(MSG_SHOWCEL);
           end;
           MSG_SHOWCEL:begin
-            fControls.Hide;
-            fMainMenu.Hide;
+            HideMainControls;
             ActiveTool:=Tools.ItemByName['SHOWCEL'];
             ActiveTool.Initialize;
           end;
@@ -223,6 +219,13 @@ begin
               MessageQueue.AddMessage(MSG_SHOWCEL);
             end;
           end;
+          MSG_PUTCEL:begin
+            HideMainControls;
+            ActiveTool:=Tools.ItemByName['PUTCEL'];
+            ActiveTool.Initialize;
+            SDL_GetMouseState(@mx,@my);
+            ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
+          end;
         end;
       end;
     end;
@@ -235,32 +238,40 @@ begin
     end;
     if keys[KeyMap[KEY_GETCEL]] then begin
       if ActiveTool.Pinnable then begin  // Not GetCEL or PutCEL
-        fControls.Hide;
-        fMainMenu.Hide;
+        HideMainControls;
         ActiveTool:=Tools.ItemByName['GETCEL'];
         SDL_GetMouseState(@mx,@my);
         ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
       end else begin
-        fControls.Show;
-        fMainMenu.Show;
+        ShowMainControls;
       end;
       keys[KeyMap[KEY_GETCEL]]:=false;
     end;
     if keys[KeyMap[KEY_PUTCEL]] then begin
       if ActiveTool.Pinnable and (Assigned(CELImage)) then begin  // Not GetCEL or PutCEL
-        fControls.Hide;
-        fMainMenu.Hide;
+        HideMainControls;
         ActiveTool:=Tools.ItemByName['PUTCEL'];
         ActiveTool.Initialize;
         SDL_GetMouseState(@mx,@my);
         ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
       end else begin
-        fControls.Show;
-        fMainMenu.Show;
+        ShowMainControls;
       end;
       keys[KeyMap[KEY_PUTCEL]]:=false;
     end;
   until quit;
+end;
+
+procedure TMain.HideMainControls;
+begin
+  fControls.Hide;
+  fMainMenu.Hide;
+end;
+
+procedure TMain.ShowMainControls;
+begin
+  fControls.Show;
+  fMainMenu.Show;
 end;
 
 end.

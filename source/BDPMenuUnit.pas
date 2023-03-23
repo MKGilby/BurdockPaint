@@ -233,7 +233,7 @@ begin
   atm:=TSubMenu.Create(x);
   atm.Name:=fItems[2];
   atm.AddItem('GET',TMessage.Init(MSG_GETCEL,0));
-  atm.AddItem('PUT',msg,false);
+  atm.AddItem('PUT',TMessage.Init(MSG_PUTCEL,0));
   atm.AddItem('RELEASE',TMessage.Init(MSG_RELEASECEL,0));
   atm.AddItem('ROTATE',TMessage.Init(MSG_OPENROTATECELDIALOG,0));
   atm.AddItem('FLIP V',TMessage.Init(MSG_FLIPCEL,0));
@@ -286,7 +286,7 @@ var submenu:TSubMenu;
 begin
   submenu:=fSubMenus[fItems.IndexOf('CEL')];
   if Assigned(submenu) then begin
-//    submenu.EnableItem('PUT');
+    submenu.EnableItem('PUT');
     submenu.EnableItem('RELEASE');
     submenu.EnableItem('ROTATE');
     submenu.EnableItem('FLIP V');
