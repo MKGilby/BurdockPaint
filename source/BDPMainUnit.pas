@@ -23,9 +23,10 @@ type
     fSplashScreen:TBDSplashScreen;
     fQuitWindow:TConfirmQuitDialog;
     fMainMenu:TMainMenu;
-    fOpenDialog:TOpenDialog;
     fMagnifyDialog:TMagnifyCELDialog;
     fRotateDialog:TRotateCELDialog;
+    fOpenDialog:TOpenDialog;
+    fSaveDialog:TSaveDialog;
     procedure HideMainControls;
     procedure ShowMainControls;
   end;
@@ -91,10 +92,18 @@ begin
   fOpenDialog.Name:='OpenDialog';
   fOpenDialog.Title:='Open file';
   fOpenDialog.InitialDir:=ExtractFilePath(ParamStr(0));
+
+  fSaveDialog:=TSaveDialog.Create(nil);
+  fSaveDialog.Filter:='CEL files|*.bdc';
+  fSaveDialog.FilterIndex:=0;
+  fSaveDialog.Name:='SaveDialog';
+  fSaveDialog.Title:='Save file';
+  fSaveDialog.InitialDir:=ExtractFilePath(ParamStr(0));;
 end;
 
 destructor TMain.Destroy;
 begin
+  if Assigned(fSaveDialog) then FreeAndNil(fSaveDialog);
   if Assigned(fOpenDialog) then FreeAndNil(fOpenDialog);
   if Assigned(fRotateDialog) then FreeAndNil(fRotateDialog);
   if Assigned(fMagnifyDialog) then FreeAndNil(fMagnifyDialog);
@@ -225,6 +234,17 @@ begin
             ActiveTool.Initialize;
             SDL_GetMouseState(@mx,@my);
             ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
+          end;
+          MSG_SAVECEL:begin
+            if fSaveDialog.Execute then begin
+              try
+                CELImage.SaveToFile(fSaveDialog.FileName);
+              except
+                on e:Exception do
+                  Log.LogError(e.message);
+              end;
+              MessageQueue.AddMessage(MSG_SHOWCEL);
+            end;
           end;
         end;
       end;

@@ -17,8 +17,8 @@
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="126"/>
-        <CursorPos X="12" Y="138"/>
+        <TopLine Value="211"/>
+        <CursorPos Y="247"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -26,8 +26,8 @@
         <Filename Value="BDPSharedUnit.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="9"/>
-        <TopLine Value="84"/>
-        <CursorPos Y="115"/>
+        <TopLine Value="81"/>
+        <CursorPos Y="117"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -47,7 +47,6 @@
         <CursorPos X="15" Y="7"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="BDPControlsUnit.pas"/>
@@ -151,7 +150,6 @@
         <CursorPos X="20" Y="64"/>
         <UsageCount Value="159"/>
         <Loaded Value="True"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="BDPColorSelectorUnit.pas"/>
@@ -160,7 +158,6 @@
         <CursorPos X="22" Y="62"/>
         <UsageCount Value="147"/>
         <Loaded Value="True"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="BDPUndoUnit.pas"/>
@@ -192,12 +189,11 @@
         <Filename Value="BDPMenuUnit.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="252"/>
-        <CursorPos X="31" Y="291"/>
+        <TopLine Value="214"/>
+        <CursorPos Y="243"/>
         <FoldState Value=" T3iM05114222133 Pj2nI0E"/>
         <UsageCount Value="75"/>
         <Loaded Value="True"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="BDPModalDialogUnit.pas"/>
@@ -298,7 +294,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="119"/>
         <CursorPos Y="142"/>
-        <UsageCount Value="0"/>
+        <UsageCount Value="10"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -336,7 +332,7 @@
         <Filename Value="units\SDL2\sdlrect.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="3" Y="28"/>
-        <UsageCount Value="0"/>
+        <UsageCount Value="10"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>

@@ -19,6 +19,7 @@ Todo:
 - When you get or load a CEL, all menus requiring active CEL are enabled.
 - Under the hood: MouseObjects only calls draw for visible objects.
 - CEL/Put works.
+- CEL/Save works. It saves the CEL in .bdc format. (See fileformats.txt)
 
 2023.03.22
 - Modal dialogs are reworked, less code to create a new one.

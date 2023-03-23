@@ -190,3 +190,17 @@
     .       ???         UndoSystem data in an U-block.
    [.       ???]        If Flags.bit[0] is set, then CELImage in an I-block.
 
+
+3. File formats
+===============
+
+3.1. CEL file format (.bdc)
+---------------------------
+
+It is an Image data block (I-block).
+
+
+3.2. System state file format (.bds)
+------------------------------------
+
+It is a System State data block (S-block).

@@ -240,7 +240,7 @@ begin
   atm.AddItem('FLIP H',TMessage.Init(MSG_FLIPCEL,1));
   atm.AddItem('MAGNIFY',TMessage.Init(MSG_OPENMAGNIFYCELDIALOG,0));
   atm.AddItem('LOAD',TMessage.Init(MSG_LOADCEL,0));
-  atm.AddItem('SAVE',msg,false);
+  atm.AddItem('SAVE',TMessage.Init(MSG_SAVECEL,0));
   atm.AddItem('EXPORT',msg,false);
   atm.Visible:=false;
   fSubMenus.Add(atm);
@@ -292,7 +292,7 @@ begin
     submenu.EnableItem('FLIP V');
     submenu.EnableItem('FLIP H');
     submenu.EnableItem('MAGNIFY');
-//    submenu.EnableItem('SAVE');
+    submenu.EnableItem('SAVE');
 //    submenu.EnableItem('EXPORT');
   end;
 end;

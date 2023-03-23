@@ -113,6 +113,8 @@ const
   MSG_GETCELFINISHED=21;
   // Put CEL image. Menu:CEL/Put
   MSG_PUTCEL=22;
+  //  Save CEL image. Menu:CEL/Save
+  MSG_SAVECEL=23;
 
 var
   MM:TGFXManager;  // MediaManager to hold fonts and internal images
