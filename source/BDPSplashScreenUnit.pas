@@ -72,12 +72,9 @@ end;
 
 procedure TBDSplashScreen.Draw;
 begin
+  fTexture.Update;
+  PutTexture(fWindowLeft,fWindowTop,fTexture);
   if SDL_GetTicks-fStart>5000 then fVisible:=false;
-  if fVisible then begin
-//    inherited Draw;
-    fTexture.Update;
-    PutTexture(fWindowLeft,fWindowTop,fTexture);
-  end;
 end;
 
 function TBDSplashScreen.MouseMove(Sender:TObject; x,y:integer):boolean;

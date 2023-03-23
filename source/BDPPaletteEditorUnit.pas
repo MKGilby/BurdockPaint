@@ -38,7 +38,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, SDL2, MKMouse2;
+uses SysUtils, BDPSharedUnit, MKMouse2;
 
 { TBDPaletteEditor }
 
@@ -122,35 +122,33 @@ end;
 procedure TBDPaletteEditor.Draw;
 var i:integer;
 begin
-  if fVisible then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(0,3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[3]);
-    fTexture.ARGBImage.Bar(
-      PALETTESOCKETSLEFT,
-      PALETTESOCKETSTOP,
-      PALETTESOCKETWIDTH*32+3,
-      PALETTESOCKETHEIGHT*8+3,
-      OverlayImage.Palette.Colors[2]);
-    if (Settings.ActiveColorIndex div 256)+1=fSliderBank.Position then
-      fTexture.ARGBImage.bar(
-        PALETTESOCKETSLEFT+(Settings.ActiveColorIndex mod 32)*PALETTESOCKETWIDTH,
-        PALETTESOCKETSTOP+(Settings.ActiveColorIndex div 32)*PALETTESOCKETHEIGHT,
-        PALETTESOCKETWIDTH+3,
-        PALETTESOCKETHEIGHT+3,
-        OverlayImage.Palette.Colors[5]);
+  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,OverlayImage.Palette[2]);
+  fTexture.ARGBImage.Bar(0,3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[3]);
+  fTexture.ARGBImage.Bar(
+    PALETTESOCKETSLEFT,
+    PALETTESOCKETSTOP,
+    PALETTESOCKETWIDTH*32+3,
+    PALETTESOCKETHEIGHT*8+3,
+    OverlayImage.Palette.Colors[2]);
+  if (Settings.ActiveColorIndex div 256)+1=fSliderBank.Position then
+    fTexture.ARGBImage.bar(
+      PALETTESOCKETSLEFT+(Settings.ActiveColorIndex mod 32)*PALETTESOCKETWIDTH,
+      PALETTESOCKETSTOP+(Settings.ActiveColorIndex div 32)*PALETTESOCKETHEIGHT,
+      PALETTESOCKETWIDTH+3,
+      PALETTESOCKETHEIGHT+3,
+      OverlayImage.Palette.Colors[5]);
 
-    for i:=0 to 255 do begin
-      fTexture.ARGBImage.Bar(
-        PALETTESOCKETSLEFT+(i mod 32)*PALETTESOCKETWIDTH+3,
-        PALETTESOCKETSTOP+(i div 32)*PALETTESOCKETHEIGHT+3,
-        PALETTESOCKETWIDTH-3,
-        PALETTESOCKETHEIGHT-3,
-        MainImage.Palette.Colors[i+(fSliderBank.Position-1)*256]);
-    end;
-//    inherited Draw;
-    fTexture.Update;
-    PutTexture(fLeft,fTop,fTexture);
+  for i:=0 to 255 do begin
+    fTexture.ARGBImage.Bar(
+      PALETTESOCKETSLEFT+(i mod 32)*PALETTESOCKETWIDTH+3,
+      PALETTESOCKETSTOP+(i div 32)*PALETTESOCKETHEIGHT+3,
+      PALETTESOCKETWIDTH-3,
+      PALETTESOCKETHEIGHT-3,
+      MainImage.Palette.Colors[i+(fSliderBank.Position-1)*256]);
   end;
+//  inherited Draw;
+  fTexture.Update;
+  PutTexture(fLeft,fTop,fTexture);
 end;
 
 procedure TBDPaletteEditor.MouseEnter(Sender:TObject);

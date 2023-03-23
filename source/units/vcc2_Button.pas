@@ -44,6 +44,8 @@
 //
 //  V1.00: Gilby - 2023.03.14
 //    * Initial creation form vcc_Button2
+//  V1.01: Gilby - 2023.03.23
+//    * Following change in MKMouse2
 
 {$mode delphi}
 {$smartlink on}
@@ -85,9 +87,10 @@ uses SysUtils, MKToolBox, Logger;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.00';
+  Version='1.01';
 
 
+{ TButton }
 
 constructor TButton.Create;
 begin
@@ -164,16 +167,14 @@ procedure TButton.Draw;
   end;
 
 begin
-  if fVisible then begin
-    case fState of
-      cNormal:DrawButton(fNormalColor);
-      cHighlighted:DrawButton(fHighlightedColor);
-      cButtonDown:DrawButton(fPushedColor);
-    end;
-    fFont.OutText(fTexture.ARGBImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX);
-    fTexture.Update;
-    PutTexture(fLeft,fTop,fTexture);
+  case fState of
+    cNormal:DrawButton(fNormalColor);
+    cHighlighted:DrawButton(fHighlightedColor);
+    cButtonDown:DrawButton(fPushedColor);
   end;
+  fFont.OutText(fTexture.ARGBImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX);
+  fTexture.Update;
+  PutTexture(fLeft,fTop,fTexture);
 end;
 
 initialization

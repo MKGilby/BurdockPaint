@@ -91,28 +91,26 @@ end;
 procedure TSubMenu.Draw;
 var i:integer;
 begin
-  if fVisible then begin
-    fTexture.ARGBImage.Bar(0,0,(length(fName)+2)*18,TOPMENUHEIGHT-3,OverlayImage.Palette[4]);
-    MM.Fonts['Red'].OutText(fTexture.ARGBImage,fName,18,3,0);
-    fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,fWidth,3,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,3,fHeight-TOPMENUHEIGHT,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(0,fHeight-3,fWidth,3,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(fWidth-3,TOPMENUHEIGHT-3,3,fHeight-TOPMENUHEIGHT,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT,fWidth-6,fHeight-TOPMENUHEIGHT-3,OverlayImage.Palette[3]);
-    if fSelected>-1 then
-      fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT+fSelected*SUBMENULINEHEIGHT,fWidth-6,SUBMENULINEHEIGHT,OverlayImage.Palette[4]);
-    for i:=0 to Length(fItems)-1 do begin
-      if fItems[i]._enabled then begin
-        if i<>fSelected then
-          MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i]._name,9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0)
-        else
-          MM.Fonts['Red'].OutText(fTexture.ARGBImage,fItems[i]._name,9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0);
-      end else
-        MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,fItems[i]._name,9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0);
-    end;
-    fTexture.Update;
-    PutTexture(fLeft,fTop,fTexture);
+  fTexture.ARGBImage.Bar(0,0,(length(fName)+2)*18,TOPMENUHEIGHT-3,OverlayImage.Palette[4]);
+  MM.Fonts['Red'].OutText(fTexture.ARGBImage,fName,18,3,0);
+  fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,fWidth,3,OverlayImage.Palette[2]);
+  fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,3,fHeight-TOPMENUHEIGHT,OverlayImage.Palette[2]);
+  fTexture.ARGBImage.Bar(0,fHeight-3,fWidth,3,OverlayImage.Palette[2]);
+  fTexture.ARGBImage.Bar(fWidth-3,TOPMENUHEIGHT-3,3,fHeight-TOPMENUHEIGHT,OverlayImage.Palette[2]);
+  fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT,fWidth-6,fHeight-TOPMENUHEIGHT-3,OverlayImage.Palette[3]);
+  if fSelected>-1 then
+    fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT+fSelected*SUBMENULINEHEIGHT,fWidth-6,SUBMENULINEHEIGHT,OverlayImage.Palette[4]);
+  for i:=0 to Length(fItems)-1 do begin
+    if fItems[i]._enabled then begin
+      if i<>fSelected then
+        MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i]._name,9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0)
+      else
+        MM.Fonts['Red'].OutText(fTexture.ARGBImage,fItems[i]._name,9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0);
+    end else
+      MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,fItems[i]._name,9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0);
   end;
+  fTexture.Update;
+  PutTexture(fLeft,fTop,fTexture);
 end;
 
 function TSubMenu.MouseMove(Sender:TObject; x,y:integer):boolean;
@@ -267,22 +265,20 @@ end;
 procedure TMainMenu.Draw;
 var x,i:integer;
 begin
-  if fVisible then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[3]);
-    fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[2]);
-    x:=0;
-    for i:=0 to fItems.Count-1 do begin
-      if fSelected<>i then
-        MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i],x+18,3,0)
-      else begin
-        fTexture.ARGBImage.Bar(x,0,(length(fItems[i])+2)*18,TOPMENUHEIGHT-3,OverlayImage.Palette[4]);
-        MM.Fonts['Red'].OutText(fTexture.ARGBImage,fItems[i],x+18,3,0);
-      end;
-      x+=(length(fItems[i])+2)*18;
+  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[3]);
+  fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[2]);
+  x:=0;
+  for i:=0 to fItems.Count-1 do begin
+    if fSelected<>i then
+      MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i],x+18,3,0)
+    else begin
+      fTexture.ARGBImage.Bar(x,0,(length(fItems[i])+2)*18,TOPMENUHEIGHT-3,OverlayImage.Palette[4]);
+      MM.Fonts['Red'].OutText(fTexture.ARGBImage,fItems[i],x+18,3,0);
     end;
-    fTexture.Update;
-    PutTexture(fLeft,fTop,fTexture);
+    x+=(length(fItems[i])+2)*18;
   end;
+  fTexture.Update;
+  PutTexture(fLeft,fTop,fTexture);
 end;
 
 procedure TMainMenu.EnableCELSubMenusWithActiveCEL;

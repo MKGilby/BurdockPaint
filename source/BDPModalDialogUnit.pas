@@ -58,8 +58,7 @@ end;
 
 procedure TModalDialog.Draw;
 begin
-  if fVisible then
-    PutTexture(fWindowLeft,fWindowTop,fTexture);
+  PutTexture(fWindowLeft,fWindowTop,fTexture);
 end;
 
 function TModalDialog.Click(Sender:TObject; x,y,buttons:integer):boolean;

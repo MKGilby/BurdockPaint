@@ -48,33 +48,31 @@ end;
 procedure TColorSelector.Draw;
 var i,x:integer;
 begin
-  if fVisible then begin
-    // Draw dark background for all slots
-    fTexture.ARGBImage.Bar(0,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(
-      COLORSELECTORGAP+COLORSELECTORBOXSIZE-3,
-      0,
-      (COLORSELECTORBOXSIZE-3)*(COLORSELECTORCOLORS-1)+3,
-      COLORSELECTORBOXSIZE,
-      OverlayImage.Palette[2]);
-    // Draw highlights and color boxes
-    x:=0;
-    for i:=0 to COLORSELECTORCOLORS-1 do begin
-      if not fPickingColor then begin
-        if Settings.SelectedColors[i]=Settings.ActiveColorIndex then begin
-          fTexture.ARGBImage.Bar(x,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[5])
-        end
-      end else begin
-        if i=fSelectedIndex then
-          fTexture.ARGBImage.Bar(x,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[VibroColors.GetColorIndex]);
-      end;
-      fTexture.ARGBImage.Bar(x+3,3,COLORSELECTORBOXSIZE-6,COLORSELECTORBOXSIZE-6,MainImage.Palette[Settings.SelectedColors[i]]);
-      x+=COLORSELECTORBOXSIZE-3;
-      if i=0 then x+=COLORSELECTORGAP;
+  // Draw dark background for all slots
+  fTexture.ARGBImage.Bar(0,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[2]);
+  fTexture.ARGBImage.Bar(
+    COLORSELECTORGAP+COLORSELECTORBOXSIZE-3,
+    0,
+    (COLORSELECTORBOXSIZE-3)*(COLORSELECTORCOLORS-1)+3,
+    COLORSELECTORBOXSIZE,
+    OverlayImage.Palette[2]);
+  // Draw highlights and color boxes
+  x:=0;
+  for i:=0 to COLORSELECTORCOLORS-1 do begin
+    if not fPickingColor then begin
+      if Settings.SelectedColors[i]=Settings.ActiveColorIndex then begin
+        fTexture.ARGBImage.Bar(x,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[5])
+      end
+    end else begin
+      if i=fSelectedIndex then
+        fTexture.ARGBImage.Bar(x,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayImage.Palette[VibroColors.GetColorIndex]);
     end;
-    fTexture.Update;
-    PutTexture(fLeft,fTop,fTexture);
+    fTexture.ARGBImage.Bar(x+3,3,COLORSELECTORBOXSIZE-6,COLORSELECTORBOXSIZE-6,MainImage.Palette[Settings.SelectedColors[i]]);
+    x+=COLORSELECTORBOXSIZE-3;
+    if i=0 then x+=COLORSELECTORGAP;
   end;
+  fTexture.Update;
+  PutTexture(fLeft,fTop,fTexture);
 end;
 
 function TColorSelector.Click(Sender:TObject; x,y,buttons:integer):boolean;

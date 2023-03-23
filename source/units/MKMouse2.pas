@@ -42,6 +42,8 @@
 //     * Changes to make compatible with the new SDL2.
 //   V1.10a - 2023.03.21 - Gilby
 //     * Following field name changes in SDL2.
+//   V1.11 - 2023.03.23 - Gilby
+//     * Not visible objects won't get draw called.
 }
 
 {$ifdef fpc}
@@ -144,7 +146,7 @@ uses SysUtils, Logger, MK_SDL2;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.10a';
+  Version='1.11';
 
 constructor TMouseObjects.Create;
 begin
@@ -282,7 +284,8 @@ end;
 procedure TMouseObjects.Draw;
 var i:integer;
 begin
-  for i:=fTop to Count-1 do Self[i].Draw;
+  for i:=fTop to Count-1 do
+    if Assigned(Self[i]) and Self[i].Visible then Self[i].Draw;
 end;
 
 procedure TMouseObjects.NewSession;
