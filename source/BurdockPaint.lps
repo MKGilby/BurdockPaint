@@ -127,7 +127,6 @@
       <Unit>
         <Filename Value="BDPModalDialogsUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="10"/>
         <TopLine Value="285"/>
         <CursorPos X="26" Y="307"/>
@@ -190,9 +189,10 @@
       <Unit>
         <Filename Value="BDPMenuUnit.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="214"/>
-        <CursorPos Y="243"/>
+        <TopLine Value="137"/>
+        <CursorPos X="22" Y="140"/>
         <UsageCount Value="77"/>
         <Loaded Value="True"/>
       </Unit>
@@ -488,34 +488,6 @@
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="BDPPaletteEditorUnit.pas"/>
-        <Caret Line="63" Column="18" TopLine="21"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPMenuUnit.pas"/>
-        <Caret Line="184" Column="3" TopLine="167"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPModalDialogsUnit.pas"/>
-        <Caret Line="215" Column="18" TopLine="144"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPMainUnit.pas"/>
-        <Caret Line="96" TopLine="61"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPMenuUnit.pas"/>
-        <Caret Line="46" Column="9" TopLine="7"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPMenuUnit.pas"/>
-        <Caret Line="29" Column="9"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPMenuUnit.pas"/>
-        <Caret Line="36" Column="7" TopLine="16"/>
-      </Position>
-      <Position>
         <Filename Value="BDPMenuUnit.pas"/>
         <Caret Line="188" Column="13" TopLine="135"/>
       </Position>
@@ -606,6 +578,34 @@
       <Position>
         <Filename Value="BDPModalDialogsUnit.pas"/>
         <Caret Line="51" Column="14" TopLine="25"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPMenuUnit.pas"/>
+        <Caret Line="172" TopLine="129"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPMenuUnit.pas"/>
+        <Caret Line="70" Column="15" TopLine="45"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPMenuUnit.pas"/>
+        <Caret Line="141" Column="32" TopLine="123"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPMenuUnit.pas"/>
+        <Caret Line="29" Column="21"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPMenuUnit.pas"/>
+        <Caret Line="122" TopLine="90"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPMenuUnit.pas"/>
+        <Caret Line="70" Column="26" TopLine="53"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPMenuUnit.pas"/>
+        <Caret Line="28" Column="22" TopLine="10"/>
       </Position>
     </JumpHistory>
     <RunParams>

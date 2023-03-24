@@ -12,9 +12,10 @@ type
 
   TSubMenuItem=record
     _name:string;
+    _hint:string;
     _message:TMessage;
     _enabled:boolean;
-    constructor Init(iName:string;iMessage:TMessage);
+    constructor Init(iName,iHint:string;iMessage:TMessage);
   end;
 
   { TSubMenu }
@@ -25,7 +26,7 @@ type
     function MouseMove(Sender:TObject;x,y:integer):boolean;
     function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
     procedure MouseLeave(Sender:TObject);
-    procedure AddItem(item:string;msg:TMessage;enabled:boolean=true);
+    procedure AddItem(item,hint:string;msg:TMessage;enabled:boolean=true);
     procedure DisableItem(item:string);
     procedure EnableItem(item:string);
   private
@@ -63,9 +64,10 @@ uses SysUtils, BDPSharedUnit;
 
 { TSubMenuItem }
 
-constructor TSubMenuItem.Init(iName:string; iMessage:TMessage);
+constructor TSubMenuItem.Init(iName,iHint:string; iMessage:TMessage);
 begin
   _name:=iName;
+  _hint:=uppercase(iHint);
   _message:=iMessage;
   _enabled:=true;
 end;
@@ -116,6 +118,8 @@ end;
 function TSubMenu.MouseMove(Sender:TObject; x,y:integer):boolean;
 begin
   fSelected:=(y-TOPMENUHEIGHT) div SUBMENULINEHEIGHT;
+  if (fSelected>=0) and (fSelected<Length(fItems)) then
+    InfoBar.ShowText(fItems[fSelected]._hint);
   Result:=true;
 end;
 
@@ -133,14 +137,15 @@ end;
 procedure TSubMenu.MouseLeave(Sender:TObject);
 begin
   fSelected:=-1;
+  InfoBar.ShowText('');
   Visible:=false;
 end;
 
-procedure TSubMenu.AddItem(item:string; msg:TMessage; enabled:boolean);
+procedure TSubMenu.AddItem(item,hint:string; msg:TMessage; enabled:boolean);
 begin
   if item<>'' then begin
     SetLength(fItems,Length(fItems)+1);
-    fItems[Length(fItems)-1]:=TSubMenuItem.Init(item,msg);
+    fItems[Length(fItems)-1]:=TSubMenuItem.Init(item,hint,msg);
     fItems[Length(fItems)-1]._enabled:=enabled;
     Resize;
   end;
@@ -199,7 +204,7 @@ begin
   Name:='MainMenu';
   fItems:=TStringList.Create;
   fItems.Add('FILE');
-  fItems.Add('PICTURE');
+  fItems.Add('IMAGE');
   fItems.Add('CEL');
   fSubMenus:=TSubMenuList.Create;
   fSubMenus.FreeObjects:=true;
@@ -210,11 +215,11 @@ begin
   atm:=TSubMenu.Create(x);
   atm.Name:=fItems[0];
   msg.TypeID:=MSG_NONE;
-  atm.AddItem('NEW',msg,false);
-  atm.AddItem('OPEN',msg,false);
-  atm.AddItem('SAVE',msg,false);
-  atm.AddItem('SETTINGS',msg,false);
-  atm.AddItem('QUIT',TMessage.Init(MSG_QUIT,1));
+  atm.AddItem('NEW','',msg,false);
+  atm.AddItem('OPEN','',msg,false);
+  atm.AddItem('SAVE','',msg,false);
+  atm.AddItem('SETTINGS','',msg,false);
+  atm.AddItem('QUIT','Save work state and quit program.',TMessage.Init(MSG_QUIT,1));
   atm.Visible:=false;
   fSubMenus.Add(atm);
   x+=(length(fItems[0])+2)*18;
@@ -222,9 +227,9 @@ begin
 
   atm:=TSubMenu.Create(x);
   atm.Name:=fItems[1];
-  atm.AddItem('CLEAR',TMessage.Init(MSG_CLEARPICTURE,0));
-  atm.AddItem('RESIZE',msg,false);
-  atm.AddItem('EXPORT',msg,false);
+  atm.AddItem('CLEAR','Clear image to key color.',TMessage.Init(MSG_CLEARPICTURE,0));
+  atm.AddItem('RESIZE','',msg,false);
+  atm.AddItem('EXPORT','',msg,false);
   atm.Visible:=false;
   fSubMenus.Add(atm);
   x+=(length(fItems[1])+2)*18;
@@ -232,16 +237,16 @@ begin
 
   atm:=TSubMenu.Create(x);
   atm.Name:=fItems[2];
-  atm.AddItem('GET',TMessage.Init(MSG_GETCEL,0));
-  atm.AddItem('PUT',TMessage.Init(MSG_PUTCEL,0));
-  atm.AddItem('RELEASE',TMessage.Init(MSG_RELEASECEL,0));
-  atm.AddItem('ROTATE',TMessage.Init(MSG_OPENROTATECELDIALOG,0));
-  atm.AddItem('FLIP V',TMessage.Init(MSG_FLIPCEL,0));
-  atm.AddItem('FLIP H',TMessage.Init(MSG_FLIPCEL,1));
-  atm.AddItem('MAGNIFY',TMessage.Init(MSG_OPENMAGNIFYCELDIALOG,0));
-  atm.AddItem('LOAD',TMessage.Init(MSG_LOADCEL,0));
-  atm.AddItem('SAVE',TMessage.Init(MSG_SAVECEL,0));
-  atm.AddItem('EXPORT',msg,false);
+  atm.AddItem('GET','Get a part of the image into a temporary image (CEL).',TMessage.Init(MSG_GETCEL,0));
+  atm.AddItem('PUT','Put CEL to the image.',TMessage.Init(MSG_PUTCEL,0));
+  atm.AddItem('RELEASE','Forget current CEL.',TMessage.Init(MSG_RELEASECEL,0));
+  atm.AddItem('ROTATE','Rotate CEL by 90°, 180° or 270°.',TMessage.Init(MSG_OPENROTATECELDIALOG,0));
+  atm.AddItem('FLIP V','Flip CEL vertically.',TMessage.Init(MSG_FLIPCEL,0));
+  atm.AddItem('FLIP H','Flip CEL horizontally.',TMessage.Init(MSG_FLIPCEL,1));
+  atm.AddItem('MAGNIFY','Magnify CEL to 2x, 3x or 5x.',TMessage.Init(MSG_OPENMAGNIFYCELDIALOG,0));
+  atm.AddItem('LOAD','Load CEL from file. (BDC or Legacy CEL)',TMessage.Init(MSG_LOADCEL,0));
+  atm.AddItem('SAVE','Save CEL to file. (BDC)',TMessage.Init(MSG_SAVECEL,0));
+  atm.AddItem('EXPORT','Export CEL to file. (PNG)',msg,false);
   atm.Visible:=false;
   fSubMenus.Add(atm);
   x+=(length(fItems[2])+2)*18;

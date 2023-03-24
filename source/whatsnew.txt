@@ -17,6 +17,7 @@ Todo:
   and on the top of the window when no panel is visible.
 - GetCEL and PutCEL now shows coordinates in first state too.
 - Added degree symbol to the rotate dialog.
+- Submenus can have hints.
 
 2023.03.23
 - Code cleanup in MainUnit.
