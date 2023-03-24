@@ -4,68 +4,68 @@ unit BDPInfoBarUnit;
 
 interface
 
-uses MK_SDL2;
+uses vcc2_VisibleControl;
 
 type
 
   { TBDInfoBar }
 
-  TBDInfoBar=class
+  TBDInfoBar=class(TVisibleControl)
     constructor Create;
-    destructor Destroy; override;
-    procedure Draw;
-    procedure ShowSimpleCoords(x,y:integer;valid:boolean);
+    procedure Draw; override;
+//    procedure ShowSimpleCoords(x,y:integer;valid:boolean);
     procedure ShowText(text:string);
   private
-    fTexture:TStreamingTexture;
     fClear:boolean;
+    fTop:integer;
+    fTextTop:integer;
     procedure Clear;
+    procedure fSetTop(aValue:integer);
+  public
+    property Top:integer read fTop write fSetTop;
   end;
 
 implementation
 
-uses SysUtils, BDPSharedUnit, SDL2, Font2Unit;
+uses SysUtils, BDPSharedUnit, mk_sdl2, Font2Unit;
 
 { TBDInfoBar }
 
 constructor TBDInfoBar.Create;
 begin
-  fTexture:=TStreamingTexture.Create(WINDOWWIDTH,24);
-  SDL_SetTextureAlphaMod(fTexture.Texture,224);
-  SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
+  inherited Create;
+  Width:=WINDOWWIDTH;
+  Height:=INFOBARHEIGHT;
+  fTop:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
+//  SDL_SetTextureAlphaMod(fTexture.Texture,224);
+//  SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
   Clear;
   fTexture.Update;
   fClear:=true;
-end;
-
-destructor TBDInfoBar.Destroy;
-begin
-  if Assigned(fTexture) then FreeAndNil(fTexture);
-  inherited Destroy;
+  if fTop=0 then fTextTop:=3 else fTextTop:=6;
 end;
 
 procedure TBDInfoBar.Draw;
 begin
-  if not fClear then PutTexture(0,0,fTexture);
+  if not fClear then PutTexture(0,fTop,fTexture);
 end;
 
-procedure TBDInfoBar.ShowSimpleCoords(x,y:integer; valid:boolean);
+{procedure TBDInfoBar.ShowSimpleCoords(x,y:integer; valid:boolean);
 begin
   Clear;
-//  MultiFontOutText(fImage,#4'('#0+inttostr(x)+#4','#0+inttostr(y)+#4')',8,3,mjLeft);
   if valid then
-    MM.Fonts['Black'].OutText(fTexture.ARGBImage,'('+inttostr(x)+','+inttostr(y)+')',8,3,mjLeft)
+    MM.Fonts['Black'].OutText(fTexture.ARGBImage,'('+inttostr(x)+','+inttostr(y)+')',8,6,mjLeft)
   else
-    MM.Fonts['Red'].OutText(fTexture.ARGBImage,'('+inttostr(x)+','+inttostr(y)+')',8,3,mjLeft);
+    MM.Fonts['Red'].OutText(fTexture.ARGBImage,'('+inttostr(x)+','+inttostr(y)+')',8,6,mjLeft);
   fTexture.Update;
   fClear:=false;
-end;
+end;}
 
 procedure TBDInfoBar.ShowText(text:string);
 begin
   Clear;
   if text<>'' then begin
-    MM.Fonts['Black'].OutText(fTexture.ARGBImage,text,8,3,mjLeft);
+    MM.Fonts['Black'].OutText(fTexture.ARGBImage,text,8,fTextTop,mjLeft);
     fClear:=false;
   end else fClear:=true;
   fTexture.Update;
@@ -73,8 +73,21 @@ end;
 
 procedure TBDInfoBar.Clear;
 begin
-  fTexture.ARGBImage.Bar(0,0,fTexture.Width,fTexture.Height-3,OverlayImage.Palette.Colors[3]);
-  fTexture.ARGBImage.Bar(0,fTexture.Height-3,fTexture.Width,3,OverlayImage.Palette.Colors[2]);
+  if fTop>0 then begin
+    fTexture.ARGBImage.Bar(0,0,fTexture.Width,3,OverlayImage.Palette.Colors[2]);
+    fTexture.ARGBImage.Bar(0,3,fTexture.Width,fTexture.Height-3,OverlayImage.Palette.Colors[3]);
+  end else begin
+    fTexture.ARGBImage.Bar(0,0,fTexture.Width,fTexture.Height-3,OverlayImage.Palette.Colors[3]);
+    fTexture.ARGBImage.Bar(0,fTexture.Height-3,fTexture.Width,3,OverlayImage.Palette.Colors[2]);
+  end;
+end;
+
+procedure TBDInfoBar.fSetTop(aValue:integer);
+begin
+  fTop:=aValue;
+  if fTop<0 then fTop:=0
+  else if fTop>WINDOWHEIGHT-INFOBARHEIGHT then fTop:=WINDOWHEIGHT-INFOBARHEIGHT;
+  if fTop=0 then fTextTop:=3 else fTextTop:=6;
 end;
 
 end.

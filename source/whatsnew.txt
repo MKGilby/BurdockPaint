@@ -1,11 +1,9 @@
 Todo:
 - Make decision:
-  - Create a mechanism to set up OpenDialog for each file type.
+  - Create a mechanism to set up Open/SaveDialog for each file type.
     OR
-  - Create multiple OpenDialogs for each type and show appropiate dialog when needed.
-- Add SaveDialog.
-- Add save to CEL.
-- Add export to CEL.
+  - Create multiple Open/SaveDialogs for each type and show appropiate dialog when needed.
+- Add export CEL to PNG.
 - Ask for color fit when loading a CEL file.
 - Add gradients.
 - Hide menu when not needed.
@@ -15,6 +13,8 @@ Todo:
 
 2023.03.24
 - Added a new, modern font for the modern look. (Drawn entirely with this program!)
+- InfoBar now appears above the current panel (Controls or PaletteEditor),
+  and on the top of the window when no panel is visible.
 
 2023.03.23
 - Code cleanup in MainUnit.

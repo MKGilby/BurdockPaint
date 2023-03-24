@@ -148,10 +148,12 @@ begin
           MSG_ACTIVATEPALETTEEDITOR:begin
             fControls.Hide;
             fPaletteEditor.Show;
+            InfoBar.Top:=WINDOWHEIGHT-PALETTEEDITORHEIGHT-INFOBARHEIGHT;
           end;
           MSG_DEACTIVATEPALETTEEDITOR:begin
             fPaletteEditor.Hide;
             fControls.Show;
+            InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
           end;
           MSG_QUIT:begin
             if msg.DataInt=0 then fQuitWindow.Visible:=false
@@ -286,12 +288,14 @@ procedure TMain.HideMainControls;
 begin
   fControls.Hide;
   fMainMenu.Hide;
+  InfoBar.Top:=0;
 end;
 
 procedure TMain.ShowMainControls;
 begin
   fControls.Show;
   fMainMenu.Show;
+  InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
 end;
 
 end.

@@ -8,7 +8,7 @@ uses
   ARGBImagePNGReaderUnit,
   ARGBImagePNGWriterUnit,
   ARGBImageTGAReaderUnit,
-  ARGBImageTGAWriterUnit, BDPModalDialogUnit;
+  ARGBImageTGAWriterUnit;
 
 const
   VERSION='0.9';
