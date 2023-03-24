@@ -15,6 +15,8 @@ Todo:
 - Added a new, modern font for the modern look. (Drawn entirely with this program!)
 - InfoBar now appears above the current panel (Controls or PaletteEditor),
   and on the top of the window when no panel is visible.
+- GetCEL and PutCEL now shows coordinates in first state too.
+- Added degree symbol to the rotate dialog.
 
 2023.03.23
 - Code cleanup in MainUnit.

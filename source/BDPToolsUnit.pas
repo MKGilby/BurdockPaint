@@ -1101,6 +1101,7 @@ begin
     0:begin
         OverlayImage.VLine(fX,0,OverlayImage.Height,VibroColors.GetColorIndex);
         OverlayImage.HLine(0,fY,OverlayImage.Width,VibroColors.GetColorIndex);
+        InfoBar.ShowText(inttostr(fX)+','+inttostr(fY));
       end;
     1:begin
         OverlayImage.Rectangle(fSX,fSY,fX,fY,VibroColors.GetColorIndex);
@@ -1188,6 +1189,7 @@ begin
           CELHelperImage.PutImage(CELImage.Left,CELImage.Top,CELImage,Settings.SelectedColors[0])
         else
           CELHelperImage.PutImage(CELImage.Left,CELImage.Top,CELImage);
+        InfoBar.ShowText(inttostr(fX)+','+inttostr(fY));
       end;
     1:begin
         if Settings.ClearKeyColor then

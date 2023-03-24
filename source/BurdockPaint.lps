@@ -27,17 +27,15 @@
         <EditorIndex Value="9"/>
         <TopLine Value="11"/>
         <CursorPos X="20" Y="20"/>
-        <FoldState Value=" T3kg0W4 pk6l50L1 PUN0-"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPInfoBarUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="11"/>
-        <TopLine Value="51"/>
-        <CursorPos Y="46"/>
+        <TopLine Value="50"/>
+        <CursorPos X="14" Y="62"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -113,8 +111,8 @@
         <Filename Value="BDPToolsUnit.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="8"/>
-        <TopLine Value="1066"/>
-        <CursorPos X="53" Y="1078"/>
+        <TopLine Value="1099"/>
+        <CursorPos X="26" Y="1104"/>
         <UsageCount Value="198"/>
         <Loaded Value="True"/>
       </Unit>
@@ -129,8 +127,10 @@
       <Unit>
         <Filename Value="BDPModalDialogsUnit.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="10"/>
-        <CursorPos X="26" Y="18"/>
+        <TopLine Value="285"/>
+        <CursorPos X="26" Y="307"/>
         <UsageCount Value="185"/>
         <Loaded Value="True"/>
       </Unit>
@@ -488,10 +488,6 @@
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="BDPModalDialogsUnit.pas"/>
-        <Caret Line="8" Column="36"/>
-      </Position>
-      <Position>
         <Filename Value="BDPPaletteEditorUnit.pas"/>
         <Caret Line="63" Column="18" TopLine="21"/>
       </Position>
@@ -606,6 +602,10 @@
       <Position>
         <Filename Value="BDPInfoBarUnit.pas"/>
         <Caret Line="89" TopLine="50"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPModalDialogsUnit.pas"/>
+        <Caret Line="51" Column="14" TopLine="25"/>
       </Position>
     </JumpHistory>
     <RunParams>

@@ -301,7 +301,7 @@ begin
       fWindowLeft+(ROTATEDIALOGWIDTH div 4)*(i+1)-NORMALBUTTONWIDTH div 2,
       fWindowTop+48,
       NORMALBUTTONWIDTH,
-      inttostr(ROTATES[i]),'',msg);
+      inttostr(ROTATES[i])+'°','',msg);
     fRotateButtons[i].ZIndex:=MODALDIALOG_ZINDEX+1;
     fRotateButtons[i].Tag:=i;
     fRotateButtons[i].OnClick:=RotateButtonClick;
