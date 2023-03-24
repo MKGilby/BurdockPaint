@@ -13,6 +13,9 @@ Todo:
 - Configurable autosave interval.
 
 
+2023.03.24
+- Added a new, modern font for the modern look. (Drawn entirely with this program!)
+
 2023.03.23
 - Code cleanup in MainUnit.
 - When you release CEL, all menus requiring active CEL are disabled.

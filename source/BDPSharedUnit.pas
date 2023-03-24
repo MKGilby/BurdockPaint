@@ -6,7 +6,7 @@ interface
 
 uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, BDPInfoBarUnit, BDPImageUnit,
   BDPSettingsUnit, BDPMessageUnit, BDPCursorUnit, BDPToolsUnit, BDPInksUnit,
-  BDPPaletteUnit, BDPUndoUnit;
+  BDPPaletteUnit, BDPUndoUnit, PNGFont2Unit;
 
 type
   TColorCluster=record
@@ -238,12 +238,18 @@ end;
 
 procedure LoadSystemFont(pR,pG,pB:integer;pName:string);
 begin
-  MM.Fonts.Add(TMKRFont.Create('system.mkr'),pName);
-  MM.Fonts[pName].SetColor(pR,pG,pB);
+  if Settings.ModernGraphics then begin
+    MM.Fonts.Add(TPNGFont.Create('bdpfont.png'),pName);
+    MM.Fonts[pName].LetterSpace:=3;
+    MM.Fonts[pName].SpaceSpace:=15;
+  end else begin
+    MM.Fonts.Add(TMKRFont.Create('system.mkr'),pName);
+    MM.Fonts[pName].Size:=3;
+    MM.Fonts[pName].LetterSpace:=1;
+    MM.Fonts[pName].SpaceSpace:=5;
+  end;
   MM.Fonts[pName].SetColorKey(0,0,0);
-  MM.Fonts[pName].SpaceSpace:=5;
-  MM.Fonts[pName].LetterSpace:=1;
-  MM.Fonts[pName].Size:=3;
+  MM.Fonts[pName].SetColor(pR,pG,pB);
 end;
 
 procedure LoadState;
