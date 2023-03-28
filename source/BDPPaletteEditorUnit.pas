@@ -38,7 +38,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, MKMouse2;
+uses SysUtils, BDPSharedUnit, MKMouse2, BDPToolsUnit;
 
 { TBDPaletteEditor }
 
@@ -146,24 +146,31 @@ begin
       PALETTESOCKETHEIGHT-3,
       MainImage.Palette.Colors[i+(fSliderBank.Position-1)*256]);
   end;
-//  inherited Draw;
   fTexture.Update;
   PutTexture(fLeft,fTop,fTexture);
 end;
 
 procedure TBDPaletteEditor.MouseEnter(Sender:TObject);
 begin
-//  if fVisible then SDL_ShowCursor(SDL_ENABLE);
   InfoBar.ShowText('');
 end;
 
 procedure TBDPaletteEditor.MouseLeave(Sender:TObject);
 begin
-//  if fVisible then SDL_ShowCursor(SDL_DISABLE);
 end;
 
 function TBDPaletteEditor.MouseMove(Sender:TObject; x,y:integer):boolean;
 begin
+  x-=Left;
+  y-=Top;
+  if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
+     (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
+    x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
+    y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
+
+    TBDToolSelectColor(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256);
+  end else
+    TBDToolSelectColor(ActiveTool).SetColor(-1);
   Result:=true;
 end;
 

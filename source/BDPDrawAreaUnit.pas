@@ -45,7 +45,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, sdl2, BDPKeyMappingUnit;
+uses SysUtils, BDPSharedUnit, sdl2, BDPKeyMappingUnit, BDPToolsUnit;
 
 { TBDDrawArea }
 
@@ -213,6 +213,7 @@ end;
 procedure TBDDrawArea.MouseLeave(Sender:TObject);
 begin
   SDL_ShowCursor(SDL_ENABLE);
+  if ActiveTool.Name='SELCOL' then TBDToolSelectColor(ActiveTool).SetColor(-1);
 end;
 
 function TBDDrawArea.KeyDown(Sender:TObject; key:integer):boolean;

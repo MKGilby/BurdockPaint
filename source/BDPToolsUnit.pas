@@ -16,7 +16,7 @@ type
     procedure Initialize; virtual; // If the tool needs some initialization before every use
     procedure Draw; virtual; // Draw helping lines, refresh infobar
     procedure Clear; virtual;  // Clear helping lines!
-    procedure Move(x,y:integer);
+    procedure Move(x,y:integer); virtual;
     function MouseDown(x,y,buttons:integer):boolean; virtual;
     function MouseMove(x,y,buttons:integer):boolean; virtual;
     function MouseUp(x,y,buttons:integer):boolean; virtual;
@@ -158,8 +158,12 @@ type
 
   TBDToolSelectColor=class(TBDTool)
     constructor Create; override;
+    procedure Move(x,y:integer); override;
     function Click(x,y,button:integer):boolean; override;
     procedure Draw; override;
+    procedure SetColor(colorindex:integer);
+  private
+    fColorIndex:integer;
   end;
 
   { TBDToolShowCEL }
@@ -1256,6 +1260,16 @@ begin
   inherited Create;
   fName:='SELCOL';
   fHint:=uppercase('Select color to draw.');
+  fColorIndex:=-1;
+end;
+
+procedure TBDToolSelectColor.Move(x,y:integer);
+begin
+  inherited Move(x,y);
+  if (fX>=0) and (fX<MainImage.Width) and (fY>=0) and (fY<MainImage.Height) then
+    fColorIndex:=MainImage.GetPixel(fX,fY)
+  else
+    fColorIndex:=-1;
 end;
 
 function TBDToolSelectColor.Click(x,y,button:integer):boolean;
@@ -1273,17 +1287,21 @@ begin
 end;
 
 procedure TBDToolSelectColor.Draw;
-var c:uint32;
 begin
-  if (fX>=0) and (fX<MainImage.Width) and (fY>=0) and (fY<MainImage.Height) then begin
-    c:=MainImage.GetPixel(fX,fY);
+  if fColorIndex>=0 then
     InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d)',
-    [c,MainImage.Palette.ColorR[c],
-    MainImage.Palette.ColorG[c],
-    MainImage.Palette.ColorB[c],
-    MainImage.Palette.ColorA[c]]));
-  end else
-    InfoBar.ShowText('OUTSIDE OF DRAW AREA!');
+      [fColorIndex,
+       MainImage.Palette.ColorR[fColorIndex],
+       MainImage.Palette.ColorG[fColorIndex],
+       MainImage.Palette.ColorB[fColorIndex],
+       MainImage.Palette.ColorA[fColorIndex]]))
+  else
+    InfoBar.ShowText('');
+end;
+
+procedure TBDToolSelectColor.SetColor(colorindex:integer);
+begin
+  if (colorindex>=-1) and (colorindex<MainImage.Palette.Size) then fColorIndex:=colorindex;
 end;
 
 // ----------------------------------------------------- [ TBDToolShowCEL ] ---
