@@ -9,6 +9,8 @@ uses
 
 type
 
+  TMousePanning=(mpIdle, mpWaitMove, mpPanning, mpFinished);
+
   { TBDDrawArea }
 
   TBDDrawArea=class(TMouseObject)
@@ -35,7 +37,7 @@ type
     fCursorX,fCursorY:integer;
     fFrameX,fFrameY:integer;
     fPanDir,fPanFase:integer;
-    fMousePanning:integer;  // 0 - false, 1 - waiting for move or mouseup, 2 - was move, really panning
+    fMousePanning:TMousePanning;
     fPanX,fPanY,fPanX2,fPanY2:integer;
   public
     property FrameX:integer read fFrameX;
@@ -60,7 +62,7 @@ begin
   fPanDir:=0;
   fCursorX:=-99999;
   fCursorY:=-99999;
-  fMousePanning:=0;
+  fMousePanning:=mpIdle;
   fName:='DrawArea';
   OnClick:=Self.Click;
   OnMouseDown:=Self.MouseDown;
@@ -121,7 +123,7 @@ end;
 
 function TBDDrawArea.Click(Sender:TObject; x,y,buttons:integer):boolean;
 begin
-  if fMousePanning=-1 then  // Panning was just finished, don't care with tools click
+  if fMousePanning=mpFinished then  // Panning was just finished, don't care with tools click
     Result:=false
   else
     Result:=ActiveTool.Click(MouseXToFrame(x),MouseYToFrame(y),buttons);
@@ -130,14 +132,14 @@ end;
 function TBDDrawArea.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
 var mx,my:integer;
 begin
-  fMousePanning:=0;  // To stop panning if you press other button
+  fMousePanning:=mpIdle;  // To stop panning if you press other button
   mx:=MouseXToFrame(x);
   my:=MouseYToFrame(y);
   Result:=false;
   Result:=ActiveTool.MouseDown(mx,my,buttons);
   if not Result then begin
     if buttons=SDL_BUTTON_RIGHT then begin
-      fMousePanning:=1;
+      fMousePanning:=mpWaitMove;
       fPanX:=fCursorX;
       fPanY:=fCursorY;
       fPanX2:=fZoomLeft;
@@ -155,14 +157,14 @@ begin
   Result:=ActiveTool.MouseUp(mx,my,buttons);
   if not Result then begin
     if buttons=SDL_BUTTON_RIGHT then begin
-      if fMousePanning=1 then begin
+      if fMousePanning=mpWaitMove then begin
         MessageQueue.AddMessage(MSG_TOGGLECONTROLS);
-        fMousePanning:=0;
+        fMousePanning:=mpIdle;
       end
-      else fMousePanning:=-1;
+      else fMousePanning:=mpFinished;
     end;
     Result:=true;
-  end else fMousePanning:=0;
+  end else fMousePanning:=mpIdle;
 end;
 
 function TBDDrawArea.MouseMove(Sender:TObject; x,y:integer):boolean;
@@ -177,8 +179,8 @@ begin
 //  MessageQueue.AddMessage(MSG_MOUSECOORDS,'',(fFrameX and $7fff)+(fFrameY and $7fff)<<16);
   Result:=ActiveTool.MouseMove(fFrameX,fFrameY,buttons);
   if not Result then begin
-    if fMousePanning=1 then fMousePanning:=2;
-    if fMousePanning=2 then begin
+    if fMousePanning=mpWaitMove then fMousePanning:=mpPanning;
+    if fMousePanning=mpPanning then begin
       fZoomLeft:=fPanX2+(fPanX-x) div fZoomTimes;
       fZoomTop:=fPanY2+(fPanY-y) div fZoomTimes;
     end;

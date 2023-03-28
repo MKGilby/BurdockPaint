@@ -16,6 +16,7 @@ Todo:
 - When you are in the PaletteEditor, color hint only visible over the DrawArea or
   over the palette colors.
 - Releasing RMB after panning no longer exits PaletteEditor.
+- Added mouse panning enum, instead of numbers.
 
 2023.03.24
 - Added a new, modern font for the modern look. (Drawn entirely with this program!)
