@@ -121,7 +121,10 @@ end;
 
 function TBDDrawArea.Click(Sender:TObject; x,y,buttons:integer):boolean;
 begin
-  Result:=ActiveTool.Click(MouseXToFrame(x),MouseYToFrame(y),buttons);
+  if fMousePanning=-1 then  // Panning was just finished, don't care with tools click
+    Result:=false
+  else
+    Result:=ActiveTool.Click(MouseXToFrame(x),MouseYToFrame(y),buttons);
 end;
 
 function TBDDrawArea.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
@@ -150,16 +153,16 @@ begin
   mx:=MouseXToFrame(x);
   my:=MouseYToFrame(y);
   Result:=ActiveTool.MouseUp(mx,my,buttons);
-{  if not Result then begin
-    Result:=ActiveTool.Click(mx,my,buttons);}
-    if not Result then begin
-      if buttons=SDL_BUTTON_RIGHT then begin
-        if fMousePanning=1 then MessageQueue.AddMessage(MSG_TOGGLECONTROLS);
+  if not Result then begin
+    if buttons=SDL_BUTTON_RIGHT then begin
+      if fMousePanning=1 then begin
+        MessageQueue.AddMessage(MSG_TOGGLECONTROLS);
         fMousePanning:=0;
-      end;
-      Result:=true;
-    end else fMousePanning:=0;
-//  end;
+      end
+      else fMousePanning:=-1;
+    end;
+    Result:=true;
+  end else fMousePanning:=0;
 end;
 
 function TBDDrawArea.MouseMove(Sender:TObject; x,y:integer):boolean;

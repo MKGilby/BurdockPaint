@@ -140,10 +140,11 @@ begin
       if not mres then begin
         case msg.TypeID of
           MSG_TOGGLECONTROLS:begin
-            if fControls.Visible then
-              HideMainControls
-            else
-              ShowMainControls;
+            if not fPaletteEditor.Visible then
+              if fControls.Visible then
+                HideMainControls
+              else
+                ShowMainControls;
           end;
           MSG_ACTIVATEPALETTEEDITOR:begin
             fControls.Hide;
