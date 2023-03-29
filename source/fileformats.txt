@@ -170,9 +170,10 @@
   UndoSystem data format
   ----------------------
     Start   Size        Description (content)
-    5       2           Undo/redo operation count
-    7       2           Index of current operation
-    9       ???         O-blocks (count times)
+    5       1           Version (0x01)
+    6       2           Undo/redo operation count
+    8       2           Index of current operation
+    10      ???         O-blocks (count times)
 
 2.6. System state data
 ----------------------
@@ -184,11 +185,15 @@
   System state data format
   ----------------------
     Start   Size        Description (content)
-    5       1           Flags
+    5       1           Version (0x01)
+    6       1           Flags
                           bit 0 - Is system state contains the CELImage?
-    6       ???         Main image in an I-block.
-    .       ???         UndoSystem data in an U-block.
-   [.       ???]        If Flags.bit[0] is set, then CELImage in an I-block.
+                          bit 1 - Is system state contains ImageUndoSystem data?
+                          bit 2 - Is system state contains PaletteUndoSystem data?
+    7       ???         Main image in an I-block.
+   [.       ???]        If Flags.bit[0] is set then CELImage in an I-block.
+   [.       ???]        if Flags.bit[1] is set then ImageUndoSystem data in an U-block.
+   [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an U-block.
 
 
 3. File formats

@@ -42,3 +42,4 @@ _release/
 source/BurdockPaint.data
 *.obj
 *.bdc
+work/font/newfont.png

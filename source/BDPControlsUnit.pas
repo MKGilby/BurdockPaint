@@ -296,7 +296,7 @@ function TBDControls.ProcessMessage(msg: TMessage): boolean;
 begin
   Result:=false;
   case msg.TypeID of
-    MSG_SETUNDOREDOBUTTON:begin
+    MSG_SETIMAGEUNDOREDOBUTTON:begin
       fUndoButton.Enabled:=ImageUndoSystem.CanUndo;
       fRedoButton.Enabled:=ImageUndoSystem.CanRedo;
     end;

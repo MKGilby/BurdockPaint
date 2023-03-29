@@ -34,6 +34,7 @@ type
     fTexture:TStreamingTexture;
     fSliderR,fSliderG,fSliderB,fSliderA:TBDHorizontalSlider;
     fSliderBank:TBDVerticalSlider;
+    fUndoButton,fRedoButton:TBDButton;
   end;
 
 implementation
@@ -43,7 +44,7 @@ uses SysUtils, BDPSharedUnit, MKMouse2, BDPToolsUnit;
 { TBDPaletteEditor }
 
 constructor TBDPaletteEditor.Create;
-var atmB:TBDButton;
+//var atmB:TBDButton;
 begin
   inherited Create;
   fLeft:=0;
@@ -112,14 +113,15 @@ begin
   end;
   AddChild(fSliderBank);
 
-  atmB:=TBDButton.Create(6,fTop+6,127-2*18,'UNDO','UNDO LAST PALETTE OPERATION',TMessage.Init(MSG_NONE,0));
-  atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-  atmB.Name:='PALUNDO';
-  AddChild(atmB);
-  atmB:=TBDButton.Create(6,fTop+6+30,127-2*18,'REDO','REDO LAST UNDOED PALETTE OPERATION',TMessage.Init(MSG_NONE,0));
-  atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-  atmB.Name:='PALREDO';
-  AddChild(atmB);
+  fUndoButton:=TBDButton.Create(6,fTop+6,127-2*18,'UNDO','UNDO LAST PALETTE OPERATION',TMessage.Init(MSG_NONE,0));
+  fUndoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fUndoButton.Name:='Palette Undo';
+  AddChild(fUndoButton);
+
+  fRedoButton:=TBDButton.Create(6,fTop+6+30,127-2*18,'REDO','REDO LAST UNDOED PALETTE OPERATION',TMessage.Init(MSG_NONE,0));
+  fRedoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fRedoButton.Name:='Palette Redo';
+  AddChild(fRedoButton);
   MouseObjects.Add(Self);
 end;
 
@@ -269,6 +271,10 @@ begin
       MSG_ACTIVECOLORINDEXCHANGED:begin
         RefreshSliders;
         Result:=true;
+      end;
+      MSG_SETPALETTEUNDOREDOBUTTON:begin
+        fUndoButton.Enabled:=ImageUndoSystem.CanUndo;
+        fRedoButton.Enabled:=ImageUndoSystem.CanRedo;
       end;
     end;
   end;

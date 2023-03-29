@@ -364,7 +364,7 @@ end;
 constructor TBDImageUndoSystem.Create;
 begin
   inherited Create;
-  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETUNDOREDOBUTTON,0);
+  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETIMAGEUNDOREDOBUTTON,0);
 end;
 
 procedure TBDImageUndoSystem.AddImageUndo(Left,Top,Width,Height:integer;Image:TBDImage);
@@ -406,7 +406,7 @@ end;
 constructor TBDPaletteUndoSystem.Create;
 begin
   inherited Create;
-  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETUNDOREDOBUTTON,0);
+  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETPALETTEUNDOREDOBUTTON,0);
 end;
 
 procedure TBDPaletteUndoSystem.AddPaletteUndo(Start,Count:integer);

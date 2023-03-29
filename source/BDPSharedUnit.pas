@@ -69,53 +69,60 @@ const
 
   // Message typeID constants
 
+  // ------- System Messages ------- Range: 0-99 -------
   // Don't want to send message but buttons need one? Give them this.
   MSG_NONE=0;
+  // ConfirmQUIT dialog finished, IntValue is 1 if really quit, 0 if not.
+  MSG_QUIT=1;
   // Toggle visibility of main Controls panel and MainMenu.
-  MSG_TOGGLECONTROLS=1;
-  // PICKCOL finished, IntValue holds the selected color index or -1 if no color selected.
-  MSG_PICKEDCOLOR=2;
-  // KEY_GETCOLOR pressed, select color value under the cursor (if over drawarea).
-  MSG_SELECTCOLOR=3;
-  // ConfirmQUIT windows finished, IntValue is 1 if really quit, 0 if not.
-  MSG_QUIT=4;
-  // GETCEL or PUTCEL finished, reactivate selected tool.
-  MSG_RESTORECONTROLS=5;
-  // Load CEL file. Menu:CEL/Load
-  MSG_LOADCEL=6;
-  // Hide PaletteEditor, show Controls and MainMenu
-  MSG_DEACTIVATEPALETTEEDITOR=7;
-  // Flip the CEL. 0 - Vertical, 1 - Horizontal. Menu:CEL/FLIP V and /FLIP H
-  MSG_FLIPCEL=8;
-  // Set Undo/Redo buttons' state depending on Undosystem state.
-  MSG_SETUNDOREDOBUTTON=9;
+  MSG_TOGGLECONTROLS=2;
   // Hide Controls, show PaletteEditor
-  MSG_ACTIVATEPALETTEEDITOR=10;
+  MSG_ACTIVATEPALETTEEDITOR=3;
+  // Hide PaletteEditor, show Controls and MainMenu
+  MSG_DEACTIVATEPALETTEEDITOR=4;
+  // Set Undo/Redo buttons' state depending on ImageUndosystem state.
+  MSG_SETIMAGEUNDOREDOBUTTON=5;
+  // Set Undo/Redo buttons' state depending on PaletteUndosystem state.
+  MSG_SETPALETTEUNDOREDOBUTTON=6;
+
+  // ------- Tool Messages ------- Range: 100-199 -------
+  // PICKCOL finished, IntValue holds the selected color index or -1 if no color selected.
+  MSG_PICKEDCOLOR=100;
+  // GETCEL or PUTCEL finished, reactivate selected tool.
+  MSG_RESTORECONTROLS=101;
   // ActiveColorIndex changed. Used in PaletteEditor
-  MSG_ACTIVECOLORINDEXCHANGED=11;
-  // Clear image to key color. Menu:Picture/Clear
-  MSG_CLEARPICTURE=13;
-  // Release CEL image. Menu:CEL/Release
-  MSG_RELEASECEL=14;
-  // Get CEL image. Menu:CEL/Get
-  MSG_GETCEL=15;
+  MSG_ACTIVECOLORINDEXCHANGED=102;
   // Show CEL image. Hides Controls and MainMenu then activates SHOWCEL tool.
-  MSG_SHOWCEL=16;
-  // Magnify CEL image. A dialog window appears where you can select beetween
-  // 2x 3x and 5x magnification and can cancel the whole operation.
-  MSG_OPENMAGNIFYCELDIALOG=17;
-  // Response from Magnify CEL dialog. Data contains magnification or 0 if cancelled.
-  MSG_MAGNIFYCEL=18;
-  // Rotate CEL 90, 180 or 270 degrees clockwise. A dialog window appears...
-  MSG_OPENROTATECELDIALOG=19;
-  // Response from Rotate CEL dialog. Rotate data*90 degrees clockwise.
-  MSG_ROTATECEL=20;
+  MSG_SHOWCEL=103;
   // GetCEL tool finished *successfully*. We should enable menus associated with CEL.
-  MSG_GETCELFINISHED=21;
+  MSG_GETCELFINISHED=104;
+  // KEY_GETCOLOR pressed, select color value under the cursor (if over drawarea).
+  MSG_SELECTCOLOR=105;
+
+  // ------- Menu Messages ------- Range: 200-299 -------
+  // Magnify CEL image. A dialog window appears where you can select beetween
+  // 2x 3x and 5x magnification and can cancel the whole operation. Menu:CEL/Magnify
+  MSG_OPENMAGNIFYCELDIALOG=200;
+  // Response from Magnify CEL dialog. Data contains magnification or 0 if cancelled.
+  MSG_MAGNIFYCEL=201;
+  // Rotate CEL 90, 180 or 270 degrees clockwise. A dialog window appears... Menu:CEL/Rotate
+  MSG_OPENROTATECELDIALOG=202;
+  // Response from Rotate CEL dialog. Rotate data*90 degrees clockwise.
+  MSG_ROTATECEL=203;
+  // Clear image to key color. Menu:Picture/Clear
+  MSG_CLEARPICTURE=204;
+  // Release CEL image. Menu:CEL/Release
+  MSG_RELEASECEL=205;
+  // Get CEL image. Menu:CEL/Get
+  MSG_GETCEL=206;
   // Put CEL image. Menu:CEL/Put
-  MSG_PUTCEL=22;
-  //  Save CEL image. Menu:CEL/Save
-  MSG_SAVECEL=23;
+  MSG_PUTCEL=207;
+  // Load CEL file. Menu:CEL/Load
+  MSG_LOADCEL=208;
+  // Save CEL image. Menu:CEL/Save
+  MSG_SAVECEL=209;
+  // Flip the CEL. 0 - Vertical, 1 - Horizontal. Menu:CEL/FLIP V and /FLIP H
+  MSG_FLIPCEL=210;
 
 var
   MM:TGFXManager;  // MediaManager to hold fonts and internal images
@@ -136,7 +143,7 @@ var
   ActiveInk:TBDInk;  // This is the selected ink
 
   ImageUndoSystem:TBDImageUndoSystem;  // Handles undo and redo things for Images
-//  PaletteUndoSystem:TB
+  PaletteUndoSystem:TBDPaletteUndoSystem;  // Handles undo and redo things for Palettes
 
   ActiveCluster:TColorCluster;  // The selected color cluster
 
@@ -259,19 +266,26 @@ var size:int64;b:byte;State:TStream;
 begin
   if not FileExists(STATEFILE) then exit;
   State:=TFileStream.Create(STATEFILE,fmOpenRead or fmShareDenyNone);
-  b:=0;
-  State.Read(b,1);
-  if b<>STATEDATAID then raise Exception.Create(Format('ID is not for System state data! (%.2x)',[b]));
-  size:=0;
-  State.Read(Size,4);
-  State.Read(b,1);
-  MainImage.LoadFromStream(State);
-  ImageUndoSystem.LoadFromStream(State);
-  if b and 1>0 then begin
-    CELImage:=TBDImage.Create(16,16);
-    CELImage.LoadFromStream(State);
+  try
+    b:=0;
+    State.Read(b,1);
+    if b<>STATEDATAID then raise Exception.Create(Format('ID is not for System state data! (%.2x)',[b]));
+    size:=0;
+    State.Read(Size,4);
+    State.Read(b,1);
+    if b=1 then begin
+      State.Read(b,1);  // Flags
+      MainImage.LoadFromStream(State);
+      if b and 1>0 then begin
+        CELImage:=TBDImage.Create(16,16);
+        CELImage.LoadFromStream(State);
+      end;
+      if b and 2>0 then ImageUndoSystem.LoadFromStream(State);
+      if b and 4>0 then PaletteUndoSystem.LoadFromStream(State);
+    end else raise Exception.Create(Format('Unknown system state version! (%d)',[b]));
+  finally
+    FreeAndNil(State);
   end;
-  FreeAndNil(State);
 end;
 
 procedure LoadAssets;
@@ -332,19 +346,12 @@ begin
   Tools:=TBDTools.Create;
   Log.LogStatus('  Initializing Undo system...');
   ImageUndoSystem:=TBDImageUndoSystem.Create;
-//  if FileExists('temp.bdu') then UndoSystem.LoadFromFile('temp.bdu');
-  MessageQueue.AddMessage(MSG_SETUNDOREDOBUTTON);
+  PaletteUndoSystem:=TBDPaletteUndoSystem.Create;
+  MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
+  MessageQueue.AddMessage(MSG_SETPALETTEUNDOREDOBUTTON);
 
   Log.LogStatus('Loading previous session data...');
   LoadState;
-{  Log.LogStatus('  Image...');
-  if FileExists(TEMPIMAGEFILE) then MainImage.LoadFromFile(TEMPIMAGEFILE);
-  Log.LogStatus('  CEL...');
-  if FileExists(TEMPCELIMAGEFILE) then begin
-    CELImage:=TBDImage.Create(16,16);
-    CELImage.LoadFromFile(TEMPCELIMAGEFILE);
-  end else CELImage:=nil;}
-//  ActiveInk:=Inks[Settings.ActiveInk];
 end;
 
 procedure WriteState;
@@ -357,12 +364,17 @@ begin
   curr:=State.Position;
   i:=0;
   State.Write(i,4);
+  i:=1;
+  State.Write(i,1);
   i:=0;
   if Assigned(CELImage) then i:=i or 1;
+  if ImageUndoSystem.Count>0 then i:=i or 2;
+  if PaletteUndoSystem.Count>0 then i:=i or 4;
   State.Write(i,1);
   MainImage.SaveToStream(State);
-  ImageUndoSystem.SaveToStream(State);
   if Assigned(CELImage) then CELImage.SaveToStream(State);
+  if ImageUndoSystem.Count>0 then ImageUndoSystem.SaveToStream(State);
+  if PaletteUndoSystem.Count>0 then PaletteUndoSystem.SaveToStream(State);
   i:=State.Position-curr-4;
   State.Position:=curr;
   State.write(i,4);
@@ -379,6 +391,7 @@ begin
     Settings.SaveToFile(SETTINGSFILE);
     FreeAndNil(Settings);
   end;
+  if Assigned(PaletteUndoSystem) then FreeAndNil(PaletteUndoSystem);
   if Assigned(ImageUndoSystem) then FreeAndNil(ImageUndoSystem);
   if Assigned(Tools) then FreeAndNil(Tools);
   if Assigned(Inks) then FreeAndNil(Inks);
