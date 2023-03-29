@@ -176,7 +176,6 @@ begin
   fFrameX:=MouseXToFrame(x);
   fFrameY:=MouseYToFrame(y);
   ActiveTool.Move(fFrameX,fFrameY);
-//  MessageQueue.AddMessage(MSG_MOUSECOORDS,'',(fFrameX and $7fff)+(fFrameY and $7fff)<<16);
   Result:=ActiveTool.MouseMove(fFrameX,fFrameY,buttons);
   if not Result then begin
     if fMousePanning=mpWaitMove then fMousePanning:=mpPanning;

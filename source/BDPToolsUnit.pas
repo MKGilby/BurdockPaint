@@ -275,7 +275,7 @@ begin
       1:begin
           if fSX>x then begin i:=x;x:=fSX;fSX:=i;end;
           if fSY>y then begin i:=y;y:=fSY;fSY:=i;end;
-          UndoSystem.AddImageUndo(fSX,fSY,x-fSX+1,y-fSY+1);
+          ImageUndoSystem.AddImageUndo(fSX,fSY,x-fSX+1,y-fSY+1);
           ActiveInk.InitializeArea(fSX,fSY,x,y);
           if Settings.FillShapes then begin
             if ActiveInk.SupportsOnTheFly then
@@ -292,7 +292,7 @@ begin
               ActiveInk.PostProcess;
             end;
           end;
-          UndoSystem.AddImageRedoToLastUndo(fSX,fSY,x-fSX+1,y-fSY+1);
+          ImageUndoSystem.AddImageRedoToLastUndo(fSX,fSY,x-fSX+1,y-fSY+1);
           InfoBar.ShowText('');
           fState:=0;
           Result:=true;
@@ -387,7 +387,7 @@ begin
         end;
       1:begin
           r:=round(sqrt(sqr(fSX-x)+sqr(fSY-y)));
-          UndoSystem.AddImageUndo(fSX-r,fSY-r,r*2+1,r*2+1);
+          ImageUndoSystem.AddImageUndo(fSX-r,fSY-r,r*2+1,r*2+1);
           ActiveInk.InitializeArea(fSX-r,fSY-r,fSX+r,fSY+r);
           if ActiveInk.SupportsOnTheFly then begin
             if Settings.FillShapes then
@@ -401,7 +401,7 @@ begin
               MainImage.Circle(fSX,fSY,r,POSTPROCESSCOLOR);
             ActiveInk.PostProcess;
           end;
-          UndoSystem.AddImageRedoToLastUndo(fSX-r,fSY-r,r*2+1,r*2+1);
+          ImageUndoSystem.AddImageRedoToLastUndo(fSX-r,fSY-r,r*2+1,r*2+1);
           InfoBar.ShowText('');
           Result:=true;
           fState:=0;
@@ -555,9 +555,9 @@ function TBDToolDraw.MouseUp(x,y,button:integer):boolean;
 begin
   if fDown then begin
     fDown:=false;
-    UndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+    ImageUndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
     FreeAndNil(fTempImage);
-    UndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
+    ImageUndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
     Result:=true;
   end else Result:=false;
 end;
@@ -598,11 +598,11 @@ begin
 
     FloodFillWithPostProcessColor(x,y);
 
-    UndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+    ImageUndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
     FreeAndNil(fTempImage);
     ActiveInk.InitializeArea(fLeft,fTop,fRight,fBottom);
     ActiveInk.PostProcess;
-    UndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
+    ImageUndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
     Result:=true;
   end else Result:=false;
 end;
@@ -727,12 +727,12 @@ begin
           fTempImage.PutImage(0,0,MainImage);
 
           FillToWithPostProcessColor(x,y);
-          UndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+          ImageUndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
           FreeAndNil(fTempImage);
 
           ActiveInk.InitializeArea(fLeft,fTop,fRight,fBottom);
           ActiveInk.PostProcess;
-          UndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
+          ImageUndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
           fState:=0;
           Result:=true;
         end;
@@ -886,7 +886,7 @@ begin
             Top:=fSY;
             Height:=y-fSY+1;
           end;
-          UndoSystem.AddImageUndo(Left,Top,Width,Height);
+          ImageUndoSystem.AddImageUndo(Left,Top,Width,Height);
           ActiveInk.InitializeArea(fSX,fSY,x,y);
           if ActiveInk.SupportsOnTheFly then
             DrawLineWithInk(fSX,fSY,x,y)
@@ -894,7 +894,7 @@ begin
             MainImage.Line(fSX,fSY,fX,fY,POSTPROCESSCOLOR);
             ActiveInk.PostProcess;
           end;
-          UndoSystem.AddImageRedoToLastUndo(Left,Top,Width,Height);
+          ImageUndoSystem.AddImageRedoToLastUndo(Left,Top,Width,Height);
           Result:=true;
           fState:=0;
           InfoBar.ShowText('');
@@ -1038,11 +1038,11 @@ begin
           if j>fBottom then fBottom:=j;
           if j<fTop then fTop:=j;
         end;
-    UndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+    ImageUndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
     FreeAndNil(fTempImage);
     ActiveInk.InitializeArea(fLeft,fTop,fRight,fBottom);
     ActiveInk.PostProcess;
-    UndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
+    ImageUndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
     Result:=true;
   end else Result:=false;
 end;
@@ -1160,12 +1160,12 @@ begin
           fState:=-1;
           CelImage.Left:=CelImage.Left+fX-fSX;
           CelImage.Top:=CelImage.Top+fY-fSY;
-          UndoSystem.AddImageUndo(CelImage.Left,Celimage.Top,CelImage.Width,CELImage.Height);
+          ImageUndoSystem.AddImageUndo(CelImage.Left,Celimage.Top,CelImage.Width,CELImage.Height);
           if Settings.ClearKeyColor then
             MainImage.PutImage(CELImage.Left,CELImage.Top,CELImage,Settings.SelectedColors[0])
           else
             MainImage.PutImage(CELImage.Left,CELImage.Top,CELImage);
-          UndoSystem.AddImageRedoToLastUndo(CelImage.Left,Celimage.Top,CelImage.Width,CELImage.Height);
+          ImageUndoSystem.AddImageRedoToLastUndo(CelImage.Left,Celimage.Top,CelImage.Width,CELImage.Height);
           MessageQueue.AddMessage(MSG_RESTORECONTROLS);
         end;
     end;

@@ -43,6 +43,7 @@ uses SysUtils, BDPSharedUnit, MKMouse2, BDPToolsUnit;
 { TBDPaletteEditor }
 
 constructor TBDPaletteEditor.Create;
+var atmB:TBDButton;
 begin
   inherited Create;
   fLeft:=0;
@@ -110,6 +111,15 @@ begin
     OnChange:=OnSliderBankChange;
   end;
   AddChild(fSliderBank);
+
+  atmB:=TBDButton.Create(6,fTop+6,127-2*18,'UNDO','UNDO LAST PALETTE OPERATION',TMessage.Init(MSG_NONE,0));
+  atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  atmB.Name:='PALUNDO';
+  AddChild(atmB);
+  atmB:=TBDButton.Create(6,fTop+6+30,127-2*18,'REDO','REDO LAST UNDOED PALETTE OPERATION',TMessage.Init(MSG_NONE,0));
+  atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  atmB.Name:='PALREDO';
+  AddChild(atmB);
   MouseObjects.Add(Self);
 end;
 

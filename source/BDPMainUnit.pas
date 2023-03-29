@@ -178,9 +178,9 @@ begin
             end;
           end;
           MSG_CLEARPICTURE:begin
-            UndoSystem.AddImageUndo(0,0,MainImage.Width,MainImage.Height);
+            ImageUndoSystem.AddImageUndo(0,0,MainImage.Width,MainImage.Height);
             MainImage.Bar(0,0,MainImage.Width,MainImage.Height,Settings.SelectedColors[0]);
-            UndoSystem.AddImageRedoToLastUndo(0,0,MainImage.Width,MainImage.Height);
+            ImageUndoSystem.AddImageRedoToLastUndo(0,0,MainImage.Width,MainImage.Height);
           end;
           MSG_RELEASECEL:begin
             if Assigned(CELImage) then FreeAndNil(CELImage);

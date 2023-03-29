@@ -4,7 +4,7 @@ unit BDPUndoUnit;
 
 interface
 
-uses classes, fgl, BDPImageUnit;
+uses classes, fgl, BDPImageUnit, BDPPaletteUnit, BDPMessageUnit;
 
 type
 
@@ -36,15 +36,28 @@ type
     fBefore,fAfter:TBDImage;
   end;
 
+  { TBDUndoColorItem }
+
+  TBDUndoColorItem=class(TBDUndoItem)
+    constructor Create(iStart:integer;iBefore:TBDPalette);
+    constructor CreateFromStream(Source:TStream);
+    destructor Destroy; override;
+    procedure AddAfter(iAfter:TBDPalette);
+    procedure Undo; override;
+    procedure Redo; override;
+    procedure SaveToStream(Target:TStream); override;
+  private
+    fStart:integer;
+    fBefore,fAfter:TBDPalette;
+  end;
+
   TBDUndoList=TFPGObjectList<TBDUndoItem>;
 
   { TBDUndoSystem }
 
-  TBDUndoSystem=class
+  TBDUndoSystem=class(TBDUndoList)
     constructor Create;
     destructor Destroy; override;
-    procedure AddImageUndo(Left,Top,Width,Height:integer;Image:TBDImage=nil);
-    procedure AddImageRedoToLastUndo(Left,Top,Width,Height:integer);
     procedure Undo;
     procedure Redo;
     procedure SaveToFile(Filename:string);
@@ -55,8 +68,25 @@ type
     function CanUndo:boolean;
     function CanRedo:boolean;
   private
-    fList:TBDUndoList;
     fPointer:integer;  // points to the item that will be undoed if requested.
+  protected
+    fAfterUndoRedoMessage:TMessage;
+  end;
+
+  { TBDImageUndoSystem }
+
+  TBDImageUndoSystem=class(TBDUndoSystem)
+    constructor Create;
+    procedure AddImageUndo(Left,Top,Width,Height:integer;Image:TBDImage=nil);
+    procedure AddImageRedoToLastUndo(Left,Top,Width,Height:integer);
+  end;
+
+  { TBDPaletteUndoSystem }
+
+  TBDPaletteUndoSystem=class(TBDUndoSystem)
+    constructor Create;
+    procedure AddPaletteUndo(Start,Count:integer);
+    procedure AddPaletteRedoToLastUndo(Start,Count:integer);
   end;
 
 implementation
@@ -67,7 +97,7 @@ const
   UNDODATAID=$55;
   UNDOOPERATIONDATAID=$4F;
   UNDOREGIONSUBID=$00;
-  UNDOPALETTESUBID=$01;
+  UNDOCOLORSUBID=$01;
 
 { TBDUndoItem }
 
@@ -150,70 +180,102 @@ begin
     raise Exception.Create('UndoImageItem save error: No AfterImage assigned!');
 end;
 
+{ TBDUndoColorItem }
+
+constructor TBDUndoColorItem.Create(iStart:integer; iBefore:TBDPalette);
+begin
+  fStart:=iStart;
+  fBefore:=iBefore;
+end;
+
+constructor TBDUndoColorItem.CreateFromStream(Source:TStream);
+begin
+  inherited Create;
+  fStart:=0;
+  Source.Read(fStart,2);
+  fBefore:=TBDPalette.Create;
+  fBefore.LoadFromStream(Source);
+  fAfter:=TBDPalette.Create;
+  fAfter.LoadFromStream(Source);
+  fRedoable:=true;
+end;
+
+destructor TBDUndoColorItem.Destroy;
+begin
+  if Assigned(fBefore) then FreeAndNil(fBefore);
+  if Assigned(fAfter) then FreeAndNil(fAfter);
+  inherited Destroy;
+end;
+
+procedure TBDUndoColorItem.AddAfter(iAfter:TBDPalette);
+begin
+  fAfter:=iAfter;
+end;
+
+procedure TBDUndoColorItem.Undo;
+begin
+  MainImage.Palette.CopyColorsFrom(fBefore,fStart,fBefore.Size);
+end;
+
+procedure TBDUndoColorItem.Redo;
+begin
+  if Assigned(fAfter) then
+    MainImage.Palette.CopyColorsFrom(fAfter,fStart,fAfter.Size);
+end;
+
+procedure TBDUndoColorItem.SaveToStream(Target:TStream);
+var i:integer;curr:int64;
+begin
+  if Assigned(fAfter) then begin
+    i:=UNDOOPERATIONDATAID;
+    Target.Write(i,1);
+    curr:=Target.Position;
+    i:=0;
+    Target.Write(i,4);
+    i:=UNDOCOLORSUBID;
+    Target.Write(i,1);
+    Target.Write(fStart,2);
+    fBefore.SaveToStream(Target);
+    fAfter.SaveToStream(Target);
+    i:=Target.Position-curr-4;
+    Target.Position:=curr;
+    Target.write(i,4);
+    Target.Position:=Target.Position+i;
+  end else
+    raise Exception.Create('UndoColorItem save error: No AfterPalette assigned!');
+end;
+
 { TBDUndoSystem }
 
 constructor TBDUndoSystem.Create;
 begin
-  fList:=TBDUndoList.Create;
-  fList.FreeObjects:=true;
+  inherited Create;
+  FreeObjects:=true;
   fPointer:=-1;
+  fAfterUndoRedoMessage:=TMessage.Init(MSG_NONE,0);
 end;
 
 destructor TBDUndoSystem.Destroy;
 begin
-  if Assigned(fList) then FreeAndNil(fList);
   inherited Destroy;
-end;
-
-procedure TBDUndoSystem.AddImageUndo(Left,Top,Width,Height:integer;Image:TBDImage);
-var atm:TBDUndoRegionItem;atmi:TBDImage;
-begin
-  if (fPointer<>fList.Count-1) then   // If not the last item, delete items after it.
-    fList.DeleteRange(fPointer+1,fList.Count-1);
-  if fList.Count=Settings.UndoLimit then fList.Delete(0);
-  atmi:=TBDImage.Create(Width,Height);
-  atmi.Left:=Left;
-  atmi.Top:=Top;
-  if Image=nil then
-    atmi.PutImagePart(0,0,Left,Top,Width,Height,MainImage)
-  else
-    atmi.PutImagePart(0,0,Left,Top,Width,Height,Image);
-  atm:=TBDUndoRegionItem.Create(atmi);
-  fList.Add(atm);
-  fPointer:=fList.Count-1;
-end;
-
-procedure TBDUndoSystem.AddImageRedoToLastUndo(Left,Top,Width,Height:integer);
-var atmi:TBDImage;
-begin
-  if fPointer>-1 then begin
-    if not fList[fPointer].Redoable then begin
-      atmi:=TBDImage.Create(Width,Height);
-      atmi.Left:=Left;
-      atmi.Top:=Top;
-      atmi.PutImagePart(0,0,Left,Top,Width,Height,MainImage);
-      TBDUndoRegionItem(fList[fPointer]).AddAfter(atmi);
-      MessageQueue.AddMessage(MSG_SETUNDOREDOBUTTON);
-    end;
-  end;
 end;
 
 procedure TBDUndoSystem.Undo;
 begin
-  if (fPointer>=0) and (fPointer<fList.Count) then begin
-    fList[fPointer].Undo;
+  if (fPointer>=0) and (fPointer<Count) then begin
+    Self[fPointer].Undo;
     dec(fPointer);  // It can go below 0, -1 shows that no more undoable task remains.
-    MessageQueue.AddMessage(MSG_SETUNDOREDOBUTTON);
+    MessageQueue.AddMessage(fAfterUndoRedoMessage);
   end;
 end;
 
 procedure TBDUndoSystem.Redo;
 begin
-  if (fPointer+1>=0) and (fPointer+1<fList.Count) then begin
-    if fList[fPointer+1].Redoable then begin
+  if (fPointer+1>=0) and (fPointer+1<Count) then begin
+    if Self[fPointer+1].Redoable then begin
       inc(fPointer);
-      fList[fPointer].Redo;
-      MessageQueue.AddMessage(MSG_SETUNDOREDOBUTTON);
+      Self[fPointer].Redo;
+      MessageQueue.AddMessage(fAfterUndoRedoMessage);
     end;
   end;
 end;
@@ -234,11 +296,11 @@ begin
   curr:=Target.Position;
   i:=0;
   Target.Write(i,4);
-  i:=fList.Count;
+  i:=Self.Count;
   Target.Write(i,2);
   Target.Write(fPointer,2);
-  for i:=0 to fList.Count-1 do
-    fList[i].SaveToStream(Target);
+  for i:=0 to Self.Count-1 do
+    Self[i].SaveToStream(Target);
   i:=Target.Position-curr-4;
   Target.Position:=curr;
   Target.write(i,4);
@@ -282,8 +344,8 @@ begin
   Source.Read(Size,4);
   curr:=Source.Position;
   Source.Read(b,1);
-  if b=UNDOREGIONSUBID then fList.Add(TBDUndoRegionItem.CreateFromStream(Source))
-  else if b=UNDOPALETTESUBID then // not yet;
+  if b=UNDOREGIONSUBID then Self.Add(TBDUndoRegionItem.CreateFromStream(Source))
+  else if b=UNDOCOLORSUBID then Self.Add(TBDUndoColorItem.CreateFromStream(Source));
   Source.Position:=curr+size;
 end;
 
@@ -294,7 +356,84 @@ end;
 
 function TBDUndoSystem.CanRedo: boolean;
 begin
-  Result:=fPointer<fList.Count-1;
+  Result:=fPointer<Self.Count-1;
+end;
+
+{ TBDImageUndoSystem }
+
+constructor TBDImageUndoSystem.Create;
+begin
+  inherited Create;
+  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETUNDOREDOBUTTON,0);
+end;
+
+procedure TBDImageUndoSystem.AddImageUndo(Left,Top,Width,Height:integer;Image:TBDImage);
+var atm:TBDUndoRegionItem;atmi:TBDImage;
+begin
+  if (fPointer<>Self.Count-1) then   // If not the last item, delete items after it.
+    Self.DeleteRange(fPointer+1,Self.Count-1);
+  if Self.Count=Settings.UndoLimit then Self.Delete(0);
+  atmi:=TBDImage.Create(Width,Height);
+  atmi.Left:=Left;
+  atmi.Top:=Top;
+  if Image=nil then
+    atmi.PutImagePart(0,0,Left,Top,Width,Height,MainImage)
+  else
+    atmi.PutImagePart(0,0,Left,Top,Width,Height,Image);
+  atm:=TBDUndoRegionItem.Create(atmi);
+  Self.Add(atm);
+  fPointer:=Self.Count-1;
+  MessageQueue.AddMessage(fAfterUndoRedoMessage);
+end;
+
+procedure TBDImageUndoSystem.AddImageRedoToLastUndo(Left,Top,Width,Height:integer);
+var atmi:TBDImage;
+begin
+  if fPointer>-1 then begin
+    if not Self[fPointer].Redoable then begin
+      atmi:=TBDImage.Create(Width,Height);
+      atmi.Left:=Left;
+      atmi.Top:=Top;
+      atmi.PutImagePart(0,0,Left,Top,Width,Height,MainImage);
+      TBDUndoRegionItem(Self[fPointer]).AddAfter(atmi);
+      MessageQueue.AddMessage(fAfterUndoRedoMessage);
+    end;
+  end;
+end;
+
+{ TBDPaletteUndoSystem }
+
+constructor TBDPaletteUndoSystem.Create;
+begin
+  inherited Create;
+  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETUNDOREDOBUTTON,0);
+end;
+
+procedure TBDPaletteUndoSystem.AddPaletteUndo(Start,Count:integer);
+var atm:TBDUndoColorItem;atmP:TBDPalette;
+begin
+  if (fPointer<>Self.Count-1) then   // If not the last item, delete items after it.
+    Self.DeleteRange(fPointer+1,Self.Count-1);
+  if Self.Count=Settings.UndoLimit then Self.Delete(0);
+  atmP:=TBDPalette.Create(Count);
+  atmP.CopyColorsFrom(MainImage.Palette,Start,Count);
+  atm:=TBDUndoColorItem.Create(Start,atmP);
+  Self.Add(atm);
+  fPointer:=Self.Count-1;
+  MessageQueue.AddMessage(fAfterUndoRedoMessage);
+end;
+
+procedure TBDPaletteUndoSystem.AddPaletteRedoToLastUndo(Start,Count:integer);
+var atmP:TBDPalette;
+begin
+  if fPointer>-1 then begin
+    if not Self[fPointer].Redoable then begin
+      atmP:=TBDPalette.Create(Count);
+      atmP.CopyColorsFrom(MainImage.Palette,Start,Count);
+      TBDUndoColorItem(Self[fPointer]).AddAfter(atmP);
+      MessageQueue.AddMessage(fAfterUndoRedoMessage);
+    end;
+  end;
 end;
 
 end.

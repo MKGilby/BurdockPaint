@@ -135,7 +135,8 @@ var
   Inks:TBDInks;  // All inks are loaded into this list
   ActiveInk:TBDInk;  // This is the selected ink
 
-  UndoSystem:TBDUndoSystem;  // Handles undo and redo things
+  ImageUndoSystem:TBDImageUndoSystem;  // Handles undo and redo things for Images
+//  PaletteUndoSystem:TB
 
   ActiveCluster:TColorCluster;  // The selected color cluster
 
@@ -265,7 +266,7 @@ begin
   State.Read(Size,4);
   State.Read(b,1);
   MainImage.LoadFromStream(State);
-  UndoSystem.LoadFromStream(State);
+  ImageUndoSystem.LoadFromStream(State);
   if b and 1>0 then begin
     CELImage:=TBDImage.Create(16,16);
     CELImage.LoadFromStream(State);
@@ -330,7 +331,7 @@ begin
   Log.LogStatus('  Creating tools...');
   Tools:=TBDTools.Create;
   Log.LogStatus('  Initializing Undo system...');
-  UndoSystem:=TBDUndoSystem.Create;
+  ImageUndoSystem:=TBDImageUndoSystem.Create;
 //  if FileExists('temp.bdu') then UndoSystem.LoadFromFile('temp.bdu');
   MessageQueue.AddMessage(MSG_SETUNDOREDOBUTTON);
 
@@ -349,7 +350,7 @@ end;
 procedure WriteState;
 var i,curr:integer;State:TStream;
 begin
-  if not (Assigned(MainImage) and Assigned(UndoSystem)) then exit;
+  if not (Assigned(MainImage) and Assigned(ImageUndoSystem)) then exit;
   State:=TFileStream.Create(STATEFILE,fmCreate);
   i:=STATEDATAID;
   State.Write(i,1);
@@ -360,7 +361,7 @@ begin
   if Assigned(CELImage) then i:=i or 1;
   State.Write(i,1);
   MainImage.SaveToStream(State);
-  UndoSystem.SaveToStream(State);
+  ImageUndoSystem.SaveToStream(State);
   if Assigned(CELImage) then CELImage.SaveToStream(State);
   i:=State.Position-curr-4;
   State.Position:=curr;
@@ -373,29 +374,18 @@ procedure FreeAssets;
 begin
   WriteState;
   if Assigned(CELHelperImage) then FreeAndNil(CELHelperImage);
-  if Assigned(CELImage) then begin
-//    CELImage.SaveToFile(TEMPCELIMAGEFILE);
-//    CELImage.ExportToPNG('CELtemp.png');
-    FreeAndNil(CELImage);
-  end;
+  if Assigned(CELImage) then FreeAndNil(CELImage);
   if Assigned(Settings) then begin
-
     Settings.SaveToFile(SETTINGSFILE);
     FreeAndNil(Settings);
   end;
-  if Assigned(UndoSystem) then begin
-//    UndoSystem.SaveToFile('temp.bdu');
-    FreeAndNil(UndoSystem);
-  end;
+  if Assigned(ImageUndoSystem) then FreeAndNil(ImageUndoSystem);
   if Assigned(Tools) then FreeAndNil(Tools);
   if Assigned(Inks) then FreeAndNil(Inks);
   if Assigned(VibroColors) then FreeAndNil(VibroColors);
   if Assigned(Cursor) then FreeAndNil(Cursor);
   if Assigned(OverlayImage) then FreeAndNil(OverlayImage);
-  if Assigned(MainImage) then begin
-//    MainImage.SaveToFile(TEMPIMAGEFILE);
-    FreeAndNil(MainImage);
-  end;
+  if Assigned(MainImage) then FreeAndNil(MainImage);
   if Assigned(MessageQueue) then FreeAndNil(MessageQueue);
   if Assigned(InfoBar) then FreeAndNil(InfoBar);
   if Assigned(MM) then FreeAndNil(MM);

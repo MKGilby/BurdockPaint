@@ -276,13 +276,13 @@ end;
 
 function TBDControls.UndoButtonClick(Sender:TObject; x,y,buttons:integer):boolean;
 begin
-  UndoSystem.Undo;
+  ImageUndoSystem.Undo;
   Result:=true;
 end;
 
 function TBDControls.RedoButtonClick(Sender:TObject; x,y,buttons:integer):boolean;
 begin
-  UndoSystem.Redo;
+  ImageUndoSystem.Redo;
   Result:=true;
 end;
 
@@ -297,8 +297,8 @@ begin
   Result:=false;
   case msg.TypeID of
     MSG_SETUNDOREDOBUTTON:begin
-      fUndoButton.Enabled:=UndoSystem.CanUndo;
-      fRedoButton.Enabled:=UndoSystem.CanRedo;
+      fUndoButton.Enabled:=ImageUndoSystem.CanUndo;
+      fRedoButton.Enabled:=ImageUndoSystem.CanRedo;
     end;
     MSG_PICKEDCOLOR:begin
       fColorSelector.SetSelectedSlotTo(msg.DataInt);
