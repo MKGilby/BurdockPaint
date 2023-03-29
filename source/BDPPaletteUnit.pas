@@ -50,11 +50,14 @@ type
     procedure LoadCOL(Source:TStream;startindex:integer); overload;
 
     // Copies colors from the specified palette. Omit count to copy all
-    // colors from start, omit start to copy whole palette.
-    procedure CopyColorsFrom(Source:TBDPalette;start:integer=0;count:integer=-1);
+    // colors from SourceStart.
+    procedure CopyColorsFrom(Source:TBDPalette;SourceStart,TargetStart:integer;count:integer=-1);
 
     // Resizes the palette, retaining color data that fits into new size.
     procedure Resize(newSize:integer);
+
+    // Resize the palette to fit the colors
+    procedure ResizeAndCopyColorsFrom(Source:TBDPalette;start:integer=0;count:integer=-1);
   private
     fEntries:pointer;
     fMaxEntries:integer;
@@ -351,21 +354,16 @@ begin
   end;
 end;
 
-procedure TBDPalette.CopyColorsFrom(Source:TBDPalette; start:integer;
-  count:integer);
-var
-  i,c:Integer;
+procedure TBDPalette.CopyColorsFrom(Source:TBDPalette;SourceStart,TargetStart:integer; count:integer);
+var i,c:Integer;
 begin
-  if (start>=0) and (start<Source.Size) then begin
+  if (SourceStart>=0) and (SourceStart<Source.Size) and
+     (TargetStart>=0) and (TargetStart<Size) then begin
     c:=count;
-    if (c=-1) or (start+c>Source.Size) then c:=Source.Size-start;
-    if fMaxEntries<>c then begin
-      Freemem(fEntries);
-      fMaxEntries:=c;
-      fEntries:=Getmem(fMaxEntries*4);
-    end;
-    for i:=0 to fMaxEntries do Colors[i]:=Source.Colors[start+i];
-  end;  // Start is out of range so nothing to copy.
+    if (c=-1) or (SourceStart+c>Source.Size) then c:=Source.Size-SourceStart;
+    if (TargetStart+c>Size) then c:=Size-TargetStart;
+    for i:=0 to c-1 do Colors[TargetStart+i]:=Source.Colors[SourceStart+i];
+  end;
 end;
 
 procedure TBDPalette.Resize(newSize:integer);
@@ -383,6 +381,21 @@ begin
 
   fMaxEntries:=newSize;
   Freemem(p);
+end;
+
+procedure TBDPalette.ResizeAndCopyColorsFrom(Source:TBDPalette; start:integer; count:integer);
+var i,c:Integer;
+begin
+  if (start>=0) and (start<Source.Size) then begin
+    c:=count;
+    if (c=-1) or (start+c>Source.Size) then c:=Source.Size-start;
+    if fMaxEntries<>c then begin
+      Freemem(fEntries);
+      fMaxEntries:=c;
+      fEntries:=Getmem(fMaxEntries*4);
+    end;
+    for i:=0 to fMaxEntries do Colors[i]:=Source.Colors[start+i];
+  end;  // Start is out of range so nothing to copy.
 end;
 
 function TBDPalette.fGetColor(index:integer):uint32;

@@ -21,6 +21,7 @@ Todo:
 - File format change in system state. This one breaks the compatibility with older
   saves. (Added Version so it won't do it in the future.)
 - ColorUndoSystem is included in the system state save.
+- After changing palette color with sliders it is possible to undo/redo the change.
 
 2023.03.28
 - Moving mouse over the palette in the PaletteEditor show color hint.

@@ -378,7 +378,6 @@ begin
   i:=State.Position-curr-4;
   State.Position:=curr;
   State.write(i,4);
-//  State.Position:=State.Position+i;
   FreeAndNil(State);
 end;
 

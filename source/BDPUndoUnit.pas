@@ -127,10 +127,10 @@ constructor TBDUndoRegionItem.CreateFromStream(Source:TStream);
 begin
   inherited Create;
   fBefore:=TBDImage.Create(16,16);
-  fBefore.Palette.CopyColorsFrom(MainImage.Palette);
+  fBefore.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
   fBefore.LoadWholeImageDataFromStream(Source);
   fAfter:=TBDImage.Create(16,16);
-  fAfter.Palette.CopyColorsFrom(MainImage.Palette);
+  fAfter.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
   fAfter.LoadWholeImageDataFromStream(Source);
   fRedoable:=true;
 end;
@@ -210,17 +210,18 @@ end;
 procedure TBDUndoColorItem.AddAfter(iAfter:TBDPalette);
 begin
   fAfter:=iAfter;
+  fRedoable:=true;
 end;
 
 procedure TBDUndoColorItem.Undo;
 begin
-  MainImage.Palette.CopyColorsFrom(fBefore,fStart,fBefore.Size);
+  MainImage.Palette.CopyColorsFrom(fBefore,0,fStart,fBefore.Size);
 end;
 
 procedure TBDUndoColorItem.Redo;
 begin
   if Assigned(fAfter) then
-    MainImage.Palette.CopyColorsFrom(fAfter,fStart,fAfter.Size);
+    MainImage.Palette.CopyColorsFrom(fAfter,0,fStart,fAfter.Size);
 end;
 
 procedure TBDUndoColorItem.SaveToStream(Target:TStream);
@@ -416,7 +417,7 @@ begin
     Self.DeleteRange(fPointer+1,Self.Count-1);
   if Self.Count=Settings.UndoLimit then Self.Delete(0);
   atmP:=TBDPalette.Create(Count);
-  atmP.CopyColorsFrom(MainImage.Palette,Start,Count);
+  atmP.ResizeAndCopyColorsFrom(MainImage.Palette,Start,Count);
   atm:=TBDUndoColorItem.Create(Start,atmP);
   Self.Add(atm);
   fPointer:=Self.Count-1;
@@ -429,7 +430,7 @@ begin
   if fPointer>-1 then begin
     if not Self[fPointer].Redoable then begin
       atmP:=TBDPalette.Create(Count);
-      atmP.CopyColorsFrom(MainImage.Palette,Start,Count);
+      atmP.ResizeAndCopyColorsFrom(MainImage.Palette,Start,Count);
       TBDUndoColorItem(Self[fPointer]).AddAfter(atmP);
       MessageQueue.AddMessage(fAfterUndoRedoMessage);
     end;

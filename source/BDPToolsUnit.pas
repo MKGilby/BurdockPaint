@@ -536,7 +536,7 @@ function TBDToolDraw.MouseDown(x,y,button:integer):boolean;
 begin
   if button=SDL_BUTTON_LEFT then begin
     fTempImage:=TBDImage.Create(MainImage.Width,MainImage.Height);
-    fTempImage.Palette.CopyColorsFrom(MainImage.Palette);
+    fTempImage.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
     fTempImage.PutImage(0,0,MainImage);
     MainImage.PutPixel(x,y,ActiveInk.GetColorIndexAt(x,y));
     Result:=true;
@@ -593,7 +593,7 @@ begin
     fRight:=x;
     fBottom:=y;
     fTempImage:=TBDImage.Create(MainImage.Width,MainImage.Height);
-    fTempImage.Palette.CopyColorsFrom(MainImage.Palette);
+    fTempImage.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
     fTempImage.PutImage(0,0,MainImage);
 
     FloodFillWithPostProcessColor(x,y);
@@ -723,7 +723,7 @@ begin
           fBottom:=y;
 
           fTempImage:=TBDImage.Create(MainImage.Width,MainImage.Height);
-          fTempImage.Palette.CopyColorsFrom(MainImage.Palette);
+          fTempImage.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
           fTempImage.PutImage(0,0,MainImage);
 
           FillToWithPostProcessColor(x,y);
@@ -1022,7 +1022,7 @@ var i,j,sc:integer;
 begin
   if button=SDL_BUTTON_LEFT then begin
     fTempImage:=TBDImage.Create(MainImage.Width,MainImage.Height);
-    fTempImage.Palette.CopyColorsFrom(MainImage.Palette);
+    fTempImage.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
     fTempImage.PutImage(0,0,MainImage);
     fLeft:=MainImage.Width;
     fRight:=-1;
@@ -1074,7 +1074,7 @@ begin
           if y<fSY then begin i:=y;y:=fSY;fSY:=i;end;
           if Assigned(CELImage) then FreeAndNil(CELImage);
           CELImage:=TBDImage.Create(x-fSX+1,y-fSY+1);
-          CELImage.Palette.CopyColorsFrom(MainImage.Palette);
+          CELImage.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
           CELImage.PutImagePart(0,0,fSX,fSY,x-fSX+1,y-fSY+1,MainImage);
           CELImage.Left:=fSX;
           CELImage.Top:=fSY;
@@ -1141,7 +1141,7 @@ end;
 
 procedure TBDToolPutCel.Initialize;
 begin
-  CELHelperImage.Palette.CopyColorsFrom(CELImage.Palette);
+  CELHelperImage.Palette.ResizeAndCopyColorsFrom(CELImage.Palette);
   CELHelperImage.Palette.Resize(CELHelperImage.Palette.Size+1);
   CELHelperImage.Palette[CELHelperImage.Palette.Size]:=0;
   CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,CELHelperImage.Palette.Size);
@@ -1315,7 +1315,7 @@ end;
 
 procedure TBDToolShowCEL.Initialize;
 begin
-  CELHelperImage.Palette.CopyColorsFrom(CELImage.Palette);
+  CELHelperImage.Palette.ResizeAndCopyColorsFrom(CELImage.Palette);
   CELHelperImage.Palette.Resize(CELHelperImage.Palette.Size+1);
   CELHelperImage.Palette[CELHelperImage.Palette.Size]:=0;
   CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,CELHelperImage.Palette.Size);
