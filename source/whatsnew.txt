@@ -11,9 +11,6 @@ Todo:
 - Add a ColorSelector to PaletteEditor.
 - Make Undo/Redo buttons on PaletteEditor work.
 - Rework ColorSelector tool hinting to allow button hinting.
-- Separate image and palette undo operations in UndoSystem. So clicking undo/redo
-  on PaletteEditor will only undo/redo color operations.
-
 
 2023.03.29
 - UndoSystem is distilled to a base class and added ImageUndoSystem and ColorUndoSystem.
@@ -22,6 +19,7 @@ Todo:
   saves. (Added Version so it won't do it in the future.)
 - ColorUndoSystem is included in the system state save.
 - After changing palette color with sliders it is possible to undo/redo the change.
+- When leaving slider with button down, it goes back to original position.
 
 2023.03.28
 - Moving mouse over the palette in the PaletteEditor show color hint.

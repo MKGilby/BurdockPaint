@@ -25,7 +25,9 @@
 // Version info:
 //
 //  V1.00: Gilby - 2023.03.15
-//    * Initial creation from vcc_SliderLogic.
+//    * Initial creation from vcc_SliderLogic.  űú
+//  V1.01: Gilby - 2023.04.02
+//    * Slider sets initial value if left with mouse button down.
 
 {$mode delphi}
 {$smartlink on}
@@ -55,7 +57,7 @@ type
   protected
     fState:TSliderMouseState;
     fMinValue,fMaxValue:integer;
-    fPosition:integer;
+    fPosition,fSavedPosition:integer;
     fDecClickAreaSize,fIncClickAreaSize:integer;
     fSlideAreaSize:integer;
     fOnChange:TOnSliderPositionChangeEvent;
@@ -89,7 +91,7 @@ type
   protected
     fState:TSliderMouseState;
     fMinValue,fMaxValue:integer;
-    fPosition:integer;
+    fPosition,fSavedPosition:integer;
     fDecClickAreaSize,fIncClickAreaSize:integer;
     fSlideAreaSize:integer;
     fOnChange:TOnSliderPositionChangeEvent;
@@ -116,7 +118,7 @@ uses SysUtils, MKToolBox, Logger;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.00';
+  Version='1.01';
 
 
 { THorizontalSliderLogic }
@@ -148,7 +150,13 @@ begin
 end;
 
 procedure THorizontalSliderLogic.MouseLeave(Sender:TObject);
+var pre:integer;
 begin
+  if fState=csMouseDown then begin
+    pre:=fPosition;
+    fPosition:=fSavedPosition;
+    if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
+  end;
   fState:=csMouseUp;
 end;
 
@@ -161,6 +169,7 @@ begin
     if (fPosition>fMinValue) then dec(fPosition);
   end
   else if (x>=fDecClickAreaSize) and (x<fDecClickAreaSize+fSlideAreaSize) then begin
+    fSavedPosition:=fPosition;
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*(x-fDecClickAreaSize) div (fSlideAreaSize-1);
     fState:=csMouseDown;
   end
@@ -257,7 +266,13 @@ begin
 end;
 
 procedure TVerticalSliderLogic.MouseLeave(Sender:TObject);
+var pre:integer;
 begin
+  if fState=csMouseDown then begin
+    pre:=fPosition;
+    fPosition:=fSavedPosition;
+    if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
+  end;
   fState:=csMouseUp;
 end;
 
@@ -270,6 +285,7 @@ begin
     if (fPosition>fMinValue) then dec(fPosition);
   end
   else if (y>=fDecClickAreaSize) and (y<fDecClickAreaSize+fSlideAreaSize) then begin
+    fSavedPosition:=fPosition;
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*(y-fDecClickAreaSize) div (fSlideAreaSize-1);
     fState:=csMouseDown;
   end

@@ -24,7 +24,7 @@
       <Unit>
         <Filename Value="BDPSharedUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="13"/>
+        <EditorIndex Value="16"/>
         <TopLine Value="305"/>
         <CursorPos Y="381"/>
         <UsageCount Value="200"/>
@@ -33,7 +33,7 @@
       <Unit>
         <Filename Value="BDPInfoBarUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="15"/>
+        <EditorIndex Value="18"/>
         <TopLine Value="50"/>
         <CursorPos X="14" Y="62"/>
         <UsageCount Value="200"/>
@@ -42,7 +42,7 @@
       <Unit>
         <Filename Value="BDPButtonUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="11"/>
         <CursorPos X="15" Y="7"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -50,7 +50,7 @@
       <Unit>
         <Filename Value="BDPControlsUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="11"/>
+        <EditorIndex Value="14"/>
         <TopLine Value="255"/>
         <CursorPos Y="302"/>
         <UsageCount Value="200"/>
@@ -62,14 +62,13 @@
         <EditorIndex Value="3"/>
         <TopLine Value="364"/>
         <CursorPos X="66" Y="397"/>
-        <FoldState Value=" T7CH5 T3jI048 pifjN0L5]9cjS0613A PiQk80s"/>
         <UsageCount Value="202"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPImageUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="12"/>
         <TopLine Value="940"/>
         <CursorPos X="39" Y="956"/>
         <UsageCount Value="201"/>
@@ -78,7 +77,7 @@
       <Unit>
         <Filename Value="BDPDrawAreaUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="12"/>
+        <EditorIndex Value="15"/>
         <TopLine Value="217"/>
         <CursorPos Y="24"/>
         <UsageCount Value="200"/>
@@ -113,10 +112,9 @@
       <Unit>
         <Filename Value="BDPToolsUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="13"/>
         <TopLine Value="1207"/>
         <CursorPos X="49" Y="1318"/>
-        <FoldState Value=" T7DAJB pibkGL81 T3lE04]Hj6jc036]94jN035]9DiT2B11311]DWjZ2N]D]BOkL2R4]@elB06211141]vl5nd03712 PiLj80T"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -131,10 +129,10 @@
       <Unit>
         <Filename Value="BDPModalDialogsUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="14"/>
+        <EditorIndex Value="17"/>
         <TopLine Value="285"/>
         <CursorPos X="26" Y="307"/>
-        <UsageCount Value="192"/>
+        <UsageCount Value="193"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -143,62 +141,61 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="3"/>
         <CursorPos Y="37"/>
-        <UsageCount Value="185"/>
+        <UsageCount Value="186"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="BDPSplashScreenUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="9"/>
         <TopLine Value="56"/>
         <CursorPos X="20" Y="64"/>
-        <UsageCount Value="168"/>
+        <UsageCount Value="169"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPColorSelectorUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="10"/>
         <TopLine Value="22"/>
         <CursorPos X="22" Y="62"/>
-        <UsageCount Value="156"/>
+        <UsageCount Value="157"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPUndoUnit.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="185"/>
-        <CursorPos X="25" Y="223"/>
+        <TopLine Value="356"/>
+        <CursorPos Y="430"/>
         <FoldState Value=" T7CEA2 PLiUN T3jH03218311124 Pk5m00w"/>
-        <UsageCount Value="146"/>
+        <UsageCount Value="147"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPPaletteEditorUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="4"/>
         <TopLine Value="272"/>
         <CursorPos Y="291"/>
-        <UsageCount Value="119"/>
+        <UsageCount Value="120"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPSliderUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="7"/>
-        <UsageCount Value="111"/>
+        <EditorIndex Value="5"/>
+        <UsageCount Value="112"/>
+        <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="BDPMenuUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="8"/>
         <TopLine Value="137"/>
         <CursorPos X="22" Y="140"/>
-        <UsageCount Value="84"/>
+        <UsageCount Value="85"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -454,18 +451,19 @@
       </Unit>
       <Unit>
         <Filename Value="units\vcc2_Slider.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="16"/>
-        <CursorPos X="6" Y="39"/>
+        <EditorIndex Value="6"/>
         <UsageCount Value="10"/>
+        <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="units\vcc2_SliderLogic.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="145"/>
-        <CursorPos Y="155"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="162"/>
+        <CursorPos Y="173"/>
         <UsageCount Value="10"/>
+        <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -492,21 +490,6 @@
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="BDPToolsUnit.pas"/>
-        <Caret Line="1144" Column="49" TopLine="1076"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPUndoUnit.pas"/>
-        <Caret Line="217" TopLine="138"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPUndoUnit.pas"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPUndoUnit.pas"/>
-        <Caret Line="133" Column="38" TopLine="88"/>
-      </Position>
       <Position>
         <Filename Value="BDPUndoUnit.pas"/>
         <Caret Line="249" Column="21" TopLine="135"/>
@@ -560,10 +543,6 @@
         <Caret Line="430" TopLine="403"/>
       </Position>
       <Position>
-        <Filename Value="BDPUndoUnit.pas"/>
-        <Caret Line="222" TopLine="403"/>
-      </Position>
-      <Position>
         <Filename Value="BDPPaletteEditorUnit.pas"/>
         <Caret Line="291" TopLine="127"/>
       </Position>
@@ -611,21 +590,28 @@
         <Filename Value="BDPUndoUnit.pas"/>
         <Caret Line="223" Column="25" TopLine="185"/>
       </Position>
+      <Position>
+        <Filename Value="BDPSliderUnit.pas"/>
+      </Position>
+      <Position>
+        <Filename Value="units\vcc2_Slider.pas"/>
+      </Position>
+      <Position>
+        <Filename Value="units\vcc2_SliderLogic.pas"/>
+        <Caret Line="121" Column="16" TopLine="101"/>
+      </Position>
+      <Position>
+        <Filename Value="units\vcc2_SliderLogic.pas"/>
+        <Caret Line="154" TopLine="133"/>
+      </Position>
+      <Position>
+        <Filename Value="units\vcc2_SliderLogic.pas"/>
+        <Caret Line="270" TopLine="249"/>
+      </Position>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
       <Modes ActiveMode=""/>
     </RunParams>
   </ProjectSession>
-  <Debugging>
-    <BreakPoints>
-      <Item>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="BDPUndoUnit.pas"/>
-        <Line Value="430"/>
-      </Item>
-    </BreakPoints>
-  </Debugging>
 </CONFIG>
