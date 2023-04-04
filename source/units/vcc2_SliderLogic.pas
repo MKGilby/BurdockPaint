@@ -25,9 +25,11 @@
 // Version info:
 //
 //  V1.00: Gilby - 2023.03.15
-//    * Initial creation from vcc_SliderLogic.  űú
+//    * Initial creation from vcc_SliderLogic.
 //  V1.01: Gilby - 2023.04.02
 //    * Slider sets initial value if left with mouse button down.
+//  V1.02: Gilby - 2023.04.04
+//    * Following changes in MKMouse2
 
 {$mode delphi}
 {$smartlink on}
@@ -49,10 +51,10 @@ type
   THorizontalSliderLogic=class(TVisibleControl)
     constructor Create; overload;
     procedure MouseLeave(Sender:TObject);
-    function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseMove(Sender:TObject;x,y:integer):boolean;
-    function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
+    procedure MouseDown(Sender:TObject;x,y,buttons:integer);
+    procedure MouseUp(Sender:TObject;x,y,buttons:integer);
+    procedure MouseMove(Sender:TObject;x,y:integer);
+    procedure MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer);
 //    function OnClick(x,y,buttons:integer):boolean;
   protected
     fState:TSliderMouseState;
@@ -83,10 +85,10 @@ type
   TVerticalSliderLogic=class(TVisibleControl)
     constructor Create; overload;
     procedure MouseLeave(Sender:TObject);
-    function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseMove(Sender:TObject;x,y:integer):boolean;
-    function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
+    procedure MouseDown(Sender:TObject;x,y,buttons:integer);
+    procedure MouseUp(Sender:TObject;x,y,buttons:integer);
+    procedure MouseMove(Sender:TObject;x,y:integer);
+    procedure MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer);
 //    function OnClick(x,y,buttons:integer):boolean;
   protected
     fState:TSliderMouseState;
@@ -118,7 +120,7 @@ uses SysUtils, MKToolBox, Logger;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.01';
+  Version='1.02';
 
 
 { THorizontalSliderLogic }
@@ -160,7 +162,7 @@ begin
   fState:=csMouseUp;
 end;
 
-function THorizontalSliderLogic.MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
+procedure THorizontalSliderLogic.MouseDown(Sender:TObject; x,y,buttons:integer);
 var pre:integer;
 begin
   x-=Left;
@@ -177,16 +179,14 @@ begin
     if (fPosition<fMaxValue) then inc(fPosition);
   end;
   if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
-  Result:=true;
 end;
 
-function THorizontalSliderLogic.MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
+procedure THorizontalSliderLogic.MouseUp(Sender:TObject; x,y,buttons:integer);
 begin
   fState:=csMouseUp;
-  Result:=true;
 end;
 
-function THorizontalSliderLogic.MouseMove(Sender:TObject; x,y:integer):boolean;
+procedure THorizontalSliderLogic.MouseMove(Sender:TObject; x,y:integer);
 var pre:integer;
 begin
   x-=Left;
@@ -196,10 +196,10 @@ begin
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*x div (fSlideAreaSize-1);
     if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
   end;
-  Result:=true;
 end;
 
-function THorizontalSliderLogic.MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
+procedure THorizontalSliderLogic.MouseWheel(Sender:TObject;
+  x,y,wheelx,wheely:integer);
 var pre:integer;
 begin
   // If only the y wheel rolled and CrossWheels enabled, use that.
@@ -210,7 +210,6 @@ begin
   if fPosition>fMaxValue then fPosition:=fMaxValue;
   if fPosition<fMinValue then fPosition:=fMinValue;
   if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Self,fPosition);
-  Result:=true;
 end;
 
 procedure THorizontalSliderLogic.fSetWidth(value:integer);
@@ -276,7 +275,7 @@ begin
   fState:=csMouseUp;
 end;
 
-function TVerticalSliderLogic.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TVerticalSliderLogic.MouseDown(Sender:TObject; x,y,buttons:integer);
 var pre:integer;
 begin
   y-=Top;
@@ -293,16 +292,14 @@ begin
     if (fPosition<fMaxValue) then inc(fPosition);
   end;
   if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
-  Result:=true;
 end;
 
-function TVerticalSliderLogic.MouseUp(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TVerticalSliderLogic.MouseUp(Sender:TObject; x,y,buttons:integer);
 begin
   fState:=csMouseUp;
-  Result:=true;
 end;
 
-function TVerticalSliderLogic.MouseMove(Sender:TObject; x,y:integer):boolean;
+procedure TVerticalSliderLogic.MouseMove(Sender:TObject; x,y:integer);
 var pre:integer;
 begin
   y-=Top;
@@ -312,10 +309,10 @@ begin
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*y div (fSlideAreaSize-1);
     if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
   end;
-  Result:=true;
 end;
 
-function TVerticalSliderLogic.MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
+procedure TVerticalSliderLogic.MouseWheel(Sender:TObject;
+  x,y,wheelx,wheely:integer);
 var pre:integer;
 begin
   // If only the x wheel rolled and CrossWheels enabled, use that.
@@ -326,7 +323,6 @@ begin
   if fPosition>fMaxValue then fPosition:=fMaxValue;
   if fPosition<fMinValue then fPosition:=fMinValue;
   if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Self,fPosition);
-  Result:=true;
 end;
 
 procedure TVerticalSliderLogic.fSetHeight(value:integer);

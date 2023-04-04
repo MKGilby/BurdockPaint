@@ -15,11 +15,6 @@ type
     constructor Create(iWidth,iHeight:integer);
     destructor Destroy; override;
     procedure Draw; override;
-    function Click(Sender:TObject;x,y,buttons: integer):boolean;
-    function MouseMove(Sender:TObject;x,y:integer):boolean;
-    function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
     function KeyDown(Sender:TObject;key:integer):boolean;
     function KeyUp(Sender:TObject;key:integer):boolean;
   protected
@@ -39,8 +34,8 @@ type
   TMagnifyCELDialog=class(TModalDialog)
     constructor Create;
     function KeyDown(Sender:TObject;key:integer):boolean;
-    function MagnifyButtonClick(Sender:TObject;x,y,buttons:integer):boolean;
-    function OKButtonClick(Sender:TObject;x,y,buttons:integer):boolean;
+    procedure MagnifyButtonClick(Sender:TObject;x,y,buttons:integer);
+    procedure OKButtonClick(Sender:TObject;x,y,buttons:integer);
   private
     fMagnifyButtons:array[0..2] of TBDButton;
   end;
@@ -50,8 +45,8 @@ type
   TRotateCELDialog=class(TModalDialog)
     constructor Create;
     function KeyDown(Sender:TObject;key:integer):boolean;
-    function RotateButtonClick(Sender:TObject;x,y,buttons:integer):boolean;
-    function OKButtonClick(Sender:TObject;x,y,buttons:integer):boolean;
+    procedure RotateButtonClick(Sender:TObject;x,y,buttons:integer);
+    procedure OKButtonClick(Sender:TObject;x,y,buttons:integer);
   private
     fRotateButtons:array[0..2] of TBDButton;
   end;
@@ -80,11 +75,6 @@ begin
   fWindowLeft:=(WINDOWWIDTH-iWidth) div 2;
   fWindowTop:=(WINDOWHEIGHT-iHeight) div 2;
   fTexture:=TStreamingTexture.Create(iWidth,iHeight);
-  OnMouseMove:=MouseMove;
-  OnMouseDown:=MouseDown;
-  OnMouseUp:=MouseUp;
-  OnMouseWheel:=MouseWheel;
-  OnClick:=Click;
   OnKeyDown:=KeyDown;
   OnKeyUp:=KeyUp;
   ZIndex:=MODALDIALOG_ZINDEX;
@@ -100,31 +90,6 @@ end;
 procedure TModalDialog.Draw;
 begin
   PutTexture(fWindowLeft,fWindowTop,fTexture);
-end;
-
-function TModalDialog.Click(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TModalDialog.MouseMove(Sender:TObject; x,y:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TModalDialog.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TModalDialog.MouseUp(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TModalDialog.MouseWheel(Sender:TObject; x,y,wheelx,wheely:integer):boolean;
-begin
-  Result:=true;
 end;
 
 function TModalDialog.KeyDown(Sender:TObject; key:integer):boolean;
@@ -261,15 +226,14 @@ begin
   Result:=true;
 end;
 
-function TMagnifyCELDialog.MagnifyButtonClick(Sender:TObject;x,y,buttons:integer):boolean;
+procedure TMagnifyCELDialog.MagnifyButtonClick(Sender:TObject;x,y,buttons:integer);
 var i:integer;
 begin
   for i:=0 to 2 do fMagnifyButtons[i].Selected:=false;
   (Sender as TBDButton).Selected:=true;
-  Result:=true;
 end;
 
-function TMagnifyCELDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TMagnifyCELDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   if fMagnifyButtons[0].Selected then
     MessageQueue.AddMessage(MSG_MAGNIFYCEL,2)
@@ -277,7 +241,6 @@ begin
     MessageQueue.AddMessage(MSG_MAGNIFYCEL,3)
   else if fMagnifyButtons[2].Selected then
     MessageQueue.AddMessage(MSG_MAGNIFYCEL,5);
-  Result:=true;
 end;
 
 { TRotateCELDialog }
@@ -360,15 +323,14 @@ begin
   Result:=true;
 end;
 
-function TRotateCELDialog.RotateButtonClick(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TRotateCELDialog.RotateButtonClick(Sender:TObject; x,y,buttons:integer);
 var i:integer;
 begin
   for i:=0 to 2 do fRotateButtons[i].Selected:=false;
   (Sender as TBDButton).Selected:=true;
-  Result:=true;
 end;
 
-function TRotateCELDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TRotateCELDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   if fRotateButtons[0].Selected then
     MessageQueue.AddMessage(MSG_ROTATECEL,1)
@@ -376,7 +338,6 @@ begin
     MessageQueue.AddMessage(MSG_ROTATECEL,2)
   else if fRotateButtons[2].Selected then
     MessageQueue.AddMessage(MSG_ROTATECEL,3);
-  Result:=true;
 end;
 
 end.

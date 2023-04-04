@@ -17,19 +17,18 @@ type
     procedure Draw; override;
     procedure MouseEnter(Sender:TObject);
     procedure MouseLeave(Sender:TObject);
-    function MouseMove(Sender:TObject;x,y:integer):boolean;
-    function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
-    function Click(Sender:TObject;x,y,buttons: integer):boolean;
+    procedure MouseMove(Sender:TObject;x,y:integer);
+    procedure MouseDown(Sender:TObject;x,y,buttons:integer);
+    procedure MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer);
     procedure OnSliderRChange(Sender:TObject;newValue:integer);
-    function OnColorSliderMouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-    function OnColorSliderMouseUp(Sender:TObject;x,y,buttons:integer):boolean;
+    procedure OnColorSliderMouseDown(Sender:TObject;x,y,buttons:integer);
+    procedure OnColorSliderMouseUp(Sender:TObject;x,y,buttons:integer);
     procedure OnSliderGChange(Sender:TObject;newValue:integer);
     procedure OnSliderBChange(Sender:TObject;newValue:integer);
     procedure OnSliderAChange(Sender:TObject;newValue:integer);
     procedure OnSliderBankChange(Sender:TObject;newValue:integer);
-    function UndoButtonClick(Sender:TObject;x,y,buttons:integer):boolean;
-    function RedoButtonClick(Sender:TObject;x,y,buttons:integer):boolean;
+    procedure UndoButtonClick(Sender:TObject;x,y,buttons:integer);
+    procedure RedoButtonClick(Sender:TObject;x,y,buttons:integer);
     procedure PaletteEditorShow(Sender:TObject);
     procedure PaletteEditorHide(Sender:TObject);
     procedure RefreshSliders;
@@ -63,7 +62,6 @@ begin
   OnMouseMove:=MouseMove;
   OnMouseDown:=MouseDown;
   OnMouseWheel:=MouseWheel;
-  OnClick:=Click;
   OnShow:=PaletteEditorShow;
   OnHide:=PaletteEditorHide;
   fName:='PaletteEditor';
@@ -186,7 +184,7 @@ procedure TBDPaletteEditor.MouseLeave(Sender:TObject);
 begin
 end;
 
-function TBDPaletteEditor.MouseMove(Sender:TObject; x,y:integer):boolean;
+procedure TBDPaletteEditor.MouseMove(Sender:TObject; x,y:integer);
 begin
   x-=Left;
   y-=Top;
@@ -198,12 +196,10 @@ begin
     TBDToolSelectColor(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256);
   end else
     TBDToolSelectColor(ActiveTool).SetColor(-1);
-  Result:=true;
 end;
 
-function TBDPaletteEditor.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TBDPaletteEditor.MouseDown(Sender:TObject; x,y,buttons:integer);
 begin
-  Result:=false;
   x-=Left;
   y-=Top;
   if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
@@ -212,11 +208,10 @@ begin
     y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
     Settings.ActiveColorIndex:=y*32+x;
     RefreshSliders;
-    Result:=true;
   end;
 end;
 
-function TBDPaletteEditor.MouseWheel(Sender: TObject; x, y, wheelx, wheely: integer): boolean;
+procedure TBDPaletteEditor.MouseWheel(Sender:TObject; x,y,wheelx,wheely:integer);
 begin
   x-=Left;
   y-=Top;
@@ -224,12 +219,6 @@ begin
      (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
     fSliderBank.MouseWheel(fSliderBank,x,y,wheelx,wheely);
   end;
-  Result:=true;
-end;
-
-function TBDPaletteEditor.Click(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
 end;
 
 procedure TBDPaletteEditor.OnSliderRChange(Sender:TObject; newValue:integer);
@@ -237,14 +226,13 @@ begin
   MainImage.Palette.ColorR[Settings.ActiveColorIndex]:=newValue;
 end;
 
-function TBDPaletteEditor.OnColorSliderMouseDown(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TBDPaletteEditor.OnColorSliderMouseDown(Sender:TObject;x,y,buttons:integer);
 begin
   fSavedColor:=MainImage.Palette.Colors[Settings.ActiveColorIndex];
   TBDHorizontalSlider(Sender).MouseDown(Sender,x,y,buttons);
-  Result:=true;
 end;
 
-function TBDPaletteEditor.OnColorSliderMouseUp(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TBDPaletteEditor.OnColorSliderMouseUp(Sender:TObject;x,y,buttons:integer);
 var tmp:uint32;
 begin
   TBDHorizontalSlider(Sender).MouseUp(Sender,x,y,buttons);
@@ -256,7 +244,6 @@ begin
     PaletteUndoSystem.AddPaletteRedoToLastUndo(Settings.ActiveColorIndex,1);
 //    RefreshSliders;
   end;
-  Result:=true;
 end;
 
 procedure TBDPaletteEditor.OnSliderGChange(Sender:TObject; newValue:integer);
@@ -279,18 +266,16 @@ begin
 
 end;
 
-function TBDPaletteEditor.UndoButtonClick(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TBDPaletteEditor.UndoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   PaletteUndoSystem.Undo;
   RefreshSliders;
-  result:=true;
 end;
 
-function TBDPaletteEditor.RedoButtonClick(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TBDPaletteEditor.RedoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   PaletteUndoSystem.Redo;
   RefreshSliders;
-  result:=true;
 end;
 
 procedure TBDPaletteEditor.PaletteEditorShow(Sender:TObject);

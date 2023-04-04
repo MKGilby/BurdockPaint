@@ -13,7 +13,7 @@ type
   TColorSelector=class(TVisibleControl)
     constructor Create(iLeft,iTop:integer);
     procedure Draw; override;
-    function Click(Sender:TObject;x, y, buttons: integer): boolean;
+    procedure Click(Sender:TObject;x, y, buttons: integer);
     function KeyDown(Sender:TObject;key:integer):boolean;
     procedure SetSelectedSlotTo(ColorIndex:integer);
   private
@@ -75,7 +75,7 @@ begin
   PutTexture(fLeft,fTop,fTexture);
 end;
 
-function TColorSelector.Click(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TColorSelector.Click(Sender:TObject; x,y,buttons:integer);
 var i:integer;
 begin
   if buttons=SDL_BUTTON_LEFT then begin
@@ -95,7 +95,6 @@ begin
       fPickingColor:=true;
     end;
   end;
-  Result:=true;
 end;
 
 function TColorSelector.KeyDown(Sender:TObject; key:integer):boolean;

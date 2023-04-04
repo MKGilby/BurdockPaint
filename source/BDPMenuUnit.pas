@@ -23,8 +23,8 @@ type
   TSubMenu=class(TVisibleControl)
     constructor Create(iLeft:integer);
     procedure Draw; override;
-    function MouseMove(Sender:TObject;x,y:integer):boolean;
-    function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
+    procedure MouseMove(Sender:TObject;x,y:integer);
+    procedure MouseDown(Sender:TObject;x,y,buttons:integer);
     procedure MouseLeave(Sender:TObject);
     procedure AddItem(item,hint:string;msg:TMessage;enabled:boolean=true);
     procedure DisableItem(item:string);
@@ -49,8 +49,7 @@ type
     procedure Draw; override;
     procedure EnableCELSubMenusWithActiveCEL;
     procedure DisableCELSubMenusWithActiveCEL;
-    function MouseMove(Sender:TObject;x,y:integer):boolean;
-    function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
+    procedure MouseMove(Sender:TObject;x,y:integer);
     procedure MouseLeave(Sender:TObject);
   private
     fSubMenus:TSubMenuList;
@@ -115,15 +114,14 @@ begin
   PutTexture(fLeft,fTop,fTexture);
 end;
 
-function TSubMenu.MouseMove(Sender:TObject; x,y:integer):boolean;
+procedure TSubMenu.MouseMove(Sender:TObject; x,y:integer);
 begin
   fSelected:=(y-TOPMENUHEIGHT) div SUBMENULINEHEIGHT;
   if (fSelected>=0) and (fSelected<Length(fItems)) then
     InfoBar.ShowText(fItems[fSelected]._hint);
-  Result:=true;
 end;
 
-function TSubMenu.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TSubMenu.MouseDown(Sender:TObject; x,y,buttons:integer);
 begin
   fSelected:=(y-TOPMENUHEIGHT) div SUBMENULINEHEIGHT;
   if (fSelected>=0) and (fSelected<Length(fItems)) and (fItems[fSelected]._enabled) then begin
@@ -131,7 +129,6 @@ begin
     fSelected:=-1;
     Visible:=false;
   end;
-  Result:=true;
 end;
 
 procedure TSubMenu.MouseLeave(Sender:TObject);
@@ -254,7 +251,6 @@ begin
 
   fSelected:=-1;
   Enabled:=true;
-  OnMouseDown:=MouseDown;
   OnMouseMove:=MouseMove;
   OnMouseLeave:=MouseLeave;
   MouseObjects.Add(Self);
@@ -318,7 +314,7 @@ begin
   end;
 end;
 
-function TMainMenu.MouseMove(Sender:TObject; x,y:integer):boolean;
+procedure TMainMenu.MouseMove(Sender:TObject; x,y:integer);
 var pre,mx,i:integer;
 begin
   x-=Left;
@@ -336,12 +332,6 @@ begin
     if fSelected<>-1 then fSubMenus[fSelected].Visible:=true;
   end;
   if (fSelected<>-1) and not fSubMenus[fSelected].Visible then fSubMenus[fSelected].Visible:=true;
-  Result:=true;
-end;
-
-function TMainMenu.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
 end;
 
 procedure TMainMenu.MouseLeave(Sender:TObject);

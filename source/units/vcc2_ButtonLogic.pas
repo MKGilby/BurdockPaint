@@ -44,8 +44,8 @@ type
     constructor Create(iINI:TINIFile;iSection:string); overload;
     procedure MouseEnter(Sender:TObject);
     procedure MouseLeave(Sender:TObject);
-    function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
+    procedure MouseDown(Sender:TObject;x,y,buttons:integer);
+    procedure MouseUp(Sender:TObject;x,y,buttons:integer);
   protected
     fState:(cNormal,cHighlighted,cButtonDown);
     fTextAlignX,
@@ -165,21 +165,15 @@ begin
   fClicked:=false;
 end;
 
-function TButtonLogic.MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
+procedure TButtonLogic.MouseDown(Sender:TObject; x,y,buttons:integer);
 begin
   fState:=cButtonDown;
-  Result:=true;
 end;
 
-function TButtonLogic.MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
+procedure TButtonLogic.MouseUp(Sender:TObject; x,y,buttons:integer);
 begin
   fState:=cHighLighted;
-  Result:=true;
 end;
-
-{function TButtonLogic.OnClick(x,y,buttons:integer):boolean;
-begin
-end;}
 
 initialization
   Log.LogStatus(Fstr+'version '+Version,'uses');

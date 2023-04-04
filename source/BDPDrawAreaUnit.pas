@@ -18,11 +18,11 @@ type
     destructor Destroy; override;
     procedure CenterImage;
     procedure Draw; override;
-    function Click(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseUp(Sender:TObject;x,y,buttons:integer):boolean;
-    function MouseMove(Sender:TObject;x,y:integer):boolean;
-    function MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer):boolean;
+    procedure Click(Sender:TObject;x,y,buttons:integer);
+    procedure MouseDown(Sender:TObject;x,y,buttons:integer);
+    procedure MouseUp(Sender:TObject;x,y,buttons:integer);
+    procedure MouseMove(Sender:TObject;x,y:integer);
+    procedure MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer);
     procedure MouseEnter(Sender:TObject);
     procedure MouseLeave(Sender:TObject);
     function KeyDown(Sender:TObject;key:integer):boolean;
@@ -121,23 +121,19 @@ begin
 
 end;
 
-function TBDDrawArea.Click(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TBDDrawArea.Click(Sender:TObject; x,y,buttons:integer);
 begin
-  if fMousePanning=mpFinished then  // Panning was just finished, don't care with tools click
-    Result:=false
-  else
-    Result:=ActiveTool.Click(MouseXToFrame(x),MouseYToFrame(y),buttons);
+  if fMousePanning<>mpFinished then  // Only call tools click on appropiate panning states
+    ActiveTool.Click(MouseXToFrame(x),MouseYToFrame(y),buttons);
 end;
 
-function TBDDrawArea.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TBDDrawArea.MouseDown(Sender:TObject; x,y,buttons:integer);
 var mx,my:integer;
 begin
   fMousePanning:=mpIdle;  // To stop panning if you press other button
   mx:=MouseXToFrame(x);
   my:=MouseYToFrame(y);
-  Result:=false;
-  Result:=ActiveTool.MouseDown(mx,my,buttons);
-  if not Result then begin
+  if not ActiveTool.MouseDown(mx,my,buttons) then begin
     if buttons=SDL_BUTTON_RIGHT then begin
       fMousePanning:=mpWaitMove;
       fPanX:=fCursorX;
@@ -145,17 +141,15 @@ begin
       fPanX2:=fZoomLeft;
       fPanY2:=fZoomTop;
     end;
-    Result:=true;
   end;
 end;
 
-function TBDDrawArea.MouseUp(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TBDDrawArea.MouseUp(Sender:TObject; x,y,buttons:integer);
 var mx,my:integer;
 begin
   mx:=MouseXToFrame(x);
   my:=MouseYToFrame(y);
-  Result:=ActiveTool.MouseUp(mx,my,buttons);
-  if not Result then begin
+  if not ActiveTool.MouseUp(mx,my,buttons) then begin
     if buttons=SDL_BUTTON_RIGHT then begin
       if fMousePanning=mpWaitMove then begin
         MessageQueue.AddMessage(MSG_TOGGLECONTROLS);
@@ -163,11 +157,10 @@ begin
       end
       else fMousePanning:=mpFinished;
     end;
-    Result:=true;
   end else fMousePanning:=mpIdle;
 end;
 
-function TBDDrawArea.MouseMove(Sender:TObject; x,y:integer):boolean;
+procedure TBDDrawArea.MouseMove(Sender:TObject; x,y:integer);
 var buttons:integer;
 begin
   buttons:=SDL_GetMouseState(nil,nil);
@@ -176,21 +169,18 @@ begin
   fFrameX:=MouseXToFrame(x);
   fFrameY:=MouseYToFrame(y);
   ActiveTool.Move(fFrameX,fFrameY);
-  Result:=ActiveTool.MouseMove(fFrameX,fFrameY,buttons);
-  if not Result then begin
+  if not ActiveTool.MouseMove(fFrameX,fFrameY,buttons) then begin
     if fMousePanning=mpWaitMove then fMousePanning:=mpPanning;
     if fMousePanning=mpPanning then begin
       fZoomLeft:=fPanX2+(fPanX-x) div fZoomTimes;
       fZoomTop:=fPanY2+(fPanY-y) div fZoomTimes;
     end;
-    Result:=true;
   end;
 end;
 
-function TBDDrawArea.MouseWheel(Sender:TObject; x,y,wheelx,wheely:integer):boolean;
+procedure TBDDrawArea.MouseWheel(Sender:TObject; x,y,wheelx,wheely:integer);
 var mx,my:integer;
 begin
-  Result:=true;
   if (wheely<0) and (fZoomLevel>1) then begin
     mx:=MouseXToFrame(x);
     my:=MouseYToFrame(y);

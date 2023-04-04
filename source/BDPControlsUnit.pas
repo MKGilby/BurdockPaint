@@ -18,16 +18,12 @@ type
     procedure ActivateToolButton(index:integer);
     procedure ActivateInkButton(index:integer);
     procedure MouseEnter(Sender:TObject);
-    procedure MouseLeave(Sender:TObject);
-    function MouseMove(Sender:TObject;x,y:integer):boolean;
-    function MouseDown(Sender:TObject;x,y,buttons:integer):boolean;
-    function Click(Sender:TObject;x,y,buttons: integer):boolean;
-    function FilledButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
-    function ClearKeyColorButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
-    function ToolButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
-    function InkButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
-    function UndoButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
-    function RedoButtonClick(Sender:TObject;x,y,buttons: integer):boolean;
+    procedure FilledButtonClick(Sender:TObject;x,y,buttons: integer);
+    procedure ClearKeyColorButtonClick(Sender:TObject;x,y,buttons: integer);
+    procedure ToolButtonClick(Sender:TObject;x,y,buttons: integer);
+    procedure InkButtonClick(Sender:TObject;x,y,buttons: integer);
+    procedure UndoButtonClick(Sender:TObject;x,y,buttons: integer);
+    procedure RedoButtonClick(Sender:TObject;x,y,buttons: integer);
     procedure SetMouseCoords(x,y:integer);
     function ProcessMessage(msg:TMessage):boolean;
     procedure ControlsShow(Sender:TObject);
@@ -63,10 +59,6 @@ begin
   fTexture.ARGBImage.Clear;
   fVisible:=true;
   OnMouseEnter:=MouseEnter;
-  OnMouseLeave:=MouseLeave;
-  OnMouseMove:=MouseMove;
-  OnMouseDown:=MouseDown;
-  OnClick:=Click;
   OnShow:=ControlsShow;
   ZIndex:=LEVEL1CONTROLS_ZINDEX;
   fName:='Controls';
@@ -220,70 +212,43 @@ begin
   InfoBar.ShowText('');
 end;
 
-procedure TBDControls.MouseLeave(Sender:TObject);
-begin
-end;
-
-function TBDControls.MouseMove(Sender:TObject; x,y:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TBDControls.MouseDown(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TBDControls.Click(Sender:TObject; x,y,buttons:integer):boolean;
-begin
-  Result:=true;
-end;
-
-function TBDControls.FilledButtonClick(Sender:TObject; x,y,buttons:integer
-  ):boolean;
+procedure TBDControls.FilledButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   if Sender is TBDButton then with Sender as TBDButton do begin
     fSelected:=not fSelected;
     Settings.FillShapes:=fSelected;
   end;
-  Result:=true;
 end;
 
-function TBDControls.ClearKeyColorButtonClick(Sender:TObject;
-  x,y,buttons:integer):boolean;
+procedure TBDControls.ClearKeyColorButtonClick(Sender:TObject;x,y,buttons:integer);
 begin
   if Sender is TBDButton then with Sender as TBDButton do begin
     fSelected:=not fSelected;
     Settings.ClearKeyColor:=fSelected;
   end;
-  Result:=true;
 end;
 
-function TBDControls.ToolButtonClick(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TBDControls.ToolButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   if Sender is TBDButton then
     ActivateToolButton((Sender as TBDButton).Tag);
   ActiveTool.Move(fMouseX,fMouseY);
-  Result:=true;
 end;
 
-function TBDControls.InkButtonClick(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TBDControls.InkButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   if Sender is TBDButton then
     ActivateInkButton((Sender as TBDButton).Tag);
-  Result:=true;
 end;
 
-function TBDControls.UndoButtonClick(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TBDControls.UndoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   ImageUndoSystem.Undo;
-  Result:=true;
 end;
 
-function TBDControls.RedoButtonClick(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TBDControls.RedoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   ImageUndoSystem.Redo;
-  Result:=true;
 end;
 
 procedure TBDControls.SetMouseCoords(x,y:integer);

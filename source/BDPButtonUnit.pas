@@ -17,7 +17,7 @@ type
     procedure Draw; override;
     procedure MouseEnter(Sender:TObject);
     procedure MouseLeave(Sender:TObject);
-    function Click(Sender:TObject;x, y, buttons: integer): boolean;
+    procedure Click(Sender:TObject;x, y, buttons: integer);
   private
     fHint:string;
     fAssignedObject:TObject;
@@ -100,14 +100,13 @@ begin
   InfoBar.ShowText('');
 end;
 
-function TBDButton.Click(Sender:TObject; x,y,buttons:integer):boolean;
+procedure TBDButton.Click(Sender:TObject; x,y,buttons:integer);
 begin
   case buttons of
     1:begin  // Left click
         if fMessage.TypeID<>MSG_NONE then MessageQueue.AddMessage(fMessage);
       end;
   end;
-  Result:=true;
 end;
 
 end.

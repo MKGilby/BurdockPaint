@@ -44,6 +44,8 @@
 //     * Following field name changes in SDL2.
 //   V1.11 - 2023.03.23 - Gilby
 //     * Not visible objects won't get draw called.
+//   V1.12 - 2023.04.04 - Gilby
+//     * Mouse event proc types are procedures now.
 }
 
 {$ifdef fpc}
@@ -59,9 +61,9 @@ uses
 
 type
   TSimpleEvent=procedure(Sender:TObject) of object;
-  TMouseButtonEvent=function(Sender:TObject;x,y,buttons:integer):boolean of object;
-  TMouseMotionEvent=function(Sender:TObject;x,y:integer):boolean of object;
-  TMouseWheelEvent=function(Sender:TObject;x,y,wheelx,wheely:integer):boolean of object;
+  TMouseButtonEvent=procedure(Sender:TObject;x,y,buttons:integer) of object;
+  TMouseMotionEvent=procedure(Sender:TObject;x,y:integer) of object;
+  TMouseWheelEvent=procedure(Sender:TObject;x,y,wheelx,wheely:integer) of object;
   TKeyEvent=function(Sender:TObject;key:integer):boolean of object;
 
   { TMouseObject }
@@ -70,7 +72,6 @@ type
     constructor Create;
     procedure SetBounds(x1,y1,x2,y2:integer);
     procedure SetBoundsWH(x,y,width,height:integer);
-    function HandleEvent(Event:PSDL_Event):boolean; virtual;
     procedure Draw; virtual; abstract;
     function IsOver(x,y:integer):boolean;
     procedure Show;
@@ -146,7 +147,7 @@ uses SysUtils, Logger, MK_SDL2;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.11';
+  Version='1.12';
 
 constructor TMouseObjects.Create;
 begin
@@ -398,51 +399,6 @@ begin
     Visible:=false;
     if Assigned(OnHide) then OnHide(Self);
   end;
-end;
-
-function TMouseObject.HandleEvent(Event:PSDL_Event):boolean;
-begin
-  Log.LogDebug('HandleEvent with object '+fName);
-  Result:=false;
-  if not fVisible then begin
-    Log.LogDebug('Not visible.');
-    exit;
-  end;
-  if not fEnabled then begin
-    Log.LogDebug('Not enabled.');
-    exit;
-  end;
-  case Event^.Type_ of
-    SDL_MOUSEBUTTONDOWN:with Event^.button do begin
-      Log.LogDebug('Event: MouseButtonDown');
-      if IsOver(x,y) and Assigned(OnMouseDown) then Result:=OnMouseDown(Self,x,y,Button);
-    end;
-    SDL_MOUSEBUTTONUP:with Event^.button do begin
-      Log.LogDebug('Event: MouseButtonUp');
-      if IsOver(x,y) and Assigned(OnMouseUp) then Result:=OnMouseUp(Self,x,y,Button);
-    end;
-    SDL_MOUSEMOTION:with Event^.motion do begin
-      Log.LogDebug('Event: MouseMotion');
-      if IsOver(x,y) and Assigned(OnMouseMove) then Result:=OnMouseMove(Self,x,y);
-    end;
-    SDL_MOUSEWHEEL:begin
-      Log.LogDebug('Event: MouseWheel');
-      if IsOver(Event.button.x,Event.button.y) and Assigned(OnMouseWheel) then
-        Result:=OnMouseWheel(Self,Event.button.x,Event.button.y,Event.wheel.x,Event.wheel.y);
-    end;
-    SDL_KEYDOWN:begin
-      Log.LogDebug('Event: KeyDown');
-      if Assigned(OnKeyDown) then Result:=OnKeyDown(Self,Event.Key.keysym.scancode);
-    end;
-    SDL_KEYUP:begin
-      Log.LogDebug('Event: KeyUp');
-      if Assigned(OnKeyUp) then Result:=OnKeyUp(Self,Event.Key.keysym.scancode);
-    end;
-  end;
-  if result then
-    Log.LogDebug('HandleEvent result is true.')
-  else
-    Log.LogDebug('HandleEvent result is false.');
 end;
 
 procedure TMouseObject.fSetWidth(value:integer);
