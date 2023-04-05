@@ -48,7 +48,7 @@ const
   PALETTESOCKETSLEFT=3;
   COLORSLIDERWIDTH=240;
   COLORSLIDERHEIGHT=33;
-  COLORSLIDERSLEFT=240;
+  COLORSLIDERSLEFT=200;
   COLORSLIDERSTOP=PALETTESOCKETSTOP-COLORSLIDERHEIGHT-3;
 
   MAXPALETTEENTRIES=2048;  // Palette color count hard limit
@@ -245,6 +245,38 @@ begin
   // Don't free images, MM will do that!
 end;
 
+procedure CreateArches;
+var x,y:integer;c:uint32;TLImage,TRImage,BLImage,BRImage:TARGBImage;s:string;
+begin
+  TLImage:=TARGBImage.Create(8,8);
+  TLImage.Bar(0,0,TLImage.Width,TLImage.Height,0,0,0,0);
+  TRImage:=TARGBImage.Create(8,8);
+  TRImage.Bar(0,0,TRImage.Width,TRImage.Height,0,0,0,0);
+  BLImage:=TARGBImage.Create(8,8);
+  BLImage.Bar(0,0,BLImage.Width,BLImage.Height,0,0,0,0);
+  BRImage:=TARGBImage.Create(8,8);
+  BRImage.Bar(0,0,BRImage.Width,BRImage.Height,0,0,0,0);
+  if Settings.ModernGraphics then s:=ArchModern else s:=ArchOriginal;
+  c:=0;
+  for y:=0 to 7 do
+    for x:=0 to 7 do begin
+      case s[x+y*8+1] of
+        '.':c:=OverlayImage.Palette[3];
+        'x':c:=OverlayImage.Palette[2];
+        ' ':c:=0;
+      end;
+      TLImage.PutPixel(x,y,c);
+      TRImage.PutPixel(7-x,y,c);
+      BLImage.PutPixel(x,7-y,c);
+      BRImage.PutPixel(7-x,7-y,c);
+    end;
+  MM.AddImage(TLImage,'ArchTopLeft');
+  MM.AddImage(TRImage,'ArchTopRight');
+  MM.AddImage(BLImage,'ArchBottomLeft');
+  MM.AddImage(BRImage,'ArchBottomRight');
+  // Don't free images, MM will do that!
+end;
+
 procedure LoadSystemFont(pR,pG,pB:integer;pName:string);
 begin
   if Settings.ModernGraphics then begin
@@ -335,6 +367,7 @@ begin
   Log.LogStatus('  Creating information bar...');
   InfoBar:=TBDInfoBar.Create;
   Log.LogStatus('  Creating UI gfx...');
+  CreateArches;
   CreateArchH(NORMALBUTTONHEIGHT,'Button');
   CreateArchH(COLORSLIDERHEIGHT,'Slider');
   CreateArchV(COLORSLIDERHEIGHT,'Slider');

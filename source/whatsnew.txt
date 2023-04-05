@@ -3,6 +3,10 @@ Todo:
   - Create a mechanism to set up Open/SaveDialog for each file type.
     OR
   - Create multiple Open/SaveDialogs for each type and show appropiate dialog when needed.
+- Make the arches in buttons and sliders split into four corners. So the size
+  of the control could be variable.
+- Create an arched control class that draws the four corners and borders, so
+  you only have to draw the other lines and bits in descendant classes.
 - Add export CEL to PNG.
 - Ask for color fit when loading a CEL file.
 - Add gradients.
@@ -30,6 +34,7 @@ Todo:
   since it doesn't have these icons.
 - Added mouse click tips to SelectColor and PickColor hints.
 - Right clicking the palette area of the PaletteEditor closes it (as the hint says).
+- Added the code that creates the four corner arches.
 
 2023.04.04
 - Under the hood: MKMouse2 changes and follow ups.

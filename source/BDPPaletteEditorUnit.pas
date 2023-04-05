@@ -50,7 +50,6 @@ uses SysUtils, BDPSharedUnit, MKMouse2, BDPToolsUnit, SDL2;
 { TBDPaletteEditor }
 
 constructor TBDPaletteEditor.Create;
-//var atmB:TBDButton;
 begin
   inherited Create;
   fLeft:=0;

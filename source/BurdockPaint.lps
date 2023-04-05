@@ -24,10 +24,11 @@
       <Unit>
         <Filename Value="BDPSharedUnit.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="7"/>
-        <TopLine Value="164"/>
-        <CursorPos X="50" Y="260"/>
-        <FoldState Value=" T3l70W11112 PjGlX0G"/>
+        <TopLine Value="227"/>
+        <CursorPos X="51" Y="249"/>
+        <FoldState Value=" T3l70W023 pjIlc0P1 PKR0S"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -113,7 +114,6 @@
         <EditorIndex Value="4"/>
         <TopLine Value="1268"/>
         <CursorPos Y="1313"/>
-        <FoldState Value=" T7DAJA21 PidkUH T3lG04B pj6jc036]94jN035]9DiT2B7 pkRjZ2N5]9DkL2R4 pielB063]a0jK056]IYjC0S4411114 PiglV0A"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -169,10 +169,9 @@
       <Unit>
         <Filename Value="BDPPaletteEditorUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="44"/>
-        <CursorPos X="59" Y="48"/>
+        <TopLine Value="37"/>
+        <CursorPos Y="119"/>
         <UsageCount Value="124"/>
         <Loaded Value="True"/>
       </Unit>
@@ -302,7 +301,6 @@
         <CursorPos X="26" Y="282"/>
         <UsageCount Value="11"/>
         <Loaded Value="True"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="units\MyZStreamUnit.pas"/>
@@ -479,7 +477,7 @@
         <UsageCount Value="10"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="18">
+    <JumpHistory HistoryIndex="19">
       <Position>
         <Filename Value="BDPPaletteEditorUnit.pas"/>
         <Caret Line="230" TopLine="219"/>
@@ -555,6 +553,10 @@
       <Position>
         <Filename Value="BDPPaletteEditorUnit.pas"/>
         <Caret Line="234" TopLine="200"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSharedUnit.pas"/>
+        <Caret Line="275" TopLine="238"/>
       </Position>
     </JumpHistory>
     <RunParams>
