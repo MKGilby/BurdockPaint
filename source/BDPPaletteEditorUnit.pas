@@ -5,7 +5,8 @@ unit BDPPaletteEditorUnit;
 interface
 
 uses
-  vcc2_Container, BDPButtonUnit, mk_sdl2, BDPMessageUnit, BDPSliderUnit;
+  vcc2_Container, BDPButtonUnit, mk_sdl2, BDPMessageUnit, BDPSliderUnit,
+  BDPColorSelectorUnit;
 
 type
 
@@ -38,6 +39,7 @@ type
     fSliderR,fSliderG,fSliderB,fSliderA:TBDHorizontalSlider;
     fSliderBank:TBDVerticalSlider;
     fUndoButton,fRedoButton:TBDButton;
+    fColorSelector:TBDColorSelector;
     fSavedColor:uint32;
   end;
 
@@ -135,6 +137,11 @@ begin
   fRedoButton.Name:='Palette Redo';
   fRedoButton.OnClick:=RedoButtonClick;
   AddChild(fRedoButton);
+
+  fColorSelector:=TBDColorSelector.Create(320,fTop+6);
+  fColorSelector.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fColorSelector.Name:='ColorSelector (PalEd)';
+  AddChild(fColorSelector);
   MouseObjects.Add(Self);
 end;
 
@@ -188,26 +195,46 @@ procedure TBDPaletteEditor.MouseMove(Sender:TObject; x,y:integer);
 begin
   x-=Left;
   y-=Top;
-  if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
-     (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
-    x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
-    y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
+  if ActiveTool.Name='SELCOL' then begin
+    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
+       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
+      x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
+      y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
 
-    TBDToolSelectColor(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256);
+      TBDToolSelectColor(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256);
+    end else
+      TBDToolSelectColor(ActiveTool).SetColor(-1);
   end else
-    TBDToolSelectColor(ActiveTool).SetColor(-1);
+  if ActiveTool.Name='PICKCOL' then begin
+    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
+       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
+      x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
+      y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
+
+      TBDToolPickColor(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256);
+    end else
+      TBDToolPickColor(ActiveTool).SetColor(-1);
+  end;
 end;
 
 procedure TBDPaletteEditor.MouseDown(Sender:TObject; x,y,buttons:integer);
 begin
   x-=Left;
   y-=Top;
-  if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
-     (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
-    x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
-    y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
-    Settings.ActiveColorIndex:=y*32+x;
-    RefreshSliders;
+  if ActiveTool.Name='SELCOL' then begin
+    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
+       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
+      x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
+      y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
+      Settings.ActiveColorIndex:=y*32+x;
+      RefreshSliders;
+    end;
+  end else
+  if ActiveTool.Name='PICKCOL' then begin
+    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
+       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
+      TBDToolPickColor(ActiveTool).Click(x,y,buttons);
+    end;
   end;
 end;
 
@@ -311,6 +338,12 @@ begin
       MSG_SETPALETTEUNDOREDOBUTTON:begin
         fUndoButton.Enabled:=PaletteUndoSystem.CanUndo;
         fRedoButton.Enabled:=PaletteUndoSystem.CanRedo;
+      end;
+      MSG_PICKEDCOLOR:begin
+        fColorSelector.SetSelectedSlotTo(msg.DataInt);
+        ActiveTool:=Tools.ItemByName['SELCOL'];
+        InfoBar.ShowText('');
+        Result:=true;
       end;
     end;
   end;

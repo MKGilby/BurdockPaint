@@ -149,9 +149,13 @@ type
 
   TBDToolPickColor=class(TBDTool)
     constructor Create; override;
+    procedure Move(x,y:integer); override;
     function Click(x,y,button:integer):boolean; override;
     function MouseUp(x,y,button:integer):boolean; override;
     procedure Draw; override;
+    procedure SetColor(colorindex:integer);
+  private
+    fColorIndex:integer;
   end;
 
   { TBDToolSelectColor }
@@ -1227,13 +1231,21 @@ begin
   fHint:=uppercase('Pick color for the selected color slot.');
 end;
 
+procedure TBDToolPickColor.Move(x,y:integer);
+begin
+  inherited Move(x,y);
+  if (fX>=0) and (fX<MainImage.Width) and (fY>=0) and (fY<MainImage.Height) then
+    SetColor(MainImage.GetPixel(fX,fY))
+  else
+    SetColor(-1);
+end;
+
 function TBDToolPickColor.Click(x,y,button:integer):boolean;
 begin
   if button=SDL_BUTTON_LEFT then begin
-    if (x>=0) and (x<MainImage.Width) and (y>=0) and (y<MainImage.Height) then
-      MessageQueue.AddMessage(MSG_PICKEDCOLOR,MainImage.GetPixel(x,y));
-  end
-  else if button=SDL_BUTTON_RIGHT then begin
+    MessageQueue.AddMessage(MSG_PICKEDCOLOR,fColorIndex);
+  end else
+  if button=SDL_BUTTON_RIGHT then begin
     MessageQueue.AddMessage(MSG_PICKEDCOLOR,-1);  // -1 means no change
   end;
   Result:=true;
@@ -1246,10 +1258,27 @@ end;
 
 procedure TBDToolPickColor.Draw;
 begin
-  if (fX>=0) and (fX<MainImage.Width) and (fY>=0) and (fY<MainImage.Height) then begin
+{  if (fX>=0) and (fX<MainImage.Width) and (fY>=0) and (fY<MainImage.Height) then begin
     InfoBar.ShowText('COLOR INDEX='+inttostr(MainImage.GetPixel(fX,fY)));
   end else
-    InfoBar.ShowText('OUTSIDE OF DRAW AREA!');
+    InfoBar.ShowText('OUTSIDE OF DRAW AREA!');}
+end;
+
+procedure TBDToolPickColor.SetColor(colorindex:integer);
+begin
+  if (colorindex>=0) and (colorindex<MainImage.Palette.Size) then begin
+    fColorIndex:=colorindex;
+    InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d)',
+      [fColorIndex,
+       MainImage.Palette.ColorR[fColorIndex],
+       MainImage.Palette.ColorG[fColorIndex],
+       MainImage.Palette.ColorB[fColorIndex],
+       MainImage.Palette.ColorA[fColorIndex]]))
+  end else
+  if colorindex=-1 then begin
+    fColorIndex:=-1;
+    InfoBar.ShowText('');
+  end;
 end;
 
 // ------------------------------------------------- [ TBDToolSelectColor ] ---

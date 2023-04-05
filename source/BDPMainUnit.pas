@@ -135,8 +135,9 @@ begin
     FlipNoLimit;
     while MessageQueue.HasNewMessage do begin
       msg:=MessageQueue.GetNextMessage;
-      mres:=fControls.ProcessMessage(msg);
-      if not mres then mres:=fPaletteEditor.ProcessMessage(msg);
+      mres:=false;
+      if fControls.Visible then mres:=fControls.ProcessMessage(msg);
+      if not mres and fPaletteEditor.Visible then mres:=fPaletteEditor.ProcessMessage(msg);
       if not mres then begin
         case msg.TypeID of
           MSG_TOGGLECONTROLS:begin

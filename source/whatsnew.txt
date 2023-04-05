@@ -8,8 +8,6 @@ Todo:
 - Add gradients.
 - Autosave state in every 1 min.
 - Configurable autosave interval.
-- Add a ColorSelector to PaletteEditor.
-- Rework SelectColor tool hinting to allow button hinting.
 - Add dithering to gradient Inks.
 - Add setup dialogs to Tools:
   - Circle (center+Radius vs. bounding box)
@@ -24,6 +22,10 @@ Todo:
 
 2023.04.05
 - SelectColor tool hinting fixed, now it allows showing hints from other controls.
+- ColorSelector added to PaletteEditor.
+- Messages are forwarded only to visible controls.
+- Right clicking on ColorSelector in PaletteEditor allows you to pick color from
+  the image or from the palette.
 
 2023.04.04
 - Under the hood: MKMouse2 changes and follow ups.

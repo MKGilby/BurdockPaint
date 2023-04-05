@@ -8,9 +8,9 @@ uses vcc2_VisibleControl;
 
 type
 
-  { TColorSelector }
+  { TBDColorSelector }
 
-  TColorSelector=class(TVisibleControl)
+  TBDColorSelector=class(TVisibleControl)
     constructor Create(iLeft,iTop:integer);
     procedure Draw; override;
     procedure Click(Sender:TObject;x, y, buttons: integer);
@@ -26,9 +26,9 @@ implementation
 
 uses BDPSharedUnit, BDPSettingsUnit, sdl2, mk_sdl2, BDPKeyMappingUnit;
 
-{ TColorSelector }
+{ TBDColorSelector }
 
-constructor TColorSelector.Create(iLeft,iTop:integer);
+constructor TBDColorSelector.Create(iLeft,iTop:integer);
 var i:integer;
 begin
   inherited Create;
@@ -45,7 +45,7 @@ begin
   fPickingColor:=false;
 end;
 
-procedure TColorSelector.Draw;
+procedure TBDColorSelector.Draw;
 var i,x:integer;
 begin
   // Draw dark background for all slots
@@ -75,7 +75,7 @@ begin
   PutTexture(fLeft,fTop,fTexture);
 end;
 
-procedure TColorSelector.Click(Sender:TObject; x,y,buttons:integer);
+procedure TBDColorSelector.Click(Sender:TObject; x,y,buttons:integer);
 var i:integer;
 begin
   if buttons=SDL_BUTTON_LEFT then begin
@@ -97,7 +97,7 @@ begin
   end;
 end;
 
-function TColorSelector.KeyDown(Sender:TObject; key:integer):boolean;
+function TBDColorSelector.KeyDown(Sender:TObject; key:integer):boolean;
 begin
   Result:=false;
   if (key=KeyMap[KEY_GETCOLOR]) then begin
@@ -108,7 +108,7 @@ begin
   end;
 end;
 
-procedure TColorSelector.SetSelectedSlotTo(ColorIndex:integer);
+procedure TBDColorSelector.SetSelectedSlotTo(ColorIndex:integer);
 begin
   if (fSelectedIndex>=0) and (fSelectedIndex<COLORSELECTORCOLORS) then begin
     if (ColorIndex>=0) and (ColorIndex<MainImage.Palette.Size) then begin
@@ -119,7 +119,7 @@ begin
   fPickingColor:=false;
 end;
 
-function TColorSelector.GetClickedIndex(x:integer):integer;
+function TBDColorSelector.GetClickedIndex(x:integer):integer;
 var cx,i:integer;
 begin
   Result:=-1;

@@ -32,7 +32,7 @@ type
     fToolButtons:array[0..5] of TBDButton;
     fInkButtons:array[0..5] of TBDButton;
     fUndoButton,fRedoButton:TBDButton;
-    fColorSelector:TColorSelector;
+    fColorSelector:TBDColorSelector;
     fMouseX,fMouseY:integer;
   end;
 
@@ -128,7 +128,7 @@ begin
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(atmB);
 
-  fColorSelector:=TColorSelector.Create(fLeft+COLORSELECTORLEFT, fTop+COLORSELECTORTOP);
+  fColorSelector:=TBDColorSelector.Create(fLeft+COLORSELECTORLEFT, fTop+COLORSELECTORTOP);
   fColorSelector.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fColorSelector.Name:='ColorSelector';
   AddChild(fColorSelector);
