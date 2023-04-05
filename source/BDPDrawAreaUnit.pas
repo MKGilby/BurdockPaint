@@ -208,6 +208,7 @@ procedure TBDDrawArea.MouseLeave(Sender:TObject);
 begin
   SDL_ShowCursor(SDL_ENABLE);
   if ActiveTool.Name='SELCOL' then TBDToolSelectColor(ActiveTool).SetColor(-1);
+  InfoBar.ShowText('');
 end;
 
 function TBDDrawArea.KeyDown(Sender:TObject; key:integer):boolean;

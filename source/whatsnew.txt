@@ -22,6 +22,12 @@ Todo:
 - Add Tool and Ink selector
 
 
+2023.04.05
+- SelectColor tool hinting fixed, now it allows showing hints from other controls.
+
+2023.04.04
+- Under the hood: MKMouse2 changes and follow ups.
+
 2023.03.29
 - UndoSystem is distilled to a base class and added ImageUndoSystem and ColorUndoSystem.
   The latter is not saved in system state yet.

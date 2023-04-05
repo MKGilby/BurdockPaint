@@ -160,7 +160,6 @@ type
     constructor Create; override;
     procedure Move(x,y:integer); override;
     function Click(x,y,button:integer):boolean; override;
-    procedure Draw; override;
     procedure SetColor(colorindex:integer);
   private
     fColorIndex:integer;
@@ -1267,9 +1266,9 @@ procedure TBDToolSelectColor.Move(x,y:integer);
 begin
   inherited Move(x,y);
   if (fX>=0) and (fX<MainImage.Width) and (fY>=0) and (fY<MainImage.Height) then
-    fColorIndex:=MainImage.GetPixel(fX,fY)
+    SetColor(MainImage.GetPixel(fX,fY))
   else
-    fColorIndex:=-1;
+    SetColor(-1);
 end;
 
 function TBDToolSelectColor.Click(x,y,button:integer):boolean;
@@ -1286,22 +1285,21 @@ begin
   Result:=true;
 end;
 
-procedure TBDToolSelectColor.Draw;
-begin
-  if fColorIndex>=0 then
-    InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d)',
-      [fColorIndex,
-       MainImage.Palette.ColorR[fColorIndex],
-       MainImage.Palette.ColorG[fColorIndex],
-       MainImage.Palette.ColorB[fColorIndex],
-       MainImage.Palette.ColorA[fColorIndex]]))
-  else
-    InfoBar.ShowText('');
-end;
-
 procedure TBDToolSelectColor.SetColor(colorindex:integer);
 begin
-  if (colorindex>=-1) and (colorindex<MainImage.Palette.Size) then fColorIndex:=colorindex;
+  if (colorindex>=-1) and (colorindex<MainImage.Palette.Size) then begin
+    fColorIndex:=colorindex;
+    if colorindex>-1 then begin
+      InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d)',
+        [fColorIndex,
+         MainImage.Palette.ColorR[fColorIndex],
+         MainImage.Palette.ColorG[fColorIndex],
+         MainImage.Palette.ColorB[fColorIndex],
+         MainImage.Palette.ColorA[fColorIndex]]))
+    end else begin
+      InfoBar.ShowText('');
+    end;
+  end;
 end;
 
 // ----------------------------------------------------- [ TBDToolShowCEL ] ---

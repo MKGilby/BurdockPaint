@@ -43,8 +43,8 @@
         <Filename Value="BDPButtonUnit.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="9"/>
-        <TopLine Value="70"/>
-        <CursorPos Y="110"/>
+        <TopLine Value="34"/>
+        <CursorPos X="20" Y="100"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -79,8 +79,8 @@
         <Filename Value="BDPDrawAreaUnit.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="13"/>
-        <TopLine Value="162"/>
-        <CursorPos Y="184"/>
+        <TopLine Value="180"/>
+        <CursorPos X="22" Y="211"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -113,9 +113,10 @@
       <Unit>
         <Filename Value="BDPToolsUnit.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="11"/>
-        <TopLine Value="1207"/>
-        <CursorPos X="49" Y="1318"/>
+        <TopLine Value="127"/>
+        <CursorPos Y="163"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -175,7 +176,7 @@
         <Filename Value="BDPPaletteEditorUnit.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="226"/>
+        <TopLine Value="175"/>
         <CursorPos Y="247"/>
         <UsageCount Value="121"/>
         <Loaded Value="True"/>
@@ -190,7 +191,6 @@
       <Unit>
         <Filename Value="BDPMenuUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="6"/>
         <TopLine Value="233"/>
         <CursorPos Y="254"/>
@@ -483,7 +483,7 @@
         <UsageCount Value="10"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="16">
+    <JumpHistory HistoryIndex="17">
       <Position>
         <Filename Value="BDPDrawAreaUnit.pas"/>
         <Caret Line="126" Column="91" TopLine="106"/>
@@ -551,6 +551,10 @@
       <Position>
         <Filename Value="BDPMenuUnit.pas"/>
         <Caret Line="53" TopLine="32"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPToolsUnit.pas"/>
+        <Caret Line="1289" TopLine="1266"/>
       </Position>
     </JumpHistory>
     <RunParams>
