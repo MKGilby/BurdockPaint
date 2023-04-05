@@ -177,74 +177,6 @@ const
     'xxx     '+
     'xxx     ';
 
-procedure CreateArchH(Height:integer;Prefix:string);
-var x,y:integer;c:uint32;fLeftImage,fRightImage:TARGBImage;s:string;
-begin
-  if Height<16 then begin
-    Height:=16;
-    Log.LogWarning('Cannot create Arch with less than 16 pixels height!');
-  end;
-  fLeftImage:=TARGBImage.Create(8,Height);
-  fLeftImage.Bar(0,0,fLeftImage.Width,fLeftImage.Height,0,0,0,0);
-  fRightImage:=TARGBImage.Create(8,Height);
-  fRightImage.Bar(0,0,fRightImage.Width,fRightImage.Height,0,0,0,0);
-  if Settings.ModernGraphics then s:=ArchModern else s:=ArchOriginal;
-  c:=0;
-  for y:=0 to 7 do
-    for x:=0 to 7 do begin
-      case s[x+y*8+1] of
-        '.':c:=OverlayImage.Palette[3];
-        'x':c:=OverlayImage.Palette[2];
-        ' ':c:=0;
-      end;
-      fLeftImage.PutPixel(x,y,c);
-      fLeftImage.PutPixel(x,Height-y-1,c);
-      fRightImage.PutPixel(7-x,y,c);
-      fRightImage.PutPixel(7-x,Height-y-1,c);
-    end;
-  if Height>16 then begin
-    fLeftImage.Bar(0,8,3,Height-16,OverlayImage.Palette[2]);
-    fRightImage.Bar(5,8,3,Height-16,OverlayImage.Palette[2]);
-  end;
-  MM.AddImage(fLeftImage,Prefix+'Left');
-  MM.AddImage(fRightImage,Prefix+'Right');
-  // Don't free images, MM will do that!
-end;
-
-procedure CreateArchV(Width:integer;Prefix:string);
-var x,y:integer;c:uint32;fTopImage,fBottomImage:TARGBImage;s:string;
-begin
-  if Width<16 then begin
-    Width:=16;
-    Log.LogWarning('Cannot create Arch with less than 16 pixels width!');
-  end;
-  fTopImage:=TARGBImage.Create(Width,8);
-  fTopImage.Bar(0,0,fTopImage.Width,fTopImage.Height,0,0,0,0);
-  fBottomImage:=TARGBImage.Create(Width,8);
-  fBottomImage.Bar(0,0,fBottomImage.Width,fBottomImage.Height,0,0,0,0);
-  if Settings.ModernGraphics then s:=ArchModern else s:=ArchOriginal;
-  c:=0;
-  for y:=0 to 7 do
-    for x:=0 to 7 do begin
-      case s[x+y*8+1] of
-        '.':c:=OverlayImage.Palette[3];
-        'x':c:=OverlayImage.Palette[2];
-        ' ':c:=0;
-      end;
-      fTopImage.PutPixel(x,y,c);
-      fTopImage.PutPixel(Width-x-1,y,c);
-      fBottomImage.PutPixel(x,7-y,c);
-      fBottomImage.PutPixel(Width-x-1,7-y,c);
-    end;
-  if Width>16 then begin
-    fTopImage.Bar(8,0,Width-16,3,OverlayImage.Palette[2]);
-    fBottomImage.Bar(8,5,Width-16,3,OverlayImage.Palette[2]);
-  end;
-  MM.AddImage(fTopImage,Prefix+'Top');
-  MM.AddImage(fBottomImage,Prefix+'Bottom');
-  // Don't free images, MM will do that!
-end;
-
 procedure CreateArches;
 var x,y:integer;c:uint32;TLImage,TRImage,BLImage,BRImage:TARGBImage;s:string;
 begin
@@ -368,9 +300,6 @@ begin
   InfoBar:=TBDInfoBar.Create;
   Log.LogStatus('  Creating UI gfx...');
   CreateArches;
-  CreateArchH(NORMALBUTTONHEIGHT,'Button');
-  CreateArchH(COLORSLIDERHEIGHT,'Slider');
-  CreateArchV(COLORSLIDERHEIGHT,'Slider');
   Log.LogStatus('  Creating cursor...');
   Cursor:=TBDCursor.Create;
   VibroColors:=TBDVibroColors.Create(6,10);
