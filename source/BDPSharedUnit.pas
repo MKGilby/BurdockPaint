@@ -257,6 +257,7 @@ begin
     MM.Fonts[pName].LetterSpace:=1;
     MM.Fonts[pName].SpaceSpace:=5;
   end;
+  MM.Fonts[pName].SetRecolorExcludeChars(#132#133);
   MM.Fonts[pName].SetColorKey(0,0,0);
   MM.Fonts[pName].SetColor(pR,pG,pB);
 end;

@@ -42,6 +42,8 @@
 //      * Followed change in TARGBImage.Copy
 //   V1.07: Gilby - 2023.02.17
 //      * BUGFix in creating from ARGBImage. Missed fRerender.
+//   V1.08: Gilby - 2023.04.05
+//      * You can specify chars to exclude from recoloring.
 
 {$ifdef fpc}
   {$mode delphi}
@@ -63,6 +65,8 @@ type
     Left,Top,Width,Height:integer;
   end;
 
+  { TFont }
+
   TFont=class
     constructor Create; overload;
     constructor Create(iImage:TARGBImage); overload;
@@ -74,6 +78,7 @@ type
     procedure ClearColorKey;
     procedure SetColor(r,g,b:integer);
     procedure SetBackgroundColor(r,g,b:integer);
+    procedure SetRecolorExcludeChars(chars:string);
     function TextWidth(text:string):integer;
     procedure LogChars;
   protected
@@ -89,6 +94,7 @@ type
     fSize:integer;
     fFixedWidth:integer;
     fName:string;
+    fDontRecolorChars:string;
     fHeight:integer;
     fLetterSpace:integer;
     fSpaceSpace:integer;
@@ -112,7 +118,7 @@ uses SDL2, Logger, MKToolBox, SysUtils;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.07';
+  Version='1.08';
 
 // --------------------------------------------------------------- [ TFont ]---
 
@@ -164,21 +170,6 @@ begin
   if Assigned(fARGBImage) then FreeAndNil(fARGBImage);
   if Assigned(fTexture) then FreeAndNIL(fTexture);
   inherited;
-end;
-
-function TFont.TextWidth(text:string):longint;
-var i,j:longint;
-begin
-  j:=0;
-  if fFixedWidth<>0 then begin
-    j:=(fFixedWidth+LetterSpace*fSize)*length(text);
-  end else begin
-    for i:=1 to length(text) do begin
-      if text[i]=#32 then j+=SpaceSpace*fSize
-                     else j+=fDefs[ord(text[i])].Width+LetterSpace*fSize;
-    end;
-  end;
-  TextWidth:=j-LetterSpace*fSize;
 end;
 
 procedure TFont.OutText(text:string;x,y,align:longint);
@@ -274,6 +265,11 @@ begin
       Log.LogWarning('Color is out of range! ('+inttostr(r)+', '+inttostr(g)+', '+inttostr(b)+')',Istr);
 end;
 
+procedure TFont.SetRecolorExcludeChars(chars:string);
+begin
+  fDontRecolorChars:=chars;
+end;
+
 procedure TFont.fSetSize(newsize:integer);
 const Istr=Fstr+'TFont.SetSize';
 var i:integer;
@@ -294,12 +290,17 @@ begin
 end;
 
 procedure TFont.fReRender;
+var i:integer;
 begin
   if Assigned(fTexture) then FreeAndNIL(fTexture);
   if Assigned(fARGBImage) then FreeAndNil(fARGBImage);
   fARGBImage:=TARGBImage.Create(fOriginalImage.Width,fOriginalImage.Height);
   fOriginalImage.Copy(0,0,fOriginalImage.Width,fOriginalImage.Height,fARGBImage);
   if fR>-1 then fARGBImage.RecolorRGB(fR,fG,fB);
+  // Copy back chars that shouldn't be recolored.
+  for i:=0 to 255 do
+    if pos(chr(i),fDontRecolorChars)>0 then with fOrigDefs[i] do
+      fOriginalImage.CopyTo(Left,Top,Width,Height,Left,Top,fARGBImage);
   if fIsColorkey then begin
     fARGBImage.ReplaceColor(fCKr,fCKg,fCKb,0,0,0,0);
     fARGBImage.SetColorkey(fCKr,fCKg,fCKb);
@@ -331,6 +332,21 @@ begin
       j+=fOrigDefs[i].Width+1;
     end;
   FreeAndNil(pImage);
+end;
+
+function TFont.TextWidth(text:string):integer;
+var i,j:longint;
+begin
+  j:=0;
+  if fFixedWidth<>0 then begin
+    j:=(fFixedWidth+LetterSpace*fSize)*length(text);
+  end else begin
+    for i:=1 to length(text) do begin
+      if text[i]=#32 then j+=SpaceSpace*fSize
+                     else j+=fDefs[ord(text[i])].Width+LetterSpace*fSize;
+    end;
+  end;
+  TextWidth:=j-LetterSpace*fSize;
 end;
 
 procedure TFont.LogChars;

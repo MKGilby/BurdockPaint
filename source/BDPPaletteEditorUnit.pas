@@ -45,7 +45,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, MKMouse2, BDPToolsUnit;
+uses SysUtils, BDPSharedUnit, MKMouse2, BDPToolsUnit, SDL2;
 
 { TBDPaletteEditor }
 
@@ -224,10 +224,15 @@ begin
   if ActiveTool.Name='SELCOL' then begin
     if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
        (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
-      x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
-      y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
-      Settings.ActiveColorIndex:=y*32+x;
-      RefreshSliders;
+      if buttons=SDL_BUTTON_LEFT then begin
+        x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
+        y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
+        Settings.ActiveColorIndex:=y*32+x;
+        RefreshSliders;
+      end else
+      if buttons=SDL_BUTTON_RIGHT then begin
+        MessageQueue.AddMessage(MSG_DEACTIVATEPALETTEEDITOR);
+      end;
     end;
   end else
   if ActiveTool.Name='PICKCOL' then begin

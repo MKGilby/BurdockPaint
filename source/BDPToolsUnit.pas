@@ -152,7 +152,6 @@ type
     procedure Move(x,y:integer); override;
     function Click(x,y,button:integer):boolean; override;
     function MouseUp(x,y,button:integer):boolean; override;
-    procedure Draw; override;
     procedure SetColor(colorindex:integer);
   private
     fColorIndex:integer;
@@ -1256,19 +1255,11 @@ begin
   Result:=true;
 end;
 
-procedure TBDToolPickColor.Draw;
-begin
-{  if (fX>=0) and (fX<MainImage.Width) and (fY>=0) and (fY<MainImage.Height) then begin
-    InfoBar.ShowText('COLOR INDEX='+inttostr(MainImage.GetPixel(fX,fY)));
-  end else
-    InfoBar.ShowText('OUTSIDE OF DRAW AREA!');}
-end;
-
 procedure TBDToolPickColor.SetColor(colorindex:integer);
 begin
   if (colorindex>=0) and (colorindex<MainImage.Palette.Size) then begin
     fColorIndex:=colorindex;
-    InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d)',
+    InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d) '#132'PICK '#133'CANCEL',
       [fColorIndex,
        MainImage.Palette.ColorR[fColorIndex],
        MainImage.Palette.ColorG[fColorIndex],
@@ -1319,7 +1310,7 @@ begin
   if (colorindex>=-1) and (colorindex<MainImage.Palette.Size) then begin
     fColorIndex:=colorindex;
     if colorindex>-1 then begin
-      InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d)',
+      InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d) '#132'SELECT '#133'CLOSE PALETTE ED.',
         [fColorIndex,
          MainImage.Palette.ColorR[fColorIndex],
          MainImage.Palette.ColorG[fColorIndex],

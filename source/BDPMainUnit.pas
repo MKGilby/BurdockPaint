@@ -171,7 +171,10 @@ begin
           MSG_LOADCEL:begin
             if fOpenDialog.Execute then begin
               if not assigned(CELImage) then CELImage:=TBDImage.Create(16,16);
-              CELImage.ImportCEL(fOpenDialog.FileName);
+              if UpperCase(ExtractFileExt(fOpenDialog.FileName))='.CEL' then
+                CELImage.ImportCEL(fOpenDialog.FileName)
+              else
+                CELImage.LoadFromFile(fOpenDialog.FileName);
               CELImage.Left:=0;
               CELImage.Top:=0;
               fMainMenu.EnableCELSubMenusWithActiveCEL;
