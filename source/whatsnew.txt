@@ -20,6 +20,10 @@ Todo:
 - Add Tool and Ink selector
 
 
+2023.04.06
+- Button's texture is only updated when button state (selected or enabled) is
+  changed.
+
 2023.04.05
 - SelectColor tool hinting fixed, now it allows showing hints from other controls.
 - ColorSelector added to PaletteEditor.
