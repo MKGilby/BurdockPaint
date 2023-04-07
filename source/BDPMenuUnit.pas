@@ -22,7 +22,7 @@ type
 
   TSubMenu=class(TVisibleControl)
     constructor Create(iLeft:integer);
-    procedure Draw; override;
+//    procedure Draw; override;
     procedure MouseMove(Sender:TObject;x,y:integer);
     procedure MouseDown(Sender:TObject;x,y,buttons:integer);
     procedure MouseLeave(Sender:TObject);
@@ -48,11 +48,12 @@ type
   TMainMenu=class(TVisibleControl)
     constructor Create;
     destructor Destroy; override;
-    procedure Draw; override;
+//    procedure Draw; override;
     procedure EnableCELSubMenusWithActiveCEL;
     procedure DisableCELSubMenusWithActiveCEL;
     procedure MouseMove(Sender:TObject;x,y:integer);
     procedure MouseLeave(Sender:TObject);
+    procedure MouseEnter(Sender:TObject);
   protected
     procedure ReDraw; override;
   private
@@ -93,7 +94,7 @@ begin
   OnMouseLeave:=MouseLeave;
 end;
 
-procedure TSubMenu.Draw;
+{procedure TSubMenu.Draw;
 var i:integer;
 begin
   fTexture.ARGBImage.Bar(0,0,(length(fName)+2)*18,TOPMENUHEIGHT-3,OverlayImage.Palette[4]);
@@ -116,18 +117,23 @@ begin
   end;
   fTexture.Update;
   PutTexture(fLeft,fTop,fTexture);
-end;
+end;}
 
 procedure TSubMenu.MouseMove(Sender:TObject; x,y:integer);
+var pre:integer;
 begin
+  pre:=fSelected;
   fSelected:=(y-TOPMENUHEIGHT) div SUBMENULINEHEIGHT;
-  if (fSelected>=0) and (fSelected<Length(fItems)) then
-    InfoBar.ShowText(fItems[fSelected]._hint);
+  if pre<>fSelected then begin
+    if (fSelected>=0) and (fSelected<Length(fItems)) then
+      InfoBar.ShowText(fItems[fSelected]._hint);
+    fNeedRedraw:=true;
+  end;
 end;
 
 procedure TSubMenu.MouseDown(Sender:TObject; x,y,buttons:integer);
 begin
-  fSelected:=(y-TOPMENUHEIGHT) div SUBMENULINEHEIGHT;
+//  fSelected:=(y-TOPMENUHEIGHT) div SUBMENULINEHEIGHT;
   if (fSelected>=0) and (fSelected<Length(fItems)) and (fItems[fSelected]._enabled) then begin
     MessageQueue.AddMessage(fItems[fSelected]._message);
     fSelected:=-1;
@@ -138,6 +144,7 @@ end;
 procedure TSubMenu.MouseLeave(Sender:TObject);
 begin
   fSelected:=-1;
+  fNeedRedraw:=true;
   InfoBar.ShowText('');
   Visible:=false;
 end;
@@ -188,13 +195,38 @@ begin
   for i:=0 to length(fItems)-1 do
     if fItems[i]._name=item then begin
       fItems[i]._enabled:=value;
+      fNeedRedraw:=true;
       break;
     end;
 end;
 
 procedure TSubMenu.ReDraw;
+var i:integer;
 begin
-
+  if Assigned(fTexture) then begin
+    fTexture.ARGBImage.Bar(0,0,(length(fName)+2)*18,TOPMENUHEIGHT-3,OverlayImage.Palette[4]);
+    fTexture.ARGBImage.Bar((length(fName)+2)*18,0,Width-(length(fName)+2)*18,TOPMENUHEIGHT-3,OverlayImage.Palette[0]);
+    MM.Fonts['Red'].OutText(fTexture.ARGBImage,fName,18,3,0);
+    fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,fWidth,3,OverlayImage.Palette[2]);
+    fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,3,fHeight-TOPMENUHEIGHT,OverlayImage.Palette[2]);
+    fTexture.ARGBImage.Bar(0,fHeight-3,fWidth,3,OverlayImage.Palette[2]);
+    fTexture.ARGBImage.Bar(fWidth-3,TOPMENUHEIGHT-3,3,fHeight-TOPMENUHEIGHT,OverlayImage.Palette[2]);
+    fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT,fWidth-6,fHeight-TOPMENUHEIGHT-3,OverlayImage.Palette[3]);
+    if fSelected>-1 then
+      fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT+fSelected*SUBMENULINEHEIGHT,fWidth-6,SUBMENULINEHEIGHT,OverlayImage.Palette[4]);
+    if Assigned(fItems) then begin
+      for i:=0 to Length(fItems)-1 do begin
+        if fItems[i]._enabled then begin
+          if i<>fSelected then
+            MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i]._name,9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0)
+          else
+            MM.Fonts['Red'].OutText(fTexture.ARGBImage,fItems[i]._name,9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0);
+        end else
+          MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,fItems[i]._name,9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0);
+      end;
+    end;
+    fTexture.Update;
+  end;
 end;
 
 { TMainMenu }
@@ -261,6 +293,7 @@ begin
   Enabled:=true;
   OnMouseMove:=MouseMove;
   OnMouseLeave:=MouseLeave;
+  OnMouseEnter:=MouseEnter;
   MouseObjects.Add(Self);
 end;
 
@@ -269,25 +302,6 @@ begin
   if Assigned(fSubMenus) then FreeAndNil(fSubMenus);
   if Assigned(fItems) then FreeAndNil(fItems);
   inherited Destroy;
-end;
-
-procedure TMainMenu.Draw;
-var x,i:integer;
-begin
-  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[3]);
-  fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[2]);
-  x:=0;
-  for i:=0 to fItems.Count-1 do begin
-    if fSelected<>i then
-      MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i],x+18,3,0)
-    else begin
-      fTexture.ARGBImage.Bar(x,0,(length(fItems[i])+2)*18,TOPMENUHEIGHT-3,OverlayImage.Palette[4]);
-      MM.Fonts['Red'].OutText(fTexture.ARGBImage,fItems[i],x+18,3,0);
-    end;
-    x+=(length(fItems[i])+2)*18;
-  end;
-  fTexture.Update;
-  PutTexture(fLeft,fTop,fTexture);
 end;
 
 procedure TMainMenu.EnableCELSubMenusWithActiveCEL;
@@ -336,22 +350,45 @@ begin
     mx+=(length(fItems[i])+2)*18;
   end;
   if fSelected<>pre then begin
-    if pre<>-1 then fSubMenus[pre].Visible:=false;
-    if fSelected<>-1 then fSubMenus[fSelected].Visible:=true;
+    if pre<>-1 then fSubMenus[pre].Hide;
+    if fSelected<>-1 then fSubMenus[fSelected].Show;
+    fNeedRedraw:=true;
   end;
-  if (fSelected<>-1) and not fSubMenus[fSelected].Visible then fSubMenus[fSelected].Visible:=true;
+  if (fSelected<>-1) and not fSubMenus[fSelected].Visible then fSubMenus[fSelected].Show;
 end;
 
 procedure TMainMenu.MouseLeave(Sender:TObject);
 begin
-//  if fVisible then SDL_ShowCursor(SDL_DISABLE);
-//  if fSelected<>-1 then fSubMenus[fSelected].Visible:=false;
   fSelected:=-1;
+  fNeedRedraw:=true;
+end;
+
+procedure TMainMenu.MouseEnter(Sender:TObject);
+begin
+  if (fSelected<>-1) and not fSubMenus[fSelected].Visible then
+    fSubMenus[fSelected].Show;
 end;
 
 procedure TMainMenu.ReDraw;
+var x,i:integer;
 begin
-
+  if Assigned(fTexture) then begin
+    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[3]);
+    fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[2]);
+    x:=0;
+    if Assigned(fItems) then begin
+      for i:=0 to fItems.Count-1 do begin
+        if fSelected<>i then
+          MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i],x+18,3,0)
+        else begin
+          fTexture.ARGBImage.Bar(x,0,(length(fItems[i])+2)*18,TOPMENUHEIGHT-3,OverlayImage.Palette[4]);
+          MM.Fonts['Red'].OutText(fTexture.ARGBImage,fItems[i],x+18,3,0);
+        end;
+        x+=(length(fItems[i])+2)*18;
+      end;
+    end;
+    fTexture.Update;
+  end;
 end;
 
 end.

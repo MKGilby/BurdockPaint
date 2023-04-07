@@ -57,7 +57,7 @@ begin
   fTRImage:=MM.Images.ItemByName['ArchTopRight'];
   fBLImage:=MM.Images.ItemByName['ArchBottomLeft'];
   fBRImage:=MM.Images.ItemByName['ArchBottomRight'];
-  ReDraw;
+  fNeedRedraw:=true;
 end;
 
 procedure TBDVerticalSlider.ReDraw;
@@ -90,7 +90,6 @@ begin
     if Assigned(fFont) then
       fFont.OutText(fTexture.ARGBImage,inttostr(Position),fWidth div 2,p+(SLIDERKNOBWIDTH-Font.Height) div 2,mjCenter);
     fTexture.Update;
-    PutTexture(fLeft,fTop,fTexture);
   end;
 end;
 
@@ -113,7 +112,7 @@ begin
   fArrowFont:=MM.Fonts['Black'];
   Visible:=true;
   Enabled:=true;
-  ReDraw;
+  fNeedRedraw:=true;
 end;
 
 procedure TBDHorizontalSlider.ReDraw;
@@ -146,7 +145,6 @@ begin
     if Assigned(fFont) then
       fFont.OutText(fTexture.ARGBImage, inttostr(Position), p+SLIDERKNOBWIDTH div 2,9,1);
     fTexture.Update;
-    PutTexture(fLeft,fTop,fTexture);
   end;
 end;
 

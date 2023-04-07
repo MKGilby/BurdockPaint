@@ -27,6 +27,10 @@
 //    * Initial creation
 //  V1.01: Gilby - 2023.04.07
 //    * Added ReDraw. You have to redraw and update fTexture in this method.
+//  V1.01a: Gilby - 2023.04.07
+//    * Added TextureBlending to allow transparent controls.
+//  V1.01b: Gilby - 2023.04.07
+//    * Added fNeedRedraw. Set it to true in descendants when visible change occurs.
 
 {$mode delphi}
 {$smartlink on}
@@ -47,6 +51,7 @@ type
     // Draws the Control to PrimaryWindow
     procedure Draw; override;
   protected
+    fNeedRedraw:boolean;
     fTexture:TStreamingTexture;
     procedure fSetHeight(value:integer); override;
     procedure fSetWidth(value:integer); override;
@@ -68,11 +73,11 @@ type
      
 implementation
 
-uses SysUtils, MKToolBox, Logger;
+uses SysUtils, MKToolBox, Logger, SDL2;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.01';
+  Version='1.01b';
 
 
 { TVisibleControl}
@@ -80,6 +85,7 @@ const
 constructor TVisibleControl.Create;
 begin
   inherited Create;
+  fNeedRedraw:=true;
   fWidth:=64;
   fHeight:=24;
   RecreateTexture;
@@ -93,21 +99,25 @@ end;
 
 procedure TVisibleControl.Draw;
 begin
-  if Assigned(fTexture) then PutTexture(Left,Top,fTexture);
+  if Assigned(fTexture) then begin
+    if fNeedRedraw then ReDraw;
+    fNeedRedraw:=false;
+    PutTexture(Left,Top,fTexture);
+  end;
 end;
 
 procedure TVisibleControl.fSetHeight(value:integer);
 begin
   inherited fSetHeight(value);
   RecreateTexture;
-  ReDraw;
+  fNeedRedraw:=true;
 end;
 
 procedure TVisibleControl.fSetWidth(value:integer);
 begin
   inherited fSetWidth(value);
   RecreateTexture;
-  ReDraw;
+  fNeedRedraw:=true;
 end;
 
 procedure TVisibleControl.ReDraw;
@@ -121,6 +131,7 @@ begin
     if (fWidth>0) and (fHeight>0) then begin
       if Assigned(fTexture) then FreeAndNil(fTexture);
       fTexture:=TStreamingTexture.Create(fWidth,fHeight);
+      SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
     end;
   end;
 end;
@@ -129,7 +140,7 @@ procedure TVisibleControl.fSetSelected(value:boolean);
 begin
   if fSelected<>value then begin
     fSelected:=value;
-    ReDraw;
+    fNeedRedraw:=true;
   end;
 end;
 
@@ -137,7 +148,7 @@ procedure TVisibleControl.fSetEnabled(value:boolean);
 begin
   if fEnabled<>value then begin
     fSelected:=value;
-    ReDraw;
+    fNeedRedraw:=true;
   end;
 end;
 

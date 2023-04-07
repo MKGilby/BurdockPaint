@@ -163,7 +163,7 @@ begin
     fPosition:=fSavedPosition;
     if (pre<>fPosition) then begin
       if Assigned(fOnChange) then fOnChange(Self,fPosition);
-      ReDraw;
+      fNeedRedraw:=true;
     end;
   end;
   fState:=csMouseUp;
@@ -187,7 +187,7 @@ begin
   end;
   if (pre<>fPosition) then begin
     if Assigned(fOnChange) then fOnChange(Self,fPosition);
-    ReDraw;
+    fNeedRedraw:=true;
   end;
 end;
 
@@ -206,7 +206,7 @@ begin
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*x div (fSlideAreaSize-1);
     if (pre<>fPosition) then begin
       if Assigned(fOnChange) then fOnChange(Self,fPosition);
-      ReDraw;
+      fNeedRedraw:=true;
     end;
   end;
 end;
@@ -223,7 +223,7 @@ begin
   if fPosition<fMinValue then fPosition:=fMinValue;
   if (pre<>fPosition) then begin
     if Assigned(fOnChange) then fOnChange(Self,fPosition);
-    ReDraw;
+    fNeedRedraw:=true;
   end;
 end;
 
@@ -240,7 +240,7 @@ begin
   if (value>=0) and (fWidth-value-fIncClickAreaSize>0) then begin
     fDecClickAreaSize:=value;
     fSlideAreaSize:=fWidth-fDecClickAreaSize-fIncClickAreaSize;
-    ReDraw;
+    fNeedRedraw:=true;
   end;
 end;
 
@@ -249,7 +249,7 @@ begin
   if (value>=0) and (fWidth-fDecClickAreaSize-value>0) then begin
     fIncClickAreaSize:=value;
     fSlideAreaSize:=fWidth-fDecClickAreaSize-fIncClickAreaSize;
-    ReDraw;
+    fNeedRedraw:=true;
   end;
 end;
 
@@ -257,7 +257,7 @@ procedure THorizontalSliderLogic.fSetPosition(value:integer);
 begin
   if (value<>fPosition) and (value>=fMinValue) and (value<=fMaxValue) then begin
     fPosition:=value;
-    ReDraw;
+    fNeedRedraw:=true;
   end;
 end;
 
@@ -297,7 +297,7 @@ begin
     fPosition:=fSavedPosition;
     if (pre<>fPosition) then begin
       if Assigned(fOnChange) then fOnChange(Self,fPosition);
-      ReDraw;
+      fNeedRedraw:=true;
     end;
   end;
   fState:=csMouseUp;
@@ -321,7 +321,7 @@ begin
   end;
   if (pre<>fPosition) then begin
     if Assigned(fOnChange) then fOnChange(Self,fPosition);
-    ReDraw;
+    fNeedRedraw:=true;
   end;
 end;
 
@@ -340,7 +340,7 @@ begin
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*y div (fSlideAreaSize-1);
     if (pre<>fPosition) then begin
       if Assigned(fOnChange) then fOnChange(Self,fPosition);
-      ReDraw;
+      fNeedRedraw:=true;
     end;
   end;
 end;
@@ -357,7 +357,7 @@ begin
   if fPosition<fMinValue then fPosition:=fMinValue;
   if (pre<>fPosition) then begin
     if Assigned(fOnChange) then fOnChange(Self,fPosition);
-    ReDraw;
+    fNeedRedraw:=true;
   end;
 end;
 
@@ -374,7 +374,7 @@ begin
   if (value>=0) and (fHeight-fIncClickAreaSize-value>0) then begin
     fdecClickAreaSize:=value;
     fSlideAreaSize:=fHeight-fDecClickAreaSize-fIncClickAreaSize;
-    ReDraw;
+    fNeedRedraw:=true;
   end;
 end;
 
@@ -383,7 +383,7 @@ begin
   if (value>=0) and (fHeight-fDecClickAreaSize-value>0) then begin
     fIncClickAreaSize:=value;
     fSlideAreaSize:=fHeight-fDecClickAreaSize-fIncClickAreaSize;
-    ReDraw;
+    fNeedRedraw:=true;
   end;
 end;
 
@@ -391,7 +391,7 @@ procedure TVerticalSliderLogic.fSetPosition(value:integer);
 begin
   if (value<>fPosition) and (value>=fMinValue) and (value<=fMaxValue) then begin
     fPosition:=value;
-    ReDraw;
+    fNeedRedraw:=true;
   end;
 end;
 

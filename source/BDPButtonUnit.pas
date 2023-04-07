@@ -57,7 +57,7 @@ begin
   fTRImage:=MM.Images.ItemByName['ArchTopRight'];
   fBLImage:=MM.Images.ItemByName['ArchBottomLeft'];
   fBRImage:=MM.Images.ItemByName['ArchBottomRight'];
-  ReDraw;
+  fNeedRedraw:=true;
 end;
 
 constructor TBDButton.Create;
@@ -121,22 +121,6 @@ begin
   end;
   fTexture.Update;
 end;
-
-{procedure TBDButton.fSetSelected(value:boolean);
-begin
-  if fSelected<>value then begin
-    fSelected:=value;
-    ReDraw;
-  end;
-end;
-
-procedure TBDButton.fSetEnabled(value:boolean);
-begin
-  if fEnabled<>value then begin
-    fSelected:=value;
-    ReDraw;
-  end;
-end;}
 
 end.
 
