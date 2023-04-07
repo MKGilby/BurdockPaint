@@ -14,24 +14,20 @@ type
     constructor Create(iX,iY,iWidth:integer;iCaption,iHint:string;
           iClickMessage:TMessage;iAssignedobject:TObject=nil); overload;
     constructor Create; overload;
-    procedure Draw; override;
     procedure MouseEnter(Sender:TObject);
     procedure MouseLeave(Sender:TObject);
     procedure Click(Sender:TObject;x, y, buttons: integer);
+  protected
+    procedure ReDraw; override;
   private
     fHint:string;
     fAssignedObject:TObject;
     fTLImage,fTRImage,fBLImage,fBRImage:TARGBImage;
     fFont2:TFont;
     fMessage:TMessage;
-    procedure RefreshImage;
-    procedure fSetSelected(value:boolean);
-    procedure fSetEnabled(value:boolean);
   published
     property Hint:string read fHint write fHint;
     property AssignedObject:TObject read fAssignedObject write fAssignedObject;
-    property Selected:boolean read fSelected write fSetSelected;
-    property Enabled:boolean read fEnabled write fSetEnabled;
   end;
 
 implementation
@@ -44,10 +40,10 @@ constructor TBDButton.Create(iX,iY,iWidth:integer;
   iCaption,iHint:string; iClickMessage:TMessage; iAssignedobject:TObject);
 begin
   Create;
-  fLeft:=iX;
-  fTop:=iY;
-  fWidth:=iWidth;
-  fHeight:=NORMALBUTTONHEIGHT;
+  Left:=iX;
+  Top:=iY;
+  Width:=iWidth;
+  Height:=NORMALBUTTONHEIGHT;
   TextAlignX:=mjCenter;
   TextOffsetY:=2;
   Font:=MM.Fonts['Black'];
@@ -56,13 +52,12 @@ begin
   fName:=fCaption;
   fHint:=iHint;
   fAssignedObject:=iAssignedobject;
+  fMessage:=iClickMessage;
   fTLImage:=MM.Images.ItemByName['ArchTopLeft'];
   fTRImage:=MM.Images.ItemByName['ArchTopRight'];
   fBLImage:=MM.Images.ItemByName['ArchBottomLeft'];
   fBRImage:=MM.Images.ItemByName['ArchBottomRight'];
-  fMessage:=iClickMessage;
-  RecreateTexture;
-  RefreshImage;
+  ReDraw;
 end;
 
 constructor TBDButton.Create;
@@ -72,13 +67,6 @@ begin
   OnMouseEnter:=Self.MouseEnter;
   OnMouseLeave:=Self.MouseLeave;
   OnClick:=Self.Click;
-end;
-
-procedure TBDButton.Draw;
-begin
-  if Visible then begin
-    PutTexture(fLeft,fTop,fTexture);
-  end;
 end;
 
 procedure TBDButton.MouseEnter(Sender:TObject);
@@ -100,7 +88,7 @@ begin
   end;
 end;
 
-procedure TBDButton.RefreshImage;
+procedure TBDButton.ReDraw;
 begin
   with fTexture.ARGBImage do begin
     Bar(8,0,Width-16,3,OverlayImage.Palette[2]);
@@ -116,22 +104,29 @@ begin
         Bar(3,3,Width-6,Height-6,OverlayImage.Palette[2]);
     end;
   end;
-  fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fTexture.ARGBImage,true);
-  fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,fWidth-8,0,fTexture.ARGBImage,true);
-  fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,0,fHeight-8,fTexture.ARGBImage,true);
-  fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,fTexture.ARGBImage,true);
-  if not fSelected then
-    fFont.OutText(fTexture.ARGBImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX)
-  else
-    fFont2.OutText(fTexture.ARGBImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX);
+  if Assigned(fTLImage) then
+    fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fTexture.ARGBImage,true);
+  if Assigned(fTRImage) then
+    fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,fWidth-8,0,fTexture.ARGBImage,true);
+  if Assigned(fBLImage) then
+    fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,0,fHeight-8,fTexture.ARGBImage,true);
+  if Assigned(fBRImage) then
+    fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,fTexture.ARGBImage,true);
+  if not fSelected then begin
+    if Assigned(fFont) then
+      fFont.OutText(fTexture.ARGBImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX)
+  end else begin
+    if Assigned(fFont2) then
+      fFont2.OutText(fTexture.ARGBImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX);
+  end;
   fTexture.Update;
 end;
 
-procedure TBDButton.fSetSelected(value:boolean);
+{procedure TBDButton.fSetSelected(value:boolean);
 begin
   if fSelected<>value then begin
     fSelected:=value;
-    RefreshImage;
+    ReDraw;
   end;
 end;
 
@@ -139,9 +134,9 @@ procedure TBDButton.fSetEnabled(value:boolean);
 begin
   if fEnabled<>value then begin
     fSelected:=value;
-    RefreshImage;
+    ReDraw;
   end;
-end;
+end;}
 
 end.
 

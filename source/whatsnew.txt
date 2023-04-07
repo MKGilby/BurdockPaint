@@ -20,6 +20,9 @@ Todo:
 - Add Tool and Ink selector
 
 
+2023.04.07
+- Following changes in vcc2_VisibleControl unit.
+
 2023.04.06
 - Button's texture is only updated when button state (selected or enabled) is
   changed.

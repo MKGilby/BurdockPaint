@@ -24,6 +24,8 @@
 //
 //  V1.00: Gilby - 2023.03.15
 //    * Initial creation from vcc_ARGBSlider.
+//  V1.01: Gilby - 2023.04.07
+//    * Following changes in vcc2_VisibleControl.
 
 unit vcc2_Slider;
 
@@ -39,12 +41,12 @@ type
   { TARGBHorizontalSlider }
 
   THorizontalSlider=class(THorizontalSliderLogic)
-    procedure Draw; override;
   protected
     fFont:TFont;
     fBorderColor,
     fNormalColor,
     fHighlightColor:uint32;
+    procedure ReDraw; override;
   public
     property Font:TFont read fFont write fFont;
     property BorderColor:uint32 read fBorderColor write fBorderColor;
@@ -55,12 +57,12 @@ type
   { TVerticalSlider }
 
   TVerticalSlider=class(TVerticalSliderLogic)
-    procedure Draw; override;
   protected
     fFont:TFont;
     fBorderColor,
     fNormalColor,
     fHighlightColor:uint32;
+    procedure ReDraw; override;
   public
     property Font:TFont read fFont write fFont;
     property BorderColor:uint32 read fBorderColor write fBorderColor;
@@ -74,13 +76,13 @@ uses SysUtils, mk_sdl2, Logger;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.00';
+  Version='1.01';
 
 { TARGBHorizontalSlider }
 
-procedure THorizontalSlider.Draw;
+procedure THorizontalSlider.ReDraw;
 begin
-  if Visible then begin
+  if Assigned(fTexture) then begin
     with fTexture.ARGBImage do begin
       Bar(0,0,fDecClickAreaSize,fHeight,fBorderColor);
       Bar(fDecClickAreaSize,0,fSlideAreaSize,1,fBorderColor);
@@ -90,7 +92,8 @@ begin
       Bar(fDecClickAreaSize,fHeight-1,fSlideAreaSize,1,fBorderColor);
       Bar(fDecClickAreaSize+fSlideAreaSize,0,fIncClickAreaSize,fHeight,fBorderColor);
     end;
-    fFont.OutText(fTexture.ARGBImage,inttostr(fPosition),fWidth div 2,2,mjCenter);
+    if Assigned(fFont) then
+      fFont.OutText(fTexture.ARGBImage,inttostr(fPosition),fWidth div 2,2,mjCenter);
     fTexture.Update;
     PutTexture(fLeft,fTop,fTexture);
   end;
@@ -98,9 +101,9 @@ end;
 
 { TVerticalSlider }
 
-procedure TVerticalSlider.Draw;
+procedure TVerticalSlider.ReDraw;
 begin
-  if Visible then begin
+  if Assigned(fTexture) then begin
     with fTexture.ARGBImage do begin
       Bar(0,0,fWidth,fDecClickAreaSize,fBorderColor);
       Bar(0,fDecClickAreaSize,1,fSlideAreaSize,fBorderColor);
@@ -110,7 +113,6 @@ begin
       Bar(fWidth-1,fDecClickAreaSize,1,fSlideAreaSize,fBorderColor);
       Bar(0,0+fDecClickAreaSize+fSlideAreaSize,fHeight,fIncClickAreaSize,fBorderColor);
     end;
-//  fFont.OutText(fTarget,inttostr(fPosition),fOnImageLeft+fWidth div 2,fOnImageTop+2,mjCenter);
     fTexture.Update;
     PutTexture(fLeft,fTop,fTexture);
   end;

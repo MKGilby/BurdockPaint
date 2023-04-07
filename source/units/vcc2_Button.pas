@@ -46,6 +46,8 @@
 //    * Initial creation form vcc_Button2
 //  V1.01: Gilby - 2023.03.23
 //    * Following change in MKMouse2
+//  V1.02: Gilby - 2023.04.07
+//    * Following change in vcc2_VisibleControl
 
 {$mode delphi}
 {$smartlink on}
@@ -63,7 +65,6 @@ type
   TButton=class(TButtonLogic)
     constructor Create; overload;
     constructor Create(iINI:TINIFile;iSection:string;iFontList:TFontList); overload;
-    procedure Draw; override;
   protected
     fFont:TFont;
     fBorderColor,
@@ -73,6 +74,7 @@ type
     procedure fSetTop(value:integer);
     procedure fSetHeight(value:integer); override;
     procedure fSetFont(font:TFont);
+    procedure ReDraw; override;
   public
     property Font:TFont read fFont write fSetFont;
     property BorderColor:UInt32 read fBorderColor write fBorderColor;
@@ -87,7 +89,7 @@ uses SysUtils, MKToolBox, Logger;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.01';
+  Version='1.02';
 
 
 { TButton }
@@ -158,7 +160,7 @@ begin
   fTextAlignPointY:=fTop+(fHeight-fFont.Height) div 2;
 end;
 
-procedure TButton.Draw;
+procedure TButton.ReDraw;
 
   procedure DrawButton(color:uint32);
   begin
@@ -167,14 +169,17 @@ procedure TButton.Draw;
   end;
 
 begin
-  case fState of
-    cNormal:DrawButton(fNormalColor);
-    cHighlighted:DrawButton(fHighlightedColor);
-    cButtonDown:DrawButton(fPushedColor);
+  if Assigned(fTexture) then begin
+    case fState of
+      cNormal:DrawButton(fNormalColor);
+      cHighlighted:DrawButton(fHighlightedColor);
+      cButtonDown:DrawButton(fPushedColor);
+    end;
+    if Assigned(fFont) then
+      fFont.OutText(fTexture.ARGBImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX);
+    fTexture.Update;
+    PutTexture(fLeft,fTop,fTexture);
   end;
-  fFont.OutText(fTexture.ARGBImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX);
-  fTexture.Update;
-  PutTexture(fLeft,fTop,fTexture);
 end;
 
 initialization

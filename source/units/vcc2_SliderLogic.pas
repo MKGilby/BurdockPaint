@@ -30,6 +30,8 @@
 //    * Slider sets initial value if left with mouse button down.
 //  V1.02: Gilby - 2023.04.04
 //    * Following changes in MKMouse2
+//  V1.03: Gilby - 2023.04.07
+//    * Following changes in vcc2_VisibleControl
 
 {$mode delphi}
 {$smartlink on}
@@ -68,13 +70,14 @@ type
     procedure fSetWidth(value:integer); override;
     procedure fSetDecClickAreaSize(value:integer);
     procedure fSetIncClickAreaSize(value:integer);
+    procedure fSetPosition(value:integer);
   public
     property Width:integer read fWidth write fSetWidth;
     property DecClickAreaSize:integer read fDecClickAreaSize write fSetDecClickAreaSize;
     property IncClickAreaSize:integer read fIncClickAreaSize write fSetIncClickAreaSize;
     property MinValue:integer read fMinValue write fMinValue;
     property MaxValue:integer read fMaxValue write fMaxValue;
-    property Position:integer read fPosition write fPosition;
+    property Position:integer read fPosition write fSetPosition;
     property InvertWheel:boolean read fInvertWheel write fInvertWheel;
     property CrossWheels:boolean read fCrossWheels write fCrossWheels;
     property OnChange:TOnSliderPositionChangeEvent read fOnChange write fOnChange;
@@ -102,13 +105,14 @@ type
     procedure fSetHeight(value:integer); override;
     procedure fSetDecClickAreaSize(value:integer);
     procedure fSetIncClickAreaSize(value:integer);
+    procedure fSetPosition(value:integer);
   public
     property Height:integer read fHeight write fSetHeight;
     property DecClickAreaSize:integer read fDecClickAreaSize write fSetDecClickAreaSize;
     property IncClickAreaSize:integer read fIncClickAreaSize write fSetIncClickAreaSize;
     property MinValue:integer read fMinValue write fMinValue;
     property MaxValue:integer read fMaxValue write fMaxValue;
-    property Position:integer read fPosition write fPosition;
+    property Position:integer read fPosition write fSetPosition;
     property InvertWheel:boolean read fInvertWheel write fInvertWheel;
     property CrossWheels:boolean read fCrossWheels write fCrossWheels;
     property OnChange:TOnSliderPositionChangeEvent read fOnChange write fOnChange;
@@ -120,7 +124,7 @@ uses SysUtils, MKToolBox, Logger;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.02';
+  Version='1.03';
 
 
 { THorizontalSliderLogic }
@@ -157,7 +161,10 @@ begin
   if fState=csMouseDown then begin
     pre:=fPosition;
     fPosition:=fSavedPosition;
-    if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
+    if (pre<>fPosition) then begin
+      if Assigned(fOnChange) then fOnChange(Self,fPosition);
+      ReDraw;
+    end;
   end;
   fState:=csMouseUp;
 end;
@@ -178,7 +185,10 @@ begin
   else if (x>=fDecClickAreaSize+fSlideAreaSize) and (x<fWidth) then begin
     if (fPosition<fMaxValue) then inc(fPosition);
   end;
-  if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
+  if (pre<>fPosition) then begin
+    if Assigned(fOnChange) then fOnChange(Self,fPosition);
+    ReDraw;
+  end;
 end;
 
 procedure THorizontalSliderLogic.MouseUp(Sender:TObject; x,y,buttons:integer);
@@ -194,12 +204,14 @@ begin
     pre:=fPosition;
     x:=x-fDecClickAreaSize;
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*x div (fSlideAreaSize-1);
-    if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
+    if (pre<>fPosition) then begin
+      if Assigned(fOnChange) then fOnChange(Self,fPosition);
+      ReDraw;
+    end;
   end;
 end;
 
-procedure THorizontalSliderLogic.MouseWheel(Sender:TObject;
-  x,y,wheelx,wheely:integer);
+procedure THorizontalSliderLogic.MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer);
 var pre:integer;
 begin
   // If only the y wheel rolled and CrossWheels enabled, use that.
@@ -209,7 +221,10 @@ begin
   fPosition+=wheelx;
   if fPosition>fMaxValue then fPosition:=fMaxValue;
   if fPosition<fMinValue then fPosition:=fMinValue;
-  if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Self,fPosition);
+  if (pre<>fPosition) then begin
+    if Assigned(fOnChange) then fOnChange(Self,fPosition);
+    ReDraw;
+  end;
 end;
 
 procedure THorizontalSliderLogic.fSetWidth(value:integer);
@@ -225,6 +240,7 @@ begin
   if (value>=0) and (fWidth-value-fIncClickAreaSize>0) then begin
     fDecClickAreaSize:=value;
     fSlideAreaSize:=fWidth-fDecClickAreaSize-fIncClickAreaSize;
+    ReDraw;
   end;
 end;
 
@@ -233,6 +249,15 @@ begin
   if (value>=0) and (fWidth-fDecClickAreaSize-value>0) then begin
     fIncClickAreaSize:=value;
     fSlideAreaSize:=fWidth-fDecClickAreaSize-fIncClickAreaSize;
+    ReDraw;
+  end;
+end;
+
+procedure THorizontalSliderLogic.fSetPosition(value:integer);
+begin
+  if (value<>fPosition) and (value>=fMinValue) and (value<=fMaxValue) then begin
+    fPosition:=value;
+    ReDraw;
   end;
 end;
 
@@ -270,7 +295,10 @@ begin
   if fState=csMouseDown then begin
     pre:=fPosition;
     fPosition:=fSavedPosition;
-    if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
+    if (pre<>fPosition) then begin
+      if Assigned(fOnChange) then fOnChange(Self,fPosition);
+      ReDraw;
+    end;
   end;
   fState:=csMouseUp;
 end;
@@ -291,7 +319,10 @@ begin
   else if (y>=fDecClickAreaSize+fSlideAreaSize) and (y<fHeight) then begin
     if (fPosition<fMaxValue) then inc(fPosition);
   end;
-  if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
+  if (pre<>fPosition) then begin
+    if Assigned(fOnChange) then fOnChange(Self,fPosition);
+    ReDraw;
+  end;
 end;
 
 procedure TVerticalSliderLogic.MouseUp(Sender:TObject; x,y,buttons:integer);
@@ -307,12 +338,14 @@ begin
     pre:=fPosition;
     y:=y-fDecClickAreaSize;
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*y div (fSlideAreaSize-1);
-    if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Sender,fPosition);
+    if (pre<>fPosition) then begin
+      if Assigned(fOnChange) then fOnChange(Self,fPosition);
+      ReDraw;
+    end;
   end;
 end;
 
-procedure TVerticalSliderLogic.MouseWheel(Sender:TObject;
-  x,y,wheelx,wheely:integer);
+procedure TVerticalSliderLogic.MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer);
 var pre:integer;
 begin
   // If only the x wheel rolled and CrossWheels enabled, use that.
@@ -322,7 +355,10 @@ begin
   fPosition-=wheely;
   if fPosition>fMaxValue then fPosition:=fMaxValue;
   if fPosition<fMinValue then fPosition:=fMinValue;
-  if (pre<>fPosition) and Assigned(fOnChange) then fOnChange(Self,fPosition);
+  if (pre<>fPosition) then begin
+    if Assigned(fOnChange) then fOnChange(Self,fPosition);
+    ReDraw;
+  end;
 end;
 
 procedure TVerticalSliderLogic.fSetHeight(value:integer);
@@ -338,6 +374,7 @@ begin
   if (value>=0) and (fHeight-fIncClickAreaSize-value>0) then begin
     fdecClickAreaSize:=value;
     fSlideAreaSize:=fHeight-fDecClickAreaSize-fIncClickAreaSize;
+    ReDraw;
   end;
 end;
 
@@ -346,6 +383,15 @@ begin
   if (value>=0) and (fHeight-fDecClickAreaSize-value>0) then begin
     fIncClickAreaSize:=value;
     fSlideAreaSize:=fHeight-fDecClickAreaSize-fIncClickAreaSize;
+    ReDraw;
+  end;
+end;
+
+procedure TVerticalSliderLogic.fSetPosition(value:integer);
+begin
+  if (value<>fPosition) and (value>=fMinValue) and (value<=fMaxValue) then begin
+    fPosition:=value;
+    ReDraw;
   end;
 end;
 

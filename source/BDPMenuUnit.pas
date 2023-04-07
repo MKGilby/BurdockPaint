@@ -29,6 +29,8 @@ type
     procedure AddItem(item,hint:string;msg:TMessage;enabled:boolean=true);
     procedure DisableItem(item:string);
     procedure EnableItem(item:string);
+  protected
+    procedure ReDraw; override;
   private
     fItems:array of TSubMenuItem;
     fSelected:integer;
@@ -51,6 +53,8 @@ type
     procedure DisableCELSubMenusWithActiveCEL;
     procedure MouseMove(Sender:TObject;x,y:integer);
     procedure MouseLeave(Sender:TObject);
+  protected
+    procedure ReDraw; override;
   private
     fSubMenus:TSubMenuList;
     fItems:TStringList;
@@ -173,9 +177,8 @@ begin
     if (length(fItems[i]._name)+1)*18>w then w:=(length(fItems[i]._name)+1)*18;
   h:=TOPMENUHEIGHT+Length(fItems)*SUBMENULINEHEIGHT+3;
   if (w<>fWidth) or (h<>fHeight) then begin
-    fWidth:=w;
-    fHeight:=h;
-    RecreateTexture;
+    Width:=w;
+    Height:=h;
   end;
 end;
 
@@ -187,6 +190,11 @@ begin
       fItems[i]._enabled:=value;
       break;
     end;
+end;
+
+procedure TSubMenu.ReDraw;
+begin
+
 end;
 
 { TMainMenu }
@@ -339,6 +347,11 @@ begin
 //  if fVisible then SDL_ShowCursor(SDL_DISABLE);
 //  if fSelected<>-1 then fSubMenus[fSelected].Visible:=false;
   fSelected:=-1;
+end;
+
+procedure TMainMenu.ReDraw;
+begin
+
 end;
 
 end.
