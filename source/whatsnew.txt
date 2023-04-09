@@ -20,6 +20,9 @@ Todo:
 - Add Tool and Ink selector
 
 
+2023.04.09
+- Added ColorBox to PaletteEditor. It shows the selected color in a bigger area.
+
 2023.04.07
 - Following changes in vcc2_VisibleControl unit.
 

@@ -6,7 +6,7 @@ interface
 
 uses
   vcc2_Container, BDPButtonUnit, mk_sdl2, BDPMessageUnit, BDPSliderUnit,
-  BDPColorSelectorUnit;
+  BDPColorSelectorUnit, BDPColorBoxUnit;
 
 type
 
@@ -40,6 +40,7 @@ type
     fSliderBank:TBDVerticalSlider;
     fUndoButton,fRedoButton:TBDButton;
     fColorSelector:TBDColorSelector;
+    fColorBox:TBDColorBox;
     fSavedColor:uint32;
   end;
 
@@ -141,6 +142,13 @@ begin
   fColorSelector.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fColorSelector.Name:='ColorSelector (PalEd)';
   AddChild(fColorSelector);
+
+  fColorBox:=TBDColorBox.Create(COLORBOXLEFT,fTop+COLORBOXTOP);
+  fColorBox.ColorIndex:=Settings.ActiveColorIndex;
+  fColorBox.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fColorBox.Name:='ColorBox';
+  AddChild(fColorBox);
+
   MouseObjects.Add(Self);
 end;
 
@@ -227,6 +235,7 @@ begin
         x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
         y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
         Settings.ActiveColorIndex:=y*32+x;
+        fColorBox.ColorIndex:=y*32+x;
         RefreshSliders;
       end else
       if buttons=SDL_BUTTON_RIGHT then begin
@@ -255,6 +264,30 @@ end;
 procedure TBDPaletteEditor.OnSliderRChange(Sender:TObject; newValue:integer);
 begin
   MainImage.Palette.ColorR[Settings.ActiveColorIndex]:=newValue;
+  fColorBox.ColorChanged;
+end;
+
+procedure TBDPaletteEditor.OnSliderGChange(Sender:TObject; newValue:integer);
+begin
+  MainImage.Palette.ColorG[Settings.ActiveColorIndex]:=newValue;
+  fColorBox.ColorChanged;
+end;
+
+procedure TBDPaletteEditor.OnSliderBChange(Sender:TObject; newValue:integer);
+begin
+  MainImage.Palette.ColorB[Settings.ActiveColorIndex]:=newValue;
+  fColorBox.ColorChanged;
+end;
+
+procedure TBDPaletteEditor.OnSliderAChange(Sender:TObject; newValue:integer);
+begin
+  MainImage.Palette.ColorA[Settings.ActiveColorIndex]:=newValue;
+  fColorBox.ColorChanged;
+end;
+
+procedure TBDPaletteEditor.OnSliderBankChange(Sender:TObject; newValue:integer);
+begin
+
 end;
 
 procedure TBDPaletteEditor.OnColorSliderMouseDown(Sender:TObject;x,y,buttons:integer);
@@ -273,39 +306,22 @@ begin
     PaletteUndoSystem.AddPaletteUndo(Settings.ActiveColorIndex,1);
     MainImage.Palette.Colors[Settings.ActiveColorIndex]:=tmp;
     PaletteUndoSystem.AddPaletteRedoToLastUndo(Settings.ActiveColorIndex,1);
+    fColorBox.ColorChanged;
 //    RefreshSliders;
   end;
-end;
-
-procedure TBDPaletteEditor.OnSliderGChange(Sender:TObject; newValue:integer);
-begin
-  MainImage.Palette.ColorG[Settings.ActiveColorIndex]:=newValue;
-end;
-
-procedure TBDPaletteEditor.OnSliderBChange(Sender:TObject; newValue:integer);
-begin
-  MainImage.Palette.ColorB[Settings.ActiveColorIndex]:=newValue;
-end;
-
-procedure TBDPaletteEditor.OnSliderAChange(Sender:TObject; newValue:integer);
-begin
-  MainImage.Palette.ColorA[Settings.ActiveColorIndex]:=newValue;
-end;
-
-procedure TBDPaletteEditor.OnSliderBankChange(Sender:TObject; newValue:integer);
-begin
-
 end;
 
 procedure TBDPaletteEditor.UndoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   PaletteUndoSystem.Undo;
+  fColorBox.ColorChanged;
   RefreshSliders;
 end;
 
 procedure TBDPaletteEditor.RedoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   PaletteUndoSystem.Redo;
+  fColorBox.ColorChanged;
   RefreshSliders;
 end;
 
@@ -336,6 +352,7 @@ begin
   if Enabled then begin
     case msg.TypeID of
       MSG_ACTIVECOLORINDEXCHANGED:begin
+        fColorBox.ColorIndex:=Settings.ActiveColorIndex;
         RefreshSliders;
         Result:=true;
       end;
