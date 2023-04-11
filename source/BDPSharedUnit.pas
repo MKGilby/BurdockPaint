@@ -6,13 +6,7 @@ interface
 
 uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, BDPInfoBarUnit, BDPImageUnit,
   BDPSettingsUnit, BDPMessageUnit, BDPCursorUnit, BDPToolsUnit, BDPInksUnit,
-  BDPPaletteUnit, BDPUndoUnit, PNGFont2Unit;
-
-type
-  TColorCluster=record
-    startindex,endindex:integer;
-    reverse,pingpong:boolean;
-  end;
+  BDPPaletteUnit, BDPUndoUnit, PNGFont2Unit, BDPColorClusterUnit;
 
 const
   WINDOWWIDTH=1280;
@@ -54,6 +48,9 @@ const
   COLORBOXHEIGHT=72;
   COLORBOXLEFT=WINDOWWIDTH-COLORBOXWIDTH-3;
   COLORBOXTOP=6;
+
+  COLORCLUSTERWIDTH=240;
+  COLORCLUSTERHEIGHT=33;
 
   MAXPALETTEENTRIES=2048;  // Palette color count hard limit
   POSTPROCESSCOLOR=$FFF0;
@@ -149,7 +146,9 @@ var
   ImageUndoSystem:TBDImageUndoSystem;  // Handles undo and redo things for Images
   PaletteUndoSystem:TBDPaletteUndoSystem;  // Handles undo and redo things for Palettes
 
-  ActiveCluster:TColorCluster;  // The selected color cluster
+  ColorClusters:TColorClusters;
+  ActiveColorClusterIndex:integer;
+//  ActiveCluster:TColorCluster;  // The selected color cluster
 
   // Load assets and create shared objects
   procedure LoadAssets;
@@ -316,6 +315,11 @@ begin
   PaletteUndoSystem:=TBDPaletteUndoSystem.Create;
   MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
   MessageQueue.AddMessage(MSG_SETPALETTEUNDOREDOBUTTON);
+  Log.LogStatus('  Initializing color clusters...');
+  ColorClusters:=TColorClusters.Create;
+  ColorClusters.FreeObjects:=true;
+  ColorClusters.Add(TColorCluster.Create(96,111));
+  ActiveColorClusterIndex:=0;
 
   Log.LogStatus('Loading previous session data...');
   LoadState;
@@ -351,6 +355,7 @@ end;
 procedure FreeAssets;
 begin
   WriteState;
+  if Assigned(ColorClusters) then FreeAndNil(ColorClusters);
   if Assigned(CELHelperImage) then FreeAndNil(CELHelperImage);
   if Assigned(CELImage) then FreeAndNil(CELImage);
   if Assigned(Settings) then begin

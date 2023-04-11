@@ -20,6 +20,11 @@ Todo:
 - Add Tool and Ink selector
 
 
+2023.04.11
+- New color cluster system.
+- Gradient inks uses the new color cluster system.
+- Preparations for saving/loading color clusters and the visual control of it.
+
 2023.04.09
 - Added ColorBox to PaletteEditor. It shows the selected color in a bigger area.
 

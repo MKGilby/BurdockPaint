@@ -6,7 +6,7 @@ interface
 
 uses
   vcc2_Container, BDPButtonUnit, mk_sdl2, BDPMessageUnit, BDPSliderUnit,
-  BDPColorSelectorUnit, BDPColorBoxUnit;
+  BDPColorSelectorUnit, BDPColorBoxUnit, BDPColorClusterUnit;
 
 type
 
@@ -41,6 +41,7 @@ type
     fUndoButton,fRedoButton:TBDButton;
     fColorSelector:TBDColorSelector;
     fColorBox:TBDColorBox;
+    fColorCluster:TBDColorCluster;
     fSavedColor:uint32;
   end;
 

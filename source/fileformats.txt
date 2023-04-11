@@ -17,6 +17,8 @@
                         U (0x55) - UndoSystem data
                         O (0x4F) - Undo operation data
                         S (0x53) - System state data
+                        L (0x4C) - Color cluster data
+                        l (0x6C) - Color clusters data (multiple color cluster)
       1       4       Size of the block without the Data ID and the size.
       5     [Size]    The data in uncompressed or ZLib compressed format.
 
@@ -175,12 +177,13 @@
     8       2           Index of current operation
     10      ???         O-blocks (count times)
 
+
 2.6. System state data
 ----------------------
 
   System state data is the current state of image, palette and undosystem.
   It is saved on exit and loaded on start. So you can continue where you left.
-  It's and S-block with uncompressed data.
+  It's an S-block with uncompressed data.
 
   System state data format
   ----------------------
@@ -196,16 +199,64 @@
    [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an U-block.
 
 
-3. File formats
-===============
+2.7. Color cluster data
+-----------------------
 
-3.1. CEL file format (.bdc)
+  Contains info about the color cluster but not the palette data.
+  It's an L-block with uncompressed data.
+
+  Color cluster data format
+  -------------------------
+    Start   Size        Description (content)
+    5       1           Version (0x01)
+    6       2           Start color index
+    8       2           End color index
+    10      1           Flags
+                          bit 0 - reversed
+                          bit 1 - pingpong
+
+
+2.8. Color clusters data
+-----------------------
+
+  Contains multiple color clusters (L-blocks).
+  It's an l-block with uncompressed data.
+
+  Color clusters data format
+  --------------------------
+    Start   Size        Description (content)
+    5       1           Version (0x01)
+    6       1           Color cluster count
+    7       ???         Color cluster data [L-block] count times
+
+
+3. Standalone file formats
+==========================
+
+3.1. Image file format (.bdi)
+-----------------------------
+
+It is an Image data block (I-block). Loading an image replaces the current image.
+
+
+3.2. CEL file format (.bdc)
 ---------------------------
 
-It is an Image data block (I-block).
+It is an Image data block (I-block). The difference between an Image and a CEL is
+that loading a CEL won't replace the current image (it will replace the current
+CEL if there is one) and it will always use the current palette, adapting to it
+in one of the ways below:
+  - Color Fit: CEL colors will be matched with colors of the current palette.
+    The CEL will look similar with original if the palette has similar colors.
+    (If the color was red, it will find the closest color to red, changing the
+    color index to that value.)
+  - No Color Fit: CEL will use colors of color indices in current palette
+    irregarding the color similarity with original color. (If the color was red,
+    but the same colorindex now has the color of blue it will be blue, since the
+    color index not changing.)
 
 
-3.2. System state file format (.bds)
+3.3. System state file format (.bds)
 ------------------------------------
 
 It is a System State data block (S-block).
