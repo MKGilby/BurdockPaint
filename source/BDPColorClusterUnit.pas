@@ -20,6 +20,8 @@ type
     function GetIndexAt(pValue,pInterval:integer):word;
     procedure SaveToFile(pFilename:string);
     procedure SaveToStream(pStream:TStream);
+    procedure LoadFromFile(pFilename:string);
+    procedure LoadFromStream(pStream:TStream);
   private
     fStart,fEnd:integer;
     fReversed,fPingpong:boolean;
@@ -28,6 +30,7 @@ type
     procedure fSetEnd(value:integer);
     procedure fSetReversed(value:boolean);
     procedure SetReal;
+    procedure LoadFromStreamV1(pStream:TStream);
   public
     property StartIndex:integer read fStart write fSetStart;
     property EndIndex:integer read fEnd write fSetEnd;
@@ -41,6 +44,10 @@ type
   TColorClusters=class(TFPGObjectList<TColorCluster>)
     procedure SaveToFile(pFilename:string);
     procedure SaveToStream(pStream:TStream);
+    procedure LoadFromFile(pFilename:string);
+    procedure LoadFromStream(pStream:TStream);
+  private
+    procedure LoadFromStreamV1(pStream:TStream);
   end;
 
   { TBDColorCluster }
@@ -58,8 +65,8 @@ implementation
 uses SysUtils, BDPSharedUnit;
 
 const
-  COLORCLUSTERID=$4C;
-  COLORCLUSTERSID=$6C;
+  COLORCLUSTERID=$54;
+  COLORCLUSTERSID=$4C;
 
 { TColorCluster }
 
@@ -91,11 +98,11 @@ var i:integer;curr:int64;flags:byte;
 begin
   i:=COLORCLUSTERID;
   pStream.Write(i,1);
-  i:=1;
-  pStream.Write(i,1);  // Version
   curr:=pStream.Position;
   i:=0;
   pStream.Write(i,4);
+  i:=1;
+  pStream.Write(i,1);  // Version
   pStream.Write(fStart,2);
   pStream.Write(fEnd,2);
   flags:=0;
@@ -106,6 +113,29 @@ begin
   pStream.Position:=curr;
   pStream.write(i,4);
   pStream.Position:=pStream.Position+i;
+end;
+
+procedure TColorCluster.LoadFromFile(pFilename:string);
+var Xs:TStream;
+begin
+  Xs:=TFileStream.Create(pFilename,fmOpenRead or fmShareDenyNone);
+  SaveToStream(Xs);
+  FreeAndNil(Xs);
+end;
+
+procedure TColorCluster.LoadFromStream(pStream:TStream);
+var size,curr:int64;b:byte;
+begin
+  b:=0;
+  pStream.Read(b,1);
+  if b<>COLORCLUSTERID then raise Exception.Create(Format('ID is not for color cluster data! (%.2x)',[b]));
+  size:=0;
+  pStream.Read(Size,4);
+  curr:=pStream.Position;
+  pStream.Read(b,1);
+  if b=1 then LoadFromStreamV1(pStream)
+  else raise Exception.Create(Format('Unknow color cluster data version! (%d)',[b]));
+  pStream.Position:=curr+size;
 end;
 
 procedure TColorCluster.fSetStart(value:integer);
@@ -145,6 +175,17 @@ begin
   end;
 end;
 
+procedure TColorCluster.LoadFromStreamV1(pStream:TStream);
+var flags:byte;
+begin
+  pStream.Read(fStart,2);
+  pStream.Read(fEnd,2);
+  flags:=0;
+  pStream.Read(flags,1);
+  fReversed:=(flags and 1)<>0;
+  fPingpong:=(flags and 2)<>0;
+end;
+
 { TColorClusters }
 
 procedure TColorClusters.SaveToFile(pFilename:string);
@@ -160,11 +201,11 @@ var i:integer;curr:int64;
 begin
   i:=COLORCLUSTERSID;
   pStream.Write(i,1);
-  i:=1;
-  pStream.Write(i,1);  // Version
   curr:=pStream.Position;
   i:=0;
   pStream.Write(i,4);
+  i:=1;
+  pStream.Write(i,1);  // Version
   i:=Self.Count;
   pStream.Write(i,1);
   for i:=0 to Count-1 do Items[i].SaveToStream(pStream);
@@ -172,6 +213,43 @@ begin
   pStream.Position:=curr;
   pStream.write(i,4);
   pStream.Position:=pStream.Position+i;
+end;
+
+procedure TColorClusters.LoadFromFile(pFilename:string);
+var Xs:TStream;
+begin
+  Xs:=TFileStream.Create(pFilename,fmOpenRead or fmShareDenyNone);
+  SaveToStream(Xs);
+  FreeAndNil(Xs);
+end;
+
+procedure TColorClusters.LoadFromStream(pStream:TStream);
+var size,curr:int64;b:byte;
+begin
+  b:=0;
+  pStream.Read(b,1);
+  if b<>COLORCLUSTERSID then raise Exception.Create(Format('ID is not for color clusters data! (%.2x)',[b]));
+  size:=0;
+  pStream.Read(Size,4);
+  curr:=pStream.Position;
+  pStream.Read(b,1);
+  if b=1 then LoadFromStreamV1(pStream)
+  else raise Exception.Create(Format('Unknow color clusters data version! (%d)',[b]));
+  pStream.Position:=curr+size;
+end;
+
+procedure TColorClusters.LoadFromStreamV1(pStream:TStream);
+var count:integer;tmp:TColorCluster;
+begin
+  count:=0;
+  pStream.Read(count,1);
+  ColorClusters.Clear;
+  while count>0 do begin
+    tmp:=TColorCluster.Create(0,16);
+    tmp.LoadFromStream(pStream);
+    ColorClusters.Add(tmp);
+    dec(count);
+  end;
 end;
 
 { TBDColorCluster }

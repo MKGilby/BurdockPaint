@@ -229,6 +229,35 @@ begin
   MM.Fonts[pName].SetColor(pR,pG,pB);
 end;
 
+procedure LoadStateV1(pStream:TStream);
+var flags:byte;
+begin
+  flags:=0;
+  pStream.Read(flags,1);
+  MainImage.LoadFromStream(pStream);
+  if flags and 1>0 then begin
+    CELImage:=TBDImage.Create(16,16);
+    CELImage.LoadFromStream(pStream);
+  end;
+  if flags and 2>0 then ImageUndoSystem.LoadFromStream(pStream);
+  if flags and 4>0 then PaletteUndoSystem.LoadFromStream(pStream);
+end;
+
+procedure LoadStateV2(pStream:TStream);
+var flags:byte;
+begin
+  flags:=0;
+  pStream.Read(flags,1);
+  MainImage.LoadFromStream(pStream);
+  if flags and 1>0 then begin
+    CELImage:=TBDImage.Create(16,16);
+    CELImage.LoadFromStream(pStream);
+  end;
+  if flags and 2>0 then ImageUndoSystem.LoadFromStream(pStream);
+  if flags and 4>0 then PaletteUndoSystem.LoadFromStream(pStream);
+  if flags and 8>0 then ColorClusters.LoadFromStream(pStream);
+end;
+
 procedure LoadState;
 var size:int64;b:byte;State:TStream;
 begin
@@ -241,16 +270,9 @@ begin
     size:=0;
     State.Read(Size,4);
     State.Read(b,1);
-    if b=1 then begin
-      State.Read(b,1);  // Flags
-      MainImage.LoadFromStream(State);
-      if b and 1>0 then begin
-        CELImage:=TBDImage.Create(16,16);
-        CELImage.LoadFromStream(State);
-      end;
-      if b and 2>0 then ImageUndoSystem.LoadFromStream(State);
-      if b and 4>0 then PaletteUndoSystem.LoadFromStream(State);
-    end else raise Exception.Create(Format('Unknown system state version! (%d)',[b]));
+    if b=1 then LoadStateV1(State)
+    else if b=2 then LoadStateV2(State)
+    else raise Exception.Create(Format('Unknown system state version! (%d)',[b]));
   finally
     FreeAndNil(State);
   end;
@@ -325,7 +347,7 @@ begin
   LoadState;
 end;
 
-procedure WriteState;
+procedure WriteStateV1;
 var i,curr:integer;State:TStream;
 begin
   if not (Assigned(MainImage) and Assigned(ImageUndoSystem)) then exit;
@@ -346,6 +368,35 @@ begin
   if Assigned(CELImage) then CELImage.SaveToStream(State);
   if ImageUndoSystem.Count>0 then ImageUndoSystem.SaveToStream(State);
   if PaletteUndoSystem.Count>0 then PaletteUndoSystem.SaveToStream(State);
+  i:=State.Position-curr-4;
+  State.Position:=curr;
+  State.write(i,4);
+  FreeAndNil(State);
+end;
+
+procedure WriteState;
+var i,curr:integer;State:TStream;
+begin
+  if not (Assigned(MainImage) and Assigned(ImageUndoSystem)) then exit;
+  State:=TFileStream.Create(STATEFILE,fmCreate);
+  i:=STATEDATAID;
+  State.Write(i,1);
+  curr:=State.Position;
+  i:=0;
+  State.Write(i,4);
+  i:=2;
+  State.Write(i,1);
+  i:=0;
+  if Assigned(CELImage) then i:=i or 1;
+  if ImageUndoSystem.Count>0 then i:=i or 2;
+  if PaletteUndoSystem.Count>0 then i:=i or 4;
+  if ColorClusters.Count>0 then i:=i or 8;
+  State.Write(i,1);
+  MainImage.SaveToStream(State);
+  if Assigned(CELImage) then CELImage.SaveToStream(State);
+  if ImageUndoSystem.Count>0 then ImageUndoSystem.SaveToStream(State);
+  if PaletteUndoSystem.Count>0 then PaletteUndoSystem.SaveToStream(State);
+  if ColorClusters.Count>0 then ColorClusters.SaveToStream(State);
   i:=State.Position-curr-4;
   State.Position:=curr;
   State.write(i,4);

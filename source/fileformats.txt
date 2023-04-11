@@ -17,8 +17,8 @@
                         U (0x55) - UndoSystem data
                         O (0x4F) - Undo operation data
                         S (0x53) - System state data
-                        L (0x4C) - Color cluster data
-                        l (0x6C) - Color clusters data (multiple color cluster)
+                        T (0x54) - Color cluster data
+                        L (0x4C) - Color clusters data (multiple color clusters)
       1       4       Size of the block without the Data ID and the size.
       5     [Size]    The data in uncompressed or ZLib compressed format.
 
@@ -188,7 +188,10 @@
   System state data format
   ----------------------
     Start   Size        Description (content)
-    5       1           Version (0x01)
+    5       1           Version (0x01 or 0x02)
+
+  System state version 1 uncompressed data format
+  -----------------------------------------------
     6       1           Flags
                           bit 0 - Is system state contains the CELImage?
                           bit 1 - Is system state contains ImageUndoSystem data?
@@ -198,12 +201,25 @@
    [.       ???]        if Flags.bit[1] is set then ImageUndoSystem data in an U-block.
    [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an U-block.
 
+  System state version 2 uncompressed data format
+  -----------------------------------------------
+    6       1           Flags
+                          bit 0 - Is system state contains the CELImage?
+                          bit 1 - Is system state contains ImageUndoSystem data?
+                          bit 2 - Is system state contains PaletteUndoSystem data?
+                          bit 3 - Is system state contains ColorClusters data?
+    7       ???         Main image in an I-block.
+   [.       ???]        If Flags.bit[0] is set then CELImage in an I-block.
+   [.       ???]        if Flags.bit[1] is set then ImageUndoSystem data in an U-block.
+   [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an U-block.
+   [.       ???]        if Flags.bit[3] is set then ColorClusters data in an L-block.
+
 
 2.7. Color cluster data
 -----------------------
 
   Contains info about the color cluster but not the palette data.
-  It's an L-block with uncompressed data.
+  It's a T-block with uncompressed data.
 
   Color cluster data format
   -------------------------
@@ -220,7 +236,7 @@
 -----------------------
 
   Contains multiple color clusters (L-blocks).
-  It's an l-block with uncompressed data.
+  It's an L-block with uncompressed data.
 
   Color clusters data format
   --------------------------
