@@ -25,6 +25,8 @@ Todo:
 - Gradient inks uses the new color cluster system.
 - Preparations for saving/loading color clusters and the visual control of it.
 - Color clusters are saved into system state and read back on startup.
+- Added ColorCluster to PaletteEditor.
+- ColorCluster shows the selected color.
 
 2023.04.09
 - Added ColorBox to PaletteEditor. It shows the selected color in a bigger area.

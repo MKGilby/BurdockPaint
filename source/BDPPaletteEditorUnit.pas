@@ -150,6 +150,11 @@ begin
   fColorBox.Name:='ColorBox';
   AddChild(fColorBox);
 
+  fColorCluster:=TBDColorCluster.Create(720,fTop+6,ColorClusters.Items[0]);
+  fColorCluster.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fColorCluster.Name:='ColorCluster (PalEd)';
+  AddChild(fColorCluster);
+
   MouseObjects.Add(Self);
 end;
 
@@ -237,6 +242,7 @@ begin
         y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
         Settings.ActiveColorIndex:=y*32+x;
         fColorBox.ColorIndex:=y*32+x;
+        fColorCluster.Refresh;
         RefreshSliders;
       end else
       if buttons=SDL_BUTTON_RIGHT then begin

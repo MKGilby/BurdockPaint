@@ -15,7 +15,7 @@ type
     constructor Create(iStart,iEnd:integer);
     // Gives back the colorindex in the cluster at pValue on a scale to 0..pInterval
     // Example: if you want to draw the color cluster on a control with a width
-    //          of 240 pixels, you should use GetIndexAt(x,239) as each vertical
+    //          of 240 pixels, you should use GetIndexAt(x,240) as each vertical
     //          line of the control.
     function GetIndexAt(pValue,pInterval:integer):word;
     procedure SaveToFile(pFilename:string);
@@ -53,7 +53,8 @@ type
   { TBDColorCluster }
 
   TBDColorCluster=class(TVisibleControl)
-    procedure Create(iLeft,iTop:integer;iColorCluster:TColorCluster);
+    constructor Create(iLeft,iTop:integer;iColorCluster:TColorCluster);
+    procedure Refresh;
   protected
     procedure ReDraw; override;
   private
@@ -254,13 +255,18 @@ end;
 
 { TBDColorCluster }
 
-procedure TBDColorCluster.Create(iLeft,iTop:integer;iColorCluster:TColorCluster);
+constructor TBDColorCluster.Create(iLeft, iTop: integer;iColorCluster: TColorCluster);
 begin
   fLeft:=iLeft;
   fTop:=iTop;
   fColorCluster:=iColorCluster;
   Width:=COLORCLUSTERWIDTH;
   Height:=COLORCLUSTERHEIGHT;
+  fNeedRedraw:=true;
+end;
+
+procedure TBDColorCluster.Refresh;
+begin
   fNeedRedraw:=true;
 end;
 
@@ -275,7 +281,7 @@ begin
       Bar(Width-3,3,3,Height-6,OverlayImage.Palette[2]);
       if Assigned(fColorCluster) then begin
         for i:=0 to Width-6-1 do begin
-          colorindex:=fColorCluster.GetIndexAt(i,Width-7);
+          colorindex:=fColorCluster.GetIndexAt(i,Width-6);
           VLine(3+i,3,Height-6,MainImage.Palette[colorindex]);
           if colorindex=Settings.ActiveColorIndex then begin
             VLine(3+i,Height div 2-3,3,OverlayImage.Palette[4]);
