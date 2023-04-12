@@ -60,15 +60,19 @@ type
   private
     fActiveImageIndex:integer;
     fImages:TBDExtendedImages;
+    // Only needed in-program, but must be the same size as the current image.
+    fOverlayImage:TBDImage;
     fCELImage:TBDImage;
+    procedure LoadFromStreamV1(pStream:TStream);
+    procedure SetOverlayPalette;
+    procedure fSetActiveImageIndex(value:integer);
   public
     property Images:TBDExtendedImages read fImages;
-    property ActiveImageIndex:integer read fActiveImageIndex;
+    property ActiveImageIndex:integer read fActiveImageIndex write fSetActiveImageIndex;
+    property OverlayImage:TBDImage read fOverlayImage;
   end;
 
 implementation
-
-{$i ntsccol.inc}
 
 const
   EXTENDEDIMAGEID=$45;
@@ -82,12 +86,8 @@ begin
 end;
 
 constructor TBDExtendedImage.Create(iWidth,iHeight:integer);
-var Xs:TStream;
 begin
   inherited Create(iWidth,iHeight);
-  Xs:=TStringStream.Create(NTSCCOL);
-  Palette.LoadCOL(Xs,0);
-  FreeAndNil(Xs);
   fImageUndoSystem:=TBDImageUndoSystem.Create;
   fPaletteUndoSystem:=TBDPaletteUndoSystem.Create;
   fColorClusters:=TColorClusters.Create;
@@ -169,12 +169,34 @@ begin
   fImages:=TBDExtendedImages.Create;
   fImages.Add(TBDExtendedImage.Create);
   fActiveImageIndex:=0;
+  fOverlayImage:=TBDImage.Create(fImages[0].Width,fImages[0].Height);
+  SetOverlayPalette;
+  fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
   fCELImage:=nil;
 end;
 
 constructor TBDProject.CreateFromStream(iStream:TStream);
+var curr,size:int64;b:byte;
 begin
+  fImages:=TBDExtendedImages.Create;
+  b:=0;
+  iStream.Read(b,1);
+  if b<>PROJECTDATAID then raise Exception.Create(Format('Project image ID expected, got 0x%.2x!',[b]));
+  size:=0;
+  iStream.Read(size,4);
+  curr:=iStream.Position;
+  iStream.Read(b,1);  // Version
+  if b=1 then LoadFromStreamV1(iStream)
+  else raise Exception.Create(Format('Unknown project data version! (%d)',[b]));
+  iStream.Position:=curr+size;
 
+  if fImages.Count=0 then fImages.Add(TBDExtendedImage.Create);
+
+  if (fActiveImageIndex<0) or (fActiveImageIndex>=fImages.Count) then
+    fActiveImageIndex:=0;
+  fOverlayImage:=TBDImage.Create(fImages[fActiveImageIndex].Width,fImages[fActiveImageIndex].Height);
+  SetOverlayPalette;
+  fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
 end;
 
 destructor TBDProject.Destroy;
@@ -207,6 +229,48 @@ begin
   pStream.Position:=curr;
   pStream.write(i,4);
   pStream.Position:=pStream.Position+i;
+end;
+
+procedure TBDProject.LoadFromStreamV1(pStream:TStream);
+var flags:byte;count:integer;
+begin
+  flags:=0;
+  pStream.Read(flags,1);
+  count:=0;
+  pStream.Read(count,2);
+  fActiveImageIndex:=0;
+  pStream.Read(fActiveImageIndex,2);
+  while count>0 do begin
+    fImages.Add(TBDExtendedImage.CreateFromStream(pStream));
+    dec(count);
+  end;
+  if flags and 1<>0 then fCELImage:=TBDImage.CreateFromStream(pStream);
+end;
+
+procedure TBDProject.SetOverlayPalette;
+begin
+  with fOverlayImage do begin
+    Palette.Colors[0]:=$00000000;
+    Palette.Colors[1]:=$ff040404;
+    Palette.Colors[2]:=$ff5d5d5d;
+    Palette.Colors[3]:=$ff9a9a9a;
+    Palette.Colors[4]:=$ffc7c7c7;
+    Palette.Colors[5]:=$ffc70404;
+    Palette.Colors[6]:=$ff202020;
+    Palette.Colors[7]:=$ff505050;
+    Palette.Colors[8]:=$ff808080;
+    Palette.Colors[9]:=$ffb0b0b0;
+    Palette.Colors[10]:=$ffe0e0e0;
+  end;
+end;
+
+procedure TBDProject.fSetActiveImageIndex(value:integer);
+begin
+  if (value<>fActiveImageIndex) and (value>=0) and (value<fImages.Count) then begin
+    fActiveImageIndex:=value;
+    fOverlayImage.Recreate(fImages[fActiveImageIndex].Width,fImages[fActiveImageIndex].Height);
+    fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
+  end;
 end;
 
 end.
