@@ -13,6 +13,7 @@ type
 
   TColorCluster=class
     constructor Create(iStart,iEnd:integer);
+    constructor CreateFromStream(iStream:TStream);
     // Gives back the colorindex in the cluster at pValue on a scale to 0..pInterval
     // Example: if you want to draw the color cluster on a control with a width
     //          of 240 pixels, you should use GetIndexAt(x,240) as each vertical
@@ -42,6 +43,7 @@ type
   { TColorClusters }
 
   TColorClusters=class(TFPGObjectList<TColorCluster>)
+    constructor CreateFromStream(iStream:TStream);
     procedure SaveToFile(pFilename:string);
     procedure SaveToStream(pStream:TStream);
     procedure LoadFromFile(pFilename:string);
@@ -79,6 +81,11 @@ begin
   fPingpong:=false;
   fRealStart:=fStart;
   fRealEnd:=fEnd;
+end;
+
+constructor TColorCluster.CreateFromStream(iStream:TStream);
+begin
+  LoadFromStream(iStream);
 end;
 
 function TColorCluster.GetIndexAt(pValue,pInterval:integer):word;
@@ -137,6 +144,7 @@ begin
   if b=1 then LoadFromStreamV1(pStream)
   else raise Exception.Create(Format('Unknow color cluster data version! (%d)',[b]));
   pStream.Position:=curr+size;
+  SetReal;
 end;
 
 procedure TColorCluster.fSetStart(value:integer);
@@ -188,6 +196,12 @@ begin
 end;
 
 { TColorClusters }
+
+constructor TColorClusters.CreateFromStream(iStream:TStream);
+begin
+  inherited Create;
+  LoadFromStream(iStream);
+end;
 
 procedure TColorClusters.SaveToFile(pFilename:string);
 var Xs:TStream;
