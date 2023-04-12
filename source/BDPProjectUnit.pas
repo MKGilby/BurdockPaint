@@ -49,11 +49,17 @@ type
     // Creates a project with a new empty 320x200 image
     constructor Create;
 
+    // Creates a project from file. (fileformats.txt - P-block)
+    constructor CreateFromFile(iFilename:String);
+
     // Creates a project from stream. (fileformats.txt - P-block)
     constructor CreateFromStream(iStream:TStream);
 
     // Free assigned entities
     destructor Destroy; override;
+
+    // Saves project to stream. (fileformats.txt - P-block)
+    procedure SaveToFile(pFilename:string);
 
     // Saves project to stream. (fileformats.txt - P-block)
     procedure SaveToStream(pStream:TStream);
@@ -77,7 +83,7 @@ type
 
 implementation
 
-uses BDPSharedUnit;
+uses BDPSharedUnit, BDPPaletteUnit;
 
 const
   EXTENDEDIMAGEID=$45;
@@ -158,6 +164,7 @@ var flags:byte;
 begin
   flags:=0;
   pStream.Read(flags,1);
+  fPalette:=TBDPalette.Create;
   Palette.LoadFromStream(pStream);
   LoadWholeImageDataFromStream(pStream);
   if flags and 2<>0 then fImageUndoSystem:=TBDImageUndoSystem.CreateFromStream(pStream);
@@ -177,6 +184,14 @@ begin
   SetOverlayPalette;
   fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
   fCELImage:=nil;
+end;
+
+constructor TBDProject.CreateFromFile(iFilename:String);
+var Xs:TStream;
+begin
+  Xs:=TFileStream.Create(iFilename,fmOpenRead or fmShareDenyWrite);
+  CreateFromStream(Xs);
+  FreeAndNil(Xs);
 end;
 
 constructor TBDProject.CreateFromStream(iStream:TStream);
@@ -210,6 +225,14 @@ begin
   if Assigned(fOverlayImage) then FreeAndNil(fOverlayImage);
   if Assigned(fImages) then FreeAndNil(fImages);
   inherited Destroy;
+end;
+
+procedure TBDProject.SaveToFile(pFilename:string);
+var Xs:TStream;
+begin
+  Xs:=TFileStream.Create(pFilename,fmCreate);
+  SaveToStream(Xs);
+  FreeAndNil(Xs);
 end;
 
 procedure TBDProject.SaveToStream(pStream:TStream);
