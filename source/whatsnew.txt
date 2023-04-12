@@ -25,6 +25,9 @@ Todo:
 - Added Extended Image data block (E) and Project data block (P) to fileformats.txt.
 - Added project and extended image class with saving to and loading from stream.
 - BDPUndoUnit variable names uniformized, added CreateFromStream where missed.
+- Global variables are changed to Project properties:
+  MainImage, OverlayImage, ColorClusters, CELImage, ImageUndoSystem, PaletteUndoSystem
+- OverlayImage palette is separated from OverlayImage.
 
 2023.04.11
 - New color cluster system.

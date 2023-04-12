@@ -204,16 +204,16 @@ procedure TSubMenu.ReDraw;
 var i:integer;
 begin
   if Assigned(fTexture) then begin
-    fTexture.ARGBImage.Bar(0,0,(length(fName)+2)*18,TOPMENUHEIGHT-3,OverlayImage.Palette[4]);
-    fTexture.ARGBImage.Bar((length(fName)+2)*18,0,Width-(length(fName)+2)*18,TOPMENUHEIGHT-3,OverlayImage.Palette[0]);
+    fTexture.ARGBImage.Bar(0,0,(length(fName)+2)*18,TOPMENUHEIGHT-3,OverlayPalette[4]);
+    fTexture.ARGBImage.Bar((length(fName)+2)*18,0,Width-(length(fName)+2)*18,TOPMENUHEIGHT-3,OverlayPalette[0]);
     MM.Fonts['Red'].OutText(fTexture.ARGBImage,fName,18,3,0);
-    fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,fWidth,3,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,3,fHeight-TOPMENUHEIGHT,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(0,fHeight-3,fWidth,3,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(fWidth-3,TOPMENUHEIGHT-3,3,fHeight-TOPMENUHEIGHT,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT,fWidth-6,fHeight-TOPMENUHEIGHT-3,OverlayImage.Palette[3]);
+    fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,fWidth,3,OverlayPalette[2]);
+    fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,3,fHeight-TOPMENUHEIGHT,OverlayPalette[2]);
+    fTexture.ARGBImage.Bar(0,fHeight-3,fWidth,3,OverlayPalette[2]);
+    fTexture.ARGBImage.Bar(fWidth-3,TOPMENUHEIGHT-3,3,fHeight-TOPMENUHEIGHT,OverlayPalette[2]);
+    fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT,fWidth-6,fHeight-TOPMENUHEIGHT-3,OverlayPalette[3]);
     if fSelected>-1 then
-      fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT+fSelected*SUBMENULINEHEIGHT,fWidth-6,SUBMENULINEHEIGHT,OverlayImage.Palette[4]);
+      fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT+fSelected*SUBMENULINEHEIGHT,fWidth-6,SUBMENULINEHEIGHT,OverlayPalette[4]);
     if Assigned(fItems) then begin
       for i:=0 to Length(fItems)-1 do begin
         if fItems[i]._enabled then begin
@@ -373,15 +373,15 @@ procedure TMainMenu.ReDraw;
 var x,i:integer;
 begin
   if Assigned(fTexture) then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[3]);
-    fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[2]);
+    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayPalette[3]);
+    fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayPalette[2]);
     x:=0;
     if Assigned(fItems) then begin
       for i:=0 to fItems.Count-1 do begin
         if fSelected<>i then
           MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i],x+18,3,0)
         else begin
-          fTexture.ARGBImage.Bar(x,0,(length(fItems[i])+2)*18,TOPMENUHEIGHT-3,OverlayImage.Palette[4]);
+          fTexture.ARGBImage.Bar(x,0,(length(fItems[i])+2)*18,TOPMENUHEIGHT-3,OverlayPalette[4]);
           MM.Fonts['Red'].OutText(fTexture.ARGBImage,fItems[i],x+18,3,0);
         end;
         x+=(length(fItems[i])+2)*18;

@@ -91,17 +91,17 @@ end;
 procedure TBDDrawArea.CenterImage;
 begin
   if not(fZoomLevel in [1..4]) then exit;
-  fZoomLeft:=((MainImage.Width*fZoomTimes)-WindowWidth) div 2 div fZoomTimes;
-  fZoomTop:=((MainImage.Height*fZoomTimes)-WindowHeight) div 2 div fZoomTimes;
+  fZoomLeft:=((Project.CurrentImage.Width*fZoomTimes)-WindowWidth) div 2 div fZoomTimes;
+  fZoomTop:=((Project.CurrentImage.Height*fZoomTimes)-WindowHeight) div 2 div fZoomTimes;
 end;
 
 procedure TBDDrawArea.Draw;
 begin
-  MainImage.RenderToTexture(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
+  Project.CurrentImage.RenderToTexture(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
   ActiveTool.Draw;
   if (ActiveTool.Name='PUTCEL') or (ActiveTool.Name='SHOWCEL') then
     CELHelperImage.RenderToTextureAsOverlay(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
-  OverlayImage.RenderToTextureAsOverlay(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
+  Project.OverlayImage.RenderToTextureAsOverlay(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
   fTexture.Update;
   PutTexture(0,0,fTexture);
   ActiveTool.Clear;

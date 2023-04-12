@@ -153,7 +153,7 @@ end;
 
 procedure TColorCluster.fSetStart(value:integer);
 begin
-  if (value>=0) and (value<MainImage.Palette.Size) then begin
+  if (value>=0) and (value<Project.CurrentImage.Palette.Size) then begin
     fStart:=value;
     SetReal;
   end;
@@ -161,7 +161,7 @@ end;
 
 procedure TColorCluster.fSetEnd(value:integer);
 begin
-  if (value>=0) and (value<MainImage.Palette.Size) then begin
+  if (value>=0) and (value<Project.CurrentImage.Palette.Size) then begin
     fEnd:=value;
     SetReal;
   end;
@@ -268,11 +268,11 @@ var count:integer;tmp:TColorCluster;
 begin
   count:=0;
   pStream.Read(count,1);
-  ColorClusters.Clear;
+  Clear;
   while count>0 do begin
     tmp:=TColorCluster.Create(0,16);
     tmp.LoadFromStream(pStream);
-    ColorClusters.Add(tmp);
+    Add(tmp);
     dec(count);
   end;
 end;
@@ -299,17 +299,17 @@ var i:integer;colorindex:word;
 begin
   if Assigned(fTexture) then begin
     with fTexture.ARGBImage do begin
-      Bar(0,0,Width,3,OverlayImage.Palette[2]);
-      Bar(0,3,3,Height-6,OverlayImage.Palette[2]);
-      Bar(0,Height-3,Width,3,OverlayImage.Palette[2]);
-      Bar(Width-3,3,3,Height-6,OverlayImage.Palette[2]);
+      Bar(0,0,Width,3,OverlayPalette[2]);
+      Bar(0,3,3,Height-6,OverlayPalette[2]);
+      Bar(0,Height-3,Width,3,OverlayPalette[2]);
+      Bar(Width-3,3,3,Height-6,OverlayPalette[2]);
       if Assigned(fColorCluster) then begin
         for i:=0 to Width-6-1 do begin
           colorindex:=fColorCluster.GetIndexAt(i,Width-6);
-          VLine(3+i,3,Height-6,MainImage.Palette[colorindex]);
+          VLine(3+i,3,Height-6,Project.CurrentImage.Palette[colorindex]);
           if colorindex=Settings.ActiveColorIndex then begin
-            VLine(3+i,Height div 2-3,3,OverlayImage.Palette[4]);
-            VLine(3+i,Height div 2,3,OverlayImage.Palette[1]);
+            VLine(3+i,Height div 2-3,3,OverlayPalette[4]);
+            VLine(3+i,Height div 2,3,OverlayPalette[1]);
           end;
         end;
       end;

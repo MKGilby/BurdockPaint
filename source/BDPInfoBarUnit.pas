@@ -74,11 +74,11 @@ end;
 procedure TBDInfoBar.Clear;
 begin
   if fTop>0 then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.Width,3,OverlayImage.Palette.Colors[2]);
-    fTexture.ARGBImage.Bar(0,3,fTexture.Width,fTexture.Height-3,OverlayImage.Palette.Colors[3]);
+    fTexture.ARGBImage.Bar(0,0,fTexture.Width,3,OverlayPalette.Colors[2]);
+    fTexture.ARGBImage.Bar(0,3,fTexture.Width,fTexture.Height-3,OverlayPalette.Colors[3]);
   end else begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.Width,fTexture.Height-3,OverlayImage.Palette.Colors[3]);
-    fTexture.ARGBImage.Bar(0,fTexture.Height-3,fTexture.Width,3,OverlayImage.Palette.Colors[2]);
+    fTexture.ARGBImage.Bar(0,0,fTexture.Width,fTexture.Height-3,OverlayPalette.Colors[3]);
+    fTexture.ARGBImage.Bar(0,fTexture.Height-3,fTexture.Width,3,OverlayPalette.Colors[2]);
   end;
 end;
 

@@ -144,13 +144,13 @@ end;
 procedure TBDControls.Draw;
 begin
   if fVisible then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(COORDSLEFT,0,COORDSWIDTH,CONTROLSHEIGHT,OverlayImage.Palette[2]);
-    fTexture.ARGBImage.Bar(0,3,COORDSLEFT,fTexture.ARGBImage.Height-3,OverlayImage.Palette[3]);
-    if (fMouseX>=0) and (fMouseX<MainImage.Width) and (fMouseY>=0) and (fMouseY<MainImage.Height) then begin
+    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,OverlayPalette[2]);
+    fTexture.ARGBImage.Bar(COORDSLEFT,0,COORDSWIDTH,CONTROLSHEIGHT,OverlayPalette[2]);
+    fTexture.ARGBImage.Bar(0,3,COORDSLEFT,fTexture.ARGBImage.Height-3,OverlayPalette[3]);
+    if (fMouseX>=0) and (fMouseX<Project.CurrentImage.Width) and (fMouseY>=0) and (fMouseY<Project.CurrentImage.Height) then begin
       MM.Fonts['Black'].OutText(fTexture.ARGBImage,'X='+inttostr(fMouseX),COORDSCENTER,CONTROLSHEIGHT-84,1);
       MM.Fonts['Black'].OutText(fTexture.ARGBImage,'Y='+inttostr(fMouseY),COORDSCENTER,CONTROLSHEIGHT-54,1);
-      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'C='+inttostr(MainImage.GetPixel(fMouseX,fMouseY)),COORDSCENTER,CONTROLSHEIGHT-24,1);
+      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'C='+inttostr(Project.CurrentImage.GetPixel(fMouseX,fMouseY)),COORDSCENTER,CONTROLSHEIGHT-24,1);
     end else begin
       if (fMouseX>-1000) and (fMouseX<1000) then
         MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'X='+inttostr(fMouseX),COORDSCENTER,CONTROLSHEIGHT-84,1)
@@ -215,7 +215,7 @@ end;
 procedure TBDControls.FilledButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   if Sender is TBDButton then with Sender as TBDButton do begin
-    fSelected:=not fSelected;
+    Selected:=not Selected;
     Settings.FillShapes:=fSelected;
   end;
 end;
@@ -223,7 +223,7 @@ end;
 procedure TBDControls.ClearKeyColorButtonClick(Sender:TObject;x,y,buttons:integer);
 begin
   if Sender is TBDButton then with Sender as TBDButton do begin
-    fSelected:=not fSelected;
+    Selected:=not Selected;
     Settings.ClearKeyColor:=fSelected;
   end;
 end;
@@ -243,12 +243,12 @@ end;
 
 procedure TBDControls.UndoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
-  ImageUndoSystem.Undo;
+  Project.CurrentImage.ImageUndo.Undo;
 end;
 
 procedure TBDControls.RedoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
-  ImageUndoSystem.Redo;
+  Project.CurrentImage.ImageUndo.Redo;
 end;
 
 procedure TBDControls.SetMouseCoords(x,y:integer);
@@ -262,8 +262,8 @@ begin
   Result:=false;
   case msg.TypeID of
     MSG_SETIMAGEUNDOREDOBUTTON:begin
-      fUndoButton.Enabled:=ImageUndoSystem.CanUndo;
-      fRedoButton.Enabled:=ImageUndoSystem.CanRedo;
+      fUndoButton.Enabled:=Project.CurrentImage.ImageUndo.CanUndo;
+      fRedoButton.Enabled:=Project.CurrentImage.ImageUndo.CanRedo;
     end;
     MSG_PICKEDCOLOR:begin
       fColorSelector.SetSelectedSlotTo(msg.DataInt);

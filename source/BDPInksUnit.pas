@@ -140,9 +140,9 @@ function TBDInkHGrad.GetColorIndexAt(pX,pY: integer):integer;
 begin
 //  Log.LogDebug('pX='+inttostr(pX)+', pY='+inttostr(pY)+', fLeft='+inttostr(fLeft)+', fWidth='+inttostr(fWidth));
   if fWidth>1 then
-    Result:=ColorClusters[ActiveColorClusterIndex].GetIndexAt(px-fLeft,fWidth-1)
+    Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(px-fLeft,fWidth-1)
   else
-    Result:=ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2);
+    Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2);
 {  if fWidth>1 then
     Result:=trunc(0.5+ActiveCluster.startindex+(ActiveCluster.endindex-ActiveCluster.startindex)*(pX-fLeft)/(fWidth-1))
   else
@@ -154,8 +154,8 @@ var i,j:integer;
 begin
   for j:=fTop to fTop+fHeight-1 do
     for i:=fLeft to fLeft+fWidth-1 do
-      if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
-        MainImage.PutPixel(i,j,GetColorIndexAt(i,j));
+      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+        Project.CurrentImage.PutPixel(i,j,GetColorIndexAt(i,j));
 end;
 
 // -------------------------------------------------------- [ TBDInkLGrad ] ---
@@ -174,19 +174,19 @@ begin
   SegmentRight:=i;
   repeat
     inc(SegmentRight);
-  until (SegmentRight>=MainImage.Width) or (MainImage.GetPixel(SegmentRight,j)<>POSTPROCESSCOLOR);
+  until (SegmentRight>=Project.CurrentImage.Width) or (Project.CurrentImage.GetPixel(SegmentRight,j)<>POSTPROCESSCOLOR);
   Result:=SegmentRight-i-1;
   dec(SegmentRight);
   if Result>0 then begin
     while i<SegmentRight+1 do begin
-      MainImage.PutPixel(i,j,ColorClusters[ActiveColorClusterIndex].GetIndexAt(SegmentRight-i,Result+1));
+      Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(SegmentRight-i,Result+1));
 {      MainImage.PutPixel(i,j,
         trunc(0.5+ActiveCluster.endindex-(ActiveCluster.endindex-ActiveCluster.startindex)*(SegmentRight-i)/(Result+1))
       );}
       inc(i);
     end;
   end else begin
-    MainImage.PutPixel(i,j,ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2));
+    Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2));
 {    MainImage.PutPixel(i,j,
       ActiveCluster.startindex+(ActiveCluster.endindex-ActiveCluster.startindex) div 2
     );}
@@ -199,7 +199,7 @@ begin
   for j:=fTop to fTop+fHeight-1 do begin
     i:=fLeft;
     while i<=fLeft+fWidth-1 do begin
-      if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
         i+=ProcessSegment(i,j);
       inc(i);
     end;
@@ -226,8 +226,8 @@ var i,j:integer;
 begin
   for j:=fTop to fTop+fHeight-1 do
     for i:=fLeft to fLeft+fWidth-1 do
-      if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
-        MainImage.PutPixel(i,j,Settings.ActiveColorIndex);
+      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+        Project.CurrentImage.PutPixel(i,j,Settings.ActiveColorIndex);
 end;
 
 // -------------------------------------------------------- [ TBDInkHGrad ] ---
@@ -244,9 +244,9 @@ function TBDInkVGrad.GetColorIndexAt(pX,pY: integer):integer;
 begin
   if fHeight>1 then
 //    Result:=trunc(0.5+ActiveCluster.startindex+(ActiveCluster.endindex-ActiveCluster.startindex)*(pY-fTop)/(fHeight-1))
-    Result:=ColorClusters[ActiveColorClusterIndex].GetIndexAt(pY-fTop,fHeight-1)
+    Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(pY-fTop,fHeight-1)
   else
-    Result:=ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2);
+    Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2);
 //    Result:=ActiveCluster.startindex+(ActiveCluster.endindex-ActiveCluster.startindex) div 2;
 end;
 
@@ -255,8 +255,8 @@ var i,j:integer;
 begin
   for j:=fTop to fTop+fHeight-1 do
     for i:=fLeft to fLeft+fWidth-1 do
-      if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
-        MainImage.PutPixel(i,j,GetColorIndexAt(i,j));
+      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+        Project.CurrentImage.PutPixel(i,j,GetColorIndexAt(i,j));
 end;
 
 end.

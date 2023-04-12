@@ -55,12 +55,12 @@ procedure TBDColorBox.ReDraw;
 begin
   if Assigned(fTexture) then begin
     with fTexture.ARGBImage do begin
-      if (fColorIndex<MainImage.Palette.Size) then
-        Bar(0,0,Width,Height,MainImage.Palette[fColorIndex]);
-      Bar(8,0,Width-16,3,OverlayImage.Palette[2]);
-      Bar(8,Height-3,fWidth-16,3,OverlayImage.Palette[2]);
-      Bar(0,8,3,Height-16,OverlayImage.Palette[2]);
-      Bar(Width-3,8,3,Height-16,OverlayImage.Palette[2]);
+      if (fColorIndex<Project.CurrentImage.Palette.Size) then
+        Bar(3,3,Width-6,Height-6,Project.CurrentImage.Palette[fColorIndex]);
+      Bar(8,0,Width-16,3,OverlayPalette[2]);
+      Bar(8,Height-3,fWidth-16,3,OverlayPalette[2]);
+      Bar(0,8,3,Height-16,OverlayPalette[2]);
+      Bar(Width-3,8,3,Height-16,OverlayPalette[2]);
     end;
     if Assigned(fTLImage) then
       fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fTexture.ARGBImage,true);

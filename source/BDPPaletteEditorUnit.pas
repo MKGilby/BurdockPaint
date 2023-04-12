@@ -150,7 +150,7 @@ begin
   fColorBox.Name:='ColorBox';
   AddChild(fColorBox);
 
-  fColorCluster:=TBDColorCluster.Create(720,fTop+6,ColorClusters.Items[0]);
+  fColorCluster:=TBDColorCluster.Create(720,fTop+6,Project.CurrentImage.ColorClusters.Items[0]);
   fColorCluster.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fColorCluster.Name:='ColorCluster (PalEd)';
   AddChild(fColorCluster);
@@ -167,21 +167,21 @@ end;
 procedure TBDPaletteEditor.Draw;
 var i:integer;
 begin
-  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,OverlayImage.Palette[2]);
-  fTexture.ARGBImage.Bar(0,3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayImage.Palette[3]);
+  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,OverlayPalette[2]);
+  fTexture.ARGBImage.Bar(0,3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayPalette[3]);
   fTexture.ARGBImage.Bar(
     PALETTESOCKETSLEFT,
     PALETTESOCKETSTOP,
     PALETTESOCKETWIDTH*32+3,
     PALETTESOCKETHEIGHT*8+3,
-    OverlayImage.Palette.Colors[2]);
+    OverlayPalette.Colors[2]);
   if (Settings.ActiveColorIndex div 256)+1=fSliderBank.Position then
     fTexture.ARGBImage.bar(
       PALETTESOCKETSLEFT+(Settings.ActiveColorIndex mod 32)*PALETTESOCKETWIDTH,
       PALETTESOCKETSTOP+(Settings.ActiveColorIndex div 32)*PALETTESOCKETHEIGHT,
       PALETTESOCKETWIDTH+3,
       PALETTESOCKETHEIGHT+3,
-      OverlayImage.Palette.Colors[5]);
+      OverlayPalette.Colors[5]);
 
   for i:=0 to 255 do begin
     fTexture.ARGBImage.Bar(
@@ -189,7 +189,7 @@ begin
       PALETTESOCKETSTOP+(i div 32)*PALETTESOCKETHEIGHT+3,
       PALETTESOCKETWIDTH-3,
       PALETTESOCKETHEIGHT-3,
-      MainImage.Palette.Colors[i+(fSliderBank.Position-1)*256]);
+      Project.CurrentImage.Palette.Colors[i+(fSliderBank.Position-1)*256]);
   end;
   fTexture.Update;
   PutTexture(fLeft,fTop,fTexture);
@@ -270,25 +270,25 @@ end;
 
 procedure TBDPaletteEditor.OnSliderRChange(Sender:TObject; newValue:integer);
 begin
-  MainImage.Palette.ColorR[Settings.ActiveColorIndex]:=newValue;
+  Project.CurrentImage.Palette.ColorR[Settings.ActiveColorIndex]:=newValue;
   fColorBox.ColorChanged;
 end;
 
 procedure TBDPaletteEditor.OnSliderGChange(Sender:TObject; newValue:integer);
 begin
-  MainImage.Palette.ColorG[Settings.ActiveColorIndex]:=newValue;
+  Project.CurrentImage.Palette.ColorG[Settings.ActiveColorIndex]:=newValue;
   fColorBox.ColorChanged;
 end;
 
 procedure TBDPaletteEditor.OnSliderBChange(Sender:TObject; newValue:integer);
 begin
-  MainImage.Palette.ColorB[Settings.ActiveColorIndex]:=newValue;
+  Project.CurrentImage.Palette.ColorB[Settings.ActiveColorIndex]:=newValue;
   fColorBox.ColorChanged;
 end;
 
 procedure TBDPaletteEditor.OnSliderAChange(Sender:TObject; newValue:integer);
 begin
-  MainImage.Palette.ColorA[Settings.ActiveColorIndex]:=newValue;
+  Project.CurrentImage.Palette.ColorA[Settings.ActiveColorIndex]:=newValue;
   fColorBox.ColorChanged;
 end;
 
@@ -299,7 +299,7 @@ end;
 
 procedure TBDPaletteEditor.OnColorSliderMouseDown(Sender:TObject;x,y,buttons:integer);
 begin
-  fSavedColor:=MainImage.Palette.Colors[Settings.ActiveColorIndex];
+  fSavedColor:=Project.CurrentImage.Palette.Colors[Settings.ActiveColorIndex];
   TBDHorizontalSlider(Sender).MouseDown(Sender,x,y,buttons);
 end;
 
@@ -307,27 +307,26 @@ procedure TBDPaletteEditor.OnColorSliderMouseUp(Sender:TObject;x,y,buttons:integ
 var tmp:uint32;
 begin
   TBDHorizontalSlider(Sender).MouseUp(Sender,x,y,buttons);
-  if fSavedColor<>MainImage.Palette.Colors[Settings.ActiveColorIndex] then begin
-    tmp:=MainImage.Palette.Colors[Settings.ActiveColorIndex];
-    MainImage.Palette.Colors[Settings.ActiveColorIndex]:=fSavedColor;
-    PaletteUndoSystem.AddPaletteUndo(Settings.ActiveColorIndex,1);
-    MainImage.Palette.Colors[Settings.ActiveColorIndex]:=tmp;
-    PaletteUndoSystem.AddPaletteRedoToLastUndo(Settings.ActiveColorIndex,1);
+  if fSavedColor<>Project.CurrentImage.Palette.Colors[Settings.ActiveColorIndex] then begin
+    tmp:=Project.CurrentImage.Palette.Colors[Settings.ActiveColorIndex];
+    Project.CurrentImage.Palette.Colors[Settings.ActiveColorIndex]:=fSavedColor;
+    Project.CurrentImage.PaletteUndo.AddPaletteUndo(Settings.ActiveColorIndex,1);
+    Project.CurrentImage.Palette.Colors[Settings.ActiveColorIndex]:=tmp;
+    Project.CurrentImage.PaletteUndo.AddPaletteRedoToLastUndo(Settings.ActiveColorIndex,1);
     fColorBox.ColorChanged;
-//    RefreshSliders;
   end;
 end;
 
 procedure TBDPaletteEditor.UndoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
-  PaletteUndoSystem.Undo;
+  Project.CurrentImage.PaletteUndo.Undo;
   fColorBox.ColorChanged;
   RefreshSliders;
 end;
 
 procedure TBDPaletteEditor.RedoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
-  PaletteUndoSystem.Redo;
+  Project.CurrentImage.PaletteUndo.Redo;
   fColorBox.ColorChanged;
   RefreshSliders;
 end;
@@ -335,9 +334,10 @@ end;
 procedure TBDPaletteEditor.PaletteEditorShow(Sender:TObject);
 begin
   inherited Show;
-//  fSliderR.Visible:=true;
   RefreshSliders;
   ActiveTool:=Tools.ItemByName['SELCOL'];
+  fUndoButton.Enabled:=Project.CurrentImage.PaletteUndo.CanUndo;
+  fRedoButton.Enabled:=Project.CurrentImage.PaletteUndo.CanRedo;
 end;
 
 procedure TBDPaletteEditor.PaletteEditorHide(Sender:TObject);
@@ -347,10 +347,10 @@ end;
 
 procedure TBDPaletteEditor.RefreshSliders;
 begin
-  fSliderR.Position:=MainImage.Palette.ColorR[Settings.ActiveColorIndex];
-  fSliderG.Position:=MainImage.Palette.ColorG[Settings.ActiveColorIndex];
-  fSliderB.Position:=MainImage.Palette.ColorB[Settings.ActiveColorIndex];
-  fSliderA.Position:=MainImage.Palette.ColorA[Settings.ActiveColorIndex];
+  fSliderR.Position:=Project.CurrentImage.Palette.ColorR[Settings.ActiveColorIndex];
+  fSliderG.Position:=Project.CurrentImage.Palette.ColorG[Settings.ActiveColorIndex];
+  fSliderB.Position:=Project.CurrentImage.Palette.ColorB[Settings.ActiveColorIndex];
+  fSliderA.Position:=Project.CurrentImage.Palette.ColorA[Settings.ActiveColorIndex];
 end;
 
 function TBDPaletteEditor.ProcessMessage(msg:TMessage):boolean;
@@ -364,8 +364,8 @@ begin
         Result:=true;
       end;
       MSG_SETPALETTEUNDOREDOBUTTON:begin
-        fUndoButton.Enabled:=PaletteUndoSystem.CanUndo;
-        fRedoButton.Enabled:=PaletteUndoSystem.CanRedo;
+        fUndoButton.Enabled:=Project.CurrentImage.PaletteUndo.CanUndo;
+        fRedoButton.Enabled:=Project.CurrentImage.PaletteUndo.CanRedo;
       end;
       MSG_PICKEDCOLOR:begin
         fColorSelector.SetSelectedSlotTo(msg.DataInt);

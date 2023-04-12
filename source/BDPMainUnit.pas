@@ -80,7 +80,7 @@ begin
     MouseObjects.Add(fSplashScreen);
   end;
   fMainMenu:=TMainMenu.Create;
-  if not Assigned(CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
+  if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   fMagnifyDialog:=TMagnifyCELDialog.Create;
   fRotateDialog:=TRotateCELDialog.Create;
   MouseObjects.Sort;
@@ -165,29 +165,32 @@ begin
             SDL_GetMouseState(@mx,@my);
             mx:=fDrawArea.MouseXToFrame(mx);
             my:=fDrawArea.MouseYToFrame(my);
-            if (mx>=0) and (mx<MainImage.Width) and (my>=0) and (my<MainImage.Height) then
-              Settings.ActiveColorIndex:=MainImage.GetPixel(mx,my);
+            if (mx>=0) and (mx<Project.CurrentImage.Width) and (my>=0) and (my<Project.CurrentImage.Height) then
+              Settings.ActiveColorIndex:=Project.CurrentImage.GetPixel(mx,my);
           end;
           MSG_LOADCEL:begin
             if fOpenDialog.Execute then begin
-              if not assigned(CELImage) then CELImage:=TBDImage.Create(16,16);
+              if not assigned(Project.CELImage) then Project.CELImage:=TBDImage.Create(16,16);
               if UpperCase(ExtractFileExt(fOpenDialog.FileName))='.CEL' then
-                CELImage.ImportCEL(fOpenDialog.FileName)
+                Project.CELImage.ImportCEL(fOpenDialog.FileName)
               else
-                CELImage.LoadFromFile(fOpenDialog.FileName);
-              CELImage.Left:=0;
-              CELImage.Top:=0;
+                Project.CELImage.LoadFromFile(fOpenDialog.FileName);
+              Project.CELImage.Left:=0;
+              Project.CELImage.Top:=0;
               fMainMenu.EnableCELSubMenusWithActiveCEL;
               MessageQueue.AddMessage(MSG_SHOWCEL);
             end;
           end;
           MSG_CLEARPICTURE:begin
-            ImageUndoSystem.AddImageUndo(0,0,MainImage.Width,MainImage.Height);
-            MainImage.Bar(0,0,MainImage.Width,MainImage.Height,Settings.SelectedColors[0]);
-            ImageUndoSystem.AddImageRedoToLastUndo(0,0,MainImage.Width,MainImage.Height);
+            Project.CurrentImage.ImageUndo.AddImageUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);
+            Project.CurrentImage.Bar(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height,Settings.SelectedColors[0]);
+            Project.CurrentImage.ImageUndo.AddImageRedoToLastUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);
           end;
           MSG_RELEASECEL:begin
-            if Assigned(CELImage) then FreeAndNil(CELImage);
+            if Assigned(Project.CELImage) then begin
+              Project.CELImage.Free;
+              Project.CELImage:=nil;
+            end;
             fMainMenu.DisableCELSubMenusWithActiveCEL;
           end;
           MSG_GETCEL:begin
@@ -205,8 +208,8 @@ begin
             MessageQueue.AddMessage(MSG_RESTORECONTROLS);
           end;
           MSG_FLIPCEL:begin
-            if msg.DataInt=0 then CELImage.FlipV
-            else if msg.DataInt=1 then CelImage.FlipH
+            if msg.DataInt=0 then Project.CELImage.FlipV
+            else if msg.DataInt=1 then Project.CelImage.FlipH
             else raise Exception.Create('Invalid FLIPCEL message parameter!');
             MessageQueue.AddMessage(MSG_SHOWCEL);
           end;
@@ -221,7 +224,7 @@ begin
           MSG_MAGNIFYCEL:begin
             fMagnifyDialog.Hide;
             if msg.DataInt in [2..8] then begin
-              CELImage.Magnify(msg.DataInt);
+              Project.CELImage.Magnify(msg.DataInt);
               MessageQueue.AddMessage(MSG_SHOWCEL);
             end;
           end;
@@ -231,7 +234,7 @@ begin
           MSG_ROTATECEL:begin
             fRotateDialog.Hide;
             if msg.DataInt in [1..3] then begin
-              CELImage.Rotate(msg.DataInt);
+              Project.CELImage.Rotate(msg.DataInt);
               MessageQueue.AddMessage(MSG_SHOWCEL);
             end;
           end;
@@ -245,7 +248,7 @@ begin
           MSG_SAVECEL:begin
             if fSaveDialog.Execute then begin
               try
-                CELImage.SaveToFile(fSaveDialog.FileName);
+                Project.CELImage.SaveToFile(fSaveDialog.FileName);
               except
                 on e:Exception do
                   Log.LogError(e.message);
@@ -275,7 +278,7 @@ begin
       keys[KeyMap[KEY_GETCEL]]:=false;
     end;
     if keys[KeyMap[KEY_PUTCEL]] then begin
-      if ActiveTool.Pinnable and (Assigned(CELImage)) then begin  // Not GetCEL or PutCEL
+      if ActiveTool.Pinnable and (Assigned(Project.CELImage)) then begin  // Not GetCEL or PutCEL
         HideMainControls;
         ActiveTool:=Tools.ItemByName['PUTCEL'];
         ActiveTool.Initialize;

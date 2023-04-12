@@ -128,9 +128,12 @@ const
 var
   MM:TGFXManager;  // MediaManager to hold fonts and internal images
   InfoBar:TBDInfoBar;  // The information bar on the top of the screen
-  MainImage:TBDImage;  // The image we are working on
-  OverlayImage:TBDImage;  // The image where the tools draw its things
-  CELImage:TBDImage;  // The "clipboard" of image
+//  MainImage:TBDImage;  // The image we are working on
+//  OverlayImage:TBDImage;  // The image where the tools draw its things
+//  CELImage:TBDImage;  // The "clipboard" of image
+
+  OverlayPalette:TBDPalette;
+
   CELHelperImage:TBDImage;  // Helper image for PUTCel
   Settings:TSettings;  // All settings in one place
   MessageQueue:TMessageQueue;  // Messaging queue for classes who doesn't know each other
@@ -143,12 +146,13 @@ var
   Inks:TBDInks;  // All inks are loaded into this list
   ActiveInk:TBDInk;  // This is the selected ink
 
-  ImageUndoSystem:TBDImageUndoSystem;  // Handles undo and redo things for Images
-  PaletteUndoSystem:TBDPaletteUndoSystem;  // Handles undo and redo things for Palettes
+//  ImageUndoSystem:TBDImageUndoSystem;  // Handles undo and redo things for Images
+//  PaletteUndoSystem:TBDPaletteUndoSystem;  // Handles undo and redo things for Palettes
 
-  ColorClusters:TColorClusters;
+//  ColorClusters:TColorClusters;
   ActiveColorClusterIndex:integer;
 //  ActiveCluster:TColorCluster;  // The selected color cluster
+  Project:TBDProject;
 
   // Load assets and create shared objects
   procedure LoadAssets;
@@ -196,8 +200,8 @@ begin
   for y:=0 to 7 do
     for x:=0 to 7 do begin
       case s[x+y*8+1] of
-        '.':c:=OverlayImage.Palette[3];
-        'x':c:=OverlayImage.Palette[2];
+        '.':c:=OverlayPalette[3];
+        'x':c:=OverlayPalette[2];
         ' ':c:=0;
       end;
       TLImage.PutPixel(x,y,c);
@@ -229,7 +233,7 @@ begin
   MM.Fonts[pName].SetColor(pR,pG,pB);
 end;
 
-procedure LoadStateV1(pStream:TStream);
+{procedure LoadStateV1(pStream:TStream);
 var flags:byte;
 begin
   flags:=0;
@@ -276,7 +280,7 @@ begin
   finally
     FreeAndNil(State);
   end;
-end;
+end;}
 
 procedure LoadAssets;
 var i:integer;
@@ -299,25 +303,24 @@ begin
   MM.Images.ItemByName['Burdock'].Resize2x;
   Log.LogStatus('  Creating message queue...');
   MessageQueue:=TMessageQueue.Create(32);
-  Log.LogStatus('  Creating main image...');
+{  Log.LogStatus('  Creating main image...');
   MainImage:=TBDImage.Create(320,200);
   MainImage.Palette.LoadCOL('files\ntsc.col',0);
   for i:=1 to 15 do
-    MainImage.Circle(i*20,random(160)+20,random(10)+15,i);
-  Log.LogStatus('  Creating overlay image...');
-  OverlayImage:=TBDImage.Create(320,200);
-  OverlayImage.Palette.Colors[0]:=$00000000;
-  OverlayImage.Palette.Colors[1]:=$ff040404;
-  OverlayImage.Palette.Colors[2]:=$ff5d5d5d;
-  OverlayImage.Palette.Colors[3]:=$ff9a9a9a;
-  OverlayImage.Palette.Colors[4]:=$ffc7c7c7;
-  OverlayImage.Palette.Colors[5]:=$ffc70404;
-  OverlayImage.Palette.Colors[6]:=$ff202020;
-  OverlayImage.Palette.Colors[7]:=$ff505050;
-  OverlayImage.Palette.Colors[8]:=$ff808080;
-  OverlayImage.Palette.Colors[9]:=$ffb0b0b0;
-  OverlayImage.Palette.Colors[10]:=$ffe0e0e0;
-  OverlayImage.Bar(0,0,OverlayImage.Width,OverlayImage.Height,0);
+    MainImage.Circle(i*20,random(160)+20,random(10)+15,i);}
+  Log.LogStatus('  Creating overlay palette...');
+  OverlayPalette:=TBDPalette.Create(16);
+  OverlayPalette.Colors[0]:=$00000000;
+  OverlayPalette.Colors[1]:=$ff040404;
+  OverlayPalette.Colors[2]:=$ff5d5d5d;
+  OverlayPalette.Colors[3]:=$ff9a9a9a;
+  OverlayPalette.Colors[4]:=$ffc7c7c7;
+  OverlayPalette.Colors[5]:=$ffc70404;
+  OverlayPalette.Colors[6]:=$ff202020;
+  OverlayPalette.Colors[7]:=$ff505050;
+  OverlayPalette.Colors[8]:=$ff808080;
+  OverlayPalette.Colors[9]:=$ffb0b0b0;
+  OverlayPalette.Colors[10]:=$ffe0e0e0;
   Log.LogStatus('  Creating CEL helper image...');
   CELHelperImage:=TBDImage.Create(320,200);
   CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,0);
@@ -332,22 +335,23 @@ begin
   Inks:=TBDInks.Create;
   Log.LogStatus('  Creating tools...');
   Tools:=TBDTools.Create;
-  Log.LogStatus('  Initializing Undo system...');
+ { Log.LogStatus('  Initializing Undo system...');
   ImageUndoSystem:=TBDImageUndoSystem.Create;
   PaletteUndoSystem:=TBDPaletteUndoSystem.Create;
   MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
-  MessageQueue.AddMessage(MSG_SETPALETTEUNDOREDOBUTTON);
-  Log.LogStatus('  Initializing color clusters...');
-  ColorClusters:=TColorClusters.Create;
-  ColorClusters.FreeObjects:=true;
-  ColorClusters.Add(TColorCluster.Create(96,111));
+  MessageQueue.AddMessage(MSG_SETPALETTEUNDOREDOBUTTON);}
+{  Log.LogStatus('  Initializing color clusters...');
+  ColorClusters:=TColorClusters.Create;}
   ActiveColorClusterIndex:=0;
+  Project:=TBDProject.Create;
+  MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
+  MessageQueue.AddMessage(MSG_SETPALETTEUNDOREDOBUTTON);
 
-  Log.LogStatus('Loading previous session data...');
-  LoadState;
+{  Log.LogStatus('Loading previous session data...');
+  LoadState;}
 end;
 
-procedure WriteStateV1;
+{procedure WriteStateV1;
 var i,curr:integer;State:TStream;
 begin
   if not (Assigned(MainImage) and Assigned(ImageUndoSystem)) then exit;
@@ -401,26 +405,27 @@ begin
   State.Position:=curr;
   State.write(i,4);
   FreeAndNil(State);
-end;
+end;}
 
 procedure FreeAssets;
 begin
-  WriteState;
-  if Assigned(ColorClusters) then FreeAndNil(ColorClusters);
+//  WriteState;
+//  if Assigned(ColorClusters) then FreeAndNil(ColorClusters);
+  if Assigned(Project) then FreeAndNil(Project);
   if Assigned(CELHelperImage) then FreeAndNil(CELHelperImage);
-  if Assigned(CELImage) then FreeAndNil(CELImage);
+//  if Assigned(CELImage) then FreeAndNil(CELImage);
   if Assigned(Settings) then begin
     Settings.SaveToFile(SETTINGSFILE);
     FreeAndNil(Settings);
   end;
-  if Assigned(PaletteUndoSystem) then FreeAndNil(PaletteUndoSystem);
-  if Assigned(ImageUndoSystem) then FreeAndNil(ImageUndoSystem);
+//  if Assigned(PaletteUndoSystem) then FreeAndNil(PaletteUndoSystem);
+//  if Assigned(ImageUndoSystem) then FreeAndNil(ImageUndoSystem);
   if Assigned(Tools) then FreeAndNil(Tools);
   if Assigned(Inks) then FreeAndNil(Inks);
   if Assigned(VibroColors) then FreeAndNil(VibroColors);
   if Assigned(Cursor) then FreeAndNil(Cursor);
-  if Assigned(OverlayImage) then FreeAndNil(OverlayImage);
-  if Assigned(MainImage) then FreeAndNil(MainImage);
+  if Assigned(OverlayPalette) then FreeAndNil(OverlayPalette);
+//  if Assigned(MainImage) then FreeAndNil(MainImage);
   if Assigned(MessageQueue) then FreeAndNil(MessageQueue);
   if Assigned(InfoBar) then FreeAndNil(InfoBar);
   if Assigned(MM) then FreeAndNil(MM);

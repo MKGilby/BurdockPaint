@@ -66,15 +66,18 @@ type
     procedure LoadFromStreamV1(pStream:TStream);
     procedure SetOverlayPalette;
     procedure fSetActiveImageIndex(value:integer);
-    function fGetCurrentImage:TBDImage;
+    function fGetCurrentImage:TBDExtendedImage;
   public
     property Images:TBDExtendedImages read fImages;
     property ActiveImageIndex:integer read fActiveImageIndex write fSetActiveImageIndex;
     property OverlayImage:TBDImage read fOverlayImage;
-    property CurrentImage:TBDImage read fGetCurrentImage;
+    property CurrentImage:TBDExtendedImage read fGetCurrentImage;
+    property CELImage:TBDImage read fCELImage write fCELImage;
   end;
 
 implementation
+
+uses BDPSharedUnit;
 
 const
   EXTENDEDIMAGEID=$45;
@@ -117,10 +120,9 @@ end;
 
 destructor TBDExtendedImage.Destroy;
 begin
-//  if Assigned(fImage) then FreeAndNil(fImage);
+  if Assigned(fColorClusters) then FreeAndNil(fColorClusters);
   if Assigned(fImageUndoSystem) then FreeAndNil(fImageUndoSystem);
   if Assigned(fPaletteUndoSystem) then FreeAndNil(fPaletteUndoSystem);
-//  if Assigned(fCELImage) then FreeAndNil(fCELImage);
   inherited Destroy;
 end;
 
@@ -197,12 +199,15 @@ begin
   if (fActiveImageIndex<0) or (fActiveImageIndex>=fImages.Count) then
     fActiveImageIndex:=0;
   fOverlayImage:=TBDImage.Create(fImages[fActiveImageIndex].Width,fImages[fActiveImageIndex].Height);
-  SetOverlayPalette;
+//  SetOverlayPalette;
+  fOverlayImage.Palette.ResizeAndCopyColorsFrom(OverlayPalette);
   fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
 end;
 
 destructor TBDProject.Destroy;
 begin
+  if Assigned(fCELImage) then FreeAndNil(fCELImage);
+  if Assigned(fOverlayImage) then FreeAndNil(fOverlayImage);
   if Assigned(fImages) then FreeAndNil(fImages);
   inherited Destroy;
 end;
@@ -275,7 +280,7 @@ begin
   end;
 end;
 
-function TBDProject.fGetCurrentImage:TBDImage;
+function TBDProject.fGetCurrentImage:TBDExtendedImage;
 begin
   Result:=fImages[fActiveImageIndex];
 end;

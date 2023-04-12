@@ -91,17 +91,17 @@ end;
 procedure TBDButton.ReDraw;
 begin
   with fTexture.ARGBImage do begin
-    Bar(8,0,Width-16,3,OverlayImage.Palette[2]);
-    Bar(8,Height-3,fWidth-16,3,OverlayImage.Palette[2]);
-    Bar(0,8,3,Height-16,OverlayImage.Palette[2]);
-    Bar(Width-3,8,3,Height-16,OverlayImage.Palette[2]);
+    Bar(8,0,Width-16,3,OverlayPalette[2]);
+    Bar(8,Height-3,fWidth-16,3,OverlayPalette[2]);
+    Bar(0,8,3,Height-16,OverlayPalette[2]);
+    Bar(Width-3,8,3,Height-16,OverlayPalette[2]);
     if fSelected then
-      Bar(3,3,Width-6,Height-6,OverlayImage.Palette[4])
+      Bar(3,3,Width-6,Height-6,OverlayPalette[4])
     else begin
       if fEnabled then
-        Bar(3,3,Width-6,Height-6,OverlayImage.Palette[3])
+        Bar(3,3,Width-6,Height-6,OverlayPalette[3])
       else
-        Bar(3,3,Width-6,Height-6,OverlayImage.Palette[2]);
+        Bar(3,3,Width-6,Height-6,OverlayPalette[2]);
     end;
   end;
   if Assigned(fTLImage) then

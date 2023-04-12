@@ -128,10 +128,10 @@ constructor TBDUndoRegionItem.CreateFromStream(iStream:TStream);
 begin
   inherited Create;
   fBefore:=TBDImage.Create(16,16);
-  fBefore.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
+  fBefore.Palette.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette);
   fBefore.LoadWholeImageDataFromStream(iStream);
   fAfter:=TBDImage.Create(16,16);
-  fAfter.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
+  fAfter.Palette.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette);
   fAfter.LoadWholeImageDataFromStream(iStream);
   fRedoable:=true;
 end;
@@ -151,13 +151,13 @@ end;
 
 procedure TBDUndoRegionItem.Undo;
 begin
-  MainImage.PutImage(fBefore.Left,fBefore.Top,fBefore);
+  Project.CurrentImage.PutImage(fBefore.Left,fBefore.Top,fBefore);
 end;
 
 procedure TBDUndoRegionItem.Redo;
 begin
   if Assigned(fAfter) then
-    MainImage.PutImage(fAfter.Left,fAfter.Top,fAfter);
+    Project.CurrentImage.PutImage(fAfter.Left,fAfter.Top,fAfter);
 end;
 
 procedure TBDUndoRegionItem.SaveToStream(pStream:TStream);
@@ -216,13 +216,13 @@ end;
 
 procedure TBDUndoColorItem.Undo;
 begin
-  MainImage.Palette.CopyColorsFrom(fBefore,0,fStart,fBefore.Size);
+  Project.CurrentImage.Palette.CopyColorsFrom(fBefore,0,fStart,fBefore.Size);
 end;
 
 procedure TBDUndoColorItem.Redo;
 begin
   if Assigned(fAfter) then
-    MainImage.Palette.CopyColorsFrom(fAfter,0,fStart,fAfter.Size);
+    Project.CurrentImage.Palette.CopyColorsFrom(fAfter,0,fStart,fAfter.Size);
 end;
 
 procedure TBDUndoColorItem.SaveToStream(pStream:TStream);
@@ -402,7 +402,7 @@ begin
   atmi.Left:=Left;
   atmi.Top:=Top;
   if Image=nil then
-    atmi.PutImagePart(0,0,Left,Top,Width,Height,MainImage)
+    atmi.PutImagePart(0,0,Left,Top,Width,Height,Project.CurrentImage)
   else
     atmi.PutImagePart(0,0,Left,Top,Width,Height,Image);
   atm:=TBDUndoRegionItem.Create(atmi);
@@ -419,7 +419,7 @@ begin
       atmi:=TBDImage.Create(Width,Height);
       atmi.Left:=Left;
       atmi.Top:=Top;
-      atmi.PutImagePart(0,0,Left,Top,Width,Height,MainImage);
+      atmi.PutImagePart(0,0,Left,Top,Width,Height,Project.CurrentImage);
       TBDUndoRegionItem(Self[fPointer]).AddAfter(atmi);
       MessageQueue.AddMessage(fAfterUndoRedoMessage);
     end;
@@ -441,7 +441,7 @@ begin
     Self.DeleteRange(fPointer+1,Self.Count-1);
   if Self.Count=Settings.UndoLimit then Self.Delete(0);
   atmP:=TBDPalette.Create(Count);
-  atmP.ResizeAndCopyColorsFrom(MainImage.Palette,Start,Count);
+  atmP.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette,Start,Count);
   atm:=TBDUndoColorItem.Create(Start,atmP);
   Self.Add(atm);
   fPointer:=Self.Count-1;
@@ -454,7 +454,7 @@ begin
   if fPointer>-1 then begin
     if not Self[fPointer].Redoable then begin
       atmP:=TBDPalette.Create(Count);
-      atmP.ResizeAndCopyColorsFrom(MainImage.Palette,Start,Count);
+      atmP.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette,Start,Count);
       TBDUndoColorItem(Self[fPointer]).AddAfter(atmP);
       MessageQueue.AddMessage(fAfterUndoRedoMessage);
     end;

@@ -277,24 +277,24 @@ begin
       1:begin
           if fSX>x then begin i:=x;x:=fSX;fSX:=i;end;
           if fSY>y then begin i:=y;y:=fSY;fSY:=i;end;
-          ImageUndoSystem.AddImageUndo(fSX,fSY,x-fSX+1,y-fSY+1);
+          Project.CurrentImage.ImageUndo.AddImageUndo(fSX,fSY,x-fSX+1,y-fSY+1);
           ActiveInk.InitializeArea(fSX,fSY,x,y);
           if Settings.FillShapes then begin
             if ActiveInk.SupportsOnTheFly then
               DrawBarWithInk(fSX,fSY,x,y)
             else begin
-              MainImage.Bar(fSX,fSY,fX,fY,POSTPROCESSCOLOR);
+              Project.CurrentImage.Bar(fSX,fSY,fX,fY,POSTPROCESSCOLOR);
               ActiveInk.PostProcess;
             end;
           end else begin
             if ActiveInk.SupportsOnTheFly then
               DrawRectangleWithInk(fSX,fSY,x,y)
             else begin
-              MainImage.Rectangle(fSX,fSY,fX,fY,POSTPROCESSCOLOR);
+              Project.CurrentImage.Rectangle(fSX,fSY,fX,fY,POSTPROCESSCOLOR);
               ActiveInk.PostProcess;
             end;
           end;
-          ImageUndoSystem.AddImageRedoToLastUndo(fSX,fSY,x-fSX+1,y-fSY+1);
+          Project.CurrentImage.ImageUndo.AddImageRedoToLastUndo(fSX,fSY,x-fSX+1,y-fSY+1);
           InfoBar.ShowText('');
           fState:=0;
           Result:=true;
@@ -320,7 +320,7 @@ begin
   case fState of
     0:;
     1:begin
-        OverlayImage.Rectangle(fSX,fSY,fX,fY,VibroColors.GetColorIndex);
+        Project.OverlayImage.Rectangle(fSX,fSY,fX,fY,VibroColors.GetColorIndex);
 
         InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
           'WI='+inttostr(abs(fSX-fX)+1)+' HE='+inttostr(abs(fSY-fY)+1)+' '+
@@ -334,7 +334,7 @@ begin
   case fState of
     0:;
     1:begin
-        OverlayImage.Rectangle(fSX,fSY,fX,fY,0);
+        Project.OverlayImage.Rectangle(fSX,fSY,fX,fY,0);
       end;
   end;
 end;
@@ -347,7 +347,7 @@ begin
   if y1>y2 then begin i:=y1;y1:=y2;y2:=i;end;
   for j:=y1 to y2 do
     for i:=x1 to x2 do
-      MainImage.PutPixel(i,j,ActiveInk.GetColorIndexAt(i,j));
+      Project.CurrentImage.PutPixel(i,j,ActiveInk.GetColorIndexAt(i,j));
 end;
 
 procedure TBDToolBox.DrawRectangleWithInk(x1,y1,x2,y2:integer);
@@ -357,12 +357,12 @@ begin
   if x1>x2 then begin i:=x1;x1:=x2;x2:=i;end;
   if y1>y2 then begin i:=y1;y1:=y2;y2:=i;end;
   for i:=y1 to y2 do begin
-    MainImage.PutPixel(x1,i,ActiveInk.GetColorIndexAt(x1,i));
-    MainImage.PutPixel(x2,i,ActiveInk.GetColorIndexAt(x2,i));
+    Project.CurrentImage.PutPixel(x1,i,ActiveInk.GetColorIndexAt(x1,i));
+    Project.CurrentImage.PutPixel(x2,i,ActiveInk.GetColorIndexAt(x2,i));
   end;
   for i:=x1+1 to x2-1 do begin
-    MainImage.PutPixel(i,y1,ActiveInk.GetColorIndexAt(i,y1));
-    MainImage.PutPixel(i,y2,ActiveInk.GetColorIndexAt(i,y2));
+    Project.CurrentImage.PutPixel(i,y1,ActiveInk.GetColorIndexAt(i,y1));
+    Project.CurrentImage.PutPixel(i,y2,ActiveInk.GetColorIndexAt(i,y2));
   end;
 end;
 
@@ -389,7 +389,7 @@ begin
         end;
       1:begin
           r:=round(sqrt(sqr(fSX-x)+sqr(fSY-y)));
-          ImageUndoSystem.AddImageUndo(fSX-r,fSY-r,r*2+1,r*2+1);
+          Project.CurrentImage.ImageUndo.AddImageUndo(fSX-r,fSY-r,r*2+1,r*2+1);
           ActiveInk.InitializeArea(fSX-r,fSY-r,fSX+r,fSY+r);
           if ActiveInk.SupportsOnTheFly then begin
             if Settings.FillShapes then
@@ -398,12 +398,12 @@ begin
               DrawCircleWithInk(fSX,fSY,r)
           end else begin
             if Settings.FillShapes then
-              MainImage.FilledCircle(fSX,fSY,r,POSTPROCESSCOLOR)
+              Project.CurrentImage.FilledCircle(fSX,fSY,r,POSTPROCESSCOLOR)
             else
-              MainImage.Circle(fSX,fSY,r,POSTPROCESSCOLOR);
+              Project.CurrentImage.Circle(fSX,fSY,r,POSTPROCESSCOLOR);
             ActiveInk.PostProcess;
           end;
-          ImageUndoSystem.AddImageRedoToLastUndo(fSX-r,fSY-r,r*2+1,r*2+1);
+          Project.CurrentImage.ImageUndo.AddImageRedoToLastUndo(fSX-r,fSY-r,r*2+1,r*2+1);
           InfoBar.ShowText('');
           Result:=true;
           fState:=0;
@@ -431,7 +431,7 @@ begin
     0:;
     1:begin
         r:=round(sqrt(sqr(fSX-fX)+sqr(fSY-fY)));
-        OverlayImage.Circle(fSX,fSY,r,VibroColors.GetColorIndex);
+        Project.OverlayImage.Circle(fSX,fSY,r,VibroColors.GetColorIndex);
 
         InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
           'RADIUS='+inttostr(r)+' '+
@@ -447,7 +447,7 @@ begin
     0:;
     1:begin
         r:=round(sqrt(sqr(fSX-fX)+sqr(fSY-fY)));
-        OverlayImage.Circle(fSX,fSY,r,0);
+        Project.OverlayImage.Circle(fSX,fSY,r,0);
       end;
   end;
 end;
@@ -457,14 +457,14 @@ procedure TBDToolCircle.DrawCircleWithInk(cx,cy,r:integer);
 
   procedure PutPixel8(x,y:integer);
   begin
-    MainImage.PutPixel(cx+x, cy+y, ActiveInk.GetColorIndexAt(cx+x, cy+y));
-    MainImage.PutPixel(cx-x, cy+y, ActiveInk.GetColorIndexAt(cx-x, cy+y));
-    MainImage.PutPixel(cx+x, cy-y, ActiveInk.GetColorIndexAt(cx+x, cy-y));
-    MainImage.PutPixel(cx-x, cy-y, ActiveInk.GetColorIndexAt(cx-x, cy-y));
-    MainImage.PutPixel(cx+y, cy+x, ActiveInk.GetColorIndexAt(cx+y, cy+x));
-    MainImage.PutPixel(cx-y, cy+x, ActiveInk.GetColorIndexAt(cx-y, cy+x));
-    MainImage.PutPixel(cx+y, cy-x, ActiveInk.GetColorIndexAt(cx+y, cy-x));
-    MainImage.PutPixel(cx-y, cy-x, ActiveInk.GetColorIndexAt(cx-y, cy-x));
+    Project.CurrentImage.PutPixel(cx+x, cy+y, ActiveInk.GetColorIndexAt(cx+x, cy+y));
+    Project.CurrentImage.PutPixel(cx-x, cy+y, ActiveInk.GetColorIndexAt(cx-x, cy+y));
+    Project.CurrentImage.PutPixel(cx+x, cy-y, ActiveInk.GetColorIndexAt(cx+x, cy-y));
+    Project.CurrentImage.PutPixel(cx-x, cy-y, ActiveInk.GetColorIndexAt(cx-x, cy-y));
+    Project.CurrentImage.PutPixel(cx+y, cy+x, ActiveInk.GetColorIndexAt(cx+y, cy+x));
+    Project.CurrentImage.PutPixel(cx-y, cy+x, ActiveInk.GetColorIndexAt(cx-y, cy+x));
+    Project.CurrentImage.PutPixel(cx+y, cy-x, ActiveInk.GetColorIndexAt(cx+y, cy-x));
+    Project.CurrentImage.PutPixel(cx-y, cy-x, ActiveInk.GetColorIndexAt(cx-y, cy-x));
   end;
 
 var x,y,d:integer;
@@ -495,12 +495,12 @@ procedure TBDToolCircle.DrawFilledCircleWithInk(cx,cy,r:integer);
   var i:integer;
   begin
     for i:=-x to +x do begin
-      MainImage.PutPixel(cx+i,cy+y,ActiveInk.GetColorIndexAt(cx+i,cy+y));
-      MainImage.PutPixel(cx+i,cy-y,ActiveInk.GetColorIndexAt(cx+i,cy-y));
+      Project.CurrentImage.PutPixel(cx+i,cy+y,ActiveInk.GetColorIndexAt(cx+i,cy+y));
+      Project.CurrentImage.PutPixel(cx+i,cy-y,ActiveInk.GetColorIndexAt(cx+i,cy-y));
     end;
     for i:=-y to +y do begin
-      MainImage.PutPixel(cx+i,cy+x,ActiveInk.GetColorIndexAt(cx+i,cy+x));
-      MainImage.PutPixel(cx+i,cy-x,ActiveInk.GetColorIndexAt(cx+i,cy-x));
+      Project.CurrentImage.PutPixel(cx+i,cy+x,ActiveInk.GetColorIndexAt(cx+i,cy+x));
+      Project.CurrentImage.PutPixel(cx+i,cy-x,ActiveInk.GetColorIndexAt(cx+i,cy-x));
     end;
   end;
 
@@ -537,10 +537,10 @@ end;
 function TBDToolDraw.MouseDown(x,y,button:integer):boolean;
 begin
   if button=SDL_BUTTON_LEFT then begin
-    fTempImage:=TBDImage.Create(MainImage.Width,MainImage.Height);
-    fTempImage.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
-    fTempImage.PutImage(0,0,MainImage);
-    MainImage.PutPixel(x,y,ActiveInk.GetColorIndexAt(x,y));
+    fTempImage:=TBDImage.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
+    fTempImage.Palette.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette);
+    fTempImage.PutImage(0,0,Project.CurrentImage);
+    Project.CurrentImage.PutPixel(x,y,ActiveInk.GetColorIndexAt(x,y));
     Result:=true;
     fLeft:=x;
     fTop:=y;
@@ -557,9 +557,9 @@ function TBDToolDraw.MouseUp(x,y,button:integer):boolean;
 begin
   if fDown then begin
     fDown:=false;
-    ImageUndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+    Project.CurrentImage.ImageUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
     FreeAndNil(fTempImage);
-    ImageUndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
+    Project.CurrentImage.ImageUndo.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
     Result:=true;
   end else Result:=false;
 end;
@@ -567,7 +567,7 @@ end;
 function TBDToolDraw.MouseMove(x,y,button:integer):boolean;
 begin
   if fDown then begin
-    MainImage.PutPixel(x,y,ActiveInk.GetColorIndexAt(x,y));
+    Project.CurrentImage.PutPixel(x,y,ActiveInk.GetColorIndexAt(x,y));
     if fLeft>x then fLeft:=x;
     if fTop>y then fTop:=y;
     if fRight<x then fRight:=x;
@@ -594,17 +594,17 @@ begin
     fTop:=y;
     fRight:=x;
     fBottom:=y;
-    fTempImage:=TBDImage.Create(MainImage.Width,MainImage.Height);
-    fTempImage.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
-    fTempImage.PutImage(0,0,MainImage);
+    fTempImage:=TBDImage.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
+    fTempImage.Palette.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette);
+    fTempImage.PutImage(0,0,Project.CurrentImage);
 
     FloodFillWithPostProcessColor(x,y);
 
-    ImageUndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+    Project.CurrentImage.ImageUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
     FreeAndNil(fTempImage);
     ActiveInk.InitializeArea(fLeft,fTop,fRight,fBottom);
     ActiveInk.PostProcess;
-    ImageUndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
+    Project.CurrentImage.ImageUndo.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
     Result:=true;
   end else Result:=false;
 end;
@@ -615,31 +615,31 @@ var i,j,ic,cc:integer;w:boolean;
   function FFCheckPixel(x,y,src:integer):boolean;
   begin
     Result:=false;
-    if (y>0) and (MainImage.GetPixel(x,y-1)=src) then begin
-      MainImage.PutPixel(x,y-1,POSTPROCESSCOLOR);
+    if (y>0) and (Project.CurrentImage.GetPixel(x,y-1)=src) then begin
+      Project.CurrentImage.PutPixel(x,y-1,POSTPROCESSCOLOR);
       if y-1<fTop then fTop:=y-1;
       Result:=true;
     end;
-    if (x<MainImage.Width-1) and (MainImage.GetPixel(x+1,y)=src) then begin
-      MainImage.PutPixel(x+1,y,POSTPROCESSCOLOR);
+    if (x<Project.CurrentImage.Width-1) and (Project.CurrentImage.GetPixel(x+1,y)=src) then begin
+      Project.CurrentImage.PutPixel(x+1,y,POSTPROCESSCOLOR);
       if x+1>fRight then fRight:=x+1;
       Result:=true;
     end;
-    if (y<MainImage.Height-1) and (MainImage.GetPixel(x,y+1)=src) then begin
-      MainImage.PutPixel(x,y+1,POSTPROCESSCOLOR);
+    if (y<Project.CurrentImage.Height-1) and (Project.CurrentImage.GetPixel(x,y+1)=src) then begin
+      Project.CurrentImage.PutPixel(x,y+1,POSTPROCESSCOLOR);
       if y+1>fBottom then fBottom:=y+1;
       Result:=true;
     end;
-    if (x>0) and (MainImage.GetPixel(x-1,y)=src) then begin
-      MainImage.PutPixel(x-1,y,POSTPROCESSCOLOR);
+    if (x>0) and (Project.CurrentImage.GetPixel(x-1,y)=src) then begin
+      Project.CurrentImage.PutPixel(x-1,y,POSTPROCESSCOLOR);
       if x-1<fLeft then fLeft:=x-1;
       Result:=true;
     end;
   end;
 
 begin
-  cc:=MainImage.GetPixel(x,y);
-  MainImage.PutPixel(x,y,POSTPROCESSCOLOR);
+  cc:=Project.CurrentImage.GetPixel(x,y);
+  Project.CurrentImage.PutPixel(x,y,POSTPROCESSCOLOR);
   ic:=0;
   repeat
     w:=false;
@@ -649,7 +649,7 @@ begin
           while j<=fBottom do begin
             i:=fLeft;
             while i<=fRight do begin
-              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j,cc) then w:=true;
               inc(i);
             end;
@@ -661,7 +661,7 @@ begin
           while j>=fTop do begin
             i:=fLeft;
             while i<=fRight do begin
-              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j,cc) then w:=true;
               inc(i);
             end;
@@ -673,7 +673,7 @@ begin
           while j>=fTop do begin
             i:=fRight;
             while i>=fLeft do begin
-              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j,cc) then w:=true;
               dec(i);
             end;
@@ -685,7 +685,7 @@ begin
           while j<=fBottom do begin
             i:=fRight;
             while i>=fLeft do begin
-              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j,cc) then w:=true;
               dec(i);
             end;
@@ -714,7 +714,7 @@ begin
   if button=SDL_BUTTON_LEFT then
     case fstate of
       0:begin
-          fSourceColor:=MainImage.GetPixel(x,y);
+          fSourceColor:=Project.CurrentImage.GetPixel(x,y);
           fState:=1;
           Result:=true;
         end;
@@ -724,17 +724,17 @@ begin
           fRight:=x;
           fBottom:=y;
 
-          fTempImage:=TBDImage.Create(MainImage.Width,MainImage.Height);
-          fTempImage.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
-          fTempImage.PutImage(0,0,MainImage);
+          fTempImage:=TBDImage.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
+          fTempImage.Palette.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette);
+          fTempImage.PutImage(0,0,Project.CurrentImage);
 
           FillToWithPostProcessColor(x,y);
-          ImageUndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+          Project.CurrentImage.ImageUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
           FreeAndNil(fTempImage);
 
           ActiveInk.InitializeArea(fLeft,fTop,fRight,fBottom);
           ActiveInk.PostProcess;
-          ImageUndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
+          Project.CurrentImage.ImageUndo.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
           fState:=0;
           Result:=true;
         end;
@@ -765,34 +765,34 @@ var i,j,ic:integer;w:boolean;
   function FFCheckPixel(x,y:integer):boolean;
   begin
     Result:=false;
-    if (y>0) and (MainImage.GetPixel(x,y-1)<>fSourceColor) and
-      (MainImage.GetPixel(x,y-1)<>POSTPROCESSCOLOR) then begin
-      MainImage.PutPixel(x,y-1,POSTPROCESSCOLOR);
+    if (y>0) and (Project.CurrentImage.GetPixel(x,y-1)<>fSourceColor) and
+      (Project.CurrentImage.GetPixel(x,y-1)<>POSTPROCESSCOLOR) then begin
+      Project.CurrentImage.PutPixel(x,y-1,POSTPROCESSCOLOR);
       if y-1<fTop then fTop:=y-1;
       Result:=true;
     end;
-    if (x<MainImage.Width-1) and (MainImage.GetPixel(x+1,y)<>fSourceColor) and
-      (MainImage.GetPixel(x+1,y)<>POSTPROCESSCOLOR) then begin
-      MainImage.PutPixel(x+1,y,POSTPROCESSCOLOR);
+    if (x<Project.CurrentImage.Width-1) and (Project.CurrentImage.GetPixel(x+1,y)<>fSourceColor) and
+      (Project.CurrentImage.GetPixel(x+1,y)<>POSTPROCESSCOLOR) then begin
+      Project.CurrentImage.PutPixel(x+1,y,POSTPROCESSCOLOR);
       if x+1>fRight then fRight:=x+1;
       Result:=true;
     end;
-    if (y<MainImage.Height-1) and (MainImage.GetPixel(x,y+1)<>fSourceColor) and
-      (MainImage.GetPixel(x,y+1)<>POSTPROCESSCOLOR) then begin
-      MainImage.PutPixel(x,y+1,POSTPROCESSCOLOR);
+    if (y<Project.CurrentImage.Height-1) and (Project.CurrentImage.GetPixel(x,y+1)<>fSourceColor) and
+      (Project.CurrentImage.GetPixel(x,y+1)<>POSTPROCESSCOLOR) then begin
+      Project.CurrentImage.PutPixel(x,y+1,POSTPROCESSCOLOR);
       if y+1>fBottom then fBottom:=y+1;
       Result:=true;
     end;
-    if (x>0) and (MainImage.GetPixel(x-1,y)<>fSourceColor) and
-      (MainImage.GetPixel(x-1,y)<>POSTPROCESSCOLOR) then begin
-      MainImage.PutPixel(x-1,y,POSTPROCESSCOLOR);
+    if (x>0) and (Project.CurrentImage.GetPixel(x-1,y)<>fSourceColor) and
+      (Project.CurrentImage.GetPixel(x-1,y)<>POSTPROCESSCOLOR) then begin
+      Project.CurrentImage.PutPixel(x-1,y,POSTPROCESSCOLOR);
       if x-1<fLeft then fLeft:=x-1;
       Result:=true;
     end;
   end;
 
 begin
-  MainImage.PutPixel(x,y,POSTPROCESSCOLOR);
+  Project.CurrentImage.PutPixel(x,y,POSTPROCESSCOLOR);
   ic:=0;
   repeat
     w:=false;
@@ -803,7 +803,7 @@ begin
           while j<=fBottom do begin
             i:=fLeft;
             while i<=fRight do begin
-              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j) then w:=true;
               inc(i);
             end;
@@ -815,7 +815,7 @@ begin
           while j>=fTop do begin
             i:=fLeft;
             while i<=fRight do begin
-              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j) then w:=true;
               inc(i);
             end;
@@ -827,7 +827,7 @@ begin
           while j>=fTop do begin
             i:=fRight;
             while i>=fLeft do begin
-              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j) then w:=true;
               dec(i);
             end;
@@ -839,7 +839,7 @@ begin
           while j<=fBottom do begin
             i:=fRight;
             while i>=fLeft do begin
-              if MainImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j) then w:=true;
               dec(i);
             end;
@@ -888,15 +888,15 @@ begin
             Top:=fSY;
             Height:=y-fSY+1;
           end;
-          ImageUndoSystem.AddImageUndo(Left,Top,Width,Height);
+          Project.CurrentImage.ImageUndo.AddImageUndo(Left,Top,Width,Height);
           ActiveInk.InitializeArea(fSX,fSY,x,y);
           if ActiveInk.SupportsOnTheFly then
             DrawLineWithInk(fSX,fSY,x,y)
           else begin
-            MainImage.Line(fSX,fSY,fX,fY,POSTPROCESSCOLOR);
+            Project.CurrentImage.Line(fSX,fSY,fX,fY,POSTPROCESSCOLOR);
             ActiveInk.PostProcess;
           end;
-          ImageUndoSystem.AddImageRedoToLastUndo(Left,Top,Width,Height);
+          Project.CurrentImage.ImageUndo.AddImageRedoToLastUndo(Left,Top,Width,Height);
           Result:=true;
           fState:=0;
           InfoBar.ShowText('');
@@ -923,7 +923,7 @@ begin
   case fState of
     0:;
     1:begin
-        OverlayImage.Line(fSX,fSY,fX,fY,VibroColors.GetColorIndex);
+        Project.OverlayImage.Line(fSX,fSY,fX,fY,VibroColors.GetColorIndex);
         if (fSX>fX) then begin
           d:=trunc(arctan((fSY-fY)/(fSX-fX))*180/pi)+270;
         end else
@@ -949,7 +949,7 @@ procedure TBDToolLine.Clear;
 begin
   case fState of
     0:;
-    1:OverlayImage.Line(fSX,fSY,fX,fY,0);
+    1:Project.OverlayImage.Line(fSX,fSY,fX,fY,0);
   end;
 end;
 
@@ -994,7 +994,7 @@ begin
   nondiag_inc := b + b;
   diag_inc    := b + b - a - a;
   for i := 0 to a do begin   {draw the a+1 pixels}
-    MainImage.PutPixel(x,y,ActiveInk.GetColorIndexAt(x,y));
+    Project.CurrentImage.PutPixel(x,y,ActiveInk.GetColorIndexAt(x,y));
     if d < 0 then begin
       x := x + dx_nondiag;
       y := y + dy_nondiag;
@@ -1023,28 +1023,28 @@ var i,j,sc:integer;
   fTempImage:TBDImage;
 begin
   if button=SDL_BUTTON_LEFT then begin
-    fTempImage:=TBDImage.Create(MainImage.Width,MainImage.Height);
-    fTempImage.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
-    fTempImage.PutImage(0,0,MainImage);
-    fLeft:=MainImage.Width;
+    fTempImage:=TBDImage.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
+    fTempImage.Palette.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette);
+    fTempImage.PutImage(0,0,Project.CurrentImage);
+    fLeft:=Project.CurrentImage.Width;
     fRight:=-1;
-    fTop:=MainImage.Height;
+    fTop:=Project.CurrentImage.Height;
     fBottom:=-1;
-    sc:=MainImage.GetPixel(x,y);
-    for j:=0 to MainImage.Height-1 do
-      for i:=0 to MainImage.Width-1 do
-        if MainImage.GetPixel(i,j)=sc then begin
-          MainImage.Putpixel(i,j,POSTPROCESSCOLOR);
+    sc:=Project.CurrentImage.GetPixel(x,y);
+    for j:=0 to Project.CurrentImage.Height-1 do
+      for i:=0 to Project.CurrentImage.Width-1 do
+        if Project.CurrentImage.GetPixel(i,j)=sc then begin
+          Project.CurrentImage.Putpixel(i,j,POSTPROCESSCOLOR);
           if i>fRight then fRight:=i;
           if i<fLeft then fLeft:=i;
           if j>fBottom then fBottom:=j;
           if j<fTop then fTop:=j;
         end;
-    ImageUndoSystem.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+    Project.CurrentImage.ImageUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
     FreeAndNil(fTempImage);
     ActiveInk.InitializeArea(fLeft,fTop,fRight,fBottom);
     ActiveInk.PostProcess;
-    ImageUndoSystem.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
+    Project.CurrentImage.ImageUndo.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
     Result:=true;
   end else Result:=false;
 end;
@@ -1074,12 +1074,12 @@ begin
 //          Log.Trace(Format('GETCEL2 fSX=%d, fSY=%d, x=%d, y=%d',[fSX,fSY,x,y]));
           if x<fSX then begin i:=x;x:=fSX;fSX:=i;end;
           if y<fSY then begin i:=y;y:=fSY;fSY:=i;end;
-          if Assigned(CELImage) then FreeAndNil(CELImage);
-          CELImage:=TBDImage.Create(x-fSX+1,y-fSY+1);
-          CELImage.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
-          CELImage.PutImagePart(0,0,fSX,fSY,x-fSX+1,y-fSY+1,MainImage);
-          CELImage.Left:=fSX;
-          CELImage.Top:=fSY;
+          if Assigned(Project.CELImage) then Project.CELImage.Free;
+          Project.CELImage:=TBDImage.Create(x-fSX+1,y-fSY+1);
+          Project.CELImage.Palette.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette);
+          Project.CELImage.PutImagePart(0,0,fSX,fSY,x-fSX+1,y-fSY+1,Project.CurrentImage);
+          Project.CELImage.Left:=fSX;
+          Project.CELImage.Top:=fSY;
           fState:=-1;
           MessageQueue.AddMessage(MSG_GETCELFINISHED);
           Result:=true;
@@ -1105,12 +1105,12 @@ begin
     -1:fState:=0;  // One frame where we don't draw anything before resetting fState.
                    // This is needed to remove flickering.
     0:begin
-        OverlayImage.VLine(fX,0,OverlayImage.Height,VibroColors.GetColorIndex);
-        OverlayImage.HLine(0,fY,OverlayImage.Width,VibroColors.GetColorIndex);
+        Project.OverlayImage.VLine(fX,0,Project.OverlayImage.Height,VibroColors.GetColorIndex);
+        Project.OverlayImage.HLine(0,fY,Project.OverlayImage.Width,VibroColors.GetColorIndex);
         InfoBar.ShowText(inttostr(fX)+','+inttostr(fY));
       end;
     1:begin
-        OverlayImage.Rectangle(fSX,fSY,fX,fY,VibroColors.GetColorIndex);
+        Project.OverlayImage.Rectangle(fSX,fSY,fX,fY,VibroColors.GetColorIndex);
 
         InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
           'WI='+inttostr(abs(fSX-fX)+1)+' HE='+inttostr(abs(fSY-fY)+1)+' '+
@@ -1123,11 +1123,11 @@ procedure TBDToolGetCel.Clear;
 begin
   case fState of
     0:begin
-        OverlayImage.VLine(fX,0,OverlayImage.Height,0);
-        OverlayImage.HLine(0,fY,OverlayImage.Width,0);
+        Project.OverlayImage.VLine(fX,0,Project.OverlayImage.Height,0);
+        Project.OverlayImage.HLine(0,fY,Project.OverlayImage.Width,0);
       end;
     1:begin
-        OverlayImage.Rectangle(fSX,fSY,fX,fY,0);
+        Project.OverlayImage.Rectangle(fSX,fSY,fX,fY,0);
       end;
   end;
 end;
@@ -1143,7 +1143,7 @@ end;
 
 procedure TBDToolPutCel.Initialize;
 begin
-  CELHelperImage.Palette.ResizeAndCopyColorsFrom(CELImage.Palette);
+  CELHelperImage.Palette.ResizeAndCopyColorsFrom(Project.CELImage.Palette);
   CELHelperImage.Palette.Resize(CELHelperImage.Palette.Size+1);
   CELHelperImage.Palette[CELHelperImage.Palette.Size]:=0;
   CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,CELHelperImage.Palette.Size);
@@ -1160,14 +1160,15 @@ begin
         end;
       1:begin
           fState:=-1;
-          CelImage.Left:=CelImage.Left+fX-fSX;
-          CelImage.Top:=CelImage.Top+fY-fSY;
-          ImageUndoSystem.AddImageUndo(CelImage.Left,Celimage.Top,CelImage.Width,CELImage.Height);
+          Project.CelImage.Left:=Project.CelImage.Left+fX-fSX;
+          Project.CelImage.Top:=Project.CelImage.Top+fY-fSY;
+          Project.CurrentImage.ImageUndo.AddImageUndo(
+            Project.CelImage.Left,Project.Celimage.Top,Project.CelImage.Width,Project.CELImage.Height);
           if Settings.ClearKeyColor then
-            MainImage.PutImage(CELImage.Left,CELImage.Top,CELImage,Settings.SelectedColors[0])
+            Project.CurrentImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,Settings.SelectedColors[0])
           else
-            MainImage.PutImage(CELImage.Left,CELImage.Top,CELImage);
-          ImageUndoSystem.AddImageRedoToLastUndo(CelImage.Left,Celimage.Top,CelImage.Width,CELImage.Height);
+            Project.CurrentImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage);
+          Project.CurrentImage.ImageUndo.AddImageRedoToLastUndo(Project.CelImage.Left,Project.Celimage.Top,Project.CelImage.Width,Project.CELImage.Height);
           MessageQueue.AddMessage(MSG_RESTORECONTROLS);
         end;
     end;
@@ -1190,19 +1191,19 @@ begin
     -1:fState:=0;  // One frame where we don't draw anything before resetting fState.
                    // This is needed to remove flickering.
     0:begin
-        OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,VibroColors.GetColorIndex);
+        Project.OverlayImage.RectangleWH(Project.CelImage.Left,Project.CelImage.Top,Project.CELImage.Width,Project.CELImage.Height,VibroColors.GetColorIndex);
         if Settings.ClearKeyColor then
-          CELHelperImage.PutImage(CELImage.Left,CELImage.Top,CELImage,Settings.SelectedColors[0])
+          CELHelperImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,Settings.SelectedColors[0])
         else
-          CELHelperImage.PutImage(CELImage.Left,CELImage.Top,CELImage);
+          CELHelperImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage);
         InfoBar.ShowText(inttostr(fX)+','+inttostr(fY));
       end;
     1:begin
         if Settings.ClearKeyColor then
-          CELHelperImage.PutImage(CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,CELImage,Settings.SelectedColors[0])
+          CELHelperImage.PutImage(Project.CELImage.Left+fX-fSX,Project.CELImage.Top+fY-fSY,Project.CELImage,Settings.SelectedColors[0])
         else
-          CELHelperImage.PutImage(CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,CELImage);
-        InfoBar.ShowText(Format('%d,%d (%d,%d)',[CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,fX-fSX,fY-fSY]));
+          CELHelperImage.PutImage(Project.CELImage.Left+fX-fSX,Project.CELImage.Top+fY-fSY,Project.CELImage);
+        InfoBar.ShowText(Format('%d,%d (%d,%d)',[Project.CELImage.Left+fX-fSX,Project.CELImage.Top+fY-fSY,fX-fSX,fY-fSY]));
       end;
   end;
 end;
@@ -1211,11 +1212,11 @@ procedure TBDToolPutCel.Clear;
 begin
   case fState of
     0:begin
-        OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,0);
-        CELHelperImage.BarWH(CELImage.Left,CELImage.Top,CELImage.Width,CELImage.Height,CELHelperImage.Palette.Size);
+        Project.OverlayImage.RectangleWH(Project.CelImage.Left,Project.CelImage.Top,Project.CELImage.Width,Project.CELImage.Height,0);
+        CELHelperImage.BarWH(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage.Width,Project.CELImage.Height,CELHelperImage.Palette.Size);
       end;
     1:begin
-        CELHelperImage.BarWH(CELImage.Left+fX-fSX,CELImage.Top+fY-fSY,CELImage.Width,CELImage.Height,CELHelperImage.Palette.Size);
+        CELHelperImage.BarWH(Project.CELImage.Left+fX-fSX,Project.CELImage.Top+fY-fSY,Project.CELImage.Width,Project.CELImage.Height,CELHelperImage.Palette.Size);
       end;
 
   end;
@@ -1233,8 +1234,8 @@ end;
 procedure TBDToolPickColor.Move(x,y:integer);
 begin
   inherited Move(x,y);
-  if (fX>=0) and (fX<MainImage.Width) and (fY>=0) and (fY<MainImage.Height) then
-    SetColor(MainImage.GetPixel(fX,fY))
+  if (fX>=0) and (fX<Project.CurrentImage.Width) and (fY>=0) and (fY<Project.CurrentImage.Height) then
+    SetColor(Project.CurrentImage.GetPixel(fX,fY))
   else
     SetColor(-1);
 end;
@@ -1257,14 +1258,14 @@ end;
 
 procedure TBDToolPickColor.SetColor(colorindex:integer);
 begin
-  if (colorindex>=0) and (colorindex<MainImage.Palette.Size) then begin
+  if (colorindex>=0) and (colorindex<Project.CurrentImage.Palette.Size) then begin
     fColorIndex:=colorindex;
     InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d) '#132'PICK '#133'CANCEL',
       [fColorIndex,
-       MainImage.Palette.ColorR[fColorIndex],
-       MainImage.Palette.ColorG[fColorIndex],
-       MainImage.Palette.ColorB[fColorIndex],
-       MainImage.Palette.ColorA[fColorIndex]]))
+       Project.CurrentImage.Palette.ColorR[fColorIndex],
+       Project.CurrentImage.Palette.ColorG[fColorIndex],
+       Project.CurrentImage.Palette.ColorB[fColorIndex],
+       Project.CurrentImage.Palette.ColorA[fColorIndex]]))
   end else
   if colorindex=-1 then begin
     fColorIndex:=-1;
@@ -1285,8 +1286,8 @@ end;
 procedure TBDToolSelectColor.Move(x,y:integer);
 begin
   inherited Move(x,y);
-  if (fX>=0) and (fX<MainImage.Width) and (fY>=0) and (fY<MainImage.Height) then
-    SetColor(MainImage.GetPixel(fX,fY))
+  if (fX>=0) and (fX<Project.CurrentImage.Width) and (fY>=0) and (fY<Project.CurrentImage.Height) then
+    SetColor(Project.CurrentImage.GetPixel(fX,fY))
   else
     SetColor(-1);
 end;
@@ -1294,8 +1295,8 @@ end;
 function TBDToolSelectColor.Click(x,y,button:integer):boolean;
 begin
   if button=SDL_BUTTON_LEFT then begin
-    if (x>=0) and (x<MainImage.Width) and (y>=0) and (y<MainImage.Height) then begin
-      Settings.ActiveColorIndex:=MainImage.GetPixel(x,y);
+    if (x>=0) and (x<Project.CurrentImage.Width) and (y>=0) and (y<Project.CurrentImage.Height) then begin
+      Settings.ActiveColorIndex:=Project.CurrentImage.GetPixel(x,y);
       MessageQueue.AddMessage(MSG_ACTIVECOLORINDEXCHANGED);
     end;
   end else
@@ -1307,15 +1308,15 @@ end;
 
 procedure TBDToolSelectColor.SetColor(colorindex:integer);
 begin
-  if (colorindex>=-1) and (colorindex<MainImage.Palette.Size) then begin
+  if (colorindex>=-1) and (colorindex<Project.CurrentImage.Palette.Size) then begin
     fColorIndex:=colorindex;
     if colorindex>-1 then begin
       InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d) '#132'SELECT '#133'CLOSE PALETTE ED.',
         [fColorIndex,
-         MainImage.Palette.ColorR[fColorIndex],
-         MainImage.Palette.ColorG[fColorIndex],
-         MainImage.Palette.ColorB[fColorIndex],
-         MainImage.Palette.ColorA[fColorIndex]]))
+         Project.CurrentImage.Palette.ColorR[fColorIndex],
+         Project.CurrentImage.Palette.ColorG[fColorIndex],
+         Project.CurrentImage.Palette.ColorB[fColorIndex],
+         Project.CurrentImage.Palette.ColorA[fColorIndex]]))
     end else begin
       InfoBar.ShowText('');
     end;
@@ -1333,7 +1334,7 @@ end;
 
 procedure TBDToolShowCEL.Initialize;
 begin
-  CELHelperImage.Palette.ResizeAndCopyColorsFrom(CELImage.Palette);
+  CELHelperImage.Palette.ResizeAndCopyColorsFrom(Project.CELImage.Palette);
   CELHelperImage.Palette.Resize(CELHelperImage.Palette.Size+1);
   CELHelperImage.Palette[CELHelperImage.Palette.Size]:=0;
   CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,CELHelperImage.Palette.Size);
@@ -1342,11 +1343,11 @@ end;
 
 procedure TBDToolShowCEL.Draw;
 begin
-  OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,VibroColors.GetColorIndex);
+  Project.OverlayImage.RectangleWH(Project.CelImage.Left,Project.CelImage.Top,Project.CELImage.Width,Project.CELImage.Height,VibroColors.GetColorIndex);
   if Settings.ClearKeyColor then
-    CELHelperImage.PutImage(CELImage.Left,CELImage.Top,CELImage,Settings.SelectedColors[0])
+    CELHelperImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,Settings.SelectedColors[0])
   else
-    CELHelperImage.PutImage(CELImage.Left,CELImage.Top,CELImage);
+    CELHelperImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage);
   if GetTickCount64-fStartTime>1000 then begin
     MessageQueue.AddMessage(MSG_RESTORECONTROLS);
   end;
@@ -1354,8 +1355,8 @@ end;
 
 procedure TBDToolShowCEL.Clear;
 begin
-  OverlayImage.RectangleWH(CelImage.Left,CelImage.Top,CELImage.Width,CELImage.Height,0);
-  CELHelperImage.BarWH(CELImage.Left,CELImage.Top,CELImage.Width,CELImage.Height,CELHelperImage.Palette.Size);
+  Project.OverlayImage.RectangleWH(Project.CelImage.Left,Project.CelImage.Top,Project.CELImage.Width,Project.CELImage.Height,0);
+  CELHelperImage.BarWH(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage.Width,Project.CELImage.Height,CELHelperImage.Palette.Size);
 end;
 
 end.
