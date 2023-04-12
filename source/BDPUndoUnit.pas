@@ -4,7 +4,7 @@ unit BDPUndoUnit;
 
 interface
 
-uses classes, fgl, BDPImageUnit, BDPPaletteUnit, BDPMessageUnit;
+uses Classes, Sysutils, fgl, BDPImageUnit, BDPPaletteUnit, BDPMessageUnit;
 
 type
 
@@ -26,12 +26,12 @@ type
 
   TBDUndoRegionItem=class(TBDUndoItem)
     constructor Create(iBefore:TBDImage);
-    constructor CreateFromStream(Source:TStream);
+    constructor CreateFromStream(iStream:TStream);
     destructor Destroy; override;
     procedure AddAfter(iAfter:TBDImage);
     procedure Undo; override;
     procedure Redo; override;
-    procedure SaveToStream(Target:TStream); override;
+    procedure SaveToStream(pStream:TStream); override;
   private
     fBefore,fAfter:TBDImage;
   end;
@@ -40,12 +40,12 @@ type
 
   TBDUndoColorItem=class(TBDUndoItem)
     constructor Create(iStart:integer;iBefore:TBDPalette);
-    constructor CreateFromStream(Source:TStream);
+    constructor CreateFromStream(iStream:TStream);
     destructor Destroy; override;
     procedure AddAfter(iAfter:TBDPalette);
     procedure Undo; override;
     procedure Redo; override;
-    procedure SaveToStream(Target:TStream); override;
+    procedure SaveToStream(pStream:TStream); override;
   private
     fStart:integer;
     fBefore,fAfter:TBDPalette;
@@ -57,14 +57,15 @@ type
 
   TBDUndoSystem=class(TBDUndoList)
     constructor Create;
+    constructor CreateFromStream(pStream:TStream);
     destructor Destroy; override;
     procedure Undo;
     procedure Redo;
-    procedure SaveToFile(Filename:string);
-    procedure SaveToStream(Target:TStream);
-    procedure LoadFromFile(Filename:string);
-    procedure LoadFromStream(Source:TStream);
-    procedure LoadItemFromStream(Source:TStream);
+    procedure SaveToFile(pFilename:string);
+    procedure SaveToStream(pStream:TStream);
+    procedure LoadFromFile(pFilename:string);
+    procedure LoadFromStream(pStream:TStream);
+    procedure LoadItemFromStream(pStream:TStream);
     function CanUndo:boolean;
     function CanRedo:boolean;
   private
@@ -91,7 +92,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, BDPSettingsUnit;
+uses BDPSharedUnit, BDPSettingsUnit;
 
 const
   UNDODATAID=$55;
@@ -123,15 +124,15 @@ begin
   fAfter:=nil;
 end;
 
-constructor TBDUndoRegionItem.CreateFromStream(Source:TStream);
+constructor TBDUndoRegionItem.CreateFromStream(iStream:TStream);
 begin
   inherited Create;
   fBefore:=TBDImage.Create(16,16);
   fBefore.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
-  fBefore.LoadWholeImageDataFromStream(Source);
+  fBefore.LoadWholeImageDataFromStream(iStream);
   fAfter:=TBDImage.Create(16,16);
   fAfter.Palette.ResizeAndCopyColorsFrom(MainImage.Palette);
-  fAfter.LoadWholeImageDataFromStream(Source);
+  fAfter.LoadWholeImageDataFromStream(iStream);
   fRedoable:=true;
 end;
 
@@ -159,23 +160,23 @@ begin
     MainImage.PutImage(fAfter.Left,fAfter.Top,fAfter);
 end;
 
-procedure TBDUndoRegionItem.SaveToStream(Target:TStream);
-var i,curr:integer;
+procedure TBDUndoRegionItem.SaveToStream(pStream:TStream);
+var i:integer;curr:int64;
 begin
   if Assigned(fAfter) then begin
     i:=UNDOOPERATIONDATAID;
-    Target.Write(i,1);
-    curr:=Target.Position;
+    pStream.Write(i,1);
+    curr:=pStream.Position;
     i:=0;
-    Target.Write(i,4);
+    pStream.Write(i,4);
     i:=UNDOREGIONSUBID;
-    Target.Write(i,1);
-    fBefore.SaveWholeImageDataToStream(Target);
-    fAfter.SaveWholeImageDataToStream(Target);
-    i:=Target.Position-curr-4;
-    Target.Position:=curr;
-    Target.write(i,4);
-    Target.Position:=Target.Position+i;
+    pStream.Write(i,1);
+    fBefore.SaveWholeImageDataToStream(pStream);
+    fAfter.SaveWholeImageDataToStream(pStream);
+    i:=pStream.Position-curr-4;
+    pStream.Position:=curr;
+    pStream.write(i,4);
+    pStream.Position:=pStream.Position+i;
   end else
     raise Exception.Create('UndoImageItem save error: No AfterImage assigned!');
 end;
@@ -188,15 +189,15 @@ begin
   fBefore:=iBefore;
 end;
 
-constructor TBDUndoColorItem.CreateFromStream(Source:TStream);
+constructor TBDUndoColorItem.CreateFromStream(iStream:TStream);
 begin
   inherited Create;
   fStart:=0;
-  Source.Read(fStart,2);
+  iStream.Read(fStart,2);
   fBefore:=TBDPalette.Create;
-  fBefore.LoadFromStream(Source);
+  fBefore.LoadFromStream(iStream);
   fAfter:=TBDPalette.Create;
-  fAfter.LoadFromStream(Source);
+  fAfter.LoadFromStream(iStream);
   fRedoable:=true;
 end;
 
@@ -224,24 +225,24 @@ begin
     MainImage.Palette.CopyColorsFrom(fAfter,0,fStart,fAfter.Size);
 end;
 
-procedure TBDUndoColorItem.SaveToStream(Target:TStream);
+procedure TBDUndoColorItem.SaveToStream(pStream:TStream);
 var i:integer;curr:int64;
 begin
   if Assigned(fAfter) then begin
     i:=UNDOOPERATIONDATAID;
-    Target.Write(i,1);
-    curr:=Target.Position;
+    pStream.Write(i,1);
+    curr:=pStream.Position;
     i:=0;
-    Target.Write(i,4);
+    pStream.Write(i,4);
     i:=UNDOCOLORSUBID;
-    Target.Write(i,1);
-    Target.Write(fStart,2);
-    fBefore.SaveToStream(Target);
-    fAfter.SaveToStream(Target);
-    i:=Target.Position-curr-4;
-    Target.Position:=curr;
-    Target.write(i,4);
-    Target.Position:=Target.Position+i;
+    pStream.Write(i,1);
+    pStream.Write(fStart,2);
+    fBefore.SaveToStream(pStream);
+    fAfter.SaveToStream(pStream);
+    i:=pStream.Position-curr-4;
+    pStream.Position:=curr;
+    pStream.write(i,4);
+    pStream.Position:=pStream.Position+i;
   end else
     raise Exception.Create('UndoColorItem save error: No AfterPalette assigned!');
 end;
@@ -254,6 +255,29 @@ begin
   FreeObjects:=true;
   fPointer:=-1;
   fAfterUndoRedoMessage:=TMessage.Init(MSG_NONE,0);
+end;
+
+constructor TBDUndoSystem.CreateFromStream(pStream:TStream);
+var size,curr:int64;b:byte;count,i:integer;
+begin
+  inherited Create;
+  FreeObjects:=true;
+  fPointer:=-1;
+  fAfterUndoRedoMessage:=TMessage.Init(MSG_NONE,0);
+  b:=0;
+  pStream.Read(b,1);
+  if b<>UNDODATAID then raise Exception.Create(Format('ID is not for undosystem data! (%.2x)',[b]));
+  size:=0;
+  pStream.Read(Size,4);
+  curr:=pStream.Position;
+  count:=0;
+  pStream.Read(count,2);
+  fPointer:=0;
+  pStream.Read(fPointer,2);
+  if fPointer=65535 then fPointer:=-1;
+  for i:=0 to Count-1 do
+    LoadItemFromStream(pStream);
+  pStream.Position:=curr+size;
 end;
 
 destructor TBDUndoSystem.Destroy;
@@ -281,73 +305,73 @@ begin
   end;
 end;
 
-procedure TBDUndoSystem.SaveToFile(Filename:string);
+procedure TBDUndoSystem.SaveToFile(pFilename:string);
 var Xs:TStream;
 begin
-  Xs:=TFileStream.Create(Filename,fmCreate);
+  Xs:=TFileStream.Create(pFilename,fmCreate);
   SaveToStream(Xs);
   FreeAndNil(Xs);
 end;
 
-procedure TBDUndoSystem.SaveToStream(Target:TStream);
+procedure TBDUndoSystem.SaveToStream(pStream:TStream);
 var i,curr:integer;
 begin
   i:=UNDODATAID;
-  Target.Write(i,1);
-  curr:=Target.Position;
+  pStream.Write(i,1);
+  curr:=pStream.Position;
   i:=0;
-  Target.Write(i,4);
+  pStream.Write(i,4);
   i:=Self.Count;
-  Target.Write(i,2);
-  Target.Write(fPointer,2);
+  pStream.Write(i,2);
+  pStream.Write(fPointer,2);
   for i:=0 to Self.Count-1 do
-    Self[i].SaveToStream(Target);
-  i:=Target.Position-curr-4;
-  Target.Position:=curr;
-  Target.write(i,4);
-  Target.Position:=Target.Position+i;
+    Self[i].SaveToStream(pStream);
+  i:=pStream.Position-curr-4;
+  pStream.Position:=curr;
+  pStream.write(i,4);
+  pStream.Position:=pStream.Position+i;
 end;
 
-procedure TBDUndoSystem.LoadFromFile(Filename:string);
+procedure TBDUndoSystem.LoadFromFile(pFilename:string);
 var Xs:TStream;
 begin
-  Xs:=TFileStream.Create(Filename,fmOpenRead or fmShareDenyNone);
+  Xs:=TFileStream.Create(pFilename,fmOpenRead or fmShareDenyNone);
   LoadFromStream(Xs);
   FreeAndNil(Xs);
 end;
 
-procedure TBDUndoSystem.LoadFromStream(Source:TStream);
+procedure TBDUndoSystem.LoadFromStream(pStream:TStream);
 var size,curr:int64;b:byte;count,i:integer;
 begin
   b:=0;
-  Source.Read(b,1);
+  pStream.Read(b,1);
   if b<>UNDODATAID then raise Exception.Create(Format('ID is not for undosystem data! (%.2x)',[b]));
   size:=0;
-  Source.Read(Size,4);
-  curr:=Source.Position;
+  pStream.Read(Size,4);
+  curr:=pStream.Position;
   count:=0;
-  Source.Read(count,2);
+  pStream.Read(count,2);
   fPointer:=0;
-  Source.Read(fPointer,2);
+  pStream.Read(fPointer,2);
   if fPointer=65535 then fPointer:=-1;
   for i:=0 to Count-1 do
-    LoadItemFromStream(Source);
-  Source.Position:=curr+size;
+    LoadItemFromStream(pStream);
+  pStream.Position:=curr+size;
 end;
 
-procedure TBDUndoSystem.LoadItemFromStream(Source:TStream);
+procedure TBDUndoSystem.LoadItemFromStream(pStream:TStream);
 var size,curr:int64;b:byte;
 begin
   b:=0;
-  Source.Read(b,1);
+  pStream.Read(b,1);
   if b<>UNDOOPERATIONDATAID then raise Exception.Create(Format('ID is not for undo operation data! (%.2x)',[b]));
   size:=0;
-  Source.Read(Size,4);
-  curr:=Source.Position;
-  Source.Read(b,1);
-  if b=UNDOREGIONSUBID then Self.Add(TBDUndoRegionItem.CreateFromStream(Source))
-  else if b=UNDOCOLORSUBID then Self.Add(TBDUndoColorItem.CreateFromStream(Source));
-  Source.Position:=curr+size;
+  pStream.Read(Size,4);
+  curr:=pStream.Position;
+  pStream.Read(b,1);
+  if b=UNDOREGIONSUBID then Self.Add(TBDUndoRegionItem.CreateFromStream(pStream))
+  else if b=UNDOCOLORSUBID then Self.Add(TBDUndoColorItem.CreateFromStream(pStream));
+  pStream.Position:=curr+size;
 end;
 
 function TBDUndoSystem.CanUndo: boolean;
