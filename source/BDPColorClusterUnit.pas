@@ -13,6 +13,7 @@ type
 
   TColorCluster=class
     constructor Create(iStart,iEnd:integer);
+    // Create the color cluster from stream (fileformats.txt - T-block)
     constructor CreateFromStream(iStream:TStream);
     // Gives back the colorindex in the cluster at pValue on a scale to 0..pInterval
     // Example: if you want to draw the color cluster on a control with a width
@@ -43,6 +44,9 @@ type
   { TColorClusters }
 
   TColorClusters=class(TFPGObjectList<TColorCluster>)
+    // Creates the list with one default color cluster element.
+    constructor Create;
+    // Creates the list from stream. (fileformats.txt - L-block)
     constructor CreateFromStream(iStream:TStream);
     procedure SaveToFile(pFilename:string);
     procedure SaveToStream(pStream:TStream);
@@ -196,6 +200,12 @@ begin
 end;
 
 { TColorClusters }
+
+constructor TColorClusters.Create;
+begin
+  inherited Create;
+  Add(TColorCluster.Create(0,15));
+end;
 
 constructor TColorClusters.CreateFromStream(iStream:TStream);
 begin

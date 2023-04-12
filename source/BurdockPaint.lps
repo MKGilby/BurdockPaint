@@ -144,7 +144,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="22"/>
         <CursorPos Y="51"/>
-        <UsageCount Value="196"/>
+        <UsageCount Value="197"/>
       </Unit>
       <Unit>
         <Filename Value="BDPColorSelectorUnit.pas"/>
@@ -152,7 +152,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="31"/>
         <CursorPos X="9" Y="13"/>
-        <UsageCount Value="184"/>
+        <UsageCount Value="185"/>
       </Unit>
       <Unit>
         <Filename Value="BDPUndoUnit.pas"/>
@@ -161,7 +161,7 @@
         <TopLine Value="119"/>
         <CursorPos Y="163"/>
         <FoldState Value=" T7CEA032 T3jI03C piajQ]H2619 PkNmJ0X"/>
-        <UsageCount Value="174"/>
+        <UsageCount Value="175"/>
       </Unit>
       <Unit>
         <Filename Value="BDPPaletteEditorUnit.pas"/>
@@ -169,7 +169,7 @@
         <EditorIndex Value="3"/>
         <TopLine Value="223"/>
         <CursorPos X="30" Y="245"/>
-        <UsageCount Value="147"/>
+        <UsageCount Value="148"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -178,7 +178,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="82"/>
         <CursorPos X="37" Y="118"/>
-        <UsageCount Value="139"/>
+        <UsageCount Value="140"/>
       </Unit>
       <Unit>
         <Filename Value="BDPMenuUnit.pas"/>
@@ -186,7 +186,7 @@
         <EditorIndex Value="5"/>
         <TopLine Value="233"/>
         <CursorPos Y="368"/>
-        <UsageCount Value="112"/>
+        <UsageCount Value="113"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -195,25 +195,25 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="32"/>
         <CursorPos Y="51"/>
-        <UsageCount Value="35"/>
+        <UsageCount Value="36"/>
       </Unit>
       <Unit>
         <Filename Value="BDPColorClusterUnit.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="7"/>
-        <TopLine Value="25"/>
-        <CursorPos X="20" Y="270"/>
-        <UsageCount Value="33"/>
+        <TopLine Value="196"/>
+        <CursorPos Y="207"/>
+        <UsageCount Value="34"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPProjectUnit.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="9"/>
-        <TopLine Value="122"/>
-        <CursorPos Y="155"/>
-        <UsageCount Value="22"/>
+        <TopLine Value="69"/>
+        <CursorPos X="40" Y="93"/>
+        <UsageCount Value="23"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -512,7 +512,7 @@
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="18">
+    <JumpHistory HistoryIndex="20">
       <Position>
         <Filename Value="BDPProjectUnit.pas"/>
         <Caret Line="73" Column="36" TopLine="52"/>
@@ -588,6 +588,14 @@
       <Position>
         <Filename Value="BDPProjectUnit.pas"/>
         <Caret Line="65" Column="38" TopLine="43"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPProjectUnit.pas"/>
+        <Caret Line="111" Column="73" TopLine="90"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPColorClusterUnit.pas"/>
+        <Caret Line="48" Column="6" TopLine="14"/>
       </Position>
     </JumpHistory>
     <RunParams>
