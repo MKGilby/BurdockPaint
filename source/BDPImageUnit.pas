@@ -60,6 +60,8 @@ type
     procedure Magnify(factor:integer);
     // Rotates the image by quads*90 degrees clockwise.
     procedure Rotate(quads:integer);
+    // Recreates the image with the new dimensions but keeps the palette intact.
+    procedure Recreate(pWidth,pHeight:integer);
 
     // -------------- Rendering operations --------------------
     // Renders the image onto a Texture.
@@ -744,6 +746,13 @@ begin
   end;
   freemem(fData);
   fData:=p;
+end;
+
+procedure TBDImage.Recreate(pWidth,pHeight:integer);
+begin
+  if Assigned(fData) then FreeAndNil(fData);
+  fDataSize:=pWidth*pHeight*2;
+  fData:=Getmem(fDataSize);
 end;
 
 procedure TBDImage.RenderToTexture(Target:TStreamingTexture;
