@@ -122,7 +122,7 @@ type
     procedure ImportCEL(aFilename:string); overload;
     // Imports a legacy AAT CEL file from stream.
     procedure ImportCEL(Source:TStream); overload;
-  private
+  protected
     // Image position (used for CELImage, leave on 0,0 otherwise)
     fLeft,fTop:integer;
     // Image dimensions
