@@ -20,6 +20,10 @@ Todo:
 - Add Tool and Ink selector
 
 
+2023.04.12
+- Restructured fileformats.txt.
+- Added Extended Image data block (E) and Project data block (P) to fileformats.txt.
+
 2023.04.11
 - New color cluster system.
 - Gradient inks uses the new color cluster system.
