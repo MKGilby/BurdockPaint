@@ -31,6 +31,8 @@
 //    * Added TextureBlending to allow transparent controls.
 //  V1.01b: Gilby - 2023.04.07
 //    * Added fNeedRedraw. Set it to true in descendants when visible change occurs.
+//  V1.02: Gilby - 2023.04.12
+//    * Bugfix in fSetEnabled.
 
 {$mode delphi}
 {$smartlink on}
@@ -77,7 +79,7 @@ uses SysUtils, MKToolBox, Logger, SDL2;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.01b';
+  Version='1.02';
 
 
 { TVisibleControl}
@@ -147,7 +149,7 @@ end;
 procedure TVisibleControl.fSetEnabled(value:boolean);
 begin
   if fEnabled<>value then begin
-    fSelected:=value;
+    fEnabled:=value;
     fNeedRedraw:=true;
   end;
 end;
