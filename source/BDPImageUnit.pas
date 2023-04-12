@@ -12,7 +12,11 @@ type
   { TBDImage }
 
   TBDImage=class
+    // Creates an empty image with default palette
     constructor Create(iWidth,iHeight:integer);
+    // Creates image from stream (fileformats.txt - I-block)
+    constructor CreateFromStream(iStream:TStream);
+    // Free up entities
     destructor Destroy; override;
 
     // ---------------- Drawing operations -------------------
@@ -147,6 +151,8 @@ implementation
 
 uses SysUtils, MyZStreamUnit, SDL2, Logger, ARGBImageUnit;
 
+{$i ntsccol.inc}
+
 const
   IMAGEDATAID=$49;
   REGIONDATAID=$52;
@@ -215,6 +221,7 @@ end;
 { TBDImage }
 
 constructor TBDImage.Create(iWidth,iHeight:integer);
+var Xs:TStream;
 begin
   fLeft:=0;
   fTop:=0;
@@ -224,7 +231,15 @@ begin
   fData:=getmem(fDataSize);
   fillchar(fData^,fDataSize,0);
   fPalette:=TBDPalette.Create;
+  Xs:=TStringStream.Create(NTSCCOL);
+  fPalette.LoadCOL(Xs,0);
+  FreeAndNil(Xs);
   ResetChange;
+end;
+
+constructor TBDImage.CreateFromStream(iStream:TStream);
+begin
+  LoadFromStream(iStream);
 end;
 
 destructor TBDImage.Destroy;
