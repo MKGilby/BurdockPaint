@@ -102,8 +102,6 @@ begin
   iStream.Read(size,4);
   curr:=iStream.Position;
   iStream.Read(b,1);  // Version
-  fImageUndoSystem:=TBDImageUndoSystem.Create;
-  fPaletteUndoSystem:=TBDPaletteUndoSystem.Create;
   fColorClusters:=TColorClusters.Create;
   if b=1 then LoadFromStreamV1(iStream)
   else raise Exception.Create(Format('Unknown extended image data version! (%d)',[b]));
@@ -153,8 +151,8 @@ begin
   pStream.Read(flags,1);
   Palette.LoadFromStream(pStream);
   LoadWholeImageDataFromStream(pStream);
-  if flags and 2<>0 then fImageUndoSystem.LoadFromStream(pStream);
-  if flags and 4<>0 then fPaletteUndoSystem.LoadFromStream(pStream);
+  if flags and 2<>0 then fImageUndoSystem:=TBDImageUndoSystem.CreateFromStream(pStream);
+  if flags and 4<>0 then fPaletteUndoSystem:=TBDPaletteUndoSystem.CreateFromStream(pStream);
   if flags and 8<>0 then fColorClusters.LoadFromStream(pStream);
 end;
 
