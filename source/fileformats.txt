@@ -15,8 +15,10 @@
                         E (0x45) - Extended Image data
                         C (0x43) - Color data
                         R (0x52) - Region data
-                        U (0x55) - UndoSystem data
-                        O (0x4F) - Undo operation data
+                        U (0x55) - UndoSystem data for region
+                        V (0x56) - UndoSystem data for palette
+                        O (0x4F) - Undo operation data for region
+                        Q (0x51) - Undo operation data for palette
                         S (0x53) - System state data
                         T (0x54) - Color cluster data
                         L (0x4C) - Color clusters data (multiple color clusters)
@@ -126,34 +128,34 @@
     9       width*height*2      Color indices line by line
 
 
-2.1.3. Undo operation data (O-block)
-------------------------------------
+2.1.3. Region undo operation data (O-block)
+-------------------------------------------
 
-  Undo operation data contains information about one undo/redo operation.
+  Region undo operation data contains information about one undo/redo operation.
   It is an O-block and has uncompressed data with other blocks inside.
 
   Undo operation data format
   --------------------------
     Start   Size        Description (content)
-    5       1           The type of operation
-                          0 - region (drawing, etc.)
-                          1 - color (editing colors)
-
-  if the type of operation is image:
-
-    Start   Size        Description (content)
-    6       ???         The affected region before the operation in, an R-block
+    5       ???         The affected region before the operation in, an R-block
     .       ???         The affected region after the operation in, an R-block
 
-  if the type of operation is color:
 
+2.1.4. Palette undo operation data (Q-block)
+-------------------------------------------
+
+  Palette undo operation data contains information about one undo/redo operation.
+  It is an Q-block and has uncompressed data with other blocks inside.
+
+  Undo operation data format
+  --------------------------
     Start   Size        Description (content)
-    6       2           First affected color in the palette
-    8       ???         The affected color data before the operation, in a C-block
+    5       2           First affected color in the palette
+    7       ???         The affected color data before the operation, in a C-block
     .       ???         The affected color data after the operation, in a C-block
 
 
-2.1.4. Color cluster data (T-block)
+2.1.5. Color cluster data (T-block)
 -----------------------------------
 
   Contains info about a color cluster (but not the palette data).
@@ -188,8 +190,8 @@
     .       ???         Region data in an R-block
 
 
-2.2.2. UndoSystem data (U-block)
---------------------------------
+2.2.2. UndoSystem data for region (U-block)
+-------------------------------------------
 
   UndoSystem data contains info about undo/redo operations. It is an U-block
   and has uncompressed data with O-blocks inside.
@@ -203,7 +205,22 @@
     10      ???         O-blocks (count times)
 
 
-2.2.3. Color clusters data (L-block)
+2.2.3. UndoSystem data for palette (V-block)
+--------------------------------------------
+
+  UndoSystem data contains info about undo/redo operations. It is an V-block
+  and has uncompressed data with Q-blocks inside.
+
+  UndoSystem data format
+  ----------------------
+    Start   Size        Description (content)
+    5       1           Version (0x01)
+    6       2           Undo/redo operation count
+    8       2           Index of current operation
+    10      ???         Q-blocks (count times)
+
+
+2.2.4. Color clusters data (L-block)
 ------------------------------------
 
   Contains multiple color clusters (T-blocks).
@@ -217,7 +234,7 @@
     7       ???         Color cluster data [T-block], count times
 
 
-2.2.4. Extended Image data (E-block)
+2.2.5. Extended Image data (E-block)
 ------------------------------------
 
   Extended Image data can contain 3 additional blocks over the simple Image data.
@@ -243,7 +260,7 @@
    [.       ???]        if Flags.bit[3] is set then ColorClusters data in an L-block
 
 
-2.2.5. System state data (S-block)
+2.2.6. System state data (S-block)
 ----------------------------------
 
   System state data is the current state of image, palette, undosystem and color
@@ -282,7 +299,7 @@
    [.       ???]        if Flags.bit[3] is set then ColorClusters data in an L-block
 
 
-2.2.6. Project data (P-block)
+2.2.7. Project data (P-block)
 -----------------------------
 
   (This will replace system state)
