@@ -66,10 +66,12 @@ type
     procedure LoadFromStreamV1(pStream:TStream);
     procedure SetOverlayPalette;
     procedure fSetActiveImageIndex(value:integer);
+    function fGetCurrentImage:TBDImage;
   public
     property Images:TBDExtendedImages read fImages;
     property ActiveImageIndex:integer read fActiveImageIndex write fSetActiveImageIndex;
     property OverlayImage:TBDImage read fOverlayImage;
+    property CurrentImage:TBDImage read fGetCurrentImage;
   end;
 
 implementation
@@ -271,6 +273,11 @@ begin
     fOverlayImage.Recreate(fImages[fActiveImageIndex].Width,fImages[fActiveImageIndex].Height);
     fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
   end;
+end;
+
+function TBDProject.fGetCurrentImage:TBDImage;
+begin
+  Result:=fImages[fActiveImageIndex];
 end;
 
 end.
