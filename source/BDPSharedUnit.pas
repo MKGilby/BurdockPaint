@@ -6,7 +6,7 @@ interface
 
 uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, BDPInfoBarUnit, BDPImageUnit,
   BDPSettingsUnit, BDPMessageUnit, BDPCursorUnit, BDPToolsUnit, BDPInksUnit,
-  BDPPaletteUnit, BDPUndoUnit, PNGFont2Unit, BDPColorClusterUnit;
+  BDPPaletteUnit, BDPUndoUnit, PNGFont2Unit, BDPColorClusterUnit, BDPProjectUnit;
 
 const
   WINDOWWIDTH=1280;

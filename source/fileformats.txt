@@ -238,9 +238,9 @@
                           bit 3 - Is data state contains ColorClusters data?
     7       ???         Color data in a C-block
     .       ???         Region data in an R-block
-   [.       ???]        if Flags.bit[1] is set then ImageUndoSystem data in an U-block.
-   [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an U-block.
-   [.       ???]        if Flags.bit[3] is set then ColorClusters data in an L-block.
+   [.       ???]        if Flags.bit[1] is set then ImageUndoSystem data in an U-block
+   [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an U-block
+   [.       ???]        if Flags.bit[3] is set then ColorClusters data in an L-block
 
 
 2.2.5. System state data (S-block)
@@ -264,8 +264,8 @@
                           bit 2 - Is system state contains PaletteUndoSystem data?
     7       ???         Main image in an I-block.
    [.       ???]        If Flags.bit[0] is set then CELImage in an I-block.
-   [.       ???]        if Flags.bit[1] is set then ImageUndoSystem data in an U-block.
-   [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an U-block.
+   [.       ???]        if Flags.bit[1] is set then ImageUndoSystem data in an U-block
+   [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an U-block
 
   System state version 2 uncompressed data format
   -----------------------------------------------
@@ -276,10 +276,10 @@
                           bit 2 - Is system state contains PaletteUndoSystem data?
                           bit 3 - Is system state contains ColorClusters data?
     7       ???         Main image in an I-block.
-   [.       ???]        If Flags.bit[0] is set then CELImage in an I-block.
-   [.       ???]        if Flags.bit[1] is set then ImageUndoSystem data in an U-block.
-   [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an U-block.
-   [.       ???]        if Flags.bit[3] is set then ColorClusters data in an L-block.
+   [.       ???]        If Flags.bit[0] is set then CELImage in an I-block
+   [.       ???]        if Flags.bit[1] is set then ImageUndoSystem data in an U-block
+   [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an U-block
+   [.       ???]        if Flags.bit[3] is set then ColorClusters data in an L-block
 
 
 2.2.6. Project data (P-block)
@@ -300,9 +300,10 @@
     6       1           Flags
                           bit 0 - Is project contains the CELImage?
     7       2           Image count
-    9       ???         First image in an E-block.
-   [.       ???]        More images in E-blocks.
-   [.       ???]        If Flags.bit[0] is set then CELImage in an I-block.
+    9       2           Active image index
+    11      ???         First image in an E-block
+   [.       ???]        More images in E-blocks
+   [.       ???]        If Flags.bit[0] is set then CELImage in an I-block
 
 
 3. Standalone file formats
