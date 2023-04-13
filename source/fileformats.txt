@@ -19,7 +19,6 @@
                         V (0x56) - UndoSystem data for palette
                         O (0x4F) - Undo operation data for region
                         Q (0x51) - Undo operation data for palette
-                        S (0x53) - System state data
                         T (0x54) - Color cluster data
                         L (0x4C) - Color clusters data (multiple color clusters)
                         P (0x50) - Project data
@@ -240,7 +239,7 @@
   Extended Image data can contain 3 additional blocks over the simple Image data.
   Beside the usual color data and region data there can be additional
   ImageUndoSystem, ColorUndoSystem Data and Color Clusters Data. It is an E-block
-  containing a C-block, an R-block and probably one or two U-blocks and an L-block.
+  containing a C-block, an R-block and probably an U-block, a V-block and an L-block.
   The block data itself is not compressed, the sub-blocks can have compressed
   data.
 
@@ -256,50 +255,11 @@
     7       ???         Color data in a C-block
     .       ???         Region data in an R-block
    [.       ???]        if Flags.bit[1] is set then ImageUndoSystem data in an U-block
-   [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an U-block
+   [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an V-block
    [.       ???]        if Flags.bit[3] is set then ColorClusters data in an L-block
 
 
-2.2.6. System state data (S-block)
-----------------------------------
-
-  System state data is the current state of image, palette, undosystem and color
-  clusters. It is saved on exit and loaded on start. So you can continue where
-  you left. It's an S-block with uncompressed data.
-
-  System state data format
-  ----------------------
-    Start   Size        Description (content)
-    5       1           Version (0x01 or 0x02)
-
-  System state version 1 uncompressed data format
-  -----------------------------------------------
-    Start   Size        Description (content)
-    6       1           Flags
-                          bit 0 - Is system state contains the CELImage?
-                          bit 1 - Is system state contains ImageUndoSystem data?
-                          bit 2 - Is system state contains PaletteUndoSystem data?
-    7       ???         Main image in an I-block.
-   [.       ???]        If Flags.bit[0] is set then CELImage in an I-block.
-   [.       ???]        if Flags.bit[1] is set then ImageUndoSystem data in an U-block
-   [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an U-block
-
-  System state version 2 uncompressed data format
-  -----------------------------------------------
-    Start   Size        Description (content)
-    6       1           Flags
-                          bit 0 - Is system state contains the CELImage?
-                          bit 1 - Is system state contains ImageUndoSystem data?
-                          bit 2 - Is system state contains PaletteUndoSystem data?
-                          bit 3 - Is system state contains ColorClusters data?
-    7       ???         Main image in an I-block.
-   [.       ???]        If Flags.bit[0] is set then CELImage in an I-block
-   [.       ???]        if Flags.bit[1] is set then ImageUndoSystem data in an U-block
-   [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an U-block
-   [.       ???]        if Flags.bit[3] is set then ColorClusters data in an L-block
-
-
-2.2.7. Project data (P-block)
+2.2.6. Project data (P-block)
 -----------------------------
 
   (This will replace system state)
