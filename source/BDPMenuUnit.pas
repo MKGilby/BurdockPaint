@@ -4,7 +4,7 @@ unit BDPMenuUnit;
 
 interface
 
-uses Classes, mk_sdl2, MKMouse2, fgl, BDPMessageUnit, vcc2_VisibleControl;
+uses Classes, SysUtils, fgl, mk_sdl2, MKMouse2, BDPMessageUnit, vcc2_VisibleControl;
 
 type
 
@@ -22,7 +22,6 @@ type
 
   TSubMenu=class(TVisibleControl)
     constructor Create(iLeft:integer);
-//    procedure Draw; override;
     procedure MouseMove(Sender:TObject;x,y:integer);
     procedure MouseDown(Sender:TObject;x,y,buttons:integer);
     procedure MouseLeave(Sender:TObject);
@@ -48,7 +47,6 @@ type
   TMainMenu=class(TVisibleControl)
     constructor Create;
     destructor Destroy; override;
-//    procedure Draw; override;
     procedure EnableCELSubMenusWithActiveCEL;
     procedure DisableCELSubMenusWithActiveCEL;
     procedure MouseMove(Sender:TObject;x,y:integer);
@@ -64,7 +62,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit;
+uses BDPSharedUnit;
 
 { TSubMenuItem }
 
@@ -94,31 +92,6 @@ begin
   OnMouseLeave:=MouseLeave;
 end;
 
-{procedure TSubMenu.Draw;
-var i:integer;
-begin
-  fTexture.ARGBImage.Bar(0,0,(length(fName)+2)*18,TOPMENUHEIGHT-3,OverlayImage.Palette[4]);
-  MM.Fonts['Red'].OutText(fTexture.ARGBImage,fName,18,3,0);
-  fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,fWidth,3,OverlayImage.Palette[2]);
-  fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,3,fHeight-TOPMENUHEIGHT,OverlayImage.Palette[2]);
-  fTexture.ARGBImage.Bar(0,fHeight-3,fWidth,3,OverlayImage.Palette[2]);
-  fTexture.ARGBImage.Bar(fWidth-3,TOPMENUHEIGHT-3,3,fHeight-TOPMENUHEIGHT,OverlayImage.Palette[2]);
-  fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT,fWidth-6,fHeight-TOPMENUHEIGHT-3,OverlayImage.Palette[3]);
-  if fSelected>-1 then
-    fTexture.ARGBImage.Bar(3,TOPMENUHEIGHT+fSelected*SUBMENULINEHEIGHT,fWidth-6,SUBMENULINEHEIGHT,OverlayImage.Palette[4]);
-  for i:=0 to Length(fItems)-1 do begin
-    if fItems[i]._enabled then begin
-      if i<>fSelected then
-        MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i]._name,9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0)
-      else
-        MM.Fonts['Red'].OutText(fTexture.ARGBImage,fItems[i]._name,9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0);
-    end else
-      MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,fItems[i]._name,9,TOPMENUHEIGHT+i*SUBMENULINEHEIGHT+(SUBMENULINEHEIGHT-15) div 2,0);
-  end;
-  fTexture.Update;
-  PutTexture(fLeft,fTop,fTexture);
-end;}
-
 procedure TSubMenu.MouseMove(Sender:TObject; x,y:integer);
 var pre:integer;
 begin
@@ -133,7 +106,6 @@ end;
 
 procedure TSubMenu.MouseDown(Sender:TObject; x,y,buttons:integer);
 begin
-//  fSelected:=(y-TOPMENUHEIGHT) div SUBMENULINEHEIGHT;
   if (fSelected>=0) and (fSelected<Length(fItems)) and (fItems[fSelected]._enabled) then begin
     MessageQueue.AddMessage(fItems[fSelected]._message);
     fSelected:=-1;
