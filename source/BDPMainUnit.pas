@@ -4,8 +4,8 @@ unit BDPMainUnit;
 
 interface
 
-uses mk_sdl2, BDPControlsUnit, BDPDrawAreaUnit, BDPModalDialogsUnit,
-  BDPSplashScreenUnit, BDPPaletteEditorUnit, BDPMenuUnit, Dialogs;
+uses SysUtils, mk_sdl2, Dialogs, BDPControlsUnit, BDPDrawAreaUnit,
+  BDPModalDialogsUnit, BDPSplashScreenUnit, BDPPaletteEditorUnit, BDPMenuUnit;
 
 type
 
@@ -33,7 +33,7 @@ type
 
 implementation
 
-uses SysUtils, SDL2, BDPSharedUnit, MKToolbox, MKStream, MKMouse2, Logger,
+uses SDL2, BDPSharedUnit, MKToolbox, MKStream, MKMouse2, Logger,
   BDPMessageUnit, BDPKeyMappingUnit, BDPToolsUnit, MAD4MidLevelUnit, BDPImageUnit;
 
 { TMain }

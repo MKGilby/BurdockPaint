@@ -4,7 +4,7 @@ unit BDPInfoBarUnit;
 
 interface
 
-uses vcc2_VisibleControl;
+uses SysUtils, vcc2_VisibleControl;
 
 type
 
@@ -27,7 +27,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, mk_sdl2, Font2Unit;
+uses BDPSharedUnit, mk_sdl2, Font2Unit;
 
 { TBDInfoBar }
 
@@ -49,17 +49,6 @@ procedure TBDInfoBar.Draw;
 begin
   if not fClear then PutTexture(0,fTop,fTexture);
 end;
-
-{procedure TBDInfoBar.ShowSimpleCoords(x,y:integer; valid:boolean);
-begin
-  Clear;
-  if valid then
-    MM.Fonts['Black'].OutText(fTexture.ARGBImage,'('+inttostr(x)+','+inttostr(y)+')',8,6,mjLeft)
-  else
-    MM.Fonts['Red'].OutText(fTexture.ARGBImage,'('+inttostr(x)+','+inttostr(y)+')',8,6,mjLeft);
-  fTexture.Update;
-  fClear:=false;
-end;}
 
 procedure TBDInfoBar.ShowText(text:string);
 begin

@@ -5,7 +5,7 @@ unit BDPSliderUnit;
 interface
 
 uses
-  vcc2_Slider, ARGBImageUnit, Font2Unit;
+  SysUtils, vcc2_Slider, ARGBImageUnit, Font2Unit;
 
 type
 
@@ -33,7 +33,7 @@ type
 
 implementation
 
-uses SysUtils, mk_sdl2, BDPSharedUnit;
+uses mk_sdl2, BDPSharedUnit;
 
 const
   SLIDERKNOBWIDTH=57;

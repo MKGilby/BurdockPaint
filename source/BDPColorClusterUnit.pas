@@ -5,7 +5,7 @@ unit BDPColorClusterUnit;
 interface
 
 uses
-  Classes, fgl, vcc2_VisibleControl;
+  Classes, SysUtils, fgl, vcc2_VisibleControl;
 
 type
 
@@ -69,7 +69,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit;
+uses BDPSharedUnit;
 
 const
   COLORCLUSTERID=$54;

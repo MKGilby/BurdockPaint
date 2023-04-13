@@ -5,7 +5,7 @@ unit BDPModalDialogsUnit;
 interface
 
 uses
-  vcc2_Container, mk_sdl2, BDPButtonUnit;
+  SysUtils, mk_sdl2, vcc2_Container, BDPButtonUnit;
 
 type
 
@@ -54,7 +54,7 @@ type
 implementation
 
 uses
-  SysUtils, BDPSharedUnit, BDPMessageUnit, BDPKeyMappingUnit, sdl2, MKMouse2;
+  sdl2, BDPSharedUnit, BDPMessageUnit, BDPKeyMappingUnit, MKMouse2;
 
 const
   QUITDIALOGWIDTH=480;

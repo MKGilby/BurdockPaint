@@ -4,6 +4,8 @@ unit BDPMessageUnit;
 
 interface
 
+uses SysUtils;
+
 type
 
   { TMessage }
@@ -31,7 +33,7 @@ type
 
 implementation
 
-uses SysUtils, Logger;
+uses Logger;
 
 { TMessage }
 

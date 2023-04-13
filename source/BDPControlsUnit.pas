@@ -5,7 +5,7 @@ unit BDPControlsUnit;
 interface
 
 uses
-  vcc2_Container, BDPButtonUnit, mk_sdl2, BDPMessageUnit, BDPColorSelectorUnit;
+  SysUtils, mk_sdl2, vcc2_Container, BDPButtonUnit, BDPMessageUnit, BDPColorSelectorUnit;
 
 type
 
@@ -38,7 +38,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, BDPToolsUnit, BDPInksUnit, MKMouse2;
+uses BDPSharedUnit, BDPToolsUnit, BDPInksUnit, MKMouse2;
 
 { TBDControls }
 
@@ -162,7 +162,6 @@ begin
         MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'Y=OUT',COORDSCENTER,CONTROLSHEIGHT-54,1);
       MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'C=?',COORDSCENTER,CONTROLSHEIGHT-24,1);
     end;
-//    inherited Draw;
     fTexture.Update;
     PutTexture(fLeft,fTop,fTexture);
   end;

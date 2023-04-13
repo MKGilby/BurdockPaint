@@ -5,7 +5,7 @@ unit BDPDrawAreaUnit;
 interface
 
 uses
-  Classes, MKMouse2, mk_sdl2;
+  Classes, SysUtils, MKMouse2, mk_sdl2;
 
 type
 
@@ -47,7 +47,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, sdl2, BDPKeyMappingUnit, BDPToolsUnit;
+uses BDPSharedUnit, sdl2, BDPKeyMappingUnit, BDPToolsUnit;
 
 { TBDDrawArea }
 

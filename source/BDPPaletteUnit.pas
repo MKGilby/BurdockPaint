@@ -4,7 +4,7 @@ unit BDPPaletteUnit;
 
 interface
 
-uses Classes;
+uses Classes, SysUtils;
 
 type
 
@@ -95,7 +95,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, MKStream, Logger, MyZStreamUnit, CodingUnit;
+uses BDPSharedUnit, MKStream, Logger, MyZStreamUnit, CodingUnit;
 
 const
   PALETTEDATAID=$43;

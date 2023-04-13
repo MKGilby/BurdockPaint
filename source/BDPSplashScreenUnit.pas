@@ -5,7 +5,7 @@ unit BDPSplashScreenUnit;
 interface
 
 uses
-  vcc2_Container, mk_sdl2, MKMouse2;
+  SysUtils, vcc2_Container, mk_sdl2, MKMouse2;
 
 type
 
@@ -26,7 +26,7 @@ type
 implementation
 
 uses
-  SysUtils, SDL2, BDPSharedUnit, Font2Unit;
+  SDL2, BDPSharedUnit, Font2Unit;
 
 const
   SPLASHSCREENWIDTH=480;

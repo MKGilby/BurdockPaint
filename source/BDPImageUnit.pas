@@ -5,7 +5,7 @@ unit BDPImageUnit;
 interface
 
 uses
-  Classes, mk_sdl2, BDPPaletteUnit;
+  Classes, SysUtils, mk_sdl2, BDPPaletteUnit;
 
 type
 
@@ -149,7 +149,7 @@ type
 
 implementation
 
-uses SysUtils, MyZStreamUnit, SDL2, Logger, ARGBImageUnit;
+uses MyZStreamUnit, SDL2, Logger, ARGBImageUnit;
 
 {$i ntsccol.inc}
 

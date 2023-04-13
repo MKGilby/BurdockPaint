@@ -5,7 +5,7 @@ unit BDPPaletteEditorUnit;
 interface
 
 uses
-  vcc2_Container, BDPButtonUnit, mk_sdl2, BDPMessageUnit, BDPSliderUnit,
+  SysUtils, mk_sdl2, vcc2_Container, BDPButtonUnit, BDPMessageUnit, BDPSliderUnit,
   BDPColorSelectorUnit, BDPColorBoxUnit, BDPColorClusterUnit;
 
 type
@@ -47,7 +47,7 @@ type
 
 implementation
 
-uses SysUtils, BDPSharedUnit, MKMouse2, BDPToolsUnit, SDL2;
+uses BDPSharedUnit, MKMouse2, BDPToolsUnit, SDL2;
 
 { TBDPaletteEditor }
 
