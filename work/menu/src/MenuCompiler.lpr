@@ -43,6 +43,7 @@ end;
 procedure WriteString(s:string);
 var b:byte;
 begin
+  s:=UpCase(s);  // Font contains only uppercase letters so...
   b:=length(s);
   blockwrite(bin,b,1);
   blockwrite(bin,s[1],b);
