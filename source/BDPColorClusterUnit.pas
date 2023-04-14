@@ -299,17 +299,17 @@ var i:integer;colorindex:word;
 begin
   if Assigned(fTexture) then begin
     with fTexture.ARGBImage do begin
-      Bar(0,0,Width,3,OverlayPalette[2]);
-      Bar(0,3,3,Height-6,OverlayPalette[2]);
-      Bar(0,Height-3,Width,3,OverlayPalette[2]);
-      Bar(Width-3,3,3,Height-6,OverlayPalette[2]);
+      Bar(0,0,Width,3,SystemPalette[2]);
+      Bar(0,3,3,Height-6,SystemPalette[2]);
+      Bar(0,Height-3,Width,3,SystemPalette[2]);
+      Bar(Width-3,3,3,Height-6,SystemPalette[2]);
       if Assigned(fColorCluster) then begin
         for i:=0 to Width-6-1 do begin
           colorindex:=fColorCluster.GetIndexAt(i,Width-6);
           VLine(3+i,3,Height-6,Project.CurrentImage.Palette[colorindex]);
           if colorindex=Settings.ActiveColorIndex then begin
-            VLine(3+i,Height div 2-3,3,OverlayPalette[4]);
-            VLine(3+i,Height div 2,3,OverlayPalette[1]);
+            VLine(3+i,Height div 2-3,3,SystemPalette[4]);
+            VLine(3+i,Height div 2,3,SystemPalette[1]);
           end;
         end;
       end;

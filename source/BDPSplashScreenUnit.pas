@@ -42,8 +42,8 @@ begin
   fWindowLeft:=(WINDOWWIDTH-SPLASHSCREENWIDTH) div 2;
   fWindowTop:=(WINDOWHEIGHT-SPLASHSCREENHEIGHT) div 2;
   fTexture:=TStreamingTexture.Create(SPLASHSCREENWIDTH,SPLASHSCREENHEIGHT);
-  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,OverlayPalette[2]);
-  fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,OverlayPalette[3]);
+  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[2]);
+  fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[3]);
   MM.Fonts['LogoFont'].OutText(fTexture.ARGBImage,'BURDoCK PAINT',80,24,0);
   MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'CODE: GILBY/MKSZTSZ',80,56,0);
   MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'HUNGARY - 2023',80,88,0);

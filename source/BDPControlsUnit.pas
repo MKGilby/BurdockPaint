@@ -144,9 +144,9 @@ end;
 procedure TBDControls.Draw;
 begin
   if fVisible then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,OverlayPalette[2]);
-    fTexture.ARGBImage.Bar(COORDSLEFT,0,COORDSWIDTH,CONTROLSHEIGHT,OverlayPalette[2]);
-    fTexture.ARGBImage.Bar(0,3,COORDSLEFT,fTexture.ARGBImage.Height-3,OverlayPalette[3]);
+    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,SystemPalette[2]);
+    fTexture.ARGBImage.Bar(COORDSLEFT,0,COORDSWIDTH,CONTROLSHEIGHT,SystemPalette[2]);
+    fTexture.ARGBImage.Bar(0,3,COORDSLEFT,fTexture.ARGBImage.Height-3,SystemPalette[3]);
     if (fMouseX>=0) and (fMouseX<Project.CurrentImage.Width) and (fMouseY>=0) and (fMouseY<Project.CurrentImage.Height) then begin
       MM.Fonts['Black'].OutText(fTexture.ARGBImage,'X='+inttostr(fMouseX),COORDSCENTER,CONTROLSHEIGHT-84,1);
       MM.Fonts['Black'].OutText(fTexture.ARGBImage,'Y='+inttostr(fMouseY),COORDSCENTER,CONTROLSHEIGHT-54,1);

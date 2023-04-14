@@ -113,7 +113,7 @@ var
 
   Project:TBDProject;  // The project we are working on
 
-  OverlayPalette:TBDPalette;
+  SystemPalette:TBDPalette;  // The palette holding system colors
 
   CELHelperImage:TBDImage;  // Helper image for PUTCel
   Settings:TSettings;  // All settings in one place
@@ -175,8 +175,8 @@ begin
   for y:=0 to 7 do
     for x:=0 to 7 do begin
       case s[x+y*8+1] of
-        '.':c:=OverlayPalette[3];
-        'x':c:=OverlayPalette[2];
+        '.':c:=SystemPalette[3];
+        'x':c:=SystemPalette[2];
         ' ':c:=0;
       end;
       TLImage.PutPixel(x,y,c);
@@ -229,18 +229,18 @@ begin
   Log.LogStatus('  Creating message queue...');
   MessageQueue:=TMessageQueue.Create(32);
   Log.LogStatus('  Creating overlay palette...');
-  OverlayPalette:=TBDPalette.Create(16);
-  OverlayPalette.Colors[0]:=$00000000;
-  OverlayPalette.Colors[1]:=$ff040404;
-  OverlayPalette.Colors[2]:=$ff5d5d5d;
-  OverlayPalette.Colors[3]:=$ff9a9a9a;
-  OverlayPalette.Colors[4]:=$ffc7c7c7;
-  OverlayPalette.Colors[5]:=$ffc70404;
-  OverlayPalette.Colors[6]:=$ff202020;
-  OverlayPalette.Colors[7]:=$ff505050;
-  OverlayPalette.Colors[8]:=$ff808080;
-  OverlayPalette.Colors[9]:=$ffb0b0b0;
-  OverlayPalette.Colors[10]:=$ffe0e0e0;
+  SystemPalette:=TBDPalette.Create(16);
+  SystemPalette.Colors[0]:=$00000000;
+  SystemPalette.Colors[1]:=$ff040404;
+  SystemPalette.Colors[2]:=$ff5d5d5d;
+  SystemPalette.Colors[3]:=$ff9a9a9a;
+  SystemPalette.Colors[4]:=$ffc7c7c7;
+  SystemPalette.Colors[5]:=$ffc70404;
+  SystemPalette.Colors[6]:=$ff202020;
+  SystemPalette.Colors[7]:=$ff505050;
+  SystemPalette.Colors[8]:=$ff808080;
+  SystemPalette.Colors[9]:=$ffb0b0b0;
+  SystemPalette.Colors[10]:=$ffe0e0e0;
   Log.LogStatus('  Creating CEL helper image...');
   CELHelperImage:=TBDImage.Create(320,200);
   CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,0);
@@ -281,7 +281,7 @@ begin
   if Assigned(Inks) then FreeAndNil(Inks);
   if Assigned(VibroColors) then FreeAndNil(VibroColors);
   if Assigned(Cursor) then FreeAndNil(Cursor);
-  if Assigned(OverlayPalette) then FreeAndNil(OverlayPalette);
+  if Assigned(SystemPalette) then FreeAndNil(SystemPalette);
   if Assigned(MessageQueue) then FreeAndNil(MessageQueue);
   if Assigned(InfoBar) then FreeAndNil(InfoBar);
   if Assigned(MM) then FreeAndNil(MM);

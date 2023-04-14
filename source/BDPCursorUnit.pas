@@ -24,9 +24,9 @@ begin
   case zoomlevel of
     1:begin
         SDL_SetRenderDrawColor(PrimaryWindow.Renderer,
-          OverlayPalette.ColorR[3],
-          OverlayPalette.ColorG[3],
-          OverlayPalette.ColorB[3],
+          SystemPalette.ColorR[3],
+          SystemPalette.ColorG[3],
+          SystemPalette.ColorB[3],
           255);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x-4,y);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x-3,y);
@@ -37,9 +37,9 @@ begin
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x,y+3);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x,y+4);
         SDL_SetRenderDrawColor(PrimaryWindow.Renderer,
-          OverlayPalette.ColorR[0],
-          OverlayPalette.ColorG[0],
-          OverlayPalette.ColorB[0],
+          SystemPalette.ColorR[0],
+          SystemPalette.ColorG[0],
+          SystemPalette.ColorB[0],
           255);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x-2,y);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x,y-2);
@@ -57,9 +57,9 @@ begin
         x-=x mod 2;
         y-=y mod 2;
         SDL_SetRenderDrawColor(PrimaryWindow.Renderer,
-          OverlayPalette.ColorR[3],
-          OverlayPalette.ColorG[3],
-          OverlayPalette.ColorB[3],
+          SystemPalette.ColorR[3],
+          SystemPalette.ColorG[3],
+          SystemPalette.ColorB[3],
           255);
         r.x:=x-8;r.y:=y;r.w:=4;r.h:=2;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
@@ -70,9 +70,9 @@ begin
         r.y:=y+6;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         SDL_SetRenderDrawColor(PrimaryWindow.Renderer,
-          OverlayPalette.ColorR[0],
-          OverlayPalette.ColorG[0],
-          OverlayPalette.ColorB[0],
+          SystemPalette.ColorR[0],
+          SystemPalette.ColorG[0],
+          SystemPalette.ColorB[0],
           255);
         r.x:=x-4;r.y:=y;r.w:=2;r.h:=2;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
@@ -92,9 +92,9 @@ begin
         x-=x mod 4;
         y-=y mod 4;
         SDL_SetRenderDrawColor(PrimaryWindow.Renderer,
-          OverlayPalette.ColorR[3],
-          OverlayPalette.ColorG[3],
-          OverlayPalette.ColorB[3],
+          SystemPalette.ColorR[3],
+          SystemPalette.ColorG[3],
+          SystemPalette.ColorB[3],
           255);
         r.x:=x-16;r.y:=y;r.w:=8;r.h:=4;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
@@ -105,9 +105,9 @@ begin
         r.y:=y+12;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         SDL_SetRenderDrawColor(PrimaryWindow.Renderer,
-          OverlayPalette.ColorR[0],
-          OverlayPalette.ColorG[0],
-          OverlayPalette.ColorB[0],
+          SystemPalette.ColorR[0],
+          SystemPalette.ColorG[0],
+          SystemPalette.ColorB[0],
           255);
         r.x:=x-8;r.y:=y;r.w:=4;r.h:=4;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
@@ -127,9 +127,9 @@ begin
         x-=x mod 8;
         y-=y mod 8;
         SDL_SetRenderDrawColor(PrimaryWindow.Renderer,
-          OverlayPalette.ColorR[3],
-          OverlayPalette.ColorG[3],
-          OverlayPalette.ColorB[3],
+          SystemPalette.ColorR[3],
+          SystemPalette.ColorG[3],
+          SystemPalette.ColorB[3],
           255);
         r.x:=x-32;r.y:=y;r.w:=16;r.h:=8;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
@@ -140,9 +140,9 @@ begin
         r.y:=y+24;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         SDL_SetRenderDrawColor(PrimaryWindow.Renderer,
-          OverlayPalette.ColorR[0],
-          OverlayPalette.ColorG[0],
-          OverlayPalette.ColorB[0],
+          SystemPalette.ColorR[0],
+          SystemPalette.ColorG[0],
+          SystemPalette.ColorB[0],
           255);
         r.x:=x-16;r.y:=y;r.w:=8;r.h:=8;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);

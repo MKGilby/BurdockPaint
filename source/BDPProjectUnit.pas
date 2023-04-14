@@ -215,7 +215,7 @@ begin
     fActiveImageIndex:=0;
   fOverlayImage:=TBDImage.Create(fImages[fActiveImageIndex].Width,fImages[fActiveImageIndex].Height);
 //  SetOverlayPalette;
-  fOverlayImage.Palette.ResizeAndCopyColorsFrom(OverlayPalette);
+  fOverlayImage.Palette.ResizeAndCopyColorsFrom(SystemPalette);
   fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
 end;
 

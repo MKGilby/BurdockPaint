@@ -167,21 +167,21 @@ end;
 procedure TBDPaletteEditor.Draw;
 var i:integer;
 begin
-  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,OverlayPalette[2]);
-  fTexture.ARGBImage.Bar(0,3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,OverlayPalette[3]);
+  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,SystemPalette[2]);
+  fTexture.ARGBImage.Bar(0,3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,SystemPalette[3]);
   fTexture.ARGBImage.Bar(
     PALETTESOCKETSLEFT,
     PALETTESOCKETSTOP,
     PALETTESOCKETWIDTH*32+3,
     PALETTESOCKETHEIGHT*8+3,
-    OverlayPalette.Colors[2]);
+    SystemPalette.Colors[2]);
   if (Settings.ActiveColorIndex div 256)+1=fSliderBank.Position then
     fTexture.ARGBImage.bar(
       PALETTESOCKETSLEFT+(Settings.ActiveColorIndex mod 32)*PALETTESOCKETWIDTH,
       PALETTESOCKETSTOP+(Settings.ActiveColorIndex div 32)*PALETTESOCKETHEIGHT,
       PALETTESOCKETWIDTH+3,
       PALETTESOCKETHEIGHT+3,
-      OverlayPalette.Colors[5]);
+      SystemPalette.Colors[5]);
 
   for i:=0 to 255 do begin
     fTexture.ARGBImage.Bar(

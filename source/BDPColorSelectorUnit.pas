@@ -41,7 +41,7 @@ begin
     if Settings.SelectedColors[i]=Settings.ActiveColorIndex then fSelectedIndex:=i;
   OnClick:=Self.Click;
   OnKeyDown:=Self.KeyDown;
-  fTexture.ARGBImage.Bar(0,0,fTexture.Width,fTexture.Height,OverlayPalette[3]);
+  fTexture.ARGBImage.Bar(0,0,fTexture.Width,fTexture.Height,SystemPalette[3]);
   fPickingColor:=false;
 end;
 
@@ -49,23 +49,23 @@ procedure TBDColorSelector.Draw;
 var i,x:integer;
 begin
   // Draw dark background for all slots
-  fTexture.ARGBImage.Bar(0,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayPalette[2]);
+  fTexture.ARGBImage.Bar(0,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,SystemPalette[2]);
   fTexture.ARGBImage.Bar(
     COLORSELECTORGAP+COLORSELECTORBOXSIZE-3,
     0,
     (COLORSELECTORBOXSIZE-3)*(COLORSELECTORCOLORS-1)+3,
     COLORSELECTORBOXSIZE,
-    OverlayPalette[2]);
+    SystemPalette[2]);
   // Draw highlights and color boxes
   x:=0;
   for i:=0 to COLORSELECTORCOLORS-1 do begin
     if not fPickingColor then begin
       if Settings.SelectedColors[i]=Settings.ActiveColorIndex then begin
-        fTexture.ARGBImage.Bar(x,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayPalette[5])
+        fTexture.ARGBImage.Bar(x,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,SystemPalette[5])
       end
     end else begin
       if i=fSelectedIndex then
-        fTexture.ARGBImage.Bar(x,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,OverlayPalette[VibroColors.GetColorIndex]);
+        fTexture.ARGBImage.Bar(x,0,COLORSELECTORBOXSIZE,COLORSELECTORBOXSIZE,SystemPalette[VibroColors.GetColorIndex]);
     end;
     fTexture.ARGBImage.Bar(x+3,3,COLORSELECTORBOXSIZE-6,COLORSELECTORBOXSIZE-6,Project.CurrentImage.Palette[Settings.SelectedColors[i]]);
     x+=COLORSELECTORBOXSIZE-3;
