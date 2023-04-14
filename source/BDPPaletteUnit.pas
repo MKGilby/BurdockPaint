@@ -26,6 +26,9 @@ type
     // Create with specified entry count. Cannot be more than MAXPALETTEENTRIES.
     constructor Create(iMaxEntries:integer); overload;
 
+    // Create from stream.
+    constructor CreateFromStream(iStream:TStream);
+
     // Destructor.
     destructor Destroy; override;
 
@@ -131,6 +134,11 @@ begin
   fMaxEntries:=iMaxEntries;
   fEntries:=getmem(fMaxEntries*4);
   fillchar(fEntries^,fMaxEntries*4,0);
+end;
+
+constructor TBDPalette.CreateFromStream(iStream:TStream);
+begin
+  LoadFromStream(iStream);
 end;
 
 destructor TBDPalette.Destroy;
