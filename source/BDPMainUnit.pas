@@ -5,7 +5,7 @@ unit BDPMainUnit;
 interface
 
 uses SysUtils, mk_sdl2, Dialogs, BDPControlsUnit, BDPDrawAreaUnit,
-  BDPModalDialogsUnit, BDPSplashScreenUnit, BDPPaletteEditorUnit, BDPMenuUnit;
+  BDPModalDialogsUnit, BDPPaletteEditorUnit, BDPMenuUnit;
 
 type
 
@@ -75,10 +75,7 @@ begin
   fControls:=TBDControls.Create;
   fPaletteEditor:=TBDPaletteEditor.Create;
   fQuitWindow:=TConfirmQuitDialog.Create;
-  if Settings.ShowSplash then begin
-    fSplashScreen:=TBDSplashScreen.Create;
-    MouseObjects.Add(fSplashScreen);
-  end;
+  fSplashScreen:=TBDSplashScreen.Create;
   fMainMenu:=TMainMenu.Create('menu.bin');
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   fMagnifyDialog:=TMagnifyCELDialog.Create;
@@ -221,7 +218,7 @@ begin
           MSG_OPENMAGNIFYCELDIALOG:begin
             fMagnifyDialog.Show;
           end;
-          MSG_MAGNIFYCEL:begin
+          MSG_MAGNIFYCELRESP:begin
             fMagnifyDialog.Hide;
             if msg.DataInt in [2..8] then begin
               Project.CELImage.Magnify(msg.DataInt);
@@ -231,12 +228,18 @@ begin
           MSG_OPENROTATECELDIALOG:begin
             fRotateDialog.Show;
           end;
-          MSG_ROTATECEL:begin
+          MSG_ROTATECELRESP:begin
             fRotateDialog.Hide;
             if msg.DataInt in [1..3] then begin
               Project.CELImage.Rotate(msg.DataInt);
               MessageQueue.AddMessage(MSG_SHOWCEL);
             end;
+          end;
+          MSG_OPENABOUTDIALOG:begin
+            fSplashScreen.Show;
+          end;
+          MSG_ABOUTRESP:begin
+            fSplashScreen.Hide;
           end;
           MSG_PUTCEL:begin
             HideMainControls;

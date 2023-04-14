@@ -88,9 +88,11 @@ const
   // Set Undo/Redo buttons' state depending on PaletteUndosystem state.
   MSG_SETPALETTEUNDOREDOBUTTON=6;
   // Response from Magnify CEL dialog. Data contains magnification or 0 if cancelled.
-  MSG_MAGNIFYCEL=7;
+  MSG_MAGNIFYCELRESP=7;
   // Response from Rotate CEL dialog. Rotate data*90 degrees clockwise.
-  MSG_ROTATECEL=8;
+  MSG_ROTATECELRESP=8;
+  // Response from About dialog.
+  MSG_ABOUTRESP=9;
 
   // ------- Tool Messages ------- Range: 100-199 -------
   // PICKCOL finished, IntValue holds the selected color index or -1 if no color selected.
