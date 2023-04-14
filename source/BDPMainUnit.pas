@@ -79,7 +79,7 @@ begin
     fSplashScreen:=TBDSplashScreen.Create;
     MouseObjects.Add(fSplashScreen);
   end;
-  fMainMenu:=TMainMenu.Create;
+  fMainMenu:=TMainMenu.Create('menu.bin');
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   fMagnifyDialog:=TMagnifyCELDialog.Create;
   fRotateDialog:=TRotateCELDialog.Create;

@@ -45,7 +45,7 @@ type
   { TMainMenu }
 
   TMainMenu=class(TVisibleControl)
-    constructor Create;
+    constructor Create(iFilename:string);
     destructor Destroy; override;
     procedure EnableCELSubMenusWithActiveCEL;
     procedure DisableCELSubMenusWithActiveCEL;
@@ -62,7 +62,7 @@ type
 
 implementation
 
-uses BDPSharedUnit;
+uses BDPSharedUnit, MKStream;
 
 { TSubMenuItem }
 
@@ -203,8 +203,26 @@ end;
 
 { TMainMenu }
 
-constructor TMainMenu.Create;
-var atm:TSubMenu;x:integer;msg:TMessage;
+constructor TMainMenu.Create(iFilename:string);
+var atm:TSubMenu;x,menucount,submenucount:integer;msg:TMessage;Xs:TStream;
+  s,hint:string;
+
+  function ReadString(pStream:TStream):string;
+  var i:integer;
+  begin
+    i:=0;
+    pStream.Read(i,1);
+    Result:='';
+    SetLength(Result,i);
+    pStream.Read(Result[1],i);
+  end;
+
+  function ReadInteger(pStream:TStream):integer;
+  begin
+    Result:=0;
+    pStream.Read(Result,2);
+  end;
+
 begin
   Left:=0;
   Top:=0;
@@ -212,15 +230,43 @@ begin
   Height:=TOPMENUHEIGHT;
   Name:='MainMenu';
   fItems:=TStringList.Create;
+  fSubMenus:=TSubMenuList.Create;
+  ZIndex:=LEVEL1CONTROLS_ZINDEX;
+  fVisible:=true;
+  if MKStreamOpener.FileExists(iFilename) then begin
+    x:=0;
+    Xs:=MKStreamOpener.OpenStream(iFilename);
+    menucount:=0;
+    Xs.Read(menucount,1);
+    while menucount>0 do begin
+      s:=ReadString(Xs);
+      fItems.Add(s);
+      atm:=TSubMenu.Create(x);
+      atm.name:=s;
+      atm.Visible:=false;
+      submenucount:=0;
+      Xs.Read(submenucount,1);
+      while submenucount>0 do begin
+        s:=ReadString(Xs);
+        msg.TypeID:=ReadInteger(Xs);
+        msg.DataInt:=ReadInteger(Xs);
+        hint:=ReadString(Xs);
+        atm.AddItem(s,hint,msg,msg.TypeID<>MSG_NONE);
+        dec(submenucount);
+      end;
+      fSubMenus.Add(atm);
+      x+=(length(fItems[fItems.Count-1])+2)*18;
+      MouseObjects.Add(atm);
+      dec(menucount);
+    end;
+    FreeAndNil(Xs);
+  end;
+
+{
   fItems.Add('FILE');
   fItems.Add('IMAGE');
   fItems.Add('CEL');
-  fSubMenus:=TSubMenuList.Create;
-  fSubMenus.FreeObjects:=true;
-  ZIndex:=LEVEL1CONTROLS_ZINDEX;
-  fVisible:=true;
 
-  x:=0;
   atm:=TSubMenu.Create(x);
   atm.Name:=fItems[0];
   msg.TypeID:=MSG_NONE;
@@ -260,7 +306,7 @@ begin
   fSubMenus.Add(atm);
   x+=(length(fItems[2])+2)*18;
   MouseObjects.Add(atm);
-
+}
   fSelected:=-1;
   Enabled:=true;
   OnMouseMove:=MouseMove;
