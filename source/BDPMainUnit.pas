@@ -181,7 +181,7 @@ begin
               MessageQueue.AddMessage(MSG_SHOWCEL);
             end;
           end;
-          MSG_CLEARPICTURE:begin
+          MSG_CLEARIMAGE:begin
             Project.CurrentImage.ImageUndo.AddImageUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);
             Project.CurrentImage.Bar(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height,Settings.SelectedColors[0]);
             Project.CurrentImage.ImageUndo.AddImageRedoToLastUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);

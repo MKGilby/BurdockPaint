@@ -85,6 +85,10 @@ const
   MSG_SETIMAGEUNDOREDOBUTTON=5;
   // Set Undo/Redo buttons' state depending on PaletteUndosystem state.
   MSG_SETPALETTEUNDOREDOBUTTON=6;
+  // Response from Magnify CEL dialog. Data contains magnification or 0 if cancelled.
+  MSG_MAGNIFYCEL=7;
+  // Response from Rotate CEL dialog. Rotate data*90 degrees clockwise.
+  MSG_ROTATECEL=8;
 
   // ------- Tool Messages ------- Range: 100-199 -------
   // PICKCOL finished, IntValue holds the selected color index or -1 if no color selected.
@@ -101,29 +105,7 @@ const
   MSG_SELECTCOLOR=105;
 
   // ------- Menu Messages ------- Range: 200-299 -------
-  // Magnify CEL image. A dialog window appears where you can select beetween
-  // 2x 3x and 5x magnification and can cancel the whole operation. Menu:CEL/Magnify
-  MSG_OPENMAGNIFYCELDIALOG=200;
-  // Response from Magnify CEL dialog. Data contains magnification or 0 if cancelled.
-  MSG_MAGNIFYCEL=201;
-  // Rotate CEL 90, 180 or 270 degrees clockwise. A dialog window appears... Menu:CEL/Rotate
-  MSG_OPENROTATECELDIALOG=202;
-  // Response from Rotate CEL dialog. Rotate data*90 degrees clockwise.
-  MSG_ROTATECEL=203;
-  // Clear image to key color. Menu:Picture/Clear
-  MSG_CLEARPICTURE=204;
-  // Release CEL image. Menu:CEL/Release
-  MSG_RELEASECEL=205;
-  // Get CEL image. Menu:CEL/Get
-  MSG_GETCEL=206;
-  // Put CEL image. Menu:CEL/Put
-  MSG_PUTCEL=207;
-  // Load CEL file. Menu:CEL/Load
-  MSG_LOADCEL=208;
-  // Save CEL image. Menu:CEL/Save
-  MSG_SAVECEL=209;
-  // Flip the CEL. 0 - Vertical, 1 - Horizontal. Menu:CEL/FLIP V and /FLIP H
-  MSG_FLIPCEL=210;
+  {$i MenuMessages.inc}
 
 var
   MM:TGFXManager;  // MediaManager to hold fonts and internal images

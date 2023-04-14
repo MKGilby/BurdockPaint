@@ -236,7 +236,7 @@ begin
 
   atm:=TSubMenu.Create(x);
   atm.Name:=fItems[1];
-  atm.AddItem('CLEAR','Clear image to key color.',TMessage.Init(MSG_CLEARPICTURE,0));
+  atm.AddItem('CLEAR','Clear image to key color.',TMessage.Init(MSG_CLEARIMAGE,0));
   atm.AddItem('RESIZE','',msg,false);
   atm.AddItem('EXPORT','',msg,false);
   atm.Visible:=false;
