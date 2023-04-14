@@ -5,7 +5,9 @@ Todo:
   - Create multiple Open/SaveDialogs for each type and show appropiate dialog when needed.
 - Add export CEL to PNG.
 - Ask for color fit when loading a CEL file.
-- Add gradients.
+- Make ColorCluster clickable.
+  - Left to select color.
+  - Right to pick cluster, but only on the PaletteEditor.
 - Autosave state in every 1 min.
 - Configurable autosave interval.
 - Add dithering to gradient Inks.
@@ -23,6 +25,9 @@ Todo:
 2023.04.14
 - Menus are loaded from external file. (look at \work\menu)
 - Added 16x zoom. (+1 level)
+- Added About menu.
+- Renamed SplashScreen to AboutDialog.
+- Updated AboutDialog with licensing info and added a button to close it.
 
 2023.04.13
 - Removed system state from fileformats.txt.
