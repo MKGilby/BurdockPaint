@@ -25,10 +25,15 @@ type
     fMainMenu:TMainMenu;
     fMagnifyDialog:TMagnifyCELDialog;
     fRotateDialog:TRotateCELDialog;
-    fOpenDialog:TOpenDialog;
-    fSaveDialog:TSaveDialog;
+    fOpenCELDialog,
+    fOpenProjectDialog:TOpenDialog;
+    fSaveCELDialog,
+    fSaveProjectDialog,
+    fExportCELDialog:TSaveDialog;
     procedure HideMainControls;
     procedure ShowMainControls;
+    function CreateOpenDialog(pName,pTitle,pFilter:string):TOpenDialog;
+    function CreateSaveDialog(pName,pTitle,pFilter:string):TSaveDialog;
   end;
 
 implementation
@@ -83,25 +88,20 @@ begin
   MouseObjects.Sort;
   MouseObjects.List;
 
-  fOpenDialog:=TOpenDialog.Create(nil);
-  fOpenDialog.Filter:='CEL files|*.bdc|Legacy CEL files|*.cel';
-  fOpenDialog.FilterIndex:=0;
-  fOpenDialog.Name:='OpenDialog';
-  fOpenDialog.Title:='Open file';
-  fOpenDialog.InitialDir:=ExtractFilePath(ParamStr(0));
-
-  fSaveDialog:=TSaveDialog.Create(nil);
-  fSaveDialog.Filter:='CEL files|*.bdc';
-  fSaveDialog.FilterIndex:=0;
-  fSaveDialog.Name:='SaveDialog';
-  fSaveDialog.Title:='Save file';
-  fSaveDialog.InitialDir:=ExtractFilePath(ParamStr(0));;
+  fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','CEL files|*.bdc|Legacy CEL files|*.cel');
+  fOpenProjectDialog:=CreateOpenDialog('OpenProjectDialog','Open Project','Project files|*.bpprj');
+  fSaveCELDialog:=CreateSaveDialog('SaveCELDialog','Save CEL','CEL files|*.bdc');
+  fSaveProjectDialog:=CreateSaveDialog('SaveProjectDialog','Save Project','Project files|*.bpprj');
+  fExportCELDialog:=CreateSaveDialog('ExportCELDialog','Export CEL to ...','PNG files|*.png|TGA files|*.tga');
 end;
 
 destructor TMain.Destroy;
 begin
-  if Assigned(fSaveDialog) then FreeAndNil(fSaveDialog);
-  if Assigned(fOpenDialog) then FreeAndNil(fOpenDialog);
+  if Assigned(fExportCELDialog) then FreeAndNil(fExportCELDialog);
+  if Assigned(fOpenProjectDialog) then FreeAndNil(fOpenProjectDialog);
+  if Assigned(fSaveProjectDialog) then FreeAndNil(fSaveProjectDialog);
+  if Assigned(fSaveCELDialog) then FreeAndNil(fSaveCELDialog);
+  if Assigned(fOpenCELDialog) then FreeAndNil(fOpenCELDialog);
   if Assigned(fRotateDialog) then FreeAndNil(fRotateDialog);
   if Assigned(fMagnifyDialog) then FreeAndNil(fMagnifyDialog);
   if Assigned(fMainMenu) then FreeAndNil(fMainMenu);
@@ -166,12 +166,12 @@ begin
               Settings.ActiveColorIndex:=Project.CurrentImage.GetPixel(mx,my);
           end;
           MSG_LOADCEL:begin
-            if fOpenDialog.Execute then begin
+            if fOpenCELDialog.Execute then begin
               if not assigned(Project.CELImage) then Project.CELImage:=TBDImage.Create(16,16);
-              if UpperCase(ExtractFileExt(fOpenDialog.FileName))='.CEL' then
-                Project.CELImage.ImportCEL(fOpenDialog.FileName)
+              if UpperCase(ExtractFileExt(fOpenCELDialog.FileName))='.CEL' then
+                Project.CELImage.ImportCEL(fOpenCELDialog.FileName)
               else
-                Project.CELImage.LoadFromFile(fOpenDialog.FileName);
+                Project.CELImage.LoadFromFile(fOpenCELDialog.FileName);
               Project.CELImage.Left:=0;
               Project.CELImage.Top:=0;
               fMainMenu.EnableCELSubMenusWithActiveCEL;
@@ -249,9 +249,20 @@ begin
             ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
           end;
           MSG_SAVECEL:begin
-            if fSaveDialog.Execute then begin
+            if fSaveCELDialog.Execute then begin
               try
-                Project.CELImage.SaveToFile(fSaveDialog.FileName);
+                Project.CELImage.SaveToFile(fSaveCELDialog.FileName);
+              except
+                on e:Exception do
+                  Log.LogError(e.message);
+              end;
+              MessageQueue.AddMessage(MSG_SHOWCEL);
+            end;
+          end;
+          MSG_EXPORTCEL:begin
+            if fExportCELDialog.Execute then begin
+              try
+                Project.CELImage.ExportTo(fExportCELDialog.FileName,copy(ExtractFileExt(fExportCELDialog.FileName),2));
               except
                 on e:Exception do
                   Log.LogError(e.message);
@@ -307,6 +318,30 @@ begin
   fControls.Show;
   fMainMenu.Show;
   InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
+end;
+
+function TMain.CreateOpenDialog(pName,pTitle,pFilter:string):TOpenDialog;
+begin
+  Result:=TOpenDialog.Create(nil);
+  with Result do begin
+    Filter:=pFilter;
+    FilterIndex:=0;
+    Name:=pName;
+    Title:=pTitle;
+    InitialDir:=ExtractFilePath(ParamStr(0));
+  end;
+end;
+
+function TMain.CreateSaveDialog(pName,pTitle,pFilter:string):TSaveDialog;
+begin
+  Result:=TSaveDialog.Create(nil);
+  with Result do begin
+    Filter:=pFilter;
+    FilterIndex:=0;
+    Name:=pName;
+    Title:=pTitle;
+    InitialDir:=ExtractFilePath(ParamStr(0));
+  end;
 end;
 
 end.

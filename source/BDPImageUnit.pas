@@ -111,7 +111,7 @@ type
     // Loads image from stream, including palette data.
     procedure LoadFromStream(Source:TStream);
     // Exports the image to PNG.
-    procedure ExportToPNG(pFilename:string);
+    procedure ExportTo(pFilename,pExtension:string);
     // Write whole image data to stream.
     // (probably later will be added method to save only a region)
     procedure SaveWholeImageDataToStream(Target:TStream);
@@ -992,7 +992,7 @@ begin
   Source.Position:=curr+size;
 end;
 
-procedure TBDImage.ExportToPNG(pFilename:string);
+procedure TBDImage.ExportTo(pFilename,pExtension:string);
 var atm:TARGBImage;i,j:integer;p,pp:pointer;
 begin
   atm:=TARGBImage.Create(fWidth,fHeight);
@@ -1004,7 +1004,7 @@ begin
       inc(p,2);
       inc(pp,4);
     end;
-  atm.WriteFile(pFilename,'PNG');
+  atm.WriteFile(pFilename,pExtension);
   FreeAndNil(atm);
 end;
 

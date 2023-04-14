@@ -82,8 +82,8 @@ CEL
     SAVECEL
     Save CEL to file. (BDC)
   EXPORT
-    NONE
-    Export CEL to file. (PNG)
+    EXPORTCEL
+    Export CEL to file. (PNG or TGA)
 
 ;------------------------------
 About
