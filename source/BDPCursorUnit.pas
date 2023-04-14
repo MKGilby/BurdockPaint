@@ -158,6 +158,41 @@ begin
           Project.CurrentImage.Palette.ColorB[Settings.ActiveColorIndex],
           Project.CurrentImage.Palette.ColorA[Settings.ActiveColorIndex]);
       end;
+    5:begin
+        x-=x mod 16;
+        y-=y mod 16;
+        SDL_SetRenderDrawColor(PrimaryWindow.Renderer,
+          SystemPalette.ColorR[3],
+          SystemPalette.ColorG[3],
+          SystemPalette.ColorB[3],
+          255);
+        r.x:=x-64;r.y:=y;r.w:=32;r.h:=16;
+        SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
+        r.x:=x+48;
+        SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
+        r.x:=x;r.y:=y-64;r.w:=16;r.h:=32;
+        SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
+        r.y:=y+48;
+        SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
+        SDL_SetRenderDrawColor(PrimaryWindow.Renderer,
+          SystemPalette.ColorR[0],
+          SystemPalette.ColorG[0],
+          SystemPalette.ColorB[0],
+          255);
+        r.x:=x-32;r.y:=y;r.w:=16;r.h:=16;
+        SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
+        r.x:=x+32;
+        SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
+        r.x:=x;r.y:=y-32;r.w:=16;r.h:=16;
+        SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
+        r.y:=y+32;
+        SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
+        Bar(x,y,16,16,
+          Project.CurrentImage.Palette.ColorR[Settings.ActiveColorIndex],
+          Project.CurrentImage.Palette.ColorG[Settings.ActiveColorIndex],
+          Project.CurrentImage.Palette.ColorB[Settings.ActiveColorIndex],
+          Project.CurrentImage.Palette.ColorA[Settings.ActiveColorIndex]);
+      end;
   end;
 end;
 

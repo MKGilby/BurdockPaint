@@ -149,7 +149,7 @@ type
 
 implementation
 
-uses MyZStreamUnit, SDL2, Logger, ARGBImageUnit;
+uses MyZStreamUnit, SDL2, Logger, ARGBImageUnit, BDPSharedUnit;
 
 {$i ntsccol.inc}
 
@@ -774,7 +774,7 @@ procedure TBDImage.RenderToTexture(Target:TStreamingTexture;
   TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
 var x,y,zPixel,zRenderWidth,zRenderHeight:integer;
 begin
-  if not(Zoom in [1..4]) then exit;
+  if not(Zoom in [1..MAXZOOMLEVEL]) then exit;
   zPixel:=1<<(Zoom-1);
 
   // RenderWidth and Height comes in real pixels, convert to image pixels.
@@ -809,7 +809,7 @@ procedure TBDImage.RenderToTextureAsOverlay(Target:TStreamingTexture;
   TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
 var x,y,p,zPixel,zRenderWidth,zRenderHeight:integer;
 begin
-  if not(Zoom in [1..4]) then exit;
+  if not(Zoom in [1..MAXZOOMLEVEL]) then exit;
   zPixel:=1<<(Zoom-1);
 
   // RenderWidth and Height comes in real pixels, convert to image pixels.

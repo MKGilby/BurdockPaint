@@ -62,6 +62,8 @@ const
   // ZIndex of popup dialogs (ConfirmQuit, etc.)
   MODALDIALOG_ZINDEX=9999;
 
+  MAXZOOMLEVEL=5;
+
 
   DATAFILE='BurdockPaint.data';
   TEMPPROJECTFILE='temp.bpprj';

@@ -20,6 +20,14 @@ Todo:
 - Add Tool and Ink selector
 
 
+2023.04.14
+- Menus are loaded from external file. (look at \work\menu)
+- Added 16x zoom. (+1 level)
+
+2023.04.13
+- Removed system state from fileformats.txt.
+- Fixed undo block types in fileformats.txt.
+
 2023.04.12
 - Restructured fileformats.txt.
 - Added Extended Image data block (E) and Project data block (P) to fileformats.txt.

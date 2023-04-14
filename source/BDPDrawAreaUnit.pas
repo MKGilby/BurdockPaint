@@ -32,8 +32,8 @@ type
   private
     fTexture:TStreamingTexture;
     fZoomTop,fZoomLeft:integer;
-    fZoomLevel:integer;  // 1..4
-    fZoomTimes:integer;  // 1,2,4,8
+    fZoomLevel:integer;  // 1..5
+    fZoomTimes:integer;  // 1,2,4,8,16
     fCursorX,fCursorY:integer;
     fFrameX,fFrameY:integer;
     fPanDir,fPanFase:integer;
@@ -90,7 +90,7 @@ end;
 
 procedure TBDDrawArea.CenterImage;
 begin
-  if not(fZoomLevel in [1..4]) then exit;
+  if not(fZoomLevel in [1..MAXZOOMLEVEL]) then exit;
   fZoomLeft:=((Project.CurrentImage.Width*fZoomTimes)-WindowWidth) div 2 div fZoomTimes;
   fZoomTop:=((Project.CurrentImage.Height*fZoomTimes)-WindowHeight) div 2 div fZoomTimes;
 end;
@@ -189,7 +189,7 @@ begin
     fZoomLeft:=mx-(x div fZoomTimes);
     fZoomTop:=my-(y div fZoomTimes);
   end
-  else if (wheely>0) and (fZoomLevel<4) then begin
+  else if (wheely>0) and (fZoomLevel<MAXZOOMLEVEL) then begin
     mx:=MouseXToFrame(x);
     my:=MouseYToFrame(y);
     inc(fZoomLevel);
@@ -239,7 +239,7 @@ begin
     fZoomTimes:=1<<(fZoomLevel-1);
     Result:=true;
   end;
-  if ((key=KeyMap[KEY_ZOOMOUT1]) or (key=KeyMap[KEY_ZOOMOUT2])) and (fZoomLevel<4) then begin
+  if ((key=KeyMap[KEY_ZOOMOUT1]) or (key=KeyMap[KEY_ZOOMOUT2])) and (fZoomLevel<MAXZOOMLEVEL) then begin
     inc(fZoomLevel);
     fZoomTimes:=1<<(fZoomLevel-1);
     Result:=true;
