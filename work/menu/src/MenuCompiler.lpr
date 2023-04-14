@@ -71,6 +71,10 @@ begin
     Result:=0;
     exit;
   end;
+  if UpCase(message)='QUIT' then begin  // Special, already defined in BDPSharedUnit.pas
+    Result:=1;
+    exit;
+  end;
   for i:=0 to length(msgs)-1 do
     if UpCase(message)=msgs[i] then begin
       Result:=NextMessageID+i;
