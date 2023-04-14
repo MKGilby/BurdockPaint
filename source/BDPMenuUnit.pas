@@ -166,6 +166,7 @@ var i:integer;
 begin
   for i:=0 to length(fItems)-1 do
     if fItems[i]._name=item then begin
+      value:=value and (fItems[i]._message.TypeID<>MSG_NONE);
       fItems[i]._enabled:=value;
       fNeedRedraw:=true;
       break;
@@ -233,6 +234,14 @@ begin
   fSubMenus:=TSubMenuList.Create;
   ZIndex:=LEVEL1CONTROLS_ZINDEX;
   fVisible:=true;
+  fSelected:=-1;
+  Enabled:=true;
+  OnMouseMove:=MouseMove;
+  OnMouseLeave:=MouseLeave;
+  OnMouseEnter:=MouseEnter;
+  MouseObjects.Add(Self);
+
+  // Add menu items
   if MKStreamOpener.FileExists(iFilename) then begin
     x:=0;
     Xs:=MKStreamOpener.OpenStream(iFilename);
@@ -261,58 +270,6 @@ begin
     end;
     FreeAndNil(Xs);
   end;
-
-{
-  fItems.Add('FILE');
-  fItems.Add('IMAGE');
-  fItems.Add('CEL');
-
-  atm:=TSubMenu.Create(x);
-  atm.Name:=fItems[0];
-  msg.TypeID:=MSG_NONE;
-  atm.AddItem('NEW','',msg,false);
-  atm.AddItem('OPEN','',msg,false);
-  atm.AddItem('SAVE','',msg,false);
-  atm.AddItem('SETTINGS','',msg,false);
-  atm.AddItem('QUIT','Save work state and quit program.',TMessage.Init(MSG_QUIT,1));
-  atm.Visible:=false;
-  fSubMenus.Add(atm);
-  x+=(length(fItems[0])+2)*18;
-  MouseObjects.Add(atm);
-
-  atm:=TSubMenu.Create(x);
-  atm.Name:=fItems[1];
-  atm.AddItem('CLEAR','Clear image to key color.',TMessage.Init(MSG_CLEARIMAGE,0));
-  atm.AddItem('RESIZE','',msg,false);
-  atm.AddItem('EXPORT','',msg,false);
-  atm.Visible:=false;
-  fSubMenus.Add(atm);
-  x+=(length(fItems[1])+2)*18;
-  MouseObjects.Add(atm);
-
-  atm:=TSubMenu.Create(x);
-  atm.Name:=fItems[2];
-  atm.AddItem('GET','Get a part of the image into a temporary image (CEL).',TMessage.Init(MSG_GETCEL,0));
-  atm.AddItem('PUT','Put CEL to the image.',TMessage.Init(MSG_PUTCEL,0));
-  atm.AddItem('RELEASE','Forget current CEL.',TMessage.Init(MSG_RELEASECEL,0));
-  atm.AddItem('ROTATE','Rotate CEL by 90°, 180° or 270°.',TMessage.Init(MSG_OPENROTATECELDIALOG,0));
-  atm.AddItem('FLIP V','Flip CEL vertically.',TMessage.Init(MSG_FLIPCEL,0));
-  atm.AddItem('FLIP H','Flip CEL horizontally.',TMessage.Init(MSG_FLIPCEL,1));
-  atm.AddItem('MAGNIFY','Magnify CEL to 2x, 3x or 5x.',TMessage.Init(MSG_OPENMAGNIFYCELDIALOG,0));
-  atm.AddItem('LOAD','Load CEL from file. (BDC or Legacy CEL)',TMessage.Init(MSG_LOADCEL,0));
-  atm.AddItem('SAVE','Save CEL to file. (BDC)',TMessage.Init(MSG_SAVECEL,0));
-  atm.AddItem('EXPORT','Export CEL to file. (PNG)',msg,false);
-  atm.Visible:=false;
-  fSubMenus.Add(atm);
-  x+=(length(fItems[2])+2)*18;
-  MouseObjects.Add(atm);
-}
-  fSelected:=-1;
-  Enabled:=true;
-  OnMouseMove:=MouseMove;
-  OnMouseLeave:=MouseLeave;
-  OnMouseEnter:=MouseEnter;
-  MouseObjects.Add(Self);
 end;
 
 destructor TMainMenu.Destroy;
@@ -334,7 +291,7 @@ begin
     submenu.EnableItem('FLIP H');
     submenu.EnableItem('MAGNIFY');
     submenu.EnableItem('SAVE');
-//    submenu.EnableItem('EXPORT');
+    submenu.EnableItem('EXPORT');
   end;
 end;
 
