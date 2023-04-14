@@ -987,7 +987,7 @@ begin
   size:=0;
   Source.Read(size,4);
   curr:=Source.Position;
-  fPalette.LoadFromStream(Source);
+  fPalette:=TBDPalette.CreateFromStream(Source);
   LoadWholeImageDataFromStream(Source);
   Source.Position:=curr+size;
 end;
