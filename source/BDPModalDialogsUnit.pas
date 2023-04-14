@@ -51,9 +51,9 @@ type
     fRotateButtons:array[0..2] of TBDButton;
   end;
 
-  { TBDSplashScreen }
+  { TBDAboutDialog }
 
-  TBDSplashScreen=class(TModalDialog)
+  TBDAboutDialog=class(TModalDialog)
     constructor Create;
   end;
 
@@ -348,9 +348,9 @@ begin
     MessageQueue.AddMessage(MSG_ROTATECELRESP,3);
 end;
 
-{ TBDSplashScreen }
+{ TBDAboutDialog }
 
-constructor TBDSplashScreen.Create;
+constructor TBDAboutDialog.Create;
 var atmB:TBDButton;
 begin
   inherited Create(SPLASHSCREENWIDTH,SPLASHSCREENHEIGHT);

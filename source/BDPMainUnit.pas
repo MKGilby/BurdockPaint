@@ -20,7 +20,7 @@ type
     fControls:TBDControls;
     fDrawArea:TBDDrawArea;
     fPaletteEditor:TBDPaletteEditor;
-    fSplashScreen:TBDSplashScreen;
+    fSplashScreen:TBDAboutDialog;
     fQuitWindow:TConfirmQuitDialog;
     fMainMenu:TMainMenu;
     fMagnifyDialog:TMagnifyCELDialog;
@@ -75,7 +75,7 @@ begin
   fControls:=TBDControls.Create;
   fPaletteEditor:=TBDPaletteEditor.Create;
   fQuitWindow:=TConfirmQuitDialog.Create;
-  fSplashScreen:=TBDSplashScreen.Create;
+  fSplashScreen:=TBDAboutDialog.Create;
   fMainMenu:=TMainMenu.Create('menu.bin');
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   fMagnifyDialog:=TMagnifyCELDialog.Create;
