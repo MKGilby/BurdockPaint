@@ -162,6 +162,7 @@ begin
       end;
     end;
   end;
+  if submenu._name<>'' then WriteSubMenu;
   if (submenucount>0) then begin
     seek(bin,submenupos);
     blockwrite(bin,submenucount,1);
