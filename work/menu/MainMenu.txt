@@ -1,0 +1,79 @@
+; The menu structure is compiled from this file
+;
+; The format is (indentation is important!):
+; MenuGroup (this appears in the top menu line)
+;   MenuItem (this appears in the dropdown menu) (starts with 2 spaces!)
+;     MessageName (corresponding message name, process MSG_MessageName in
+;                  program when this menuitem is clicked.)
+;     Hint (optional) (Hint that appears in the InfoBar when the mouse is hovered over MenuItem)
+;     (These lines starts with 4 spaces!)
+;
+; During compilation two files will be created:
+;   menu.bin - This one will be consumed by the TMenu.Create to create menu structure.
+;              It will be created in \data folder.
+;   MenuMessages.inc - This one is included in BDPSharedUnit.pas and contains MSG_ constants for MenuItems.
+;                      It will be created in \source folder.
+;
+; Compilation:
+;   Run MenuCompiler.exe in this folder.
+
+Project
+  New
+    NEWPROJECT
+    Create a new project.
+  Open
+    OPENPROJECT
+    Open project from file.
+  Save
+    SAVEPROJECT
+    Save project to file.
+  Quit
+    QUIT,1
+    Save work state and quit program.
+Image
+  New
+    NEWIMAGE
+    Add a new image to project.
+  Open
+    OPENIMAGE
+    Open image from file.
+  Save
+    SAVEIMAGE
+    Save image to file.
+  Remove
+    REMOVEIMAGE
+    Remove image from project.
+  Clear
+    CLEARIMAGE
+    Clear image to key color.
+CEL
+  GET
+    GETCEL
+    Get a part of the image into a temporary image (CEL)
+  PUT
+    PUTCEL
+    Put CEL to the image.
+  RELEASE
+    RELEASECEL
+    Forget current CEL.
+  ROTATE
+    OPENROTATECELDIALOG
+    Rotate CEL by 90°, 180° or 270°.
+  FLIP V
+    FLIPCEL
+    Flip CEL vertically.
+  FLIP H
+    FLIPCEL,1
+    Flip CEL horizontally.
+  MAGNIFY
+    OPENMAGNIFYCELDIALOG
+    Magnify CEL to 2x, 3x or 5x.
+  OPEN
+    LOADCEL
+    Open CEL from file. (BDC or Legacy CEL)
+  SAVE
+    SAVECEL
+    Save CEL to file. (BDC)
+  EXPORT
+    NONE
+    Export CEL to file. (PNG)
