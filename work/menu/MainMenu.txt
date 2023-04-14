@@ -8,6 +8,8 @@
 ;     Hint (optional) (Hint that appears in the InfoBar when the mouse is hovered over MenuItem)
 ;     (These lines starts with 4 spaces!)
 ;
+; You can add comment lines and empty lines anywhere.
+;
 ; During compilation two files will be created:
 ;   menu.bin - This one will be consumed by the TMenu.Create to create menu structure.
 ;              It will be created in \data folder.
@@ -17,6 +19,7 @@
 ; Compilation:
 ;   Run MenuCompiler.exe in this folder.
 
+;------------------------------
 Project
   New
     NEWPROJECT
@@ -30,6 +33,8 @@ Project
   Quit
     QUIT,1
     Save work state and quit program.
+
+;------------------------------
 Image
   New
     NEWIMAGE
@@ -46,6 +51,8 @@ Image
   Clear
     CLEARIMAGE
     Clear image to key color.
+
+;------------------------------
 CEL
   GET
     GETCEL
@@ -77,3 +84,10 @@ CEL
   EXPORT
     NONE
     Export CEL to file. (PNG)
+
+;------------------------------
+About
+  About
+    OPENABOUTDIALOG
+    Shows about dialog.
+

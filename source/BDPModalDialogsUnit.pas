@@ -51,6 +51,12 @@ type
     fRotateButtons:array[0..2] of TBDButton;
   end;
 
+  { TBDSplashScreen }
+
+  TBDSplashScreen=class(TModalDialog)
+    constructor Create;
+  end;
+
 implementation
 
 uses
@@ -64,6 +70,8 @@ const
   XBUTTONWIDTH=63;
   ROTATEDIALOGWIDTH=512;
   ROTATEDIALOGHEIGHT=128;
+  SPLASHSCREENWIDTH=640;
+  SPLASHSCREENHEIGHT=160;
 
 
 { TModalDialog }
@@ -182,7 +190,7 @@ begin
   atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   atmb.OnClick:=OKButtonClick;
   AddChild(atmB);
-  msg.TypeID:=MSG_MAGNIFYCEL;
+  msg.TypeID:=MSG_MAGNIFYCELRESP;
   msg.DataInt:=0;
   atmB:=TBDButton.Create(
     fWindowLeft+(MAGNIFYDIALOGWIDTH div 3*2)-NORMALBUTTONWIDTH div 2,
@@ -213,15 +221,15 @@ begin
     fMagnifyButtons[2].Selected:=true;
   end else
   if key=SDL_SCANCODE_ESCAPE then begin
-    MessageQueue.AddMessage(MSG_MAGNIFYCEL,0);
+    MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,0);
   end else
   if key=SDL_SCANCODE_RETURN then begin
     if fMagnifyButtons[0].Selected then
-      MessageQueue.AddMessage(MSG_MAGNIFYCEL,2)
+      MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,2)
     else if fMagnifyButtons[1].Selected then
-      MessageQueue.AddMessage(MSG_MAGNIFYCEL,3)
+      MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,3)
     else if fMagnifyButtons[2].Selected then
-      MessageQueue.AddMessage(MSG_MAGNIFYCEL,5);
+      MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,5);
   end;
   Result:=true;
 end;
@@ -236,11 +244,11 @@ end;
 procedure TMagnifyCELDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   if fMagnifyButtons[0].Selected then
-    MessageQueue.AddMessage(MSG_MAGNIFYCEL,2)
+    MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,2)
   else if fMagnifyButtons[1].Selected then
-    MessageQueue.AddMessage(MSG_MAGNIFYCEL,3)
+    MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,3)
   else if fMagnifyButtons[2].Selected then
-    MessageQueue.AddMessage(MSG_MAGNIFYCEL,5);
+    MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,5);
 end;
 
 { TRotateCELDialog }
@@ -279,7 +287,7 @@ begin
   atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   atmb.OnClick:=OKButtonClick;
   AddChild(atmB);
-  msg.TypeID:=MSG_ROTATECEL;
+  msg.TypeID:=MSG_ROTATECELRESP;
   msg.DataInt:=0;
   atmB:=TBDButton.Create(
     fWindowLeft+(ROTATEDIALOGWIDTH div 3*2)-NORMALBUTTONWIDTH div 2,
@@ -310,15 +318,15 @@ begin
     fRotateButtons[2].Selected:=true;
   end else
   if key=SDL_SCANCODE_ESCAPE then begin
-    MessageQueue.AddMessage(MSG_ROTATECEL,0);
+    MessageQueue.AddMessage(MSG_ROTATECELRESP,0);
   end else
   if key=SDL_SCANCODE_RETURN then begin
     if fRotateButtons[0].Selected then
-      MessageQueue.AddMessage(MSG_ROTATECEL,1)
+      MessageQueue.AddMessage(MSG_ROTATECELRESP,1)
     else if fRotateButtons[1].Selected then
-      MessageQueue.AddMessage(MSG_ROTATECEL,2)
+      MessageQueue.AddMessage(MSG_ROTATECELRESP,2)
     else if fRotateButtons[2].Selected then
-      MessageQueue.AddMessage(MSG_ROTATECEL,3);
+      MessageQueue.AddMessage(MSG_ROTATECELRESP,3);
   end;
   Result:=true;
 end;
@@ -333,11 +341,37 @@ end;
 procedure TRotateCELDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   if fRotateButtons[0].Selected then
-    MessageQueue.AddMessage(MSG_ROTATECEL,1)
+    MessageQueue.AddMessage(MSG_ROTATECELRESP,1)
   else if fRotateButtons[1].Selected then
-    MessageQueue.AddMessage(MSG_ROTATECEL,2)
+    MessageQueue.AddMessage(MSG_ROTATECELRESP,2)
   else if fRotateButtons[2].Selected then
-    MessageQueue.AddMessage(MSG_ROTATECEL,3);
+    MessageQueue.AddMessage(MSG_ROTATECELRESP,3);
+end;
+
+{ TBDSplashScreen }
+
+constructor TBDSplashScreen.Create;
+var atmB:TBDButton;
+begin
+  inherited Create(SPLASHSCREENWIDTH,SPLASHSCREENHEIGHT);
+  fName:='SplashScreen';
+  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[2]);
+  fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[3]);
+  MM.Fonts['LogoFont'].OutText(fTexture.ARGBImage,'BURDoCK PAINT',80,24,0);
+  MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'CODE: GILBY/MKSZTSZ',80,56,0);
+  MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'LICENSED UNDER THE UNLICENSE',80,88,0);
+  MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'HUNGARY - 2023',80,120,0);
+  MM.Images.ItemByName['Burdock'].CopyTo(0,0,46,52,16,(SPLASHSCREENHEIGHT-52) div 2,fTexture.ARGBImage,true);
+  fTexture.Update;
+  atmB:=TBDButton.Create(
+    fWindowLeft+SPLASHSCREENWIDTH-NORMALBUTTONWIDTH-6-16,
+    fWindowTop+SPLASHSCREENHEIGHT-44,
+    NORMALBUTTONWIDTH,
+    'OK','CLOSE DIALOG',TMessage.Init(MSG_ABOUTRESP,0));
+  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
+  AddChild(atmB);
+  Visible:=false;
+  MouseObjects.Add(Self);
 end;
 
 end.
