@@ -1,9 +1,11 @@
 Todo:
-- Make decision:
-  - Create a mechanism to set up Open/SaveDialog for each file type.
-    OR
-  - Create multiple Open/SaveDialogs for each type and show appropiate dialog when needed.
-- Add export CEL to PNG.
+- Add "Project"/"New" dialog.
+- Make "Project"/"Save" work.
+- Make "Project"/"Open" work.
+- Add "Image"/"New" dialog.
+- Make "Image"/"Remove" disabled when only one image exists in the project.
+- And enable it back when there are more than 1 images.
+- Add "Random" ink. It will use colors randomly from the selected cluster.
 - Ask for color fit when loading a CEL file.
 - Make ColorCluster clickable.
   - Left to select color.
@@ -21,6 +23,9 @@ Todo:
   - R Grad (dither, Center)
 - Add Tool and Ink selector
 
+
+2023.04.21
+- Merged button and slider classes in one unit (BDPBasicControls).
 
 2023.04.14
 - Menus are loaded from external file. (look at \work\menu)

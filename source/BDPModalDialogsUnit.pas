@@ -5,7 +5,7 @@ unit BDPModalDialogsUnit;
 interface
 
 uses
-  SysUtils, mk_sdl2, vcc2_Container, BDPButtonUnit;
+  SysUtils, mk_sdl2, vcc2_Container, BDPBasicControls;
 
 type
 
