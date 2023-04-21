@@ -1,4 +1,4 @@
-unit BDPInksUnit;
+unit BDPInks;
 
 {$mode delphi}
 

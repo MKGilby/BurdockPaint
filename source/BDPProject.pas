@@ -1,11 +1,11 @@
-unit BDPProjectUnit;
+unit BDPProject;
 
 {$mode Delphi}
 
 interface
 
 uses
-  Classes, SysUtils, fgl, BDPImageUnit, BDPUndoUnit, BDPColorClusterUnit;
+  Classes, SysUtils, fgl, BDPImageUnit, BDPUndoUnit, BDPColorCluster;
 
 type
 
@@ -83,7 +83,7 @@ type
 
 implementation
 
-uses BDPSharedUnit, BDPPaletteUnit;
+uses BDPSharedUnit, BDPPalette;
 
 const
   EXTENDEDIMAGEID=$45;

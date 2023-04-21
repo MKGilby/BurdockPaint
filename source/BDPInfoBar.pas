@@ -1,4 +1,4 @@
-unit BDPInfoBarUnit;
+unit BDPInfoBar;
 
 {$mode Delphi}{$H+}
 

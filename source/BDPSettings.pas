@@ -1,4 +1,4 @@
-unit BDPSettingsUnit;
+unit BDPSettings;
 
 {$mode Delphi}
 
@@ -58,7 +58,7 @@ type
 
 implementation
 
-uses MKINIFile, BDPKeyMappingUnit, BDPSharedUnit;
+uses MKINIFile, BDPKeyMapping, BDPSharedUnit;
 
 { TSettings }
 

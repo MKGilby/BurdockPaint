@@ -1,11 +1,11 @@
-unit BDPMainUnit;
+unit BDPMain;
 
 {$mode Delphi}{$H+}
 
 interface
 
-uses SysUtils, mk_sdl2, Dialogs, BDPControlsUnit, BDPDrawAreaUnit,
-  BDPModalDialogsUnit, BDPPaletteEditorUnit, BDPMenuUnit;
+uses SysUtils, mk_sdl2, Dialogs, BDPControls, BDPDrawArea,
+  BDPModalDialogs, BDPPaletteEditor, BDPMenu;
 
 type
 
@@ -38,8 +38,8 @@ type
 
 implementation
 
-uses SDL2, BDPSharedUnit, MKToolbox, MKStream, MKMouse2, Logger,
-  BDPMessageUnit, BDPKeyMappingUnit, BDPToolsUnit, MAD4MidLevelUnit, BDPImageUnit;
+uses SDL2, BDPShared, MKToolbox, MKStream, MKMouse2, Logger,
+  BDPMessage, BDPKeyMapping, BDPTools, MAD4MidLevelUnit, BDPImage;
 
 { TMain }
 

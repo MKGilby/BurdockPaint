@@ -1,12 +1,12 @@
-unit BDPSharedUnit;
+unit BDPShared;
 
 {$mode Delphi}{$H+}
 
 interface
 
-uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, BDPInfoBarUnit, BDPImageUnit,
-  BDPSettingsUnit, BDPMessageUnit, BDPCursorUnit, BDPToolsUnit, BDPInksUnit,
-  BDPPaletteUnit, PNGFont2Unit, BDPProjectUnit;
+uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, BDPInfoBar, BDPImage,
+  BDPSettings, BDPMessage, BDPCursor, BDPTools, BDPInks,
+  BDPPalette, PNGFont2Unit, BDPProject;
 
 const
   WINDOWWIDTH=1280;

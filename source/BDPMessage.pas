@@ -1,4 +1,4 @@
-unit BDPMessageUnit;
+unit BDPMessage;
 
 {$mode Delphi}
 

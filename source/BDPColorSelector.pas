@@ -1,4 +1,4 @@
-unit BDPColorSelectorUnit;
+unit BDPColorSelector;
 
 {$mode Delphi}
 

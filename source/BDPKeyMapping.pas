@@ -1,4 +1,4 @@
-unit BDPKeyMappingUnit;
+unit BDPKeyMapping;
 
 {$mode Delphi}
 

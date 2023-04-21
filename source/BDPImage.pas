@@ -1,11 +1,11 @@
-unit BDPImageUnit;
+unit BDPImage;
 
 {$mode Delphi}
 
 interface
 
 uses
-  Classes, SysUtils, mk_sdl2, BDPPaletteUnit;
+  Classes, SysUtils, mk_sdl2, BDPPalette;
 
 type
 
@@ -149,7 +149,7 @@ type
 
 implementation
 
-uses MyZStreamUnit, SDL2, Logger, ARGBImageUnit, BDPSharedUnit;
+uses MyZStreamUnit, SDL2, Logger, ARGBImageUnit, BDPShared;
 
 {$i ntsccol.inc}
 

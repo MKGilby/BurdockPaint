@@ -1,4 +1,4 @@
-unit BDPPaletteUnit;
+unit BDPPalette;
 
 {$mode Delphi}
 

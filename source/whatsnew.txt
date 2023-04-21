@@ -26,6 +26,7 @@ Todo:
 
 2023.04.21
 - Merged button, slider and colorbox classes in one unit (BDPBasicControls).
+- Renamed units (removed the word unit from the end of the names).
 
 2023.04.14
 - Menus are loaded from external file. (look at \work\menu)

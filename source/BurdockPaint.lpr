@@ -2,7 +2,7 @@ program BurdockPaint;
 
 uses
   Interfaces,
-  BDPMainUnit,
+  BDPMain,
   ARGBImageBMPReaderUnit,
   ARGBImageCELReaderUnit,
   ARGBImagePNGReaderUnit,

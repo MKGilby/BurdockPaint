@@ -1,10 +1,10 @@
-unit BDPUndoUnit;
+unit BDPUndo;
 
 {$mode Delphi}
 
 interface
 
-uses Classes, Sysutils, fgl, BDPImageUnit, BDPPaletteUnit, BDPMessageUnit;
+uses Classes, Sysutils, fgl, BDPImage, BDPPalette, BDPMessage;
 
 type
 
@@ -99,7 +99,7 @@ type
 
 implementation
 
-uses BDPSharedUnit, BDPSettingsUnit;
+uses BDPShared, BDPSettings;
 
 const
   UNDOSYSTEMREGIONID=$55;

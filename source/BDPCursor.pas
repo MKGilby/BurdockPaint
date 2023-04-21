@@ -1,4 +1,4 @@
-unit BDPCursorUnit;
+unit BDPCursor;
 
 {$mode Delphi}
 

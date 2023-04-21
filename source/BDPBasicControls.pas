@@ -5,7 +5,7 @@ unit BDPBasicControls;
 interface
 
 uses SysUtils, vcc2_Slider, vcc2_Button, Font2Unit, ARGBImageUnit,
-  BDPMessageUnit, vcc2_VisibleControl;
+  BDPMessage, vcc2_VisibleControl;
 
 type
 
@@ -70,7 +70,7 @@ type
 
 implementation
 
-uses BDPSharedUnit, mk_sdl2;
+uses BDPShared, mk_sdl2;
 
 const
   SLIDERKNOBWIDTH=57;

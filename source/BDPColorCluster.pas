@@ -1,4 +1,4 @@
-unit BDPColorClusterUnit;
+unit BDPColorCluster;
 
 {$mode Delphi}
 

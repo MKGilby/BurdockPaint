@@ -1,4 +1,4 @@
-unit BDPDrawAreaUnit;
+unit BDPDrawArea;
 
 {$mode Delphi}
 
@@ -47,7 +47,7 @@ type
 
 implementation
 
-uses BDPSharedUnit, sdl2, BDPKeyMappingUnit, BDPToolsUnit;
+uses BDPShared, sdl2, BDPKeyMapping, BDPTools;
 
 { TBDDrawArea }
 

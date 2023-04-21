@@ -1,11 +1,11 @@
-unit BDPToolsUnit;
+unit BDPTools;
 
 {$mode delphi}
 
 interface
 
 uses
-  Classes, SysUtils, Lists, BDPImageUnit;
+  Classes, SysUtils, Lists, BDPImageBDPImage;
 
 type
 
@@ -182,7 +182,7 @@ type
 implementation
 
 uses
-  BDPSharedUnit, MKToolbox, Logger, BDPMessageUnit, BDPSettingsUnit, SDL2;
+  BDPShared, MKToolbox, Logger, BDPMessage, BDPSettings, SDL2;
 
 // ------------------------------------------------------------ [ TBDTool ] ---
 

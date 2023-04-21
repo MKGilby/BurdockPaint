@@ -1,4 +1,4 @@
-unit BDPPaletteEditorUnit;
+unit BDPPaletteEditor;
 
 {$mode Delphi}
 
@@ -6,7 +6,7 @@ interface
 
 uses
   SysUtils, mk_sdl2, vcc2_Container, BDPBasicControls, BDPMessageUnit,
-  BDPColorSelectorUnit, BDPColorClusterUnit;
+  BDPColorSelector, BDPColorCluster;
 
 type
 
@@ -47,7 +47,7 @@ type
 
 implementation
 
-uses BDPSharedUnit, MKMouse2, BDPToolsUnit, SDL2;
+uses BDPShared, MKMouse2, BDPTools, SDL2;
 
 { TBDPaletteEditor }
 

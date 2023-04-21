@@ -1,11 +1,11 @@
-unit BDPControlsUnit;
+unit BDPControls;
 
 {$mode Delphi}{$H+}
 
 interface
 
 uses
-  SysUtils, mk_sdl2, vcc2_Container, BDPBasicControls, BDPMessageUnit, BDPColorSelectorUnit;
+  SysUtils, mk_sdl2, vcc2_Container, BDPBasicControls, BDPMessageBDPMessage, BDPColorSelector;
 
 type
 
@@ -38,7 +38,7 @@ type
 
 implementation
 
-uses BDPSharedUnit, BDPToolsUnit, BDPInksUnit, MKMouse2;
+uses BDPShared, BDPTools, BDPInks, MKMouse2;
 
 { TBDControls }
 

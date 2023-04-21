@@ -1,4 +1,4 @@
-unit BDPModalDialogsUnit;
+unit BDPModalDialogs;
 
 {$mode Delphi}
 
@@ -60,7 +60,7 @@ type
 implementation
 
 uses
-  sdl2, BDPSharedUnit, BDPMessageUnit, BDPKeyMappingUnit, MKMouse2;
+  sdl2, BDPSharedUnit, BDPMessageUnit, BDPKeyMapping, MKMouse2;
 
 const
   QUITDIALOGWIDTH=480;

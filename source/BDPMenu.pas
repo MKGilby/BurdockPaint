@@ -1,4 +1,4 @@
-unit BDPMenuUnit;
+unit BDPMenu;
 
 {$mode Delphi}
 

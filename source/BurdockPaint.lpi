@@ -112,83 +112,83 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPMainUnit.pas"/>
+        <Filename Value="BDPMain.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPSharedUnit.pas"/>
+        <Filename Value="BDPShared.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPInfoBarUnit.pas"/>
+        <Filename Value="BDPInfoBar.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPControlsUnit.pas"/>
+        <Filename Value="BDPControls.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPPaletteUnit.pas"/>
+        <Filename Value="BDPPalette.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPImageUnit.pas"/>
+        <Filename Value="BDPImage.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPDrawAreaUnit.pas"/>
+        <Filename Value="BDPDrawArea.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPSettingsUnit.pas"/>
+        <Filename Value="BDPSettings.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPMessageUnit.pas"/>
+        <Filename Value="BDPMessage.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPCursorUnit.pas"/>
+        <Filename Value="BDPCursor.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPToolsUnit.pas"/>
+        <Filename Value="BDPTools.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPInksUnit.pas"/>
+        <Filename Value="BDPInks.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPModalDialogsUnit.pas"/>
+        <Filename Value="BDPModalDialogs.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPKeyMappingUnit.pas"/>
+        <Filename Value="BDPKeyMapping.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPColorSelectorUnit.pas"/>
+        <Filename Value="BDPColorSelector.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPUndoUnit.pas"/>
+        <Filename Value="BDPUndo.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPPaletteEditorUnit.pas"/>
+        <Filename Value="BDPPaletteEditor.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPMenuUnit.pas"/>
+        <Filename Value="BDPMenu.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPColorClusterUnit.pas"/>
+        <Filename Value="BDPColorCluster.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPProjectUnit.pas"/>
+        <Filename Value="BDPProject.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
