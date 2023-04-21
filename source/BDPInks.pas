@@ -59,7 +59,7 @@ type
 
 implementation
 
-uses MKToolBox, BDPSharedUnit, Logger;
+uses MKToolBox, BDPShared, Logger;
 
 // ------------------------------------------------------------- [ TBDInk ] ---
 

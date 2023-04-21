@@ -58,7 +58,7 @@ type
 
 implementation
 
-uses MKINIFile, BDPKeyMapping, BDPSharedUnit;
+uses MKINIFile, BDPKeyMapping, BDPShared;
 
 { TSettings }
 

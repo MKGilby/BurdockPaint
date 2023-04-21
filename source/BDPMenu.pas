@@ -4,7 +4,7 @@ unit BDPMenu;
 
 interface
 
-uses Classes, SysUtils, fgl, mk_sdl2, MKMouse2, BDPMessageUnit, vcc2_VisibleControl;
+uses Classes, SysUtils, fgl, mk_sdl2, MKMouse2, BDPMessage, vcc2_VisibleControl;
 
 type
 
@@ -62,7 +62,7 @@ type
 
 implementation
 
-uses BDPSharedUnit, MKStream;
+uses BDPShared, MKStream;
 
 { TSubMenuItem }
 

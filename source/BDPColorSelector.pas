@@ -24,7 +24,7 @@ type
 
 implementation
 
-uses BDPSharedUnit, BDPSettingsUnit, sdl2, mk_sdl2, BDPKeyMappingUnit;
+uses BDPShared, BDPSettings, sdl2, mk_sdl2, BDPKeyMapping;
 
 { TBDColorSelector }
 

@@ -5,7 +5,7 @@ unit BDPTools;
 interface
 
 uses
-  Classes, SysUtils, Lists, BDPImageBDPImage;
+  Classes, SysUtils, Lists, BDPImage;
 
 type
 

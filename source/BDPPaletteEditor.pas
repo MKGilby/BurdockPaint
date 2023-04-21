@@ -5,7 +5,7 @@ unit BDPPaletteEditor;
 interface
 
 uses
-  SysUtils, mk_sdl2, vcc2_Container, BDPBasicControls, BDPMessageUnit,
+  SysUtils, mk_sdl2, vcc2_Container, BDPBasicControls, BDPMessage,
   BDPColorSelector, BDPColorCluster;
 
 type

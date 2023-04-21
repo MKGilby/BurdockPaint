@@ -14,7 +14,7 @@ type
 
 implementation
 
-uses BDPSharedUnit, mk_sdl2, SDL2;
+uses BDPShared, mk_sdl2, SDL2;
 
 { TBDCursor }
 

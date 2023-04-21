@@ -5,7 +5,7 @@ unit BDPProject;
 interface
 
 uses
-  Classes, SysUtils, fgl, BDPImageUnit, BDPUndoUnit, BDPColorCluster;
+  Classes, SysUtils, fgl, BDPImage, BDPUndo, BDPColorCluster;
 
 type
 
@@ -83,7 +83,7 @@ type
 
 implementation
 
-uses BDPSharedUnit, BDPPalette;
+uses BDPShared, BDPPalette;
 
 const
   EXTENDEDIMAGEID=$45;

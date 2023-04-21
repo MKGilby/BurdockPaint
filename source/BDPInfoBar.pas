@@ -27,7 +27,7 @@ type
 
 implementation
 
-uses BDPSharedUnit, mk_sdl2, Font2Unit;
+uses BDPShared, mk_sdl2, Font2Unit;
 
 { TBDInfoBar }
 

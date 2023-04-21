@@ -69,7 +69,7 @@ type
 
 implementation
 
-uses BDPSharedUnit;
+uses BDPShared;
 
 const
   COLORCLUSTERID=$54;

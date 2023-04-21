@@ -98,7 +98,7 @@ type
 
 implementation
 
-uses BDPSharedUnit, MKStream, Logger, MyZStreamUnit, CodingUnit;
+uses BDPShared, MKStream, Logger, MyZStreamUnit, CodingUnit;
 
 const
   PALETTEDATAID=$43;
