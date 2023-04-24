@@ -44,6 +44,8 @@
 //
 //  V1.00: Gilby - 2023.01.17
 //    * Initial creation from vcc_Container2.
+//  V1.01: Gilby - 2023.04.24
+//    * BugFix in Destroy. Child objects weren't removed from MouseObjects.
 
 {$mode delphi}{$H+}
 
@@ -108,7 +110,7 @@ begin
   if Assigned(fChilds) then begin
     for i:=0 to fChilds.Count-1 do begin
       j:=MouseObjects.IndexOf(fChilds[i]);
-      if j>0 then MouseObjects.Delete(j);
+      if j>-1 then MouseObjects.Delete(j);
     end;
     FreeAndNil(fChilds);
   end;

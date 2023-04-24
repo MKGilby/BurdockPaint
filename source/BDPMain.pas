@@ -21,10 +21,10 @@ type
     fDrawArea:TBDDrawArea;
     fPaletteEditor:TBDPaletteEditor;
     fSplashScreen:TBDAboutDialog;
-    fQuitWindow:TConfirmQuitDialog;
+    fQuitWindow:TBDConfirmQuitDialog;
     fMainMenu:TMainMenu;
-    fMagnifyDialog:TMagnifyCELDialog;
-    fRotateDialog:TRotateCELDialog;
+    fMagnifyDialog:TBDMagnifyCELDialog;
+    fRotateDialog:TBDRotateCELDialog;
     fOpenCELDialog,
     fOpenProjectDialog:TOpenDialog;
     fSaveCELDialog,
@@ -79,12 +79,12 @@ begin
   fDrawArea:=TBDDrawArea.Create;
   fControls:=TBDControls.Create;
   fPaletteEditor:=TBDPaletteEditor.Create;
-  fQuitWindow:=TConfirmQuitDialog.Create;
+  fQuitWindow:=TBDConfirmQuitDialog.Create;
   fSplashScreen:=TBDAboutDialog.Create;
   fMainMenu:=TMainMenu.Create('menu.bin');
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
-  fMagnifyDialog:=TMagnifyCELDialog.Create;
-  fRotateDialog:=TRotateCELDialog.Create;
+  fMagnifyDialog:=TBDMagnifyCELDialog.Create;
+  fRotateDialog:=TBDRotateCELDialog.Create;
   MouseObjects.Sort;
   MouseObjects.List;
 
@@ -268,6 +268,19 @@ begin
                   Log.LogError(e.message);
               end;
               MessageQueue.AddMessage(MSG_SHOWCEL);
+            end;
+          end;
+          MSG_SAVEPROJECT:begin
+            if fSaveProjectDialog.Execute then begin
+              try
+                Project.SaveToFile(fSaveProjectDialog.FileName);
+                MessageBox('Project saved successfully.','OK;NOT OK');
+              except
+                on e:Exception do begin
+                  Log.LogError(e.message);
+                  MessageBox(e.Message);
+                end;
+              end;
             end;
           end;
         end;

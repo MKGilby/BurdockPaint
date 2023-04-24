@@ -24,6 +24,11 @@ Todo:
 - Add Tool and Ink selector
 
 
+2023.04.24
+- Project/Save works, a pop-up message appears on successful save.
+- BUG: You have to click twice the pop-up message's button.
+  First click is hijacked by some other control. (Need investigation!)
+
 2023.04.21
 - Merged button, slider and colorbox classes in one unit (BDPBasicControls).
 - Renamed units (removed the word unit from the end of the names).

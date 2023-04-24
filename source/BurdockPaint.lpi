@@ -123,10 +123,6 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPInfoBar.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
         <Filename Value="BDPControls.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
@@ -196,6 +192,10 @@
       </Unit>
       <Unit>
         <Filename Value="BDPBasicControls.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="BDPInfoBar.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
     </Units>

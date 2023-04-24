@@ -46,6 +46,8 @@
 //     * Not visible objects won't get draw called.
 //   V1.12 - 2023.04.04 - Gilby
 //     * Mouse event proc types are procedures now.
+//   V1.12a - 2023.04.24 - Gilby
+//     * Added ZIndex to MouseObjects.List.
 }
 
 {$ifdef fpc}
@@ -127,6 +129,7 @@ type
     procedure NewSession;
     procedure EndSession;
     procedure List;
+    procedure ListVisible;
     procedure Sort;
   private
     fStack:TStack;
@@ -147,7 +150,7 @@ uses SysUtils, Logger, MK_SDL2;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.12';
+  Version='1.12a';
 
 constructor TMouseObjects.Create;
 begin
@@ -182,6 +185,8 @@ end;
 function TMouseObjects.HandleEvent(Event:PSDL_Event):boolean;
 var i,overindex,mx,my:integer;
 begin
+  if fLastOverIndex>Count-1 then fLastOverIndex:=-1;
+  if fLastMouseDownIndex>Count-1 then fLastMouseDownIndex:=-1;
   fSoftDelete:=true;
   Result:=false;
   Log.LogDebug('MouseObjects.HandleEvent starts...');
@@ -308,12 +313,27 @@ var i:integer;
 begin
   Log.LogDebug(Format('Mouse objects listing starts... (fTop=%d, Count=%d)',[fTop,Count]),Istr);
   for i:=fTop to Count-1 do begin
-    if Self[i]<>nil then with Self[i] do begin
-      Log.LogDebug(Format('%d. %s (%d,%d,%d,%d)',[i,fName,fLeft,fTop,fWidth,fHeight]));
-      if Visible then Log.LogDebug('  Visible.',Istr) else Log.LogDebug('  Not visible.');
-      if Enabled then Log.LogDebug('  Enabled.',Istr) else Log.LogDebug('  Not enabled.');
+    if Assigned(Self[i]) then with Self[i] do begin
+      Log.LogDebug(Format('%d. %s (%d,%d,%d,%d) Z:%d',[i,fName,fLeft,fTop,fWidth,fHeight,fZIndex]));
+      if Visible then Log.LogDebug('  Visible.') else Log.LogDebug('  Not visible.');
+      if Enabled then Log.LogDebug('  Enabled.') else Log.LogDebug('  Not enabled.');
     end else
-      Log.LogDebug(inttostr(i)+'. <nil>',Istr);
+      Log.LogDebug(inttostr(i)+'. <nil>');
+  end;
+  Log.LogDebug('Mouse objects listing ends.',Istr);
+end;
+
+procedure TMouseObjects.ListVisible;
+const Istr=Fstr+'TMouseObjects.ListVisible';
+var i:integer;
+begin
+  Log.LogDebug(Format('Mouse objects listing starts (VISIBLE only)... (fTop=%d, Count=%d)',[fTop,Count]),Istr);
+  for i:=fTop to Count-1 do begin
+    if Assigned(Self[i]) and (Self[i].Visible) then with Self[i] do begin
+      Log.LogDebug(Format('%d. %s (%d,%d,%d,%d) Z:%d',[i,fName,fLeft,fTop,fWidth,fHeight,fZIndex]));
+      if Enabled then Log.LogDebug('  Enabled.') else Log.LogDebug('  Not enabled.');
+    end else
+      Log.LogDebug(inttostr(i)+'. <hidden>');
   end;
   Log.LogDebug('Mouse objects listing ends.',Istr);
 end;

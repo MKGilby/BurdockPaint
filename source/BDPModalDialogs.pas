@@ -9,9 +9,9 @@ uses
 
 type
 
-  { TModalDialog }
+  { TBDModalDialog }
 
-  TModalDialog=class(TContainer)
+  TBDModalDialog=class(TContainer)
     constructor Create(iWidth,iHeight:integer);
     destructor Destroy; override;
     procedure Draw; override;
@@ -22,16 +22,16 @@ type
     fWindowLeft,fWindowTop:integer;
   end;
 
-  { TConfirmQuitDialog }
+  { TBDConfirmQuitDialog }
 
-  TConfirmQuitDialog=class(TModalDialog)
+  TBDConfirmQuitDialog=class(TBDModalDialog)
     constructor Create;
     function KeyDown(Sender:TObject;key:integer):boolean;
   end;
 
-  { TMagnifyCELDialog }
+  { TBDMagnifyCELDialog }
 
-  TMagnifyCELDialog=class(TModalDialog)
+  TBDMagnifyCELDialog=class(TBDModalDialog)
     constructor Create;
     function KeyDown(Sender:TObject;key:integer):boolean;
     procedure MagnifyButtonClick(Sender:TObject;x,y,buttons:integer);
@@ -40,9 +40,9 @@ type
     fMagnifyButtons:array[0..2] of TBDButton;
   end;
 
-  { TRotateCELDialog }
+  { TBDRotateCELDialog }
 
-  TRotateCELDialog=class(TModalDialog)
+  TBDRotateCELDialog=class(TBDModalDialog)
     constructor Create;
     function KeyDown(Sender:TObject;key:integer):boolean;
     procedure RotateButtonClick(Sender:TObject;x,y,buttons:integer);
@@ -53,14 +53,23 @@ type
 
   { TBDAboutDialog }
 
-  TBDAboutDialog=class(TModalDialog)
+  TBDAboutDialog=class(TBDModalDialog)
     constructor Create;
   end;
+
+  { TBDMessageBox }
+
+  TBDMessageBox=class(TBDModalDialog)
+    constructor Create(iMessage:string;iButtons:string='OK');
+    function Run:integer;
+  end;
+
+function MessageBox(iMessage:string;iButtons:string='OK'):integer;
 
 implementation
 
 uses
-  sdl2, BDPShared, BDPMessage, BDPKeyMapping, MKMouse2;
+  sdl2, BDPShared, BDPMessage, BDPKeyMapping, MKMouse2, MKToolbox;
 
 const
   QUITDIALOGWIDTH=480;
@@ -72,11 +81,22 @@ const
   ROTATEDIALOGHEIGHT=128;
   SPLASHSCREENWIDTH=640;
   SPLASHSCREENHEIGHT=160;
+  MESSAGEBOXHEIGHT=96;
+
+function MessageBox(iMessage:string; iButtons:string):integer;
+var MessageBox:TBDMessageBox;j:integer;
+begin
+  MessageBox:=TBDMessageBox.Create(uppercase(iMessage),uppercase(iButtons));
+  Result:=MessageBox.Run;
+  j:=MouseObjects.IndexOf(MessageBox);
+  if j>-1 then MouseObjects.Delete(j);
+  FreeAndNil(MessageBox);
+end;
 
 
-{ TModalDialog }
+{ TBDModalDialog }
 
-constructor TModalDialog.Create(iWidth,iHeight:integer);
+constructor TBDModalDialog.Create(iWidth,iHeight:integer);
 begin
   inherited Create;
   SetBoundsWH(0,0,WINDOWWIDTH,WINDOWHEIGHT);
@@ -89,30 +109,30 @@ begin
   fVisible:=false;
 end;
 
-destructor TModalDialog.Destroy;
+destructor TBDModalDialog.Destroy;
 begin
   if Assigned(fTexture) then FreeAndNil(fTexture);
   inherited Destroy;
 end;
 
-procedure TModalDialog.Draw;
+procedure TBDModalDialog.Draw;
 begin
   PutTexture(fWindowLeft,fWindowTop,fTexture);
 end;
 
-function TModalDialog.KeyDown(Sender:TObject; key:integer):boolean;
+function TBDModalDialog.KeyDown(Sender:TObject; key:integer):boolean;
 begin
   Result:=true;
 end;
 
-function TModalDialog.KeyUp(Sender:TObject; key:integer):boolean;
+function TBDModalDialog.KeyUp(Sender:TObject; key:integer):boolean;
 begin
   Result:=true;
 end;
 
-{ TConfirmQuitDialog }
+{ TBDConfirmQuitDialog }
 
-constructor TConfirmQuitDialog.Create;
+constructor TBDConfirmQuitDialog.Create;
 var atmB:TBDButton;msg:TMessage;
 begin
   inherited Create(QUITDIALOGWIDTH,QUITDIALOGHEIGHT);
@@ -145,7 +165,7 @@ begin
   MouseObjects.Add(Self);
 end;
 
-function TConfirmQuitDialog.KeyDown(Sender:TObject; key:integer):boolean;
+function TBDConfirmQuitDialog.KeyDown(Sender:TObject; key:integer):boolean;
 begin
   Result:=true;
   if key=KeyMap[KEY_YES] then
@@ -154,9 +174,9 @@ begin
     MessageQueue.AddMessage(MSG_QUIT,0);
 end;
 
-{ TMagnifyCELDialog }
+{ TBDMagnifyCELDialog }
 
-constructor TMagnifyCELDialog.Create;
+constructor TBDMagnifyCELDialog.Create;
 const MAGNIFIES:array[0..2] of integer=(2,3,5);
 var atmb:TBDButton;msg:TMessage;i:integer;
 begin
@@ -203,7 +223,7 @@ begin
   MouseObjects.Add(Self);
 end;
 
-function TMagnifyCELDialog.KeyDown(Sender:TObject; key:integer):boolean;
+function TBDMagnifyCELDialog.KeyDown(Sender:TObject; key:integer):boolean;
 begin
   if key=SDL_SCANCODE_2 then begin
     fMagnifyButtons[0].Selected:=true;
@@ -234,14 +254,14 @@ begin
   Result:=true;
 end;
 
-procedure TMagnifyCELDialog.MagnifyButtonClick(Sender:TObject;x,y,buttons:integer);
+procedure TBDMagnifyCELDialog.MagnifyButtonClick(Sender:TObject;x,y,buttons:integer);
 var i:integer;
 begin
   for i:=0 to 2 do fMagnifyButtons[i].Selected:=false;
   (Sender as TBDButton).Selected:=true;
 end;
 
-procedure TMagnifyCELDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);
+procedure TBDMagnifyCELDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   if fMagnifyButtons[0].Selected then
     MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,2)
@@ -251,9 +271,9 @@ begin
     MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,5);
 end;
 
-{ TRotateCELDialog }
+{ TBDRotateCELDialog }
 
-constructor TRotateCELDialog.Create;
+constructor TBDRotateCELDialog.Create;
 const ROTATES:array[0..2] of integer=(90,180,270);
 var atmb:TBDButton;msg:TMessage;i:integer;
 begin
@@ -300,7 +320,7 @@ begin
   MouseObjects.Add(Self);
 end;
 
-function TRotateCELDialog.KeyDown(Sender:TObject; key:integer):boolean;
+function TBDRotateCELDialog.KeyDown(Sender:TObject; key:integer):boolean;
 begin
   if key=SDL_SCANCODE_1 then begin
     fRotateButtons[0].Selected:=true;
@@ -331,14 +351,14 @@ begin
   Result:=true;
 end;
 
-procedure TRotateCELDialog.RotateButtonClick(Sender:TObject; x,y,buttons:integer);
+procedure TBDRotateCELDialog.RotateButtonClick(Sender:TObject; x,y,buttons:integer);
 var i:integer;
 begin
   for i:=0 to 2 do fRotateButtons[i].Selected:=false;
   (Sender as TBDButton).Selected:=true;
 end;
 
-procedure TRotateCELDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);
+procedure TBDRotateCELDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   if fRotateButtons[0].Selected then
     MessageQueue.AddMessage(MSG_ROTATECELRESP,1)
@@ -372,6 +392,61 @@ begin
   AddChild(atmB);
   Visible:=false;
   MouseObjects.Add(Self);
+end;
+
+{ TBDMessageBox }
+
+constructor TBDMessageBox.Create(iMessage:string; iButtons:string);
+var atmB:TBDButton;i,x,buttoncount:integer;
+begin
+  if length(iButtons)=0 then iButtons:='OK';
+  if iButtons[length(iButtons)]<>';' then iButtons+=';';
+  buttoncount:=CountChar(';',iButtons);
+  inherited Create(max((length(iMessage)+2)*18,buttoncount*(NORMALBUTTONWIDTH+18)),MESSAGEBOXHEIGHT);
+  fName:='MessageBox';
+  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[2]);
+  fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[3]);
+  MM.Fonts['Black'].OutText(fTexture.ARGBImage,iMessage,fTexture.Width div 2,24,1);
+  fTexture.Update;
+  ZIndex:=MODALDIALOG_ZINDEX;
+  MouseObjects.Add(Self);
+  x:=(fTexture.Width div 2)-(buttoncount*(NORMALBUTTONWIDTH+18)) div 2;
+  i:=0;
+  while length(iButtons)>0 do begin
+    atmB:=TBDButton.Create(
+      fWindowLeft+x,
+      fWindowTop+MESSAGEBOXHEIGHT-44,
+      NORMALBUTTONWIDTH,
+//      'OKX','CLOSE DIALOG',TMessage.Init(MSG_MESSAGEBOXRESP,i));
+      copy(iButtons,1,pos(';',iButtons)-1),'',TMessage.Init(MSG_MESSAGEBOXRESP,i));
+    atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
+    AddChild(atmB);
+    delete(iButtons,1,pos(';',iButtons));
+    inc(i);
+    inc(x,NORMALBUTTONWIDTH+18);
+  end;
+  Visible:=true;
+end;
+
+function TBDMessageBox.Run:integer;
+var msg:TMessage;
+begin
+//  MouseObjects.List;
+  MouseObjects.ListVisible;
+  Result:=-1;
+  repeat
+    SDL_SetRenderDrawColor(PrimaryWindow.Renderer,48,12,24,255);
+    SDL_RenderClear(PrimaryWindow.Renderer);
+    MouseObjects.Draw;
+    FlipNoLimit;
+    HandleMessages;
+    while MessageQueue.HasNewMessage do begin
+      msg:=MessageQueue.GetNextMessage;
+      case msg.TypeID of
+        MSG_MESSAGEBOXRESP:Result:=msg.DataInt;
+      end;
+    end;
+  until Result<>-1;
 end;
 
 end.

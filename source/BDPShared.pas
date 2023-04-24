@@ -93,6 +93,8 @@ const
   MSG_ROTATECELRESP=8;
   // Response from About dialog.
   MSG_ABOUTRESP=9;
+  // Response from MessageBox. IntValue is the pressed button number.
+  MSG_MESSAGEBOXRESP=10;
 
   // ------- Tool Messages ------- Range: 100-199 -------
   // PICKCOL finished, IntValue holds the selected color index or -1 if no color selected.
