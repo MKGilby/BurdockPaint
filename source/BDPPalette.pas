@@ -64,6 +64,7 @@ type
   private
     fEntries:pointer;
     fMaxEntries:integer;
+    fChanged:boolean;
     function fGetColor(index:integer):uint32;
     function fGetColorA(index:integer):uint8;
     function fGetColorR(index:integer):uint8;
@@ -94,6 +95,7 @@ type
     property ColorB[index:integer]:uint8 read fGetColorB write fSetColorB;
     property ColorA[index:integer]:uint8 read fGetColorA write fSetColorA;
     property Size:integer read fMaxEntries;
+    property Changed:boolean read fChanged;
   end;
 
 implementation
@@ -126,6 +128,7 @@ end;
 constructor TBDPalette.Create;
 begin
   Create(MAXPALETTEENTRIES);
+  fChanged:=false;
 end;
 
 constructor TBDPalette.Create(iMaxEntries:integer);
@@ -134,11 +137,13 @@ begin
   fMaxEntries:=iMaxEntries;
   fEntries:=getmem(fMaxEntries*4);
   fillchar(fEntries^,fMaxEntries*4,0);
+  fChanged:=false;
 end;
 
 constructor TBDPalette.CreateFromStream(iStream:TStream);
 begin
   LoadFromStream(iStream);
+  fChanged:=false;
 end;
 
 destructor TBDPalette.Destroy;
@@ -183,6 +188,7 @@ begin
   Target.Position:=curr;
   Target.write(i,4);
   Target.Position:=Target.Position+i;
+  fChanged:=false;
 end;
 
 function TBDPalette.CreateDataV1:TStream;
@@ -360,6 +366,7 @@ begin
       inc(p);
     end;
   end;
+  fChanged:=true;
 end;
 
 procedure TBDPalette.CopyColorsFrom(Source:TBDPalette;SourceStart,TargetStart:integer; count:integer);
@@ -371,6 +378,7 @@ begin
     if (c=-1) or (SourceStart+c>Source.Size) then c:=Source.Size-SourceStart;
     if (TargetStart+c>Size) then c:=Size-TargetStart;
     for i:=0 to c-1 do Colors[TargetStart+i]:=Source.Colors[SourceStart+i];
+    fChanged:=true;
   end;
 end;
 
@@ -389,6 +397,7 @@ begin
 
   fMaxEntries:=newSize;
   Freemem(p);
+  fChanged:=true;
 end;
 
 procedure TBDPalette.ResizeAndCopyColorsFrom(Source:TBDPalette; start:integer; count:integer);
@@ -403,6 +412,7 @@ begin
       fEntries:=Getmem(fMaxEntries*4);
     end;
     for i:=0 to fMaxEntries do Colors[i]:=Source.Colors[start+i];
+    fChanged:=true;
   end;  // Start is out of range so nothing to copy.
 end;
 
@@ -448,32 +458,42 @@ end;
 
 procedure TBDPalette.fSetColor(index:integer; value:uint32);
 begin
-  if (index>=0) and (index<fMaxEntries) then
+  if (index>=0) and (index<fMaxEntries) then begin
     uint32((fEntries+index*4)^):=value;
+    fChanged:=true;
+  end;
 end;
 
 procedure TBDPalette.fSetColorA(index:integer; value:uint8);
 begin
-  if (index>=0) and (index<fMaxEntries) then
+  if (index>=0) and (index<fMaxEntries) then begin
     uint8((fEntries+index*4+3)^):=value;
+    fChanged:=true;
+  end;
 end;
 
 procedure TBDPalette.fSetColorR(index:integer; value:uint8);
 begin
-  if (index>=0) and (index<fMaxEntries) then
+  if (index>=0) and (index<fMaxEntries) then begin
     uint8((fEntries+index*4+2)^):=value;
+    fChanged:=true;
+  end;
 end;
 
 procedure TBDPalette.fSetColorG(index:integer; value:uint8);
 begin
-  if (index>=0) and (index<fMaxEntries) then
+  if (index>=0) and (index<fMaxEntries) then begin
     uint8((fEntries+index*4+1)^):=value;
+    fChanged:=true;
+  end;
 end;
 
 procedure TBDPalette.fSetColorB(index:integer; value:uint8);
 begin
-  if (index>=0) and (index<fMaxEntries) then
+  if (index>=0) and (index<fMaxEntries) then begin
     uint8((fEntries+index*4)^):=value;
+    fChanged:=true;
+  end;
 end;
 
 end.

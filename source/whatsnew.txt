@@ -27,6 +27,8 @@ Todo:
 - BUGFIX: Losing the first click after receiving focus (after the external save dialog)
   is a feature in SDL2 which can be disabled with:
   SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, '1');
+- Default palette is loaded from BDP format instead of COL.
+- Added Changed property to TBDPalette.
 
 2023.04.24
 - Project/Save works, a pop-up message appears on successful save.

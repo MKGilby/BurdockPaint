@@ -230,9 +230,8 @@ begin
   fDataSize:=fWidth*fHeight*2;
   fData:=getmem(fDataSize);
   fillchar(fData^,fDataSize,0);
-  fPalette:=TBDPalette.Create;
   Xs:=TStringStream.Create(NTSCCOL);
-  fPalette.LoadCOL(Xs,0);
+  fPalette:=TBDPalette.CreateFromStream(Xs);
   FreeAndNil(Xs);
   ResetChange;
 end;

@@ -41,6 +41,7 @@ implementation
 uses SDL2, BDPShared, MKToolbox, MKStream, MKMouse2, Logger,
   BDPMessage, BDPKeyMapping, BDPTools, MAD4MidLevelUnit, BDPImage;
 
+
 { TMain }
 
 constructor TMain.Create(iVersion,iBuildDate:string);
@@ -275,7 +276,7 @@ begin
             if fSaveProjectDialog.Execute then begin
               try
                 Project.SaveToFile(fSaveProjectDialog.FileName);
-                MessageBox('Project saved successfully.','OK;NOT OK');
+                MessageBox('Project saved successfully.');
               except
                 on e:Exception do begin
                   Log.LogError(e.message);
