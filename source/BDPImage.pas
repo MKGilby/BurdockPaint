@@ -47,8 +47,6 @@ type
     procedure VLine(x1,y1,h:integer;ColorIndex:word);
     // FloodFills starting from the given pixel. Sets changed area accordingly.
     procedure FloodFill(x,y:integer;ColorIndex:word);
-    // Resets changed area data.
-    procedure ResetChange;
     // Puts another image onto image, using the specified colorkey.
     // Sets changed area accordingly.
     procedure PutImage(x,y:integer;frame:TBDImage;colorkey:word=65535);
@@ -135,8 +133,6 @@ type
     fPalette:TBDPalette;
     // Is the pixel data changed?
     fChanged:boolean;
-    // If pixel data changed what area was affected?
-    fChangedArea:TRect;
   public
     property Left:integer read fLeft write fLeft;
     property Top:integer read fTop write fTop;
@@ -233,12 +229,13 @@ begin
   Xs:=TStringStream.Create(NTSCCOL);
   fPalette:=TBDPalette.CreateFromStream(Xs);
   FreeAndNil(Xs);
-  ResetChange;
+  fChanged:=false;
 end;
 
 constructor TBDImage.CreateFromStream(iStream:TStream);
 begin
   LoadFromStream(iStream);
+  fChanged:=false;
 end;
 
 destructor TBDImage.Destroy;
@@ -253,10 +250,6 @@ begin
   if (x>=0) and (x<fWidth) and (y>=0) and (y<fHeight) then begin
     word((fData+(y*fWidth+x)*2)^):=ColorIndex;
     fChanged:=true;
-    if fChangedArea.Left>x then fChangedArea.Left:=x;
-    if fChangedArea.Right<x then fChangedArea.Right:=x;
-    if fChangedArea.Top>y then fChangedArea.Top:=y;
-    if fChangedArea.Bottom<y then fChangedArea.Bottom:=y;
   end;
 end;
 
@@ -411,17 +404,12 @@ begin
     if x2>=fWidth then x2:=fWidth-1;
     if y1<0 then y1:=0;
     if y2>=fHeight then y2:=fHeight-1;
-    fChanged:=true;
-    if fChangedArea.Left>x1 then fChangedArea.Left:=x1;
-    if fChangedArea.Right<x2 then fChangedArea.Right:=x2;
-    if fChangedArea.Top>y1 then fChangedArea.Top:=y1;
-    if fChangedArea.Bottom<y2 then fChangedArea.Bottom:=y2;
-
     for j:=y1 to y2 do begin
       p:=fData+(j*fWidth)*2;
       for i:=x1 to x2 do
         word((p+i*2)^):=ColorIndex;
     end;
+    fChanged:=true;
   end;
 end;
 
@@ -435,17 +423,12 @@ begin
     if x1+wi>fWidth then wi:=fWidth-x1;
     if y1<0 then begin he+=y1;y1:=0;end;
     if y1+he>fHeight then he:=fHeight-y1;
-    fChanged:=true;
-    if fChangedArea.Left>x1 then fChangedArea.Left:=x1;
-    if fChangedArea.Right<x1+wi-1 then fChangedArea.Right:=x1+wi-1;
-    if fChangedArea.Top>y1 then fChangedArea.Top:=y1;
-    if fChangedArea.Bottom<y1+he-1 then fChangedArea.Bottom:=y1+he-1;
-
     for j:=0 to he-1 do begin
       p:=fData+((y1+j)*fWidth+x1)*2;
       for i:=0 to wi-1 do
         word((p+i*2)^):=ColorIndex;
     end;
+    fChanged:=true;
   end;
 end;
 
@@ -461,12 +444,6 @@ begin
     if x2>=fWidth then x2:=fWidth-1;
     if y1<0 then y1:=0;
     if y2>=fHeight then y2:=fHeight-1;
-
-    fChanged:=true;
-    if fChangedArea.Left>x1 then fChangedArea.Left:=x1;
-    if fChangedArea.Right<x2 then fChangedArea.Right:=x2;
-    if fChangedArea.Top>y1 then fChangedArea.Top:=y1;
-    if fChangedArea.Bottom<y2 then fChangedArea.Bottom:=y2;
     for i:=y1 to y2 do begin
       word((fData+(i*fWidth+x1)*2)^):=ColorIndex;
       word((fData+(i*fWidth+x2)*2)^):=ColorIndex;
@@ -475,7 +452,7 @@ begin
       word((fData+(y1*fWidth+i)*2)^):=ColorIndex;
       word((fData+(y2*fWidth+i)*2)^):=ColorIndex;
     end;
-
+    fChanged:=true;
   end;
 end;
 
@@ -489,12 +466,6 @@ begin
     if x1+wi>fWidth then wi:=fWidth-x1;
     if y1<0 then begin he+=y1;y1:=0;end;
     if y1+he>fHeight then he:=fHeight-y1;
-    fChanged:=true;
-    if fChangedArea.Left>x1 then fChangedArea.Left:=x1;
-    if fChangedArea.Right<x1+wi-1 then fChangedArea.Right:=x1+wi-1;
-    if fChangedArea.Top>y1 then fChangedArea.Top:=y1;
-    if fChangedArea.Bottom<y1+he-1 then fChangedArea.Bottom:=y1+he-1;
-
     for i:=y1 to y1+he-1 do begin
       word((fData+(i*fWidth+x1)*2)^):=ColorIndex;
       word((fData+(i*fWidth+x1+wi-1)*2)^):=ColorIndex;
@@ -503,6 +474,7 @@ begin
       word((fData+(y1*fWidth+i)*2)^):=ColorIndex;
       word((fData+((y1+he-1)*fWidth+i)*2)^):=ColorIndex;
     end;
+    fChanged:=true;
   end;
 end;
 
@@ -514,13 +486,9 @@ begin
     // Do some clipping first
     if x1<0 then begin w+=x1;x1:=0;end;
     if (x1+w>=fWidth) then w:=fWidth-x1;
-    fChanged:=true;
-    if fChangedArea.Left>x1 then fChangedArea.Left:=x1;
-    if fChangedArea.Right<x1+w-1 then fChangedArea.Right:=x1+w-1;
-    if fChangedArea.Top>y1 then fChangedArea.Top:=y1;
-    if fChangedArea.Bottom<y1 then fChangedArea.Bottom:=y1;
     for i:=x1 to x1+w-1 do
       word((fData+(y1*fWidth+i)*2)^):=ColorIndex;
+    fChanged:=true;
   end;
 end;
 
@@ -532,13 +500,9 @@ begin
     // Do some clipping first
     if y1<0 then begin h+=y1;y1:=0;end;
     if (y1+h>=fHeight) then h:=fHeight-y1;
-    fChanged:=true;
-    if fChangedArea.Left>x1 then fChangedArea.Left:=x1;
-    if fChangedArea.Right<x1 then fChangedArea.Right:=x1;
-    if fChangedArea.Top>y1 then fChangedArea.Top:=y1;
-    if fChangedArea.Bottom<y1+h-1 then fChangedArea.Bottom:=y1+h-1;
     for i:=y1 to y1+h-1 do
       word((fData+(i*fWidth+x1)*2)^):=ColorIndex;
+    fChanged:=true;
   end;
 end;
 
@@ -595,15 +559,6 @@ begin
   until not w;
 end;
 
-procedure TBDImage.ResetChange;
-begin
-  fChanged:=false;
-  fChangedArea.Left:=fWidth;
-  fChangedArea.Right:=-1;
-  fChangedArea.Top:=fHeight;
-  fChangedArea.Bottom:=-1;
-end;
-
 procedure TBDImage.PutImage(x,y:integer; frame:TBDImage; colorkey:word);
 var atm:TClipBox;i,j,c:integer;
 begin
@@ -619,10 +574,6 @@ begin
       for i:=0 to he-1 do
         move((frame.RawData+(x2+(y2+i)*frame.Width)*2)^,(fData+(x1+(y1+i)*fWidth)*2)^,wi*2);
     end;
-    if fChangedArea.Left>x1 then fChangedArea.Left:=atm.x1;
-    if fChangedArea.Right<x1+wi-1 then fChangedArea.Right:=x1+wi-1;
-    if fChangedArea.Top>y1 then fChangedArea.Top:=y1;
-    if fChangedArea.Bottom<y1+he-1 then fChangedArea.Bottom:=y1+he-1;
     fChanged:=true;
   end;
 end;
@@ -649,10 +600,6 @@ begin
         move((SourceImage.RawData+(clip1.x1+(clip1.y1+i)*SourceImage.Width)*2)^,
              (fData+(clip2.x1+(clip2.y1+i)*fWidth)*2)^,clip2.wi*2);
     end;
-    if fChangedArea.Left>clip2.x1 then fChangedArea.Left:=clip2.x1;
-    if fChangedArea.Right<clip2.x1+clip2.wi-1 then fChangedArea.Right:=clip2.x1+clip2.wi-1;
-    if fChangedArea.Top>clip2.y1 then fChangedArea.Top:=clip2.y1;
-    if fChangedArea.Bottom<clip2.y1+clip2.he-1 then fChangedArea.Bottom:=clip2.y1+clip2.he-1;
     fChanged:=true;
   end;
 end;
@@ -989,6 +936,7 @@ begin
   fPalette:=TBDPalette.CreateFromStream(Source);
   LoadWholeImageDataFromStream(Source);
   Source.Position:=curr+size;
+  fChanged:=false;
 end;
 
 procedure TBDImage.ExportTo(pFilename,pExtension:string);
