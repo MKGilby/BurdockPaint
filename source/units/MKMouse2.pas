@@ -48,6 +48,8 @@
 //     * Mouse event proc types are procedures now.
 //   V1.12a - 2023.04.24 - Gilby
 //     * Added ZIndex to MouseObjects.List.
+//   V1.13 - 2023.04.25 - Gilby
+//     * Better logging of MouseObjects event handling.
 }
 
 {$ifdef fpc}
@@ -228,9 +230,9 @@ begin
       // Mouse events are passed only for the visible control under the mouse.
       if (Event^.type_=SDL_MOUSEBUTTONDOWN) or (Event^.type_=SDL_MOUSEBUTTONUP) or
          (Event^.type_=SDL_MOUSEMOTION) or (Event^.type_=SDL_MOUSEWHEEL) then begin
-        while (i>=fTop) and (i<Count) and not(Result) do begin
+        while (i>=fTop) and (i<Count) and (overindex=-1) do begin
           if Assigned(Self[i]) and Self[i].Visible then begin
-            Log.LogDebug('Trying object number '+inttostr(i)+' ('+Self[i].Name+')');
+//            Log.LogDebug('Trying object number '+inttostr(i)+' ('+Self[i].Name+')');
             if (overindex=-1) and (Self[i].IsOver(mx,my)) then begin
               overindex:=i;
               if Event^.type_=SDL_MOUSEBUTTONDOWN then fLastMouseDownIndex:=i;
@@ -239,46 +241,65 @@ begin
           dec(i);
         end;
         if overindex>-1 then begin
+          Log.LogDebug(Format('Over %d. %s',[overindex,Self[overindex].Name]));
           case Event^.type_ of
             SDL_MOUSEBUTTONDOWN:
-              if Assigned(Self[overindex].OnMouseDown) then
+              if Assigned(Self[overindex].OnMouseDown) then begin
+                Log.LogDebug('Calling OnMouseDown...');
                 Self[overindex].OnMouseDown(Self[overindex],mx,my,Event.button.button);
+              end;
             SDL_MOUSEBUTTONUP:
-              if Assigned(Self[overindex].OnMouseUp) then
+              if Assigned(Self[overindex].OnMouseUp) then begin
+                Log.LogDebug('Calling OnMouseUp...');
                 Self[overindex].OnMouseUp(Self[overindex],mx,my,Event.button.button);
+              end;
             SDL_MOUSEMOTION:
-              if Assigned(Self[overindex].OnMouseMove) then
+              if Assigned(Self[overindex].OnMouseMove) then begin
+                Log.LogDebug('Calling OnMouseMove...');
                 Self[overindex].OnMouseMove(Self[overindex],mx,my);
+              end;
             SDL_MOUSEWHEEL:
-              if Assigned(Self[overindex].OnMouseWheel) then
+              if Assigned(Self[overindex].OnMouseWheel) then begin
+                Log.LogDebug('Calling OnMouseWheel...');
                 Self[overindex].OnMouseWheel(Self[overindex],mx,my,Event^.wheel.x,Event^.wheel.y);
+              end;
           end;
         end;
       end;
-    end;
 
-    // This part checks if the control under the mouse is changed and
-    // call OnMouseLeave and OnMouseEnter accordingly.
-    if (Event^.type_=SDL_MOUSEMOTION) and (overindex<>fLastOverIndex) then begin
-      if fLastOverIndex>-1 then
-        if Assigned(Self[fLastOverIndex].OnMouseLeave) then
-          Self[fLastOverIndex].OnMouseLeave(Self[fLastOverIndex]);
-      if overindex>-1 then
-        if Assigned(Self[overindex].OnMouseEnter) then
-          Self[overindex].OnMouseEnter(Self[overindex]);
-      fLastOverIndex:=overindex;
-    end;
-
-    // This part checks if a correct click occured and calls OnClick if assigned.
-    // (Click=MouseDown and MouseUp over the same control.)
-    if (Event^.type_=SDL_MOUSEBUTTONUP) and (fLastMouseDownIndex>-1) then begin
-      if (overindex=fLastMouseDownIndex) then begin
-        if Assigned(Self[overindex].OnClick) then begin
-          Log.LogDebug('Click on object number '+inttostr(overindex)+' ('+Self[overindex].Name+')');
-          Self[overindex].OnClick(Self[overindex],Event^.button.x,Event^.button.y,Event^.button.button);
+      // This part checks if the control under the mouse is changed and
+      // call OnMouseLeave and OnMouseEnter accordingly.
+      if (Event^.type_=SDL_MOUSEMOTION) and (overindex<>fLastOverIndex) then begin
+        Log.LogDebug('Object changed under the cursor!');
+        if fLastOverIndex>-1 then begin
+          Log.LogDebug(Format('  From %d. %s',[fLastOverIndex,Self[fLastOverIndex].Name]));
+          if Assigned(Self[fLastOverIndex].OnMouseLeave) then begin
+            Log.LogDebug('Calling OnMouseLeave for '+Self[fLastOverIndex].Name+'...');
+            Self[fLastOverIndex].OnMouseLeave(Self[fLastOverIndex]);
+          end;
         end;
+        if overindex>-1 then begin
+          Log.LogDebug(Format('  To %d. %s',[overindex,Self[overindex].Name]));
+          if Assigned(Self[overindex].OnMouseEnter) then begin
+            Log.LogDebug('Calling OnMouseEnter for '+Self[overindex].Name+'...');
+            Self[overindex].OnMouseEnter(Self[overindex]);
+          end;
+        end;
+        fLastOverIndex:=overindex;
       end;
-      fLastMouseDownIndex:=-1;
+
+      // This part checks if a correct click occured and calls OnClick if assigned.
+      // (Click=MouseDown and MouseUp over the same control.)
+      if (Event^.type_=SDL_MOUSEBUTTONUP) and (fLastMouseDownIndex>-1) then begin
+        if (overindex=fLastMouseDownIndex) then begin
+          if Assigned(Self[overindex].OnClick) then begin
+            Log.LogDebug('Click on object number '+inttostr(overindex)+' ('+Self[overindex].Name+')');
+            Self[overindex].OnClick(Self[overindex],Event^.button.x,Event^.button.y,Event^.button.button);
+          end;
+        end;
+        fLastMouseDownIndex:=-1;
+      end;
+      Result:=true;
     end;
   end;
   fSoftDelete:=false;

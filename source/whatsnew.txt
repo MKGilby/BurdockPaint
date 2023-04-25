@@ -1,6 +1,5 @@
 Todo:
 - Add "Project"/"New" dialog.
-- Make "Project"/"Save" work.
 - Make "Project"/"Open" work.
 - Add "Image"/"New" dialog.
 - Make "Image"/"Remove" disabled when only one image exists in the project.
@@ -23,6 +22,11 @@ Todo:
   - R Grad (dither, Center)
 - Add Tool and Ink selector
 
+
+2023.04.25
+- BUGFIX: Losing the first click after receiving focus (after the external save dialog)
+  is a feature in SDL2 which can be disabled with:
+  SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, '1');
 
 2023.04.24
 - Project/Save works, a pop-up message appears on successful save.

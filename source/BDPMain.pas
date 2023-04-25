@@ -64,6 +64,7 @@ begin
 {$ENDIF}
 
   MKStreamOpener.AddDirectory('.',0);
+  SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, '1');
 
   fMainWindow:=TWindow.Create(
     SDL_WINDOWPOS_CENTERED,
