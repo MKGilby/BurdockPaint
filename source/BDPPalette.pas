@@ -95,7 +95,7 @@ type
     property ColorB[index:integer]:uint8 read fGetColorB write fSetColorB;
     property ColorA[index:integer]:uint8 read fGetColorA write fSetColorA;
     property Size:integer read fMaxEntries;
-    property Changed:boolean read fChanged;
+    property Changed:boolean read fChanged write fChanged;
   end;
 
 implementation
@@ -188,7 +188,6 @@ begin
   Target.Position:=curr;
   Target.write(i,4);
   Target.Position:=Target.Position+i;
-  fChanged:=false;
 end;
 
 function TBDPalette.CreateDataV1:TStream;
