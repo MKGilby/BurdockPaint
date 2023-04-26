@@ -29,9 +29,11 @@
 //  V1.01: Gilby - 2023.04.02
 //    * Slider sets initial value if left with mouse button down.
 //  V1.02: Gilby - 2023.04.04
-//    * Following changes in MKMouse2
+//    * Following changes in MKMouse2.
 //  V1.03: Gilby - 2023.04.07
-//    * Following changes in vcc2_VisibleControl
+//    * Following changes in vcc2_VisibleControl.
+//  V1.04: Gilby - 2023.04.26
+//    * Setting MinValue and MaxValue also triggers redrawing.
 
 {$mode delphi}
 {$smartlink on}
@@ -71,12 +73,14 @@ type
     procedure fSetDecClickAreaSize(value:integer);
     procedure fSetIncClickAreaSize(value:integer);
     procedure fSetPosition(value:integer);
+    procedure fSetMinValue(value:integer);
+    procedure fSetMaxValue(value:integer);
   public
     property Width:integer read fWidth write fSetWidth;
     property DecClickAreaSize:integer read fDecClickAreaSize write fSetDecClickAreaSize;
     property IncClickAreaSize:integer read fIncClickAreaSize write fSetIncClickAreaSize;
-    property MinValue:integer read fMinValue write fMinValue;
-    property MaxValue:integer read fMaxValue write fMaxValue;
+    property MinValue:integer read fMinValue write fSetMinValue;
+    property MaxValue:integer read fMaxValue write fSetMaxValue;
     property Position:integer read fPosition write fSetPosition;
     property InvertWheel:boolean read fInvertWheel write fInvertWheel;
     property CrossWheels:boolean read fCrossWheels write fCrossWheels;
@@ -106,12 +110,14 @@ type
     procedure fSetDecClickAreaSize(value:integer);
     procedure fSetIncClickAreaSize(value:integer);
     procedure fSetPosition(value:integer);
+    procedure fSetMinValue(value:integer);
+    procedure fSetMaxValue(value:integer);
   public
     property Height:integer read fHeight write fSetHeight;
     property DecClickAreaSize:integer read fDecClickAreaSize write fSetDecClickAreaSize;
     property IncClickAreaSize:integer read fIncClickAreaSize write fSetIncClickAreaSize;
-    property MinValue:integer read fMinValue write fMinValue;
-    property MaxValue:integer read fMaxValue write fMaxValue;
+    property MinValue:integer read fMinValue write fSetMinValue;
+    property MaxValue:integer read fMaxValue write fSetMaxValue;
     property Position:integer read fPosition write fSetPosition;
     property InvertWheel:boolean read fInvertWheel write fInvertWheel;
     property CrossWheels:boolean read fCrossWheels write fCrossWheels;
@@ -261,6 +267,30 @@ begin
   end;
 end;
 
+procedure THorizontalSliderLogic.fSetMinValue(value:integer);
+begin
+  if (value<>fMinValue) then begin
+    fMinValue:=value;
+    fNeedRedraw:=true;
+    if fPosition<fMinValue then begin
+      fPosition:=fMinValue;
+      if Assigned(fOnChange) then fOnChange(Self,Position);
+    end;
+  end;
+end;
+
+procedure THorizontalSliderLogic.fSetMaxValue(value:integer);
+begin
+  if (value<>fMaxValue) then begin
+    fMaxValue:=value;
+    fNeedRedraw:=true;
+    if fPosition>fMaxValue then begin
+      fPosition:=fMaxValue;
+      if Assigned(fOnChange) then fOnChange(Self,Position);
+    end;
+  end;
+end;
+
 { TVerticalSliderLogic }
 
 constructor TVerticalSliderLogic.Create;
@@ -392,6 +422,30 @@ begin
   if (value<>fPosition) and (value>=fMinValue) and (value<=fMaxValue) then begin
     fPosition:=value;
     fNeedRedraw:=true;
+  end;
+end;
+
+procedure TVerticalSliderLogic.fSetMinValue(value:integer);
+begin
+  if (value<>fMinValue) then begin
+    fMinValue:=value;
+    fNeedRedraw:=true;
+    if fPosition<fMinValue then begin
+      fPosition:=fMinValue;
+      if Assigned(fOnChange) then fOnChange(Self,Position);
+    end;
+  end;
+end;
+
+procedure TVerticalSliderLogic.fSetMaxValue(value:integer);
+begin
+  if (value<>fMaxValue) then begin
+    fMaxValue:=value;
+    fNeedRedraw:=true;
+    if fPosition>fMaxValue then begin
+      fPosition:=fMaxValue;
+      if Assigned(fOnChange) then fOnChange(Self,Position);
+    end;
   end;
 end;
 
