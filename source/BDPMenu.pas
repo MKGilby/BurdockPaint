@@ -52,6 +52,7 @@ type
     procedure MouseMove(Sender:TObject;x,y:integer);
     procedure MouseLeave(Sender:TObject);
     procedure MouseEnter(Sender:TObject);
+    function ProcessMessage(msg:TMessage):boolean;
   protected
     procedure ReDraw; override;
   private
@@ -342,6 +343,25 @@ procedure TMainMenu.MouseEnter(Sender:TObject);
 begin
   if (fSelected<>-1) and not fSubMenus[fSelected].Visible then
     fSubMenus[fSelected].Show;
+end;
+
+function TMainMenu.ProcessMessage(msg:TMessage):boolean;
+var submenu:TSubMenu;
+begin
+  Result:=false;
+  case msg.TypeID of
+    MSG_PROJECTIMAGECOUNTCHANGED:begin
+      submenu:=fSubMenus[fItems.IndexOf('IMAGE')];
+      if Assigned(submenu) then begin
+        if msg.DataInt=1 then begin
+          submenu.DisableItem('REMOVE');
+        end else begin
+          submenu.EnableItem('REMOVE');
+        end;
+      end;
+      Result:=false;  // Not true, let the others also know about the count change!
+    end;
+  end;
 end;
 
 procedure TMainMenu.ReDraw;
