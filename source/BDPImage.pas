@@ -711,7 +711,7 @@ end;
 
 procedure TBDImage.Recreate(pWidth,pHeight:integer);
 begin
-  if Assigned(fData) then FreeAndNil(fData);
+  if Assigned(fData) then Freemem(fData);
   fDataSize:=pWidth*pHeight*2;
   fData:=Getmem(fDataSize);
 end;
