@@ -86,6 +86,8 @@ begin
   fSplashScreen:=TBDAboutDialog.Create;
   fMainMenu:=TMainMenu.Create('menu.bin');
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
+  // To enable/disable Image/Remove menuitem.
+  fMainMenu.ProcessMessage(TMessage.Init(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count));
   fMagnifyDialog:=TBDMagnifyCELDialog.Create;
   fRotateDialog:=TBDRotateCELDialog.Create;
   MouseObjects.Sort;
@@ -138,6 +140,7 @@ begin
       mres:=false;
       if fControls.Visible then mres:=fControls.ProcessMessage(msg);
       if not mres and fPaletteEditor.Visible then mres:=fPaletteEditor.ProcessMessage(msg);
+      if not mres and fMainMenu.Visible then mres:=fMainMenu.ProcessMessage(msg);
       if not mres then begin
         case msg.TypeID of
           MSG_TOGGLECONTROLS:begin
@@ -291,16 +294,16 @@ begin
               0:begin
                   Project.Images.Insert(0,TBDExtendedImage.Create);
                   Project.ActiveImageIndex:=0;
-                  MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED);
+                  MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
                 end;
               1:begin
                   Project.Images.Add(TBDExtendedImage.Create);
                   Project.ActiveImageIndex:=Project.Images.Count-1;
-                  MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED);
+                  MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
                 end;
               2:begin
                   Project.Images.Insert(Project.ActiveImageIndex,TBDExtendedImage.Create);
-                  MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED);
+                  MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
                 end;
             end;
           end;
@@ -310,7 +313,7 @@ begin
                 Project.Images.Delete(Project.ActiveImageIndex);
                 if Project.ActiveImageIndex>=Project.Images.Count then
                   Project.ActiveImageIndex:=Project.Images.Count-1;
-                MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED);
+                MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
               end;
             end;
           end;
