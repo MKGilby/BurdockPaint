@@ -294,7 +294,7 @@ begin
       fImageCountSlider.MaxValue:=Project.Images.Count;
       fImageCountSlider.Position:=Project.ActiveImageIndex+1;
       MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
-      Result:=true;
+      Result:=false;  // Not true, let the others also know about the count change!
     end;
   end;
 end;
