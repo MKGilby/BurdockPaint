@@ -28,8 +28,13 @@ const
   COLORSELECTORLEFT=TOOLBUTTONSLEFT+2*NORMALBUTTONWIDTH+12;
   COLORSELECTORTOP=6;
   COLORSELECTORBOXSIZE=36;
-  COLORSELECTORCOLORS=8;
+  COLORSELECTORCOLORS=9;
   COLORSELECTORGAP=12;
+  IMAGECOUNTSLIDERHEIGHT=33;
+  IMAGESCOUNTLIDERWIDTH=313;
+  IMAGECOUNTSLIDERLEFT=COLORSELECTORLEFT;
+  IMAGECOUNTSLIDERTOP=CONTROLSHEIGHT-IMAGECOUNTSLIDERHEIGHT-3;
+
   TOGGLEBUTTONSLEFT=INKBUTTONSLEFT+2*(NORMALBUTTONWIDTH+3);
   TOGGLEBUTTONSTOP=6;
   TOPMENUHEIGHT=8*3;
@@ -93,7 +98,7 @@ const
   MSG_ROTATECELRESP=8;
   // Response from About dialog.
   MSG_ABOUTRESP=9;
-  // Response from MessageBox. IntValue is the pressed button number.
+  // Response from MessageBox. Data is the pressed button number.
   MSG_MESSAGEBOXRESP=10;
 
   // ------- Tool Messages ------- Range: 100-199 -------
@@ -109,6 +114,8 @@ const
   MSG_GETCELFINISHED=104;
   // KEY_GETCOLOR pressed, select color value under the cursor (if over drawarea).
   MSG_SELECTCOLOR=105;
+  // Project image count changed. Used to refresh Controls' slider.
+  MSG_PROJECTIMAGECOUNTCHANGED=106;
 
   // ------- Menu Messages ------- Range: 200-299 -------
   {$i MenuMessages.inc}
