@@ -266,6 +266,7 @@ end;
 procedure TBDControls.ActiveImageChange(Sender:TObject; newvalue:integer);
 begin
   Project.ActiveImageIndex:=newvalue-1;
+  MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
 end;
 
 procedure TBDControls.SetMouseCoords(x,y:integer);
@@ -292,6 +293,7 @@ begin
     MSG_PROJECTIMAGECOUNTCHANGED:begin
       fImageCountSlider.MaxValue:=Project.Images.Count;
       fImageCountSlider.Position:=Project.ActiveImageIndex+1;
+      MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
       Result:=true;
     end;
   end;
