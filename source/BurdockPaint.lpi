@@ -61,9 +61,6 @@
             </Debugging>
           </Linking>
           <Other>
-            <Verbosity>
-              <ShowTriedFiles Value="True"/>
-            </Verbosity>
             <CompilerMessages>
               <IgnoredMessages idx6058="True" idx5024="True" idx3124="True" idx3123="True"/>
             </CompilerMessages>
