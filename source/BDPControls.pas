@@ -33,6 +33,7 @@ type
     fInkButtons:array[0..5] of TBDButton;
     fUndoButton,fRedoButton:TBDButton;
     fColorSelector:TBDColorSelector;
+    fImageCountSlider:TBDHorizontalSlider;
     fMouseX,fMouseY:integer;
   end;
 
@@ -132,6 +133,16 @@ begin
   fColorSelector.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fColorSelector.Name:='ColorSelector';
   AddChild(fColorSelector);
+
+  fImageCountSlider:=TBDHorizontalSlider.Create(
+    fLeft+IMAGECOUNTSLIDERLEFT, fTop+IMAGECOUNTSLIDERTOP, IMAGESCOUNTLIDERWIDTH, IMAGECOUNTSLIDERHEIGHT);
+  fImageCountSlider.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fImageCountSlider.Name:='ImagesSlider';
+  fImageCountSlider.MinValue:=1;
+  fImageCountSlider.MaxValue:=Project.Images.Count;
+  fImageCountSlider.Position:=1;
+  AddChild(fImageCountSlider);
+
   MouseObjects.Add(Self);
 end;
 
@@ -263,11 +274,16 @@ begin
     MSG_SETIMAGEUNDOREDOBUTTON:begin
       fUndoButton.Enabled:=Project.CurrentImage.ImageUndo.CanUndo;
       fRedoButton.Enabled:=Project.CurrentImage.ImageUndo.CanRedo;
+      Result:=true;
     end;
     MSG_PICKEDCOLOR:begin
       fColorSelector.SetSelectedSlotTo(msg.DataInt);
       Self.ActivateToolButton(-1);  // Puts the already selected tool into ActiveTool
       InfoBar.ShowText('');
+      Result:=true;
+    end;
+    MSG_PROJECTIMAGECOUNTCHANGED:begin
+      fImageCountSlider.MaxValue:=Project.Images.Count;
       Result:=true;
     end;
   end;
