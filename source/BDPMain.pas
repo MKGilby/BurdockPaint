@@ -39,7 +39,8 @@ type
 implementation
 
 uses SDL2, BDPShared, MKToolbox, MKStream, MKMouse2, Logger,
-  BDPMessage, BDPKeyMapping, BDPTools, MAD4MidLevelUnit, BDPImage;
+  BDPMessage, BDPKeyMapping, BDPTools, MAD4MidLevelUnit, BDPImage,
+  BDPProject;
 
 
 { TMain }
@@ -283,6 +284,24 @@ begin
                   MessageBox(e.Message);
                 end;
               end;
+            end;
+          end;
+          MSG_NEWIMAGE:begin
+            case MessageBox('Where to place new image?','First;Last;Insert;Cancel') of
+              0:begin
+                  Project.Images.Insert(0,TBDExtendedImage.Create);
+                  Project.ActiveImageIndex:=0;
+                  MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED);
+                end;
+              1:begin
+                  Project.Images.Add(TBDExtendedImage.Create);
+                  Project.ActiveImageIndex:=Project.Images.Count-1;
+                  MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED);
+                end;
+              2:begin
+                  Project.Images.Insert(Project.ActiveImageIndex,TBDExtendedImage.Create);
+                  MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED);
+                end;
             end;
           end;
         end;
