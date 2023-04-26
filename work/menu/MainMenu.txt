@@ -30,6 +30,9 @@ Project
   Save
     SAVEPROJECT
     Save project to file.
+  Save clear
+    SAVECLEARPROJECT
+    Clear Undo data, release CEL then save project to file.
   Quit
     QUIT,1
     Save work state and quit program.
