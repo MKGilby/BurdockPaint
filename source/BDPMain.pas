@@ -304,6 +304,16 @@ begin
                 end;
             end;
           end;
+          MSG_REMOVEIMAGE:begin
+            if (Project.Images.Count>1) then begin
+              if MessageBox('Really remove image from project?','Yes;No')=0 then begin
+                Project.Images.Delete(Project.ActiveImageIndex);
+                if Project.ActiveImageIndex>=Project.Images.Count then
+                  Project.ActiveImageIndex:=Project.Images.Count-1;
+                MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED);
+              end;
+            end;
+          end;
         end;
       end;
     end;
