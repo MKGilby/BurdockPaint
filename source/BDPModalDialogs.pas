@@ -410,7 +410,7 @@ begin
   fTexture.Update;
   ZIndex:=MODALDIALOG_ZINDEX;
   MouseObjects.Add(Self);
-  x:=(fTexture.Width div 2)-(buttoncount*(NORMALBUTTONWIDTH+18)) div 2;
+  x:=(fTexture.Width-(buttoncount*(NORMALBUTTONWIDTH+18))+18) div 2;
   i:=0;
   while length(iButtons)>0 do begin
     atmB:=TBDButton.Create(
