@@ -1,9 +1,6 @@
 Todo:
 - Add "Project"/"New" dialog.
 - Make "Project"/"Open" work.
-- Add "Image"/"New" dialog.
-- Make "Image"/"Remove" disabled when only one image exists in the project.
-- And enable it back when there are more than 1 images.
 - Add "Random" ink. It will use colors randomly from the selected cluster.
 - Ask for color fit when loading a CEL file.
 - Make ColorCluster clickable.
@@ -22,6 +19,20 @@ Todo:
   - R Grad (dither, Center)
 - Add Tool and Ink selector
 
+
+2023.04.26
+- Color selector colors are increased to 9 to be the same width as ImageCountSlider.
+- Added ImageCountSlider. You can change active image in Project with it.
+- Undo/Redo buttons are refreshing as you change active image.
+- Image/New works. It adds an empty 320x200 image to the Project. It brings up
+  a dialog to select new image's place:
+  - First: New image will be the first image of the Project.
+  - Last: New image will be the last image of the Project.
+  - Insert: New image will be inserted before the current image into the Project.
+  - Cancel: Don't create image.
+- Image/Remove works (if there are more than 1 images in Project). It brings up
+  a confirmation dialog.
+- Image/Remove is enabled/disabled based on image count in Project.
 
 2023.04.25
 - BUGFIX: Losing the first click after receiving focus (after the external save dialog)
