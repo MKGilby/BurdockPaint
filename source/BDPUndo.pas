@@ -500,7 +500,7 @@ begin
   pStream.Read(fPointer,2);
   if fPointer=65535 then fPointer:=-1;
   for i:=0 to Count-1 do
-    Self.Add(TBDUndoRegionItem.CreateFromStream(pStream));
+    Self.Add(TBDUndoColorItem.CreateFromStream(pStream));
   pStream.Position:=curr+size;
   fAfterUndoRedoMessage:=TMessage.Init(MSG_SETPALETTEUNDOREDOBUTTON,0);
 end;
