@@ -24,6 +24,7 @@ type
     procedure InkButtonClick(Sender:TObject;x,y,buttons: integer);
     procedure UndoButtonClick(Sender:TObject;x,y,buttons: integer);
     procedure RedoButtonClick(Sender:TObject;x,y,buttons: integer);
+    procedure ActiveImageChange(Sender:TObject;newvalue:integer);
     procedure SetMouseCoords(x,y:integer);
     function ProcessMessage(msg:TMessage):boolean;
     procedure ControlsShow(Sender:TObject);
@@ -140,7 +141,8 @@ begin
   fImageCountSlider.Name:='ImagesSlider';
   fImageCountSlider.MinValue:=1;
   fImageCountSlider.MaxValue:=Project.Images.Count;
-  fImageCountSlider.Position:=1;
+  fImageCountSlider.Position:=Project.ActiveImageIndex+1;
+  fImageCountSlider.OnChange:=ActiveImageChange;
   AddChild(fImageCountSlider);
 
   MouseObjects.Add(Self);
@@ -261,6 +263,11 @@ begin
   Project.CurrentImage.ImageUndo.Redo;
 end;
 
+procedure TBDControls.ActiveImageChange(Sender:TObject; newvalue:integer);
+begin
+  Project.ActiveImageIndex:=newvalue-1;
+end;
+
 procedure TBDControls.SetMouseCoords(x,y:integer);
 begin
   if x and $7000<>$7000 then fMouseX:=x else fMouseX:=x-32768;
@@ -284,6 +291,7 @@ begin
     end;
     MSG_PROJECTIMAGECOUNTCHANGED:begin
       fImageCountSlider.MaxValue:=Project.Images.Count;
+      fImageCountSlider.Position:=Project.ActiveImageIndex+1;
       Result:=true;
     end;
   end;
