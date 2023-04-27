@@ -12,17 +12,32 @@ type
   { TColorCluster }
 
   TColorCluster=class
+    // Create color cluster.
     constructor Create(iStart,iEnd:integer);
+
     // Create the color cluster from stream (fileformats.txt - T-block)
     constructor CreateFromStream(iStream:TStream);
+
     // Gives back the colorindex in the cluster at pValue on a scale to 0..pInterval
     // Example: if you want to draw the color cluster on a control with a width
     //          of 240 pixels, you should use GetIndexAt(x,240) as each vertical
     //          line of the control.
     function GetIndexAt(pValue,pInterval:integer):word;
+
+    // Gives back the colorindex in the cluster at pValue on a scale to 0..pInterval
+    // randomly modifying it by max +/-(pInterval*pDitherStrength/256)
+    function GetIndexAtDithered(pValue,pInterval,pDitherStrength:integer):word;
+
+    // Save color cluster to a standalone file. (fileformats.txt - T-block)
     procedure SaveToFile(pFilename:string);
+
+    // Save color cluster to the specified stream. (fileformats.txt - T-block)
     procedure SaveToStream(pStream:TStream);
+
+    // Load color cluster from a standalone file. (fileformats.txt - T-block)
     procedure LoadFromFile(pFilename:string);
+
+    // Load color cluster from the specified stream. (fileformats.txt - T-block)
     procedure LoadFromStream(pStream:TStream);
   private
     fStart,fEnd:integer;
@@ -94,6 +109,18 @@ end;
 
 function TColorCluster.GetIndexAt(pValue,pInterval:integer):word;
 begin
+  Result:=fRealStart+(fRealEnd-fRealStart)*pValue div pInterval;
+end;
+
+function TColorCluster.GetIndexAtDithered(pValue,pInterval,pDitherStrength:integer):word;
+var i,dith:integer;
+begin
+  dith:=pInterval*pDitherStrength div 256;
+  if dith>0 then begin
+    pValue+=random(2*dith)-dith;
+    if pValue<0 then pValue:=0
+    else if pValue>pInterval then pValue:=pInterval;
+  end;
   Result:=fRealStart+(fRealEnd-fRealStart)*pValue div pInterval;
 end;
 
@@ -204,7 +231,7 @@ end;
 constructor TColorClusters.Create;
 begin
   inherited Create;
-  Add(TColorCluster.Create(0,15));
+  Add(TColorCluster.Create(16,31));
 end;
 
 constructor TColorClusters.CreateFromStream(iStream:TStream);
