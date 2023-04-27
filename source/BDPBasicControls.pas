@@ -29,6 +29,8 @@ type
   published
     property Hint:string read fHint write fHint;
     property AssignedObject:TObject read fAssignedObject write fAssignedObject;
+  public
+    property Message:TMessage read fMessage;
   end;
 
   { TBDVerticalSlider }
