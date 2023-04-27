@@ -309,7 +309,7 @@ begin
           end;
           MSG_REMOVEIMAGE:begin
             if (Project.Images.Count>1) then begin
-              if MessageBox('Really remove image from project?','Yes;No')=0 then begin
+              if MessageBox('Really remove image from project?','^Yes;^No')=0 then begin
                 Project.Images.Delete(Project.ActiveImageIndex);
                 if Project.ActiveImageIndex>=Project.Images.Count then
                   Project.ActiveImageIndex:=Project.Images.Count-1;
@@ -324,8 +324,8 @@ begin
     quit:=quit or Terminate;
     fControls.SetMouseCoords(fDrawArea.FrameX,fDrawArea.FrameY);
     if keys[KeyMap[KEY_QUIT]] then begin
-      fQuitWindow.Visible:=true;
       keys[KeyMap[KEY_QUIT]]:=false;
+      quit:=MessageBox('EXIT BURDOCK PAINT?','^YES;^NO')=0
     end;
     if keys[KeyMap[KEY_GETCEL]] then begin
       if ActiveTool.Pinnable then begin  // Not GetCEL or PutCEL
