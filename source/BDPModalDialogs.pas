@@ -22,13 +22,6 @@ type
     fWindowLeft,fWindowTop:integer;
   end;
 
-  { TBDConfirmQuitDialog }
-
-  TBDConfirmQuitDialog=class(TBDModalDialog)
-    constructor Create;
-    function KeyDown(Sender:TObject;key:integer):boolean;
-  end;
-
   { TBDMagnifyCELDialog }
 
   TBDMagnifyCELDialog=class(TBDModalDialog)
@@ -73,8 +66,6 @@ uses
   sdl2, BDPShared, BDPMessage, BDPKeyMapping, MKMouse2, MKToolbox;
 
 const
-  QUITDIALOGWIDTH=480;
-  QUITDIALOGHEIGHT=96;
   MAGNIFYDIALOGWIDTH=480;
   MAGNIFYDIALOGHEIGHT=128;
   XBUTTONWIDTH=63;
@@ -129,50 +120,6 @@ end;
 function TBDModalDialog.KeyUp(Sender:TObject; key:integer):boolean;
 begin
   Result:=true;
-end;
-
-{ TBDConfirmQuitDialog }
-
-constructor TBDConfirmQuitDialog.Create;
-var atmB:TBDButton;msg:TMessage;
-begin
-  inherited Create(QUITDIALOGWIDTH,QUITDIALOGHEIGHT);
-  fName:='ConfirmQuit';
-  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,SystemPalette[2]);
-  fTexture.ARGBImage.Bar(0,0,3,fTexture.ARGBImage.Height,SystemPalette[2]);
-  fTexture.ARGBImage.Bar(fTexture.ARGBImage.Width-3,0,3,fTexture.ARGBImage.Height,SystemPalette[2]);
-  fTexture.ARGBImage.Bar(0,fTexture.ARGBImage.Height-3,fTexture.ARGBImage.Width,3,SystemPalette[2]);
-  fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[3]);
-  MM.Fonts['Black'].OutText(fTexture.ARGBImage,'EXIT BURDOCK PAINT?',QUITDIALOGWIDTH div 2,16,1);
-  fTexture.Update;
-  msg.TypeID:=MSG_QUIT;
-  msg.DataInt:=1;
-  atmB:=TBDButton.Create(
-    fWindowLeft+QUITDIALOGWIDTH div 4-NORMALBUTTONWIDTH div 2,
-    fWindowTop+48,
-    NORMALBUTTONWIDTH,
-    'YES','',msg);
-  atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
-  AddChild(atmB);
-  msg.DataInt:=0;
-  atmB:=TBDButton.Create(
-    fWindowLeft+QUITDIALOGWIDTH div 4*3-NORMALBUTTONWIDTH div 2,
-    fWindowTop+48,
-    NORMALBUTTONWIDTH,
-    'NO','',msg);
-  atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
-  AddChild(atmB);
-  OnKeyDown:=KeyDown;
-  MouseObjects.Add(Self);
-end;
-
-function TBDConfirmQuitDialog.KeyDown(Sender:TObject; key:integer):boolean;
-begin
-  Result:=true;
-  if key=KeyMap[KEY_YES] then
-    MessageQueue.AddMessage(MSG_QUIT,1)
-  else if key=KeyMap[KEY_NO] then
-    MessageQueue.AddMessage(MSG_QUIT,0);
 end;
 
 { TBDMagnifyCELDialog }

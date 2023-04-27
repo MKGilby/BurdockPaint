@@ -21,7 +21,6 @@ type
     fDrawArea:TBDDrawArea;
     fPaletteEditor:TBDPaletteEditor;
     fSplashScreen:TBDAboutDialog;
-    fQuitWindow:TBDConfirmQuitDialog;
     fMainMenu:TMainMenu;
     fMagnifyDialog:TBDMagnifyCELDialog;
     fRotateDialog:TBDRotateCELDialog;
@@ -82,7 +81,6 @@ begin
   fDrawArea:=TBDDrawArea.Create;
   fControls:=TBDControls.Create;
   fPaletteEditor:=TBDPaletteEditor.Create;
-  fQuitWindow:=TBDConfirmQuitDialog.Create;
   fSplashScreen:=TBDAboutDialog.Create;
   fMainMenu:=TMainMenu.Create('menu.bin');
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
@@ -111,7 +109,6 @@ begin
   if Assigned(fMagnifyDialog) then FreeAndNil(fMagnifyDialog);
   if Assigned(fMainMenu) then FreeAndNil(fMainMenu);
   if Assigned(fSplashScreen) then FreeAndNil(fSplashScreen);
-  if Assigned(fQuitWindow) then FreeAndNil(fQuitWindow);
   if Assigned(fPaletteEditor) then FreeAndNil(fPaletteEditor);
   if Assigned(fControls) then FreeAndNil(fControls);
   if Assigned(fDrawArea) then FreeAndNil(fDrawArea);
@@ -159,10 +156,6 @@ begin
             fPaletteEditor.Hide;
             fControls.Show;
             InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
-          end;
-          MSG_QUIT:begin
-            if msg.DataInt=0 then fQuitWindow.Visible:=false
-            else quit:=true;
           end;
           MSG_SELECTCOLOR:begin
             SDL_GetMouseState(@mx,@my);
