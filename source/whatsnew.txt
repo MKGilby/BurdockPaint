@@ -1,6 +1,7 @@
 Todo:
 - Add "Project"/"New" dialog.
-- Make "Project"/"Open" work.
+- Check and warn if current project is modified on opening project.
+- Check and warn if current project is modified on new project.
 - Add "Random" ink. It will use colors randomly from the selected cluster.
 - Ask for color fit when loading a CEL file.
 - Make ColorCluster clickable.
@@ -8,7 +9,6 @@ Todo:
   - Right to pick cluster, but only on the PaletteEditor.
 - Autosave state in every 1 min.
 - Configurable autosave interval.
-- Add dithering to gradient Inks.
 - Add setup dialogs to Tools:
   - Circle (center+Radius vs. bounding box)
   - Sep. (boxed)
@@ -19,6 +19,13 @@ Todo:
   - R Grad (dither, Center)
 - Add Tool and Ink selector
 
+
+2023.04.28
+- Project/Open works.
+- Project/"Save clear" works.
+
+2023.04.27
+- Added dithering to LGrad. It is fixed now, but the setup dialogs will solve this.
 
 2023.04.26
 - Color selector colors are increased to 9 to be the same width as ImageCountSlider.
