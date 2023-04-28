@@ -282,6 +282,34 @@ begin
               end;
             end;
           end;
+          MSG_SAVECLEARPROJECT:begin
+            if fSaveProjectDialog.Execute then begin
+              try
+                Project.Clean;
+                Project.SaveToFile(fSaveProjectDialog.FileName);
+                MessageBox('Project saved successfully.');
+              except
+                on e:Exception do begin
+                  Log.LogError(e.message);
+                  MessageBox(e.Message);
+                end;
+              end;
+            end;
+          end;
+          MSG_OPENPROJECT:begin
+            if fOpenProjectDialog.Execute then begin
+              try
+                FreeAndNil(Project);
+                Project:=TBDProject.CreateFromFile(fOpenProjectDialog.FileName);
+                MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
+              except
+                on e:Exception do begin
+                  Log.LogError(e.message);
+                  MessageBox(e.Message);
+                end;
+              end;
+            end;
+          end;
           MSG_NEWIMAGE:begin
             case MessageBox('Where to place new image?','First;Last;Insert;Cancel') of
               0:begin
