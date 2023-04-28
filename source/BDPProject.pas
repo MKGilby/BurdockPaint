@@ -28,6 +28,9 @@ type
 
     // Writes everything to stream. (fileformats.txt - E-block)
     procedure SaveToStream(pStream:TStream);
+
+    // Clears undo/redo data
+    procedure ClearUndoData;
   private
 //    fImage:TBDImage;
     fImageUndoSystem:TBDImageUndoSystem;
@@ -63,6 +66,9 @@ type
 
     // Saves project to stream. (fileformats.txt - P-block)
     procedure SaveToStream(pStream:TStream);
+
+    // Clears undo data and releases CEL
+    procedure Clean;
   private
     fActiveImageIndex:integer;
     fImages:TBDExtendedImages;
@@ -157,6 +163,12 @@ begin
   pStream.Position:=curr;
   pStream.write(i,4);
   pStream.Position:=pStream.Position+i;
+end;
+
+procedure TBDExtendedImage.ClearUndoData;
+begin
+  fImageUndoSystem.Clear;
+  fPaletteUndoSystem.Clear;
 end;
 
 procedure TBDExtendedImage.LoadFromStreamV1(pStream:TStream);
@@ -259,6 +271,13 @@ begin
   pStream.Position:=curr;
   pStream.write(i,4);
   pStream.Position:=pStream.Position+i;
+end;
+
+procedure TBDProject.Clean;
+var i:integer;
+begin
+  if Assigned(fCELImage) then FreeAndNil(fCELImage);
+  for i:=0 to fImages.Count-1 do fImages[i].ClearUndoData;
 end;
 
 procedure TBDProject.LoadFromStreamV1(pStream:TStream);
