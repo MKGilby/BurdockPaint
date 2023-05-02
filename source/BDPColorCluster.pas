@@ -5,7 +5,7 @@ unit BDPColorCluster;
 interface
 
 uses
-  Classes, SysUtils, fgl, vcc2_VisibleControl;
+  Classes, SysUtils, fgl, vcc2_VisibleControl, ARGBImageUnit, Font2Unit;
 
 type
 
@@ -79,7 +79,12 @@ type
   protected
     procedure ReDraw; override;
   private
+    fTRImage,fBRImage:TARGBImage;
     fColorCluster:TColorCluster;
+    fFont:TFont;
+    procedure fSetColorCluster(value:TColorCluster);
+  public
+    property ColorCluster:TColorCluster read fColorCluster write fSetColorCluster;
   end;
 
 implementation
@@ -109,19 +114,17 @@ end;
 
 function TColorCluster.GetIndexAt(pValue,pInterval:integer):word;
 begin
-  Result:=fRealStart+(fRealEnd-fRealStart)*pValue div pInterval;
+  if pValue<0 then pValue:=0
+  else if pValue>=pInterval then pValue:=pInterval-1;
+  Result:=fRealStart+(fRealEnd-fRealStart+1)*pValue div pInterval;
 end;
 
 function TColorCluster.GetIndexAtDithered(pValue,pInterval,pDitherStrength:integer):word;
-var i,dith:integer;
+var dith:integer;
 begin
   dith:=pInterval*pDitherStrength div 256;
-  if dith>0 then begin
-    pValue+=random(2*dith)-dith;
-    if pValue<0 then pValue:=0
-    else if pValue>pInterval then pValue:=pInterval;
-  end;
-  Result:=fRealStart+(fRealEnd-fRealStart)*pValue div pInterval;
+  if dith>0 then pValue+=random(2*dith)-dith;
+  Result:=GetIndexAt(pValue,pInterval);
 end;
 
 procedure TColorCluster.SaveToFile(pFilename:string);
@@ -314,6 +317,9 @@ begin
   Width:=COLORCLUSTERWIDTH;
   Height:=COLORCLUSTERHEIGHT;
   fNeedRedraw:=true;
+  fTRImage:=MM.Images.ItemByName['ArchTopRight'];
+  fBRImage:=MM.Images.ItemByName['ArchBottomRight'];
+  fFont:=MM.Fonts['Black'];
 end;
 
 procedure TBDColorCluster.Refresh;
@@ -322,17 +328,23 @@ begin
 end;
 
 procedure TBDColorCluster.ReDraw;
-var i:integer;colorindex:word;
+var i,fonttop:integer;colorindex:word;
 begin
   if Assigned(fTexture) then begin
     with fTexture.ARGBImage do begin
-      Bar(0,0,Width,3,SystemPalette[2]);
+      Bar(0,0,Width,Height,SystemPalette[3]);
+      Bar(0,0,Width-8,3,SystemPalette[2]);
+      Bar(0,Height-3,Width-8,3,SystemPalette[2]);
       Bar(0,3,3,Height-6,SystemPalette[2]);
-      Bar(0,Height-3,Width,3,SystemPalette[2]);
-      Bar(Width-3,3,3,Height-6,SystemPalette[2]);
+      Bar(Width-3,8,3,Height-16,SystemPalette[2]);
+      Bar(Width-Height-3,3,3,Height-6,SystemPalette[2]);
+      if Assigned(fTRImage) then
+        fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,fWidth-8,0,fTexture.ARGBImage,true);
+      if Assigned(fBRImage) then
+        fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,fTexture.ARGBImage,true);
       if Assigned(fColorCluster) then begin
-        for i:=0 to Width-6-1 do begin
-          colorindex:=fColorCluster.GetIndexAt(i,Width-6);
+        for i:=0 to Width-Height-6-1 do begin
+          colorindex:=fColorCluster.GetIndexAt(i,Width-Height-6);
           VLine(3+i,3,Height-6,Project.CurrentImage.Palette[colorindex]);
           if colorindex=Settings.ActiveColorIndex then begin
             VLine(3+i,Height div 2-3,3,SystemPalette[4]);
@@ -340,9 +352,19 @@ begin
           end;
         end;
       end;
+      if Assigned(fFont) then begin
+        fonttop:=(Height-15) div 2;
+        fFont.OutText(fTexture.ARGBImage,#130,Width-33 div 2,fonttop,1);
+      end;
     end;
     fTexture.Update;
   end;
+end;
+
+procedure TBDColorCluster.fSetColorCluster(value:TColorCluster);
+begin
+  fColorCluster:=value;
+  fNeedRedraw:=true;
 end;
 
 end.
