@@ -338,6 +338,9 @@ begin
               end;
             end;
           end;
+          MSG_QUIT:begin
+            quit:=(msg.DataInt=1);
+          end;
         end;
       end;
     end;
