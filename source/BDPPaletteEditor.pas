@@ -338,6 +338,7 @@ begin
   ActiveTool:=Tools.ItemByName['SELCOL'];
   fUndoButton.Enabled:=Project.CurrentImage.PaletteUndo.CanUndo;
   fRedoButton.Enabled:=Project.CurrentImage.PaletteUndo.CanRedo;
+  fColorCluster.ColorCluster:=Project.Images[Project.ActiveImageIndex].ColorClusters[0];
 end;
 
 procedure TBDPaletteEditor.PaletteEditorHide(Sender:TObject);
