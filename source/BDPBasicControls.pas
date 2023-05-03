@@ -12,7 +12,7 @@ type
   { TBDButton }
 
   TBDButton=class(TButton)
-    constructor Create(iX,iY,iWidth:integer;iCaption,iHint:string;
+    constructor Create(iX,iY,iWidth,iHeight:integer;iCaption,iHint:string;
           iClickMessage:TMessage;iAssignedobject:TObject=nil); overload;
     constructor Create; overload;
     procedure MouseEnter(Sender:TObject);
@@ -80,14 +80,14 @@ const
 
 { TBDButton }
 
-constructor TBDButton.Create(iX,iY,iWidth:integer;
+constructor TBDButton.Create(iX,iY,iWidth,iHeight:integer;
   iCaption,iHint:string; iClickMessage:TMessage; iAssignedobject:TObject);
 begin
   Create;
   Left:=iX;
   Top:=iY;
   Width:=iWidth;
-  Height:=NORMALBUTTONHEIGHT;
+  Height:=iHeight;
   TextAlignX:=mjCenter;
   TextOffsetY:=2;
   Font:=MM.Fonts['Black'];
