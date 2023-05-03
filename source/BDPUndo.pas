@@ -393,7 +393,7 @@ begin
 end;
 
 procedure TBDImageUndoSystem.SaveToStream(pStream:TStream);
-var i,curr:int64;
+var i:integer;curr:int64;
 begin
   i:=UNDOSYSTEMREGIONID;
   pStream.Write(i,1);
@@ -467,7 +467,7 @@ begin
 end;
 
 procedure TBDPaletteUndoSystem.SaveToStream(pStream:TStream);
-var i,curr:int64;
+var i:integer;curr:int64;
 begin
   i:=UNDOSYSTEMPALETTEID;
   pStream.Write(i,1);
