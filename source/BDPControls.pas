@@ -73,7 +73,7 @@ begin
     fToolButtons[i]:=TBDButton.Create(
       fLeft+TOOLBUTTONSLEFT+i mod 2*130,
       fTop+TOOLBUTTONSTOP+i div 2*30,
-      NORMALBUTTONWIDTH,
+      NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
       atmT.Name,
       atmT.Hint,
       msg,
@@ -91,7 +91,7 @@ begin
     fInkButtons[i]:=TBDButton.Create(
       fLeft+InkButtonsLeft+i mod 2*130,
       fTop+InkButtonsTop+i div 2*30,
-      NORMALBUTTONWIDTH,
+      NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
       atmI.Name,
       atmI.Hint,
       msg,
@@ -103,28 +103,28 @@ begin
   end;
   ActivateInkButton(Settings.ActiveInk);
 
-  fUndoButton:=TBDButton.Create(fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP,
-    NORMALBUTTONWIDTH, 'UNDO', 'UNDO LAST OPERATION', msg);
+  fUndoButton:=TBDButton.Create(fLeft+CONTROLUNDOBUTTONSLEFT, fTop+CONTROLUNDOBUTTONSTOP,
+    NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT, 'UNDO', 'UNDO LAST OPERATION', msg);
   fUndoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fUndoButton.OnClick:=UndoButtonClick;
   AddChild(fUndoButton);
 
-  fRedoButton:=TBDButton.Create(fLeft+UNDOBUTTONSLEFT, fTop+UNDOBUTTONSTOP+30,
-    NORMALBUTTONWIDTH, 'REDO', 'REDO LAST UNDOED OPERATION', msg);
+  fRedoButton:=TBDButton.Create(fLeft+CONTROLUNDOBUTTONSLEFT, fTop+CONTROLUNDOBUTTONSTOP+30,
+    NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT, 'REDO', 'REDO LAST UNDOED OPERATION', msg);
   fRedoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fRedoButton.OnClick:=RedoButtonClick;
   AddChild(fRedoButton);
 
   msg.TypeID:=MSG_NONE;
   atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP,
-    SMALLBUTTONWIDTH, 'F', 'FILL SHAPES', msg);
+    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'F', 'FILL SHAPES', msg);
   atmB.Selected:=Settings.FillShapes;
   atmB.OnClick:=FilledButtonClick;
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(atmB);
 
   atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+30,
-    SMALLBUTTONWIDTH, 'K', 'CLEAR KEY COLOR', msg);
+    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'K', 'CLEAR KEY COLOR', msg);
   atmB.Selected:=Settings.ClearKeyColor;
   atmB.OnClick:=ClearKeyColorButtonClick;
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;

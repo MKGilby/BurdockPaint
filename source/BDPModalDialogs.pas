@@ -142,7 +142,7 @@ begin
     fMagnifyButtons[i]:=TBDButton.Create(
       fWindowLeft+(MAGNIFYDIALOGWIDTH div 4)*(i+1)-XBUTTONWIDTH div 2,
       fWindowTop+48,
-      XBUTTONWIDTH,
+      XBUTTONWIDTH, NORMALBUTTONHEIGHT,
       inttostr(MAGNIFIES[i])+'X','',msg);
     fMagnifyButtons[i].ZIndex:=MODALDIALOG_ZINDEX+1;
     fMagnifyButtons[i].Tag:=i;
@@ -153,7 +153,7 @@ begin
   atmB:=TBDButton.Create(
     fWindowLeft+MAGNIFYDIALOGWIDTH div 3-NORMALBUTTONWIDTH div 2,
     fWindowTop+84,
-    NORMALBUTTONWIDTH,
+    NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT,
     'OK','MAGNIFY CEL',msg);
   atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   atmb.OnClick:=OKButtonClick;
@@ -163,7 +163,7 @@ begin
   atmB:=TBDButton.Create(
     fWindowLeft+(MAGNIFYDIALOGWIDTH div 3*2)-NORMALBUTTONWIDTH div 2,
     fWindowTop+84,
-    NORMALBUTTONWIDTH,
+    NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT,
     'CANCEL','DON''T MAGNIFY CEL',msg);
   atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
@@ -239,7 +239,7 @@ begin
     fRotateButtons[i]:=TBDButton.Create(
       fWindowLeft+(ROTATEDIALOGWIDTH div 4)*(i+1)-NORMALBUTTONWIDTH div 2,
       fWindowTop+48,
-      NORMALBUTTONWIDTH,
+      NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
       inttostr(ROTATES[i])+'°','',msg);
     fRotateButtons[i].ZIndex:=MODALDIALOG_ZINDEX+1;
     fRotateButtons[i].Tag:=i;
@@ -250,7 +250,7 @@ begin
   atmB:=TBDButton.Create(
     fWindowLeft+ROTATEDIALOGWIDTH div 3-NORMALBUTTONWIDTH div 2,
     fWindowTop+84,
-    NORMALBUTTONWIDTH,
+    NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'OK','ROTATE CEL',msg);
   atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   atmb.OnClick:=OKButtonClick;
@@ -260,7 +260,7 @@ begin
   atmB:=TBDButton.Create(
     fWindowLeft+(ROTATEDIALOGWIDTH div 3*2)-NORMALBUTTONWIDTH div 2,
     fWindowTop+84,
-    NORMALBUTTONWIDTH,
+    NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'CANCEL','DON''T ROTATE CEL',msg);
   atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
@@ -334,7 +334,7 @@ begin
   atmB:=TBDButton.Create(
     fWindowLeft+SPLASHSCREENWIDTH-NORMALBUTTONWIDTH-6-16,
     fWindowTop+SPLASHSCREENHEIGHT-44,
-    NORMALBUTTONWIDTH,
+    NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'OK','CLOSE DIALOG',TMessage.Init(MSG_ABOUTRESP,0));
   atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
@@ -370,7 +370,7 @@ begin
     atmB:=TBDButton.Create(
       fWindowLeft+x,
       fWindowTop+MESSAGEBOXHEIGHT-44,
-      NORMALBUTTONWIDTH,
+      NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
       s,'',TMessage.Init(MSG_MESSAGEBOXRESP,i));
     atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
     atmB.Tag:=key;

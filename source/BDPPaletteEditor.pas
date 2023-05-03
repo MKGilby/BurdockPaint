@@ -127,19 +127,25 @@ begin
   end;
   AddChild(fSliderBank);
 
-  fUndoButton:=TBDButton.Create(6,fTop+6,127-2*18,'UNDO','UNDO LAST PALETTE OPERATION',TMessage.Init(MSG_NONE,0));
+  fUndoButton:=TBDButton.Create(
+    PALETTEUNDOBUTTONSLEFT, fTop+PALETTEUNDOBUTTONSTOP,
+    NORMALBUTTONWIDTH, PALETTEUNDOBUTTONHEIGHT,
+    'UNDO','UNDO LAST PALETTE OPERATION',TMessage.Init(MSG_NONE,0));
   fUndoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fUndoButton.Name:='Palette Undo';
   fUndoButton.OnClick:=UndoButtonClick;
   AddChild(fUndoButton);
 
-  fRedoButton:=TBDButton.Create(6,fTop+6+30,127-2*18,'REDO','REDO LAST UNDOED PALETTE OPERATION',TMessage.Init(MSG_NONE,0));
+  fRedoButton:=TBDButton.Create(
+    PALETTEUNDOBUTTONSLEFT,fTop+PALETTEUNDOBUTTONSTOP+PALETTEUNDOBUTTONHEIGHT+3,
+    NORMALBUTTONWIDTH,PALETTEREDOBUTTONHEIGHT,
+    'REDO','REDO LAST UNDOED PALETTE OPERATION',TMessage.Init(MSG_NONE,0));
   fRedoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fRedoButton.Name:='Palette Redo';
   fRedoButton.OnClick:=RedoButtonClick;
   AddChild(fRedoButton);
 
-  fColorSelector:=TBDColorSelector.Create(320,fTop+6);
+  fColorSelector:=TBDColorSelector.Create(PALETTECOLORSELECTORLEFT,fTop+6);
   fColorSelector.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fColorSelector.Name:='ColorSelector (PalEd)';
   AddChild(fColorSelector);
@@ -150,7 +156,7 @@ begin
   fColorBox.Name:='ColorBox';
   AddChild(fColorBox);
 
-  fColorCluster:=TBDColorCluster.Create(720,fTop+6,Project.CurrentImage.ColorClusters.Items[0]);
+  fColorCluster:=TBDColorCluster.Create(COLORCLUSTERLEFT,fTop+6,Project.CurrentImage.ColorClusters.Items[0]);
   fColorCluster.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fColorCluster.Name:='ColorCluster (PalEd)';
   AddChild(fColorCluster);
