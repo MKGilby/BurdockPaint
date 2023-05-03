@@ -248,7 +248,7 @@ begin
 end;
 
 procedure TBDProject.SaveToStream(pStream:TStream);
-var i,curr:int64;flags:byte;
+var curr:int64;flags:byte;i:integer;
 begin
   i:=PROJECTDATAID;
   pStream.Write(i,1);
