@@ -249,11 +249,12 @@ begin
   fStream.Read(endc,2);
   fStream.Read(flags,1);
   W(Format('  Start: %d, End: %d',[startc,endc]));
-  s:='  Flags: [';
+  W(Format('  Flags: %d',[flags]));
+  s:='    [';
   if flags and 1<>0 then s+='X' else s+=' ';
-  s+='] PingPong, [';
+  s+='] Reversed, [';
   if flags and 2<>0 then s+='X' else s+=' ';
-  s+='] Reverse';
+  s+='] Pingpong';
   W(s);
 end;
 
