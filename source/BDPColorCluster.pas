@@ -76,15 +76,20 @@ type
   TBDColorCluster=class(TVisibleControl)
     constructor Create(iLeft,iTop:integer;iColorCluster:TColorCluster);
     procedure Refresh;
+    procedure OnClick(Sender:TObject;x,y:integer);
   protected
     procedure ReDraw; override;
+    procedure fSetWidth(value:integer); override;
   private
-    fTRImage,fBRImage:TARGBImage;
+    fTLImage,fTRImage,fBLImage,fBRImage:TARGBImage;
     fColorCluster:TColorCluster;
-    fFont:TFont;
+    fFont,fFont2:TFont;
+    fPingpongSwitchLeft,fReverseSwitchLeft,
+    fColorsLeft,fColorsWidth,fArrowLeft:integer;
     procedure fSetColorCluster(value:TColorCluster);
   public
     property ColorCluster:TColorCluster read fColorCluster write fSetColorCluster;
+    property Width:integer read fWidth write fSetWidth;
   end;
 
 implementation
@@ -94,6 +99,9 @@ uses BDPShared;
 const
   COLORCLUSTERID=$54;
   COLORCLUSTERSID=$4C;
+  PINGPONGSWITCHWIDTH=27;
+  REVERSESWITCHWIDTH=27;
+  ARROWWIDTH=30;
 
 { TColorCluster }
 
@@ -150,7 +158,7 @@ begin
   flags:=0;
   if fReversed then flags:=flags or 1;
   if fPingpong then flags:=flags or 2;
-  pStream.Write(i,1);
+  pStream.Write(flags,1);
   i:=pStream.Position-curr-4;
   pStream.Position:=curr;
   pStream.write(i,4);
@@ -317,9 +325,17 @@ begin
   Width:=COLORCLUSTERWIDTH;
   Height:=COLORCLUSTERHEIGHT;
   fNeedRedraw:=true;
+  fTLImage:=MM.Images.ItemByName['ArchTopLeft'];
   fTRImage:=MM.Images.ItemByName['ArchTopRight'];
+  fBLImage:=MM.Images.ItemByName['ArchBottomLeft'];
   fBRImage:=MM.Images.ItemByName['ArchBottomRight'];
   fFont:=MM.Fonts['Black'];
+  fFont2:=MM.Fonts['Red'];
+  fPingpongSwitchLeft:=8;
+  fReverseSwitchLeft:=fPingpongSwitchLeft+PINGPONGSWITCHWIDTH+3;
+  fColorsLeft:=fReverseSwitchLeft+REVERSESWITCHWIDTH+3;
+  fArrowLeft:=Width-ARROWWIDTH-3;
+  fColorsWidth:=fArrowLeft-fColorsLeft;
 end;
 
 procedure TBDColorCluster.Refresh;
@@ -327,34 +343,71 @@ begin
   fNeedRedraw:=true;
 end;
 
+procedure TBDColorCluster.OnClick(Sender:TObject; x,y:integer);
+begin
+//  if (x>=3) and (x<
+end;
+
 procedure TBDColorCluster.ReDraw;
 var i,fonttop:integer;colorindex:word;
 begin
   if Assigned(fTexture) then begin
     with fTexture.ARGBImage do begin
-      Bar(0,0,Width,Height,SystemPalette[3]);
-      Bar(0,0,Width-8,3,SystemPalette[2]);
-      Bar(0,Height-3,Width-8,3,SystemPalette[2]);
-      Bar(0,3,3,Height-6,SystemPalette[2]);
+      // Background
+      Bar(0,0,fPingpongSwitchLeft,Height,SystemPalette[3]);
+      if Assigned(fColorCluster) then begin
+        if fColorCluster.PingPong then
+          Bar(fPingpongSwitchLeft+3,3,PINGPONGSWITCHWIDTH,Height-6,SystemPalette[4])
+        else
+          Bar(fPingpongSwitchLeft+3,3,PINGPONGSWITCHWIDTH,Height-6,SystemPalette[3]);
+        if fColorCluster.Reversed then
+          Bar(fReverseSwitchLeft+3,3,REVERSESWITCHWIDTH,Height-6,SystemPalette[4])
+        else
+          Bar(fReverseSwitchLeft+3,3,REVERSESWITCHWIDTH,Height-6,SystemPalette[3]);
+      end;
+      Bar(fArrowLeft,0,ARROWWIDTH,Height,SystemPalette[3]);
+      // Outer border
+      Bar(8,0,Width-16,3,SystemPalette[2]);
+      Bar(8,Height-3,Width-16,3,SystemPalette[2]);
+      Bar(0,8,3,Height-16,SystemPalette[2]);
       Bar(Width-3,8,3,Height-16,SystemPalette[2]);
-      Bar(Width-Height-3,3,3,Height-6,SystemPalette[2]);
+      // Vertical separator lines
+      Bar(fPingpongSwitchLeft,3,3,Height-6,SystemPalette[2]);
+      Bar(fReverseSwitchLeft,3,3,Height-6,SystemPalette[2]);
+      Bar(fColorsLeft,3,3,Height-6,SystemPalette[2]);
+      Bar(fArrowLeft,3,3,Height-6,SystemPalette[2]);
+      // Corners
+      if Assigned(fTLImage) then
+        fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fTexture.ARGBImage,true);
       if Assigned(fTRImage) then
         fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,fWidth-8,0,fTexture.ARGBImage,true);
+      if Assigned(fBLImage) then
+        fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,0,fHeight-8,fTexture.ARGBImage,true);
       if Assigned(fBRImage) then
         fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,fTexture.ARGBImage,true);
+      // Color cluster bar
       if Assigned(fColorCluster) then begin
-        for i:=0 to Width-Height-6-1 do begin
-          colorindex:=fColorCluster.GetIndexAt(i,Width-Height-6);
-          VLine(3+i,3,Height-6,Project.CurrentImage.Palette[colorindex]);
+        for i:=0 to fColorsWidth-1-3 do begin
+          colorindex:=fColorCluster.GetIndexAt(i,fColorsWidth-3);
+          VLine(fColorsLeft+i+3,3,Height-6,Project.CurrentImage.Palette[colorindex]);
           if colorindex=Settings.ActiveColorIndex then begin
-            VLine(3+i,Height div 2-3,3,SystemPalette[4]);
-            VLine(3+i,Height div 2,3,SystemPalette[1]);
+            VLine(fColorsLeft+i+3,Height div 2-3,3,SystemPalette[4]);
+            VLine(fColorsLeft+i+3,Height div 2,3,SystemPalette[1]);
           end;
         end;
       end;
-      if Assigned(fFont) then begin
+      // Letters and arrow
+      if Assigned(fFont) and Assigned(fFont2) then begin
         fonttop:=(Height-15) div 2;
-        fFont.OutText(fTexture.ARGBImage,#130,Width-33 div 2,fonttop,1);
+        if (Assigned(fColorCluster) and fColorCluster.PingPong) then
+          fFont2.OutText(fTexture.ARGBImage,'P',fPingpongSwitchLeft+PINGPONGSWITCHWIDTH div 2+3,fonttop,1)
+        else
+          fFont.OutText(fTexture.ARGBImage,'P',fPingpongSwitchLeft+PINGPONGSWITCHWIDTH div 2+3,fonttop,1);
+        if (Assigned(fColorCluster) and fColorCluster.Reversed) then
+          fFont2.OutText(fTexture.ARGBImage,'R',fReverseSwitchLeft+REVERSESWITCHWIDTH div 2+3,fonttop,1)
+        else
+          fFont.OutText(fTexture.ARGBImage,'R',fReverseSwitchLeft+REVERSESWITCHWIDTH div 2+3,fonttop,1);
+        fFont.OutText(fTexture.ARGBImage,#130,fArrowLeft+ARROWWIDTH div 2+1,fonttop,1);
       end;
     end;
     fTexture.Update;
@@ -365,6 +418,13 @@ procedure TBDColorCluster.fSetColorCluster(value:TColorCluster);
 begin
   fColorCluster:=value;
   fNeedRedraw:=true;
+end;
+
+procedure TBDColorCluster.fSetWidth(value:integer);
+begin
+  inherited fSetWidth(value);
+  fArrowLeft:=Width-ARROWWIDTH-3;
+  fColorsWidth:=fArrowLeft-fColorsLeft;
 end;
 
 end.
