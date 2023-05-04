@@ -278,24 +278,28 @@ procedure TBDPaletteEditor.OnSliderRChange(Sender:TObject; newValue:integer);
 begin
   Project.CurrentImage.Palette.ColorR[Settings.ActiveColorIndex]:=newValue;
   fColorBox.ColorChanged;
+  fColorCluster.Refresh;
 end;
 
 procedure TBDPaletteEditor.OnSliderGChange(Sender:TObject; newValue:integer);
 begin
   Project.CurrentImage.Palette.ColorG[Settings.ActiveColorIndex]:=newValue;
   fColorBox.ColorChanged;
+  fColorCluster.Refresh;
 end;
 
 procedure TBDPaletteEditor.OnSliderBChange(Sender:TObject; newValue:integer);
 begin
   Project.CurrentImage.Palette.ColorB[Settings.ActiveColorIndex]:=newValue;
   fColorBox.ColorChanged;
+  fColorCluster.Refresh;
 end;
 
 procedure TBDPaletteEditor.OnSliderAChange(Sender:TObject; newValue:integer);
 begin
   Project.CurrentImage.Palette.ColorA[Settings.ActiveColorIndex]:=newValue;
   fColorBox.ColorChanged;
+  fColorCluster.Refresh;
 end;
 
 procedure TBDPaletteEditor.OnSliderBankChange(Sender:TObject; newValue:integer);
@@ -368,6 +372,7 @@ begin
       MSG_ACTIVECOLORINDEXCHANGED:begin
         fColorBox.ColorIndex:=Settings.ActiveColorIndex;
         RefreshSliders;
+        fColorCluster.Refresh;
         Result:=true;
       end;
       MSG_SETPALETTEUNDOREDOBUTTON:begin
