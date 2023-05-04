@@ -76,7 +76,7 @@ type
   TBDColorCluster=class(TVisibleControl)
     constructor Create(iLeft,iTop:integer;iColorCluster:TColorCluster);
     procedure Refresh;
-    procedure OnClick(Sender:TObject;x,y:integer);
+    procedure Click(Sender:TObject;x,y,button:integer);
   protected
     procedure ReDraw; override;
     procedure fSetWidth(value:integer); override;
@@ -124,7 +124,16 @@ function TColorCluster.GetIndexAt(pValue,pInterval:integer):word;
 begin
   if pValue<0 then pValue:=0
   else if pValue>=pInterval then pValue:=pInterval-1;
-  Result:=fRealStart+(fRealEnd-fRealStart+1)*pValue div pInterval;
+  if not fPingpong then
+    Result:=fRealStart+(fRealEnd-fRealStart+fDirection)*pValue div pInterval
+  else begin
+    if pValue>pInterval div 2 then begin
+      pValue:=pInterval-pValue;
+    end;
+    if pValue<0 then pValue:=0
+    else if pValue>=pInterval div 2 then pValue:=pInterval div 2-1;
+    Result:=fRealStart+(fRealEnd-fRealStart+fDirection)*pValue*2 div pInterval;
+  end;
 end;
 
 function TColorCluster.GetIndexAtDithered(pValue,pInterval,pDitherStrength:integer):word;
@@ -215,7 +224,7 @@ end;
 
 procedure TColorCluster.SetReal;
 begin
-  if (fStart<=fEnd) or ((fStart>fEnd) and fReversed) then begin
+  if ((fStart<=fEnd) and not fReversed) or ((fStart>fEnd) and fReversed) then begin
     fRealStart:=fStart;
     fRealEnd:=fEnd;
     fDirection:=1;
@@ -336,6 +345,7 @@ begin
   fColorsLeft:=fReverseSwitchLeft+REVERSESWITCHWIDTH+3;
   fArrowLeft:=Width-ARROWWIDTH-3;
   fColorsWidth:=fArrowLeft-fColorsLeft;
+  OnClick:=Click;
 end;
 
 procedure TBDColorCluster.Refresh;
@@ -343,9 +353,18 @@ begin
   fNeedRedraw:=true;
 end;
 
-procedure TBDColorCluster.OnClick(Sender:TObject; x,y:integer);
+procedure TBDColorCluster.Click(Sender:TObject; x,y,button:integer);
 begin
-//  if (x>=3) and (x<
+  x-=Left;
+  y-=Top;
+  if (x>=fPingpongSwitchLeft) and (x<fReverseSwitchLeft) and Assigned(fColorCluster) then begin
+    fColorCluster.PingPong:=not fColorCluster.PingPong;
+    fNeedRedraw:=true;
+  end else
+  if (x>=fReverseSwitchLeft) and (x<fColorsLeft) and Assigned(fColorCluster) then begin
+    fColorCluster.Reversed:=not fColorCluster.Reversed;
+    fNeedRedraw:=true;
+  end;
 end;
 
 procedure TBDColorCluster.ReDraw;
