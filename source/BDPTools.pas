@@ -1295,10 +1295,8 @@ end;
 function TBDToolSelectColor.Click(x,y,button:integer):boolean;
 begin
   if button=SDL_BUTTON_LEFT then begin
-    if (x>=0) and (x<Project.CurrentImage.Width) and (y>=0) and (y<Project.CurrentImage.Height) then begin
+    if (x>=0) and (x<Project.CurrentImage.Width) and (y>=0) and (y<Project.CurrentImage.Height) then
       Settings.ActiveColorIndex:=Project.CurrentImage.GetPixel(x,y);
-      MessageQueue.AddMessage(MSG_ACTIVECOLORINDEXCHANGED);
-    end;
   end else
   if button=SDL_BUTTON_RIGHT then begin
     MessageQueue.AddMessage(MSG_DEACTIVATEPALETTEEDITOR);
