@@ -37,6 +37,7 @@ type
     procedure fSetSelectedTool(index:integer;value:string);
     function fGetSelectedInk(index:integer):string;
     procedure fSetSelectedInk(index:integer;value:string);
+    procedure fSetActiveColorIndex(value:integer);
   public
     property Zoom:integer read fZoom write fZoom;
     property ZoomLeft:integer read fZoomLeft write fZoomLeft;
@@ -50,7 +51,7 @@ type
     property UseAlpha:boolean read fUseAlpha write fUseAlpha;
     property ShowSplash:Boolean read fShowSplash write fShowSplash;
     property SelectedColors[index:integer]:integer read fGetSelectedColor write fSetSelectedColor;
-    property ActiveColorIndex:integer read fActiveColorIndex write fActiveColorIndex;
+    property ActiveColorIndex:integer read fActiveColorIndex write fSetActiveColorIndex;
     property UndoLimit:integer read fUndoLimit write fUndoLimit;
     property ModernGraphics:boolean read fModernGraphics write fModernGraphics;
   end;
@@ -193,6 +194,14 @@ begin
   if (index>=0) and (index<6) then
     fSelectedInks[index]:=value
   else raise Exception.Create(Format('fSetSelectedInk: Index out of range! (%d)',[index]));
+end;
+
+procedure TSettings.fSetActiveColorIndex(value:integer);
+begin
+  if (value>=0) and (value<>fActiveColorIndex) then begin
+    fActiveColorIndex:=value;
+    MessageQueue.AddMessage(MSG_ACTIVECOLORINDEXCHANGED,fActiveColorIndex);
+  end;
 end;
 
 end.
