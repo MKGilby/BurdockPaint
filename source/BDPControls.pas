@@ -284,7 +284,7 @@ begin
       fRedoButton.Enabled:=Project.CurrentImage.ImageUndo.CanRedo;
       Result:=true;
     end;
-    MSG_PICKEDCOLOR:begin
+    MSG_COLORSELECTORPICKEDCOLOR:begin
       fColorSelector.SetSelectedSlotTo(msg.DataInt);
       Self.ActivateToolButton(-1);  // Puts the already selected tool into ActiveTool
       InfoBar.ShowText('');

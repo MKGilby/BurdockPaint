@@ -108,11 +108,11 @@ const
   MSG_MESSAGEBOXRESP=10;
 
   // ------- Tool Messages ------- Range: 100-199 -------
-  // PICKCOL finished, IntValue holds the selected color index or -1 if no color selected.
-  MSG_PICKEDCOLOR=100;
+  // PICKCOLCS finished, Data is the selected color index or -1 if no color selected.
+  MSG_COLORSELECTORPICKEDCOLOR=100;
   // GETCEL or PUTCEL finished, reactivate selected tool.
   MSG_RESTORECONTROLS=101;
-  // ActiveColorIndex changed. Used in PaletteEditor
+  // ActiveColorIndex changed. Data is the active color index.
   MSG_ACTIVECOLORINDEXCHANGED=102;
   // Show CEL image. Hides Controls and MainMenu then activates SHOWCEL tool.
   MSG_SHOWCEL=103;
@@ -122,6 +122,8 @@ const
   MSG_SELECTCOLOR=105;
   // Project image count changed. Used to refresh Controls' slider.
   MSG_PROJECTIMAGECOUNTCHANGED=106;
+  // PICKCOLP finished, Data is the selected color index or -1 of no color selected.
+  MSG_PALETTEPICKEDCOLOR=107;
 
   // ------- Menu Messages ------- Range: 200-299 -------
   {$i MenuMessages.inc}
