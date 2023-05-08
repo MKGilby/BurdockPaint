@@ -94,7 +94,7 @@ type
 
 implementation
 
-uses BDPShared;
+uses BDPShared, SDL2;
 
 const
   COLORCLUSTERID=$54;
@@ -355,15 +355,21 @@ end;
 
 procedure TBDColorCluster.Click(Sender:TObject; x,y,button:integer);
 begin
-  x-=Left;
-  y-=Top;
-  if (x>=fPingpongSwitchLeft) and (x<fReverseSwitchLeft) and Assigned(fColorCluster) then begin
-    fColorCluster.PingPong:=not fColorCluster.PingPong;
-    fNeedRedraw:=true;
-  end else
-  if (x>=fReverseSwitchLeft) and (x<fColorsLeft) and Assigned(fColorCluster) then begin
-    fColorCluster.Reversed:=not fColorCluster.Reversed;
-    fNeedRedraw:=true;
+  if Assigned(fColorCluster) then begin
+    x-=Left;
+    y-=Top;
+    if (x>=fPingpongSwitchLeft) and (x<fReverseSwitchLeft) then begin
+      fColorCluster.PingPong:=not fColorCluster.PingPong;
+      fNeedRedraw:=true;
+    end else
+    if (x>=fReverseSwitchLeft) and (x<fColorsLeft) then begin
+      fColorCluster.Reversed:=not fColorCluster.Reversed;
+      fNeedRedraw:=true;
+    end else
+    if (x>=fColorsLeft+3) and (x<fArrowLeft) then begin
+      if button=SDL_BUTTON_LEFT then
+        Settings.ActiveColorIndex:=fColorCluster.GetIndexAt(x-fColorsLeft-3,fColorsWidth-3);
+    end;
   end;
 end;
 
