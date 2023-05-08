@@ -13,14 +13,22 @@ type
 
   TBDTool=class
     constructor Create; virtual;
-    procedure Initialize; virtual; // If the tool needs some initialization before every use
-    procedure Draw; virtual; // Draw helping lines, refresh infobar
-    procedure Clear; virtual;  // Clear helping lines!
+    // If the tool needs some initialization before every use, do that here.
+    procedure Initialize; virtual;
+    // Draw helping lines, refresh infobar
+    procedure Draw; virtual;
+    // Clear helping lines if the tool has them.
+    procedure Clear; virtual;
+    // The mouse positioned over the draw area (x,y).
     procedure Move(x,y:integer); virtual;
+    // Mouse down occured over the draw area.
     function MouseDown(x,y,buttons:integer):boolean; virtual;
+    // Mouse moved over the draw area.
     function MouseMove(x,y,buttons:integer):boolean; virtual;
+    // Mouse up occured over the draw area.
     function MouseUp(x,y,buttons:integer):boolean; virtual;
-    function Click(x,y,buttons:integer):boolean; virtual;   // Handle clicks
+    // Mouse click occured over the draw area.
+    function Click(x,y,buttons:integer):boolean; virtual;
   protected
     fState:integer;  // 0 - Waiting for first click, 1 - waiting for second click, etc.
     fX,fY:integer;  // Current position from Move
@@ -145,9 +153,9 @@ type
     fSX,fSY:integer;
   end;
 
-  { TBDToolPickColor }
+  { TBDToolPickColorCOLSEL }
 
-  TBDToolPickColor=class(TBDTool)
+  TBDToolPickColorCOLSEL=class(TBDTool)
     constructor Create; override;
     procedure Move(x,y:integer); override;
     function Click(x,y,button:integer):boolean; override;
@@ -157,12 +165,26 @@ type
     fColorIndex:integer;
   end;
 
+  { TBDToolPickColorPAL }
+
+  TBDToolPickColorPAL=class(TBDTool)
+    constructor Create; override;
+    procedure Move(x,y:integer); override;
+    function Click(x,y,button:integer):boolean; override;
+    function MouseUp(x,y,button:integer):boolean; override;
+    procedure SetColor(colorindex:integer);
+  private
+    fColorIndex:integer;
+  end;
   { TBDToolSelectColor }
 
   TBDToolSelectColor=class(TBDTool)
     constructor Create; override;
     procedure Move(x,y:integer); override;
+    //
     function Click(x,y,button:integer):boolean; override;
+    // Tell the color under the mouse to the tool.
+    // It remembers the color and updates the InfoBar accordingly.
     procedure SetColor(colorindex:integer);
   private
     fColorIndex:integer;
@@ -183,6 +205,7 @@ implementation
 
 uses
   BDPShared, MKToolbox, Logger, BDPMessage, BDPSettings, SDL2;
+
 
 // ------------------------------------------------------------ [ TBDTool ] ---
 
@@ -248,7 +271,8 @@ begin
   AddObject('SEP.',TBDToolSep.Create);
   AddObject('GETCEL',TBDToolGetCel.Create);
   AddObject('PUTCEL',TBDToolPutCel.Create);
-  AddObject('PICKCOL',TBDToolPickColor.Create);
+  AddObject('PICKCOLCS',TBDToolPickColorCOLSEL.Create);
+  AddObject('PICKCOLP',TBDToolPickColorPAL.Create);
   AddObject('SELCOL',TBDToolSelectColor.Create);
   AddObject('SHOWCEL',TBDToolShowCEL.Create);
 end;
@@ -1222,16 +1246,16 @@ begin
   end;
 end;
 
-// --------------------------------------------------- [ TBDToolPickColor ] ---
+// --------------------------------------------- [ TBDToolPickColorCOLSEL ] ---
 
-constructor TBDToolPickColor.Create;
+constructor TBDToolPickColorCOLSEL.Create;
 begin
   inherited Create;
-  fName:='PICKCOL';
+  fName:='PICKCOLCS';
   fHint:=uppercase('Pick color for the selected color slot.');
 end;
 
-procedure TBDToolPickColor.Move(x,y:integer);
+procedure TBDToolPickColorCOLSEL.Move(x,y:integer);
 begin
   inherited Move(x,y);
   if (fX>=0) and (fX<Project.CurrentImage.Width) and (fY>=0) and (fY<Project.CurrentImage.Height) then
@@ -1240,23 +1264,74 @@ begin
     SetColor(-1);
 end;
 
-function TBDToolPickColor.Click(x,y,button:integer):boolean;
+function TBDToolPickColorCOLSEL.Click(x,y,button:integer):boolean;
 begin
   if button=SDL_BUTTON_LEFT then begin
-    MessageQueue.AddMessage(MSG_PICKEDCOLOR,fColorIndex);
+    MessageQueue.AddMessage(MSG_COLORSELECTORPICKEDCOLOR,fColorIndex);
   end else
   if button=SDL_BUTTON_RIGHT then begin
-    MessageQueue.AddMessage(MSG_PICKEDCOLOR,-1);  // -1 means no change
+    MessageQueue.AddMessage(MSG_COLORSELECTORPICKEDCOLOR,-1);  // -1 means no change
   end;
   Result:=true;
 end;
 
-function TBDToolPickColor.MouseUp(x,y,button:integer):boolean;
+function TBDToolPickColorCOLSEL.MouseUp(x,y,button:integer):boolean;
 begin
   Result:=true;
 end;
 
-procedure TBDToolPickColor.SetColor(colorindex:integer);
+procedure TBDToolPickColorCOLSEL.SetColor(colorindex:integer);
+begin
+  if (colorindex>=0) and (colorindex<Project.CurrentImage.Palette.Size) then begin
+    fColorIndex:=colorindex;
+    InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d) '#132'PICK '#133'CANCEL',
+      [fColorIndex,
+       Project.CurrentImage.Palette.ColorR[fColorIndex],
+       Project.CurrentImage.Palette.ColorG[fColorIndex],
+       Project.CurrentImage.Palette.ColorB[fColorIndex],
+       Project.CurrentImage.Palette.ColorA[fColorIndex]]))
+  end else
+  if colorindex=-1 then begin
+    fColorIndex:=-1;
+    InfoBar.ShowText('');
+  end;
+end;
+
+// ------------------------------------------------ [ TBDToolPickColorPAL ] ---
+
+constructor TBDToolPickColorPAL.Create;
+begin
+  inherited Create;
+  fName:='PICKCOLP';
+  fHint:=uppercase('Pick color for the selected palette slot.');
+end;
+
+procedure TBDToolPickColorPAL.Move(x,y:integer);
+begin
+  inherited Move(x,y);
+  if (fX>=0) and (fX<Project.CurrentImage.Width) and (fY>=0) and (fY<Project.CurrentImage.Height) then
+    SetColor(Project.CurrentImage.GetPixel(fX,fY))
+  else
+    SetColor(-1);
+end;
+
+function TBDToolPickColorPAL.Click(x,y,button:integer):boolean;
+begin
+  if button=SDL_BUTTON_LEFT then begin
+    MessageQueue.AddMessage(MSG_PALETTEPICKEDCOLOR,fColorIndex);
+  end else
+  if button=SDL_BUTTON_RIGHT then begin
+    MessageQueue.AddMessage(MSG_PALETTEPICKEDCOLOR,-1);  // -1 means no change
+  end;
+  Result:=true;
+end;
+
+function TBDToolPickColorPAL.MouseUp(x,y,button:integer):boolean;
+begin
+  Result:=true;
+end;
+
+procedure TBDToolPickColorPAL.SetColor(colorindex:integer);
 begin
   if (colorindex>=0) and (colorindex<Project.CurrentImage.Palette.Size) then begin
     fColorIndex:=colorindex;
@@ -1309,7 +1384,7 @@ begin
   if (colorindex>=-1) and (colorindex<Project.CurrentImage.Palette.Size) then begin
     fColorIndex:=colorindex;
     if colorindex>-1 then begin
-      InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d) '#132'SELECT '#133'CLOSE PALETTE ED.',
+      InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d) '#132'SELECT '#133'PICK COLOR',
         [fColorIndex,
          Project.CurrentImage.Palette.ColorR[fColorIndex],
          Project.CurrentImage.Palette.ColorG[fColorIndex],

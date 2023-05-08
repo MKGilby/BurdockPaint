@@ -91,7 +91,7 @@ begin
     if i>-1 then begin
       fSelectedIndex:=i;
       Settings.ActiveColorIndex:=Settings.SelectedColors[i];
-      ActiveTool:=Tools.ItemByName['PICKCOL'];
+      ActiveTool:=Tools.ItemByName['PICKCOLCS'];
       fPickingColor:=true;
     end;
   end;
