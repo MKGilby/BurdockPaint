@@ -314,16 +314,16 @@ begin
             case MessageBox('Where to place new image?','First;Last;Insert;Cancel') of
               0:begin
                   Project.Images.Insert(0,TBDExtendedImage.Create);
-                  Project.ActiveImageIndex:=0;
+                  Project.CurrentImageIndex:=0;
                   MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
                 end;
               1:begin
                   Project.Images.Add(TBDExtendedImage.Create);
-                  Project.ActiveImageIndex:=Project.Images.Count-1;
+                  Project.CurrentImageIndex:=Project.Images.Count-1;
                   MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
                 end;
               2:begin
-                  Project.Images.Insert(Project.ActiveImageIndex,TBDExtendedImage.Create);
+                  Project.Images.Insert(Project.CurrentImageIndex,TBDExtendedImage.Create);
                   MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
                 end;
             end;
@@ -331,9 +331,9 @@ begin
           MSG_REMOVEIMAGE:begin
             if (Project.Images.Count>1) then begin
               if MessageBox('Really remove image from project?','^Yes;^No')=0 then begin
-                Project.Images.Delete(Project.ActiveImageIndex);
-                if Project.ActiveImageIndex>=Project.Images.Count then
-                  Project.ActiveImageIndex:=Project.Images.Count-1;
+                Project.Images.Delete(Project.CurrentImageIndex);
+                if Project.CurrentImageIndex>=Project.Images.Count then
+                  Project.CurrentImageIndex:=Project.Images.Count-1;
                 MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
               end;
             end;

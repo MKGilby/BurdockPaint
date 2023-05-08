@@ -141,7 +141,7 @@ begin
   fImageCountSlider.Name:='ImagesSlider';
   fImageCountSlider.MinValue:=1;
   fImageCountSlider.MaxValue:=Project.Images.Count;
-  fImageCountSlider.Position:=Project.ActiveImageIndex+1;
+  fImageCountSlider.Position:=Project.CurrentImageIndex+1;
   fImageCountSlider.OnChange:=ActiveImageChange;
   AddChild(fImageCountSlider);
 
@@ -265,7 +265,7 @@ end;
 
 procedure TBDControls.ActiveImageChange(Sender:TObject; newvalue:integer);
 begin
-  Project.ActiveImageIndex:=newvalue-1;
+  Project.CurrentImageIndex:=newvalue-1;
   MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
 end;
 
@@ -292,7 +292,7 @@ begin
     end;
     MSG_PROJECTIMAGECOUNTCHANGED:begin
       fImageCountSlider.MaxValue:=Project.Images.Count;
-      fImageCountSlider.Position:=Project.ActiveImageIndex+1;
+      fImageCountSlider.Position:=Project.CurrentImageIndex+1;
       MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
       Result:=false;  // Not true, let the others also know about the count change!
     end;

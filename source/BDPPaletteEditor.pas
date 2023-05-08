@@ -372,7 +372,7 @@ begin
   ActiveTool:=Tools.ItemByName['SELCOL'];
   fUndoButton.Enabled:=Project.CurrentImage.PaletteUndo.CanUndo;
   fRedoButton.Enabled:=Project.CurrentImage.PaletteUndo.CanRedo;
-  fColorCluster.ColorCluster:=Project.Images[Project.ActiveImageIndex].ColorClusters[0];
+  fColorCluster.ColorCluster:=Project.CurrentImage.ColorClusters[0];
 end;
 
 procedure TBDPaletteEditor.PaletteEditorHide(Sender:TObject);
@@ -411,8 +411,7 @@ begin
       end;
       MSG_PALETTEPICKEDCOLOR:begin
         if msg.DataInt>-1 then
-          Project.Images[Project.ActiveImageIndex].Palette[fPickingColor]:=
-            Project.Images[Project.ActiveImageIndex].Palette[msg.DataInt];
+          Project.CurrentImage.Palette[fPickingColor]:=Project.CurrentImage.Palette[msg.DataInt];
         fPickingColor:=-1;
         fColorCluster.Refresh;
         ActiveTool:=Tools.ItemByName['SELCOL'];

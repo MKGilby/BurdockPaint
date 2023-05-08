@@ -70,18 +70,18 @@ type
     // Clears undo data and releases CEL
     procedure Clean;
   private
-    fActiveImageIndex:integer;
+    fCurrentImageIndex:integer;
     fImages:TBDExtendedImages;
     // Only needed in-program, but must be the same size as the current image.
     fOverlayImage:TBDImage;
     fCELImage:TBDImage;
     procedure LoadFromStreamV1(pStream:TStream);
     procedure SetOverlayPalette;
-    procedure fSetActiveImageIndex(value:integer);
+    procedure fSetCurrentImageIndex(value:integer);
     function fGetCurrentImage:TBDExtendedImage;
   public
     property Images:TBDExtendedImages read fImages;
-    property ActiveImageIndex:integer read fActiveImageIndex write fSetActiveImageIndex;
+    property CurrentImageIndex:integer read fCurrentImageIndex write fSetCurrentImageIndex;
     property OverlayImage:TBDImage read fOverlayImage;
     property CurrentImage:TBDExtendedImage read fGetCurrentImage;
     property CELImage:TBDImage read fCELImage write fCELImage;
@@ -191,7 +191,7 @@ constructor TBDProject.Create;
 begin
   fImages:=TBDExtendedImages.Create;
   fImages.Add(TBDExtendedImage.Create);
-  fActiveImageIndex:=0;
+  fCurrentImageIndex:=0;
   fOverlayImage:=TBDImage.Create(fImages[0].Width,fImages[0].Height);
   SetOverlayPalette;
   fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
@@ -223,9 +223,9 @@ begin
 
   if fImages.Count=0 then fImages.Add(TBDExtendedImage.Create);
 
-  if (fActiveImageIndex<0) or (fActiveImageIndex>=fImages.Count) then
-    fActiveImageIndex:=0;
-  fOverlayImage:=TBDImage.Create(fImages[fActiveImageIndex].Width,fImages[fActiveImageIndex].Height);
+  if (fCurrentImageIndex<0) or (fCurrentImageIndex>=fImages.Count) then
+    fCurrentImageIndex:=0;
+  fOverlayImage:=TBDImage.Create(fImages[fCurrentImageIndex].Width,fImages[fCurrentImageIndex].Height);
 //  SetOverlayPalette;
   fOverlayImage.Palette.ResizeAndCopyColorsFrom(SystemPalette);
   fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
@@ -261,7 +261,7 @@ begin
   pStream.Write(flags,1);
   i:=fImages.Count;
   pStream.Write(i,2);
-  pStream.Write(fActiveImageIndex,2);
+  pStream.Write(fCurrentImageIndex,2);
   for i:=0 to fImages.Count-1 do
     fImages[i].SaveToStream(pStream);
 
@@ -287,8 +287,8 @@ begin
   pStream.Read(flags,1);
   count:=0;
   pStream.Read(count,2);
-  fActiveImageIndex:=0;
-  pStream.Read(fActiveImageIndex,2);
+  fCurrentImageIndex:=0;
+  pStream.Read(fCurrentImageIndex,2);
   while count>0 do begin
     fImages.Add(TBDExtendedImage.CreateFromStream(pStream));
     dec(count);
@@ -313,18 +313,18 @@ begin
   end;
 end;
 
-procedure TBDProject.fSetActiveImageIndex(value:integer);
+procedure TBDProject.fSetCurrentImageIndex(value:integer);
 begin
-  if (value<>fActiveImageIndex) and (value>=0) and (value<fImages.Count) then begin
-    fActiveImageIndex:=value;
-    fOverlayImage.Recreate(fImages[fActiveImageIndex].Width,fImages[fActiveImageIndex].Height);
+  if (value<>fCurrentImageIndex) and (value>=0) and (value<fImages.Count) then begin
+    fCurrentImageIndex:=value;
+    fOverlayImage.Recreate(fImages[fCurrentImageIndex].Width,fImages[fCurrentImageIndex].Height);
     fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
   end;
 end;
 
 function TBDProject.fGetCurrentImage:TBDExtendedImage;
 begin
-  Result:=fImages[fActiveImageIndex];
+  Result:=fImages[fCurrentImageIndex];
 end;
 
 end.
