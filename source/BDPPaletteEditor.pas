@@ -43,6 +43,7 @@ type
     fColorBox:TBDColorBox;
     fColorCluster:TBDColorCluster;
     fSavedColor:uint32;
+    fPickingColor:integer;
   end;
 
 implementation
@@ -160,6 +161,7 @@ begin
   fColorCluster.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fColorCluster.Name:='ColorCluster (PalEd)';
   AddChild(fColorCluster);
+  fPickingColor:=-1;
 
   MouseObjects.Add(Self);
 end;
@@ -188,6 +190,14 @@ begin
       PALETTESOCKETWIDTH+3,
       PALETTESOCKETHEIGHT+3,
       SystemPalette.Colors[5]);
+  if (fPickingColor>-1) and ((fPickingColor div 256)+1=fSliderBank.Position) then begin
+    fTexture.ARGBImage.bar(
+      PALETTESOCKETSLEFT+(fPickingColor mod 32)*PALETTESOCKETWIDTH,
+      PALETTESOCKETSTOP+(fPickingColor div 32)*PALETTESOCKETHEIGHT,
+      PALETTESOCKETWIDTH+3,
+      PALETTESOCKETHEIGHT+3,
+      SystemPalette.Colors[VibroColors.GetColorIndex]);
+  end;
 
   for i:=0 to 255 do begin
     fTexture.ARGBImage.Bar(
@@ -219,20 +229,27 @@ begin
        (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
       x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
       y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
-
       TBDToolSelectColor(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256);
     end else
       TBDToolSelectColor(ActiveTool).SetColor(-1);
   end else
-  if ActiveTool.Name='PICKCOL' then begin
+  if ActiveTool.Name='PICKCOLCS' then begin
     if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
        (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
       x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
       y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
-
-      TBDToolPickColor(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256);
+      TBDToolPickColorCOLSEL(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256);
     end else
-      TBDToolPickColor(ActiveTool).SetColor(-1);
+      TBDToolPickColorCOLSEL(ActiveTool).SetColor(-1);
+  end else
+  if ActiveTool.Name='PICKCOLP' then begin
+    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
+       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
+      x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
+      y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
+      TBDToolPickColorPAL(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256);
+    end else
+      TBDToolPickColorPAL(ActiveTool).SetColor(-1);
   end;
 end;
 
@@ -243,23 +260,30 @@ begin
   if ActiveTool.Name='SELCOL' then begin
     if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
        (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
+      x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
+      y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
       if buttons=SDL_BUTTON_LEFT then begin
-        x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
-        y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
         Settings.ActiveColorIndex:=y*32+x;
         fColorBox.ColorIndex:=y*32+x;
         fColorCluster.Refresh;
         RefreshSliders;
       end else
       if buttons=SDL_BUTTON_RIGHT then begin
-        MessageQueue.AddMessage(MSG_DEACTIVATEPALETTEEDITOR);
+        ActiveTool:=Tools.ItemByName['PICKCOLP'];
+        fPickingColor:=y*32+x;
       end;
     end;
   end else
-  if ActiveTool.Name='PICKCOL' then begin
+  if ActiveTool.Name='PICKCOLCS' then begin
     if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
        (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
-      TBDToolPickColor(ActiveTool).Click(x,y,buttons);
+      TBDToolPickColorCOLSEL(ActiveTool).Click(x,y,buttons);
+    end;
+  end else
+  if ActiveTool.Name='PICKCOLP' then begin
+    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
+       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
+      TBDToolPickColorPAL(ActiveTool).Click(x,y,buttons);
     end;
   end;
 end;
@@ -379,8 +403,18 @@ begin
         fUndoButton.Enabled:=Project.CurrentImage.PaletteUndo.CanUndo;
         fRedoButton.Enabled:=Project.CurrentImage.PaletteUndo.CanRedo;
       end;
-      MSG_PICKEDCOLOR:begin
+      MSG_COLORSELECTORPICKEDCOLOR:begin
         fColorSelector.SetSelectedSlotTo(msg.DataInt);
+        ActiveTool:=Tools.ItemByName['SELCOL'];
+        InfoBar.ShowText('');
+        Result:=true;
+      end;
+      MSG_PALETTEPICKEDCOLOR:begin
+        if msg.DataInt>-1 then
+          Project.Images[Project.ActiveImageIndex].Palette[fPickingColor]:=
+            Project.Images[Project.ActiveImageIndex].Palette[msg.DataInt];
+        fPickingColor:=-1;
+        fColorCluster.Refresh;
         ActiveTool:=Tools.ItemByName['SELCOL'];
         InfoBar.ShowText('');
         Result:=true;
