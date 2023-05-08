@@ -124,6 +124,10 @@ const
   MSG_PROJECTIMAGECOUNTCHANGED=106;
   // PICKCOLP finished, Data is the selected color index or -1 of no color selected.
   MSG_PALETTEPICKEDCOLOR=107;
+  // Activate PickColorCluster tool.
+  MSG_ACTIVATEPICKCOLORCLUSTER=108;
+  // PICKCOLCLS finished, Data is the start in upper word and end in lower word.
+  MSG_COLORCLUSTERPICKED=109;
 
   // ------- Menu Messages ------- Range: 200-299 -------
   {$i MenuMessages.inc}
