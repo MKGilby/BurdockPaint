@@ -77,6 +77,7 @@ type
     constructor Create(iLeft,iTop:integer;iColorCluster:TColorCluster);
     procedure Refresh;
     procedure Click(Sender:TObject;x,y,button:integer);
+    procedure Draw; override;
   protected
     procedure ReDraw; override;
     procedure fSetWidth(value:integer); override;
@@ -86,6 +87,7 @@ type
     fFont,fFont2:TFont;
     fPingpongSwitchLeft,fReverseSwitchLeft,
     fColorsLeft,fColorsWidth,fArrowLeft:integer;
+    fPicking:boolean;
     procedure fSetColorCluster(value:TColorCluster);
   public
     property ColorCluster:TColorCluster read fColorCluster write fSetColorCluster;
@@ -224,15 +226,14 @@ end;
 
 procedure TColorCluster.SetReal;
 begin
-  if ((fStart<=fEnd) and not fReversed) or ((fStart>fEnd) and fReversed) then begin
-    fRealStart:=fStart;
-    fRealEnd:=fEnd;
-    fDirection:=1;
-  end else begin
+  if fReversed then begin
     fRealStart:=fEnd;
     fRealEnd:=fStart;
-    fDirection:=-1;
+  end else begin
+    fRealStart:=fStart;
+    fRealEnd:=fEnd;
   end;
+  if fStart<fEnd then fDirection:=1 else fDirection:=-1;
 end;
 
 procedure TColorCluster.LoadFromStreamV1(pStream:TStream);
@@ -346,11 +347,13 @@ begin
   fArrowLeft:=Width-ARROWWIDTH-3;
   fColorsWidth:=fArrowLeft-fColorsLeft;
   OnClick:=Click;
+  fPicking:=false;
 end;
 
 procedure TBDColorCluster.Refresh;
 begin
   fNeedRedraw:=true;
+  fPicking:=false;
 end;
 
 procedure TBDColorCluster.Click(Sender:TObject; x,y,button:integer);
@@ -368,9 +371,19 @@ begin
     end else
     if (x>=fColorsLeft+3) and (x<fArrowLeft) then begin
       if button=SDL_BUTTON_LEFT then
-        Settings.ActiveColorIndex:=fColorCluster.GetIndexAt(x-fColorsLeft-3,fColorsWidth-3);
+        Settings.ActiveColorIndex:=fColorCluster.GetIndexAt(x-fColorsLeft-3,fColorsWidth-3)
+      else if (button=SDL_BUTTON_RIGHT) then begin
+        fPicking:=true;
+        MessageQueue.AddMessage(MSG_ACTIVATEPICKCOLORCLUSTER);
+      end;
     end;
   end;
+end;
+
+procedure TBDColorCluster.Draw;
+begin
+  if fPicking then fNeedRedraw:=true;
+  inherited Draw;
 end;
 
 procedure TBDColorCluster.ReDraw;
@@ -410,6 +423,9 @@ begin
         fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,0,fHeight-8,fTexture.ARGBImage,true);
       if Assigned(fBRImage) then
         fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,fTexture.ARGBImage,true);
+      // Flashing if picking
+      if fPicking then
+        Bar(fColorsLeft,0,fColorsWidth+3,Height,SystemPalette[VibroColors.GetColorIndex]);
       // Color cluster bar
       if Assigned(fColorCluster) then begin
         for i:=0 to fColorsWidth-1-3 do begin

@@ -176,6 +176,7 @@ type
   private
     fColorIndex:integer;
   end;
+
   { TBDToolSelectColor }
 
   TBDToolSelectColor=class(TBDTool)
@@ -199,6 +200,18 @@ type
     procedure Clear; override;
   private
     fStartTime:UInt64;
+  end;
+
+  { TBDToolPickColorCluster }
+
+  TBDToolPickColorCluster=class(TBDTool)
+    constructor Create; override;
+    procedure Move(x,y:integer); override;
+    function Click(x,y,button:integer):boolean; override;
+    function MouseUp(x,y,button:integer):boolean; override;
+    procedure SetColor(colorindex:integer);
+  private
+    fStart,fColorIndex:integer;
   end;
 
 implementation
@@ -275,6 +288,7 @@ begin
   AddObject('PICKCOLP',TBDToolPickColorPAL.Create);
   AddObject('SELCOL',TBDToolSelectColor.Create);
   AddObject('SHOWCEL',TBDToolShowCEL.Create);
+  AddObject('PICKCOLCLS',TBDToolPickColorCluster.Create);
 end;
 
 // --------------------------------------------------------- [ TBDToolBox ] ---
@@ -1430,6 +1444,70 @@ procedure TBDToolShowCEL.Clear;
 begin
   Project.OverlayImage.RectangleWH(Project.CelImage.Left,Project.CelImage.Top,Project.CELImage.Width,Project.CELImage.Height,0);
   CELHelperImage.BarWH(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage.Width,Project.CELImage.Height,CELHelperImage.Palette.Size);
+end;
+
+// -------------------------------------------- [ TBDToolPickColorCluster ] ---
+
+constructor TBDToolPickColorCluster.Create;
+begin
+  inherited Create;
+  fName:='PICKCOLCLS';
+  fHint:=uppercase('Pick color cluster. Click on start then click on end.');
+  fState:=0;
+  fStart:=-1;
+end;
+
+procedure TBDToolPickColorCluster.Move(x,y:integer);
+begin
+  inherited Move(x,y);
+  if (fX>=0) and (fX<Project.CurrentImage.Width) and (fY>=0) and (fY<Project.CurrentImage.Height) then
+    SetColor(Project.CurrentImage.GetPixel(fX,fY))
+  else
+    SetColor(-1);
+end;
+
+function TBDToolPickColorCluster.Click(x,y,button:integer):boolean;
+begin
+  if (button=SDL_BUTTON_LEFT) and (fColorIndex>-1) then begin
+    case fState of
+      0:begin
+          fStart:=fColorIndex;
+          inc(fState);
+        end;
+      1:begin
+          if fColorIndex<>fStart then begin
+            MessageQueue.AddMessage(MSG_COLORCLUSTERPICKED,(fStart and $7fff)<<16+(fColorIndex and $ffff));
+            fState:=0;
+            fStart:=-1;
+          end;
+        end;
+    end;
+  end else
+  if button=SDL_BUTTON_RIGHT then begin
+    MessageQueue.AddMessage(MSG_COLORCLUSTERPICKED,-1);  // -1 means no change
+  end;
+  Result:=true;
+end;
+
+function TBDToolPickColorCluster.MouseUp(x,y,button:integer):boolean;
+begin
+  Result:=true;
+end;
+
+procedure TBDToolPickColorCluster.SetColor(colorindex:integer);
+begin
+  if (colorindex>=0) and (colorindex<Project.CurrentImage.Palette.Size) then begin
+    fColorIndex:=colorindex;
+    if fStart=-1 then
+      InfoBar.ShowText(Format('START=%d '#132'PICK '#133'CANCEL',[fColorIndex]))
+    else
+      InfoBar.ShowText(Format('START=%d END=%d LEN=%d '#132'PICK '#133'CANCEL',
+        [fStart,fColorIndex,abs(fColorIndex-fStart+1)]))
+  end else
+  if colorindex=-1 then begin
+    fColorIndex:=-1;
+    InfoBar.ShowText('');
+  end;
 end;
 
 end.

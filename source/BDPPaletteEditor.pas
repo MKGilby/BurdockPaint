@@ -250,6 +250,15 @@ begin
       TBDToolPickColorPAL(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256);
     end else
       TBDToolPickColorPAL(ActiveTool).SetColor(-1);
+  end else
+  if ActiveTool.Name='PICKCOLCLS' then begin
+    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
+       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
+      x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
+      y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
+      TBDToolPickColorCluster(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256);
+    end else
+      TBDToolPickColorCluster(ActiveTool).SetColor(-1);
   end;
 end;
 
@@ -284,6 +293,12 @@ begin
     if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
        (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
       TBDToolPickColorPAL(ActiveTool).Click(x,y,buttons);
+    end;
+  end else
+  if ActiveTool.Name='PICKCOLCLS' then begin
+    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
+       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
+      TBDToolPickColorCluster(ActiveTool).Click(x,y,buttons);
     end;
   end;
 end;
@@ -413,6 +428,20 @@ begin
         if msg.DataInt>-1 then
           Project.CurrentImage.Palette[fPickingColor]:=Project.CurrentImage.Palette[msg.DataInt];
         fPickingColor:=-1;
+        fColorCluster.Refresh;
+        ActiveTool:=Tools.ItemByName['SELCOL'];
+        InfoBar.ShowText('');
+        Result:=true;
+      end;
+      MSG_ACTIVATEPICKCOLORCLUSTER:begin
+        ActiveTool:=Tools.ItemByName['PICKCOLCLS'];
+        Result:=true;
+      end;
+      MSG_COLORCLUSTERPICKED:begin
+        if msg.DataInt>-1 then begin
+          fColorCluster.ColorCluster.StartIndex:=(msg.DataInt and $7FFF0000)>>16;
+          fColorCluster.ColorCluster.EndIndex:=msg.DataInt and $7FFF;
+        end;
         fColorCluster.Refresh;
         ActiveTool:=Tools.ItemByName['SELCOL'];
         InfoBar.ShowText('');
