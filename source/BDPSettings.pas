@@ -30,6 +30,8 @@ type
     fColorSelectorColors:array of integer;
     fActiveColorIndex:integer;
     fUndoLimit:integer;
+    fDitherGradients:boolean;
+    fDitherStrength:integer;
     fModernGraphics:boolean;
     function fGetSelectedColor(index:integer):integer;
     function fGetSelectedTool(index:integer):string;
@@ -54,6 +56,8 @@ type
     property ActiveColorIndex:integer read fActiveColorIndex write fSetActiveColorIndex;
     property UndoLimit:integer read fUndoLimit write fUndoLimit;
     property ModernGraphics:boolean read fModernGraphics write fModernGraphics;
+    property DitherGradients:boolean read fDitherGradients write fDitherGradients;
+    property DitherStrength:integer read fDitherStrength write fDitherStrength;
   end;
 
 
@@ -89,6 +93,8 @@ begin
   for i:=0 to COLORSELECTORCOLORS-1 do fColorSelectorColors[i]:=i;
   fActiveColorIndex:=0;
   fUndoLimit:=16;
+  fDitherGradients:=false;
+  fDitherStrength:=10;
 end;
 
 procedure TSettings.LoadFromFile(pFilename:String);
@@ -125,6 +131,8 @@ begin
   for i:=0 to COLORSELECTORCOLORS-1 do
     fColorSelectorColors[i]:=INI.ReadInteger('Colors',Format('Selected%d',[i]),i);
   fActiveColorIndex:=INI.ReadInteger('Colors','ActiveColor',0);
+  fDitherGradients:=INI.ReadBool('Inks','DitherGradients',false);
+  fDitherStrength:=INI.ReadInteger('Inks','DitherStrength',10);
   FreeAndNil(INI);
 end;
 
@@ -151,6 +159,8 @@ begin
   for i:=0 to COLORSELECTORCOLORS-1 do
     INI.WriteInteger('Colors',Format('Selected%d',[i]),fColorSelectorColors[i]);
   INI.WriteInteger('Colors','ActiveColor',fActiveColorIndex);
+  INI.WriteBool('Inks','DitherGradients',fDitherGradients);
+  INI.WriteInteger('Inks','DitherStrength',fDitherStrength);
   FreeAndNil(INI);
 end;
 
