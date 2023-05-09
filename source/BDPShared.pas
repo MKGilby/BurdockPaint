@@ -77,7 +77,7 @@ const
 
 
   DATAFILE='BurdockPaint.data';
-  TEMPPROJECTFILE='temp.bpprj';
+  TEMPPROJECTFILE:string='temp.bpprj';
   SETTINGSFILE='BurdockPaint.ini';
   STATEDATAID=$53;
 
@@ -106,6 +106,10 @@ const
   MSG_ABOUTRESP=9;
   // Response from MessageBox. Data is the pressed button number.
   MSG_MESSAGEBOXRESP=10;
+  // Open DitherDialog.
+  MSG_OPENDITHERDIALOG=11;
+  // Response from DitherDialog. Data is the new dither strength or -1 if cancelled.
+  MSG_DITHERRESP=12;
 
   // ------- Tool Messages ------- Range: 100-199 -------
   // PICKCOLCS finished, Data is the selected color index or -1 if no color selected.
