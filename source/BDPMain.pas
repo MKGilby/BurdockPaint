@@ -24,6 +24,7 @@ type
     fMainMenu:TMainMenu;
     fMagnifyDialog:TBDMagnifyCELDialog;
     fRotateDialog:TBDRotateCELDialog;
+    fDitherDialog:TBDDitherDialog;
     fOpenCELDialog,
     fOpenProjectDialog:TOpenDialog;
     fSaveCELDialog,
@@ -39,7 +40,7 @@ implementation
 
 uses SDL2, BDPShared, MKToolbox, MKStream, MKMouse2, Logger,
   BDPMessage, BDPKeyMapping, BDPTools, MAD4MidLevelUnit, BDPImage,
-  BDPProject;
+  BDPProject, ParametersUnit;
 
 
 { TMain }
@@ -47,20 +48,26 @@ uses SDL2, BDPShared, MKToolbox, MKStream, MKMouse2, Logger,
 constructor TMain.Create(iVersion,iBuildDate:string);
 {$IFNDEF DEBUG}var MAD4:TMAD4MidLevel;{$ENDIF}
 begin
-  // Set data directory path to allow running without datafile
-  MKStreamOpener.AddDirectory('..\data',100);
 {$IFDEF DEBUG}
   // Set logging level
   Log.SetLogLevel(llAll);
+  // Set data directory path to allow running without datafile
+  MKStreamOpener.AddDirectory('..\data',100);
 {$ELSE}
 // Set logging level
   Log.SetLogLevel(llStatus);
 // Try to mount the datafile.
-  try
-    MAD4:=TMAD4MidLevel.Create(DATAFILE);
-    MKStreamOpener.AddOtherSource(MAD4, 0);
-  except
-    on exception do ;
+  if FileExists(ExtractFileDir(Parameters[0])+'\'+DATAFILE) then begin
+    try
+      MAD4:=TMAD4MidLevel.Create(ExtractFileDir(Parameters[0])+'\'+DATAFILE);
+      MKStreamOpener.AddOtherSource(MAD4, 0);
+    except
+      on exception do ;
+    end;
+  end else begin
+    Log.LogError('Datafile not found!');
+    Log.LogStatus(ExtractFileDir(Parameters[0])+'\'+DATAFILE);
+    raise Exception.Create('Datafile not found!');
   end;
 {$ENDIF}
 
@@ -76,6 +83,10 @@ begin
 
   SetFPS(60);
 
+  if (Parameters.Count=2) and (FileExists(Parameters[1])) then begin
+    TEMPPROJECTFILE:=Parameters[1];
+  end;
+
   LoadAssets;
 
   fDrawArea:=TBDDrawArea.Create;
@@ -88,6 +99,7 @@ begin
   fMainMenu.ProcessMessage(TMessage.Init(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count));
   fMagnifyDialog:=TBDMagnifyCELDialog.Create;
   fRotateDialog:=TBDRotateCELDialog.Create;
+  fDitherDialog:=TBDDitherDialog.Create;
   MouseObjects.Sort;
   MouseObjects.List;
 
@@ -105,6 +117,7 @@ begin
   if Assigned(fSaveProjectDialog) then FreeAndNil(fSaveProjectDialog);
   if Assigned(fSaveCELDialog) then FreeAndNil(fSaveCELDialog);
   if Assigned(fOpenCELDialog) then FreeAndNil(fOpenCELDialog);
+  if Assigned(fDitherDialog) then FreeAndNil(fDitherDialog);
   if Assigned(fRotateDialog) then FreeAndNil(fRotateDialog);
   if Assigned(fMagnifyDialog) then FreeAndNil(fMagnifyDialog);
   if Assigned(fMainMenu) then FreeAndNil(fMainMenu);
@@ -337,6 +350,13 @@ begin
                 MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
               end;
             end;
+          end;
+          MSG_OPENDITHERDIALOG:begin
+            fDitherDialog.Show;
+          end;
+          MSG_DITHERRESP:begin
+            if msg.DataInt>-1 then Settings.DitherStrength:=msg.DataInt;
+            fDitherDialog.Hide;
           end;
           MSG_QUIT:begin
             quit:=(msg.DataInt=1);
