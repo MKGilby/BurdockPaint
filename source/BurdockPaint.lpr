@@ -1,5 +1,7 @@
 program BurdockPaint;
 
+{$ifndef DEBUG}{$apptype gui}{$endif}
+
 uses
   Interfaces,
   BDPMain,
