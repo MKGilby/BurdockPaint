@@ -138,15 +138,13 @@ end;
 
 function TBDInkHGrad.GetColorIndexAt(pX,pY: integer):integer;
 begin
-//  Log.LogDebug('pX='+inttostr(pX)+', pY='+inttostr(pY)+', fLeft='+inttostr(fLeft)+', fWidth='+inttostr(fWidth));
-  if fWidth>1 then
-    Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(px-fLeft,fWidth-1)
-  else
+  if fWidth>1 then begin
+    if Settings.DitherGradients then
+      Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAtDithered(px-fLeft,fWidth-1,Settings.DitherStrength)
+    else
+      Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(px-fLeft,fWidth-1)
+  end else
     Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2);
-{  if fWidth>1 then
-    Result:=trunc(0.5+ActiveCluster.startindex+(ActiveCluster.endindex-ActiveCluster.startindex)*(pX-fLeft)/(fWidth-1))
-  else
-    Result:=ActiveCluster.startindex+(ActiveCluster.endindex-ActiveCluster.startindex) div 2;}
 end;
 
 procedure TBDInkHGrad.PostProcess;
@@ -178,18 +176,19 @@ begin
   Result:=SegmentRight-i-1;
   dec(SegmentRight);
   if Result>0 then begin
-    while i<SegmentRight+1 do begin
-      Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(SegmentRight-i,Result+1));
-{      MainImage.PutPixel(i,j,
-        trunc(0.5+ActiveCluster.endindex-(ActiveCluster.endindex-ActiveCluster.startindex)*(SegmentRight-i)/(Result+1))
-      );}
-      inc(i);
+    if Settings.DitherGradients then begin
+      while i<SegmentRight+1 do begin
+        Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAtDithered(SegmentRight-i,Result+1,Settings.DitherStrength));
+        inc(i);
+      end;
+    end else begin
+      while i<SegmentRight+1 do begin
+        Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(SegmentRight-i,Result+1));
+        inc(i);
+      end;
     end;
   end else begin
     Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2));
-{    MainImage.PutPixel(i,j,
-      ActiveCluster.startindex+(ActiveCluster.endindex-ActiveCluster.startindex) div 2
-    );}
   end;
 end;
 
@@ -242,12 +241,13 @@ end;
 
 function TBDInkVGrad.GetColorIndexAt(pX,pY: integer):integer;
 begin
-  if fHeight>1 then
-//    Result:=trunc(0.5+ActiveCluster.startindex+(ActiveCluster.endindex-ActiveCluster.startindex)*(pY-fTop)/(fHeight-1))
-    Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(pY-fTop,fHeight-1)
-  else
+  if fHeight>1 then begin
+    if Settings.DitherGradients then
+      Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAtDithered(pY-fTop,fHeight-1,Settings.DitherStrength)
+    else
+      Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(pY-fTop,fHeight-1)
+  end else
     Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2);
-//    Result:=ActiveCluster.startindex+(ActiveCluster.endindex-ActiveCluster.startindex) div 2;
 end;
 
 procedure TBDInkVGrad.PostProcess;
