@@ -58,6 +58,15 @@ type
     function KeyDown(Sender:TObject;key:integer):boolean;
   end;
 
+  { TBDDitherDialog }
+
+  TBDDitherDialog=class(TBDModalDialog)
+    constructor Create;
+    procedure OKButtonClick(Sender:TObject;x,y,buttons:integer);
+  private
+    fSlider:TBDHorizontalSlider;
+  end;
+
 function MessageBox(iMessage:string;iButtons:string='OK'):integer;
 
 implementation
@@ -74,6 +83,8 @@ const
   SPLASHSCREENWIDTH=640;
   SPLASHSCREENHEIGHT=160;
   MESSAGEBOXHEIGHT=96;
+  DITHERDIALOGWIDTH=480;
+  DITHERDIALOGHEIGHT=144;
 
 function MessageBox(iMessage:string; iButtons:string):integer;
 var MessageBox:TBDMessageBox;j:integer;
@@ -411,6 +422,56 @@ begin
       Result:=true;
     end;
   end;
+end;
+
+{ TBDDitherDialog }
+
+constructor TBDDitherDialog.Create;
+const SLIDERWIDTH=300;
+      SLIDERHEIGHT=33;
+var atmB:TBDButton;
+begin
+  inherited Create(DITHERDIALOGWIDTH,DITHERDIALOGHEIGHT);
+  fName:='DitherDialog';
+  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[2]);
+  fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[3]);
+  MM.Fonts['Black'].OutText(fTexture.ARGBImage,'DITHER STRENGTH',DITHERDIALOGWIDTH div 2,16,1);
+  fTexture.Update;
+
+  fSlider:=TBDHorizontalSlider.Create(
+    fWindowLeft+(DITHERDIALOGWIDTH-SLIDERWIDTH) div 2, fWindowTop+48, SLIDERWIDTH, SLIDERHEIGHT);
+  fSlider.ZIndex:=MODALDIALOG_ZINDEX+1;
+  fSlider.Name:='DitherSlider';
+  fSlider.MinValue:=1;
+  fSlider.MaxValue:=100;
+  fSlider.Position:=Settings.DitherStrength;
+  AddChild(fSlider);
+
+  atmB:=TBDButton.Create(
+    fWindowLeft+(DITHERDIALOGWIDTH div 3-NORMALBUTTONWIDTH div 2),
+    fWindowTop+96,
+    NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
+    'OK','APPLY DITHER STRENGTH',TMessage.Init(MSG_NONE,0));
+  atmb.OnClick:=OKButtonClick;
+  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
+  AddChild(atmB);
+
+  atmB:=TBDButton.Create(
+    fWindowLeft+(DITHERDIALOGWIDTH div 3*2-NORMALBUTTONWIDTH div 2),
+    fWindowTop+96,
+    NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
+    'CANCEL','CLOSE DIALOG',TMessage.Init(MSG_DITHERRESP,-1));
+  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
+  AddChild(atmB);
+
+
+  Visible:=false;
+  MouseObjects.Add(Self);
+end;
+
+procedure TBDDitherDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);
+begin
+  MessageQueue.AddMessage(MSG_DITHERRESP,fSlider.Position);
 end;
 
 end.
