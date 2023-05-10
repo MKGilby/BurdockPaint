@@ -16,7 +16,7 @@ type
     constructor Create; virtual;
     procedure InitializeAreaWH(pLeft,pTop,pWidth,pHeight:integer);
     procedure InitializeArea(pX1,pY1,pX2,pY2:integer);
-    function GetColorIndexAt({%H-}pX,{%H-}pY:integer):integer; virtual;
+    function GetColorIndexAt(pX,pY:integer):integer; virtual;
     procedure PostProcess; virtual; abstract;
   protected
     fLeft,fTop,fWidth,fHeight:integer;
@@ -34,7 +34,7 @@ type
 
   TBDInkHGrad=class(TBDInk)
     constructor Create; override;
-    function GetColorIndexAt(pX,{%H-}pY: integer):integer; override;
+    function GetColorIndexAt(pX,pY: integer):integer; override;
     procedure PostProcess; override;
   end;
 
@@ -47,13 +47,21 @@ type
 
   TBDInkOpaque=class(TBDInk)
     constructor Create; override;
-    function GetColorIndexAt({%H-}pX, {%H-}pY: integer):integer; override;
+    function GetColorIndexAt(pX, pY: integer):integer; override;
     procedure PostProcess; override;
   end;
 
   TBDInkVGrad=class(TBDInk)
     constructor Create; override;
-    function GetColorIndexAt({%H-}pX,pY: integer):integer; override;
+    function GetColorIndexAt(pX,pY: integer):integer; override;
+    procedure PostProcess; override;
+  end;
+
+  { TBDInkRGrad }
+
+  TBDInkRGrad=class(TBDInk)
+    constructor Create; override;
+    function GetColorIndexAt(pX,pY: integer):integer; override;
     procedure PostProcess; override;
   end;
 
@@ -124,6 +132,7 @@ begin
   AddObject('H GRAD',TBDInkHGrad.Create);
   AddObject('L GRAD',TBDInkLGrad.Create);
   AddObject('V GRAD',TBDInkVGrad.Create);
+  AddObject('R GRAD',TBDInkRGrad.Create);
 end;
 
 // -------------------------------------------------------- [ TBDInkHGrad ] ---
@@ -229,7 +238,7 @@ begin
         Project.CurrentImage.PutPixel(i,j,Settings.ActiveColorIndex);
 end;
 
-// -------------------------------------------------------- [ TBDInkHGrad ] ---
+// -------------------------------------------------------- [ TBDInkVGrad ] ---
 
 constructor TBDInkVGrad.Create;
 begin
@@ -251,6 +260,40 @@ begin
 end;
 
 procedure TBDInkVGrad.PostProcess;
+var i,j:integer;
+begin
+  for j:=fTop to fTop+fHeight-1 do
+    for i:=fLeft to fLeft+fWidth-1 do
+      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+        Project.CurrentImage.PutPixel(i,j,GetColorIndexAt(i,j));
+end;
+
+// -------------------------------------------------------- [ TBDInkRGrad ] ---
+
+constructor TBDInkRGrad.Create;
+begin
+  inherited ;
+  fName:='R GRAD';
+  fHint:='ROUND GRADIENT.';
+  fSupportsOnTheFly:=true;
+end;
+
+function TBDInkRGrad.GetColorIndexAt(pX, pY: integer): integer;
+var r:integer;
+begin
+  if Settings.RGradRadius>1 then begin
+    r:=trunc(Sqrt(sqr(px-Settings.RGradCenterX)+sqr(py-Settings.RGradCenterY))) mod Settings.RGradRadius;
+    if Settings.DitherGradients then
+      Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].
+        GetIndexAtDithered(r,Settings.RGradRadius,Settings.DitherStrength)
+    else
+      Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].
+        GetIndexAt(r,Settings.RGradRadius)
+  end else
+    Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2);
+end;
+
+procedure TBDInkRGrad.PostProcess;
 var i,j:integer;
 begin
   for j:=fTop to fTop+fHeight-1 do
