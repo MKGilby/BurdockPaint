@@ -33,7 +33,7 @@ type
     fDitherGradients:boolean;
     fDitherStrength:integer;
     fModernGraphics:boolean;
-    fRGradCenterX,fRGradCenterY:integer;
+    fRGradCenterX,fRGradCenterY,fRGradRadius:integer;
     function fGetSelectedColor(index:integer):integer;
     function fGetSelectedTool(index:integer):string;
     procedure fSetSelectedColor(index:integer; AValue:integer);
@@ -61,6 +61,7 @@ type
     property DitherStrength:integer read fDitherStrength write fDitherStrength;
     property RGradCenterX:integer read fRGradCenterX write fRGradCenterX;
     property RGradCenterY:integer read fRGradCenterY write fRGradCenterY;
+    property RGradRadius:integer read fRGradRadius write fRGradRadius;
   end;
 
 
@@ -100,6 +101,7 @@ begin
   fDitherStrength:=10;
   fRGradCenterX:=0;
   fRGradCenterY:=0;
+  fRGradRadius:=32;
 end;
 
 procedure TSettings.LoadFromFile(pFilename:String);
@@ -140,6 +142,7 @@ begin
   fDitherStrength:=INI.ReadInteger('Inks','DitherStrength',10);
   fRGradCenterX:=INI.ReadInteger('Inks','RGradCenterX',0);
   fRGradCenterY:=INI.ReadInteger('Inks','RGradCenterY',0);
+  fRGradRadius:=INI.ReadInteger('Inks','RGradRadius',32);
   FreeAndNil(INI);
 end;
 
@@ -170,6 +173,7 @@ begin
   INI.WriteInteger('Inks','DitherStrength',fDitherStrength);
   INI.WriteInteger('Inks','RGradCenterX',fRGradCenterX);
   INI.WriteInteger('Inks','RGradCenterY',fRGradCenterY);
+  INI.WriteInteger('Inks','RGradRadius',fRGradRadius);
   FreeAndNil(INI);
 end;
 
