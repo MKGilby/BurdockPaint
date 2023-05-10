@@ -51,7 +51,6 @@ var
   atmT:TBDTool;
   atmI:TBDInk;
   atmB:TBDButton;
-  msg:TMessage;
 begin
   inherited Create;
   fLeft:=0;
@@ -66,8 +65,6 @@ begin
   ZIndex:=LEVEL1CONTROLS_ZINDEX;
   fName:='Controls';
 
-  msg.TypeID:=MSG_NONE;
-  msg.DataInt:=0;
   for i:=0 to 5 do begin
     atmT:=Tools[Tools.IndexOf(Settings.SelectedTools[i])];
     if atmT=nil then raise Exception.Create('Tool not found! ('+Settings.SelectedTools[i]+')');
@@ -77,7 +74,7 @@ begin
       NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
       atmT.Name,
       atmT.Hint,
-      msg,
+      TMessage.Init(MSG_NONE,0),
       atmT);
     fToolButtons[i].ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
     fToolButtons[i].Tag:=i;
@@ -95,7 +92,7 @@ begin
       NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
       atmI.Name,
       atmI.Hint,
-      msg,
+      TMessage.Init(MSG_NONE,0),
       atmI);
     fInkButtons[i].ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
     fInkButtons[i].Tag:=i;
@@ -105,34 +102,33 @@ begin
   ActivateInkButton(Settings.ActiveInk);
 
   fUndoButton:=TBDButton.Create(fLeft+CONTROLUNDOBUTTONSLEFT, fTop+CONTROLUNDOBUTTONSTOP,
-    NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT, 'UNDO', 'UNDO LAST OPERATION', msg);
+    NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT, 'UNDO', 'UNDO LAST OPERATION', TMessage.Init(MSG_NONE,0));
   fUndoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fUndoButton.OnClick:=UndoButtonClick;
   AddChild(fUndoButton);
 
   fRedoButton:=TBDButton.Create(fLeft+CONTROLUNDOBUTTONSLEFT, fTop+CONTROLUNDOBUTTONSTOP+30,
-    NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT, 'REDO', 'REDO LAST UNDOED OPERATION', msg);
+    NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT, 'REDO', 'REDO LAST UNDOED OPERATION', TMessage.Init(MSG_NONE,0));
   fRedoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fRedoButton.OnClick:=RedoButtonClick;
   AddChild(fRedoButton);
 
-  msg.TypeID:=MSG_NONE;
   atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP,
-    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'F', 'FILL SHAPES', msg);
+    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'F', 'FILL SHAPES', TMessage.Init(MSG_NONE,0));
   atmB.Selected:=Settings.FillShapes;
   atmB.OnClick:=FilledButtonClick;
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(atmB);
 
   atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+30,
-    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'K', 'CLEAR KEY COLOR', msg);
+    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'K', 'CLEAR KEY COLOR', TMessage.Init(MSG_NONE,0));
   atmB.Selected:=Settings.ClearKeyColor;
   atmB.OnClick:=ClearKeyColorButtonClick;
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(atmB);
 
   atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+60,
-    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'D', 'DITHER GRADIENTS. '#132'TOGGLE '#133'CONFIGURE', msg);
+    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'D', 'DITHER GRADIENTS. '#132'TOGGLE '#133'CONFIGURE', TMessage.Init(MSG_NONE,0));
   atmB.Selected:=Settings.DitherGradients;
   atmB.OnClick:=DitherButtonClick;
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
