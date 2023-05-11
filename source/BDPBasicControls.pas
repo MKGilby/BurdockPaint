@@ -13,7 +13,7 @@ type
 
   TBDButton=class(TButton)
     constructor Create(iX,iY,iWidth,iHeight:integer;iCaption,iHint:string;
-          iClickMessage:TMessage;iAssignedobject:TObject=nil); overload;
+          iAssignedobject:TObject=nil); overload;
     constructor Create; overload;
     procedure MouseEnter(Sender:TObject);
     procedure MouseLeave(Sender:TObject);
@@ -30,7 +30,7 @@ type
     property Hint:string read fHint write fHint;
     property AssignedObject:TObject read fAssignedObject write fAssignedObject;
   public
-    property Message:TMessage read fMessage;
+    property Message:TMessage read fMessage write fMessage;
   end;
 
   { TBDVerticalSlider }
@@ -81,7 +81,7 @@ const
 { TBDButton }
 
 constructor TBDButton.Create(iX,iY,iWidth,iHeight:integer;
-  iCaption,iHint:string; iClickMessage:TMessage; iAssignedobject:TObject);
+  iCaption,iHint:string; iAssignedobject:TObject);
 begin
   Create;
   Left:=iX;
@@ -96,7 +96,7 @@ begin
   fName:=fCaption;
   fHint:=iHint;
   fAssignedObject:=iAssignedobject;
-  fMessage:=iClickMessage;
+  fMessage:=TMessage.Init(MSG_NONE,0);
   fTLImage:=MM.Images.ItemByName['ArchTopLeft'];
   fTRImage:=MM.Images.ItemByName['ArchTopRight'];
   fBLImage:=MM.Images.ItemByName['ArchBottomLeft'];
