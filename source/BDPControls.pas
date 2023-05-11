@@ -263,8 +263,12 @@ end;
 
 procedure TBDControls.InkButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
-  if Sender is TBDButton then
-    ActivateInkButton((Sender as TBDButton).Tag);
+  if Sender is TBDButton then begin
+    if buttons=SDL_BUTTON_LEFT then
+      ActivateInkButton((Sender as TBDButton).Tag)
+    else if buttons=SDL_BUTTON_RIGHT then
+      TBDInk((Sender as TBDButton).AssignedObject).Configure;
+  end;
 end;
 
 procedure TBDControls.UndoButtonClick(Sender:TObject; x,y,buttons:integer);
