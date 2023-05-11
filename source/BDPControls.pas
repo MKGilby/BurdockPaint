@@ -74,7 +74,6 @@ begin
       NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
       atmT.Name,
       atmT.Hint,
-      TMessage.Init(MSG_NONE,0),
       atmT);
     fToolButtons[i].ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
     fToolButtons[i].Tag:=i;
@@ -92,7 +91,6 @@ begin
       NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
       atmI.Name,
       atmI.Hint,
-      TMessage.Init(MSG_NONE,0),
       atmI);
     fInkButtons[i].ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
     fInkButtons[i].Tag:=i;
@@ -102,33 +100,33 @@ begin
   ActivateInkButton(Settings.ActiveInk);
 
   fUndoButton:=TBDButton.Create(fLeft+CONTROLUNDOBUTTONSLEFT, fTop+CONTROLUNDOBUTTONSTOP,
-    NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT, 'UNDO', 'UNDO LAST OPERATION', TMessage.Init(MSG_NONE,0));
+    NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT, 'UNDO', 'UNDO LAST OPERATION');
   fUndoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fUndoButton.OnClick:=UndoButtonClick;
   AddChild(fUndoButton);
 
   fRedoButton:=TBDButton.Create(fLeft+CONTROLUNDOBUTTONSLEFT, fTop+CONTROLUNDOBUTTONSTOP+30,
-    NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT, 'REDO', 'REDO LAST UNDOED OPERATION', TMessage.Init(MSG_NONE,0));
+    NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT, 'REDO', 'REDO LAST UNDOED OPERATION');
   fRedoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fRedoButton.OnClick:=RedoButtonClick;
   AddChild(fRedoButton);
 
   atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP,
-    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'F', 'FILL SHAPES', TMessage.Init(MSG_NONE,0));
+    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'F', 'FILL SHAPES');
   atmB.Selected:=Settings.FillShapes;
   atmB.OnClick:=FilledButtonClick;
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(atmB);
 
   atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+30,
-    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'K', 'CLEAR KEY COLOR', TMessage.Init(MSG_NONE,0));
+    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'K', 'CLEAR KEY COLOR');
   atmB.Selected:=Settings.ClearKeyColor;
   atmB.OnClick:=ClearKeyColorButtonClick;
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(atmB);
 
   atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+60,
-    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'D', 'DITHER GRADIENTS. '#132'TOGGLE '#133'CONFIGURE', TMessage.Init(MSG_NONE,0));
+    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'D', 'DITHER GRADIENTS. '#132'TOGGLE '#133'CONFIGURE');
   atmB.Selected:=Settings.DitherGradients;
   atmB.OnClick:=DitherButtonClick;
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;

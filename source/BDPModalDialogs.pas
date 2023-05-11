@@ -137,7 +137,7 @@ end;
 
 constructor TBDMagnifyCELDialog.Create;
 const MAGNIFIES:array[0..2] of integer=(2,3,5);
-var atmb:TBDButton;msg:TMessage;i:integer;
+var atmb:TBDButton;i:integer;
 begin
   inherited Create(MAGNIFYDIALOGWIDTH,MAGNIFYDIALOGHEIGHT);
   fName:='Magnify CEL';
@@ -148,13 +148,12 @@ begin
   fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[3]);
   MM.Fonts['Black'].OutText(fTexture.ARGBImage,'MAGNIFY CEL',MAGNIFYDIALOGWIDTH div 2,16,1);
   fTexture.Update;
-  msg.TypeID:=MSG_NONE;
   for i:=0 to 2 do begin
     fMagnifyButtons[i]:=TBDButton.Create(
       fWindowLeft+(MAGNIFYDIALOGWIDTH div 4)*(i+1)-XBUTTONWIDTH div 2,
       fWindowTop+48,
       XBUTTONWIDTH, NORMALBUTTONHEIGHT,
-      inttostr(MAGNIFIES[i])+'X','',msg);
+      inttostr(MAGNIFIES[i])+'X','');
     fMagnifyButtons[i].ZIndex:=MODALDIALOG_ZINDEX+1;
     fMagnifyButtons[i].Tag:=i;
     fMagnifyButtons[i].OnClick:=MagnifyButtonClick;
@@ -165,18 +164,17 @@ begin
     fWindowLeft+MAGNIFYDIALOGWIDTH div 3-NORMALBUTTONWIDTH div 2,
     fWindowTop+84,
     NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT,
-    'OK','MAGNIFY CEL',msg);
-  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
-  atmb.OnClick:=OKButtonClick;
+    'OK','MAGNIFY CEL');
+  atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
+  atmB.OnClick:=OKButtonClick;
   AddChild(atmB);
-  msg.TypeID:=MSG_MAGNIFYCELRESP;
-  msg.DataInt:=0;
   atmB:=TBDButton.Create(
     fWindowLeft+(MAGNIFYDIALOGWIDTH div 3*2)-NORMALBUTTONWIDTH div 2,
     fWindowTop+84,
     NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT,
-    'CANCEL','DON''T MAGNIFY CEL',msg);
-  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
+    'CANCEL','DON''T MAGNIFY CEL');
+  atmB.Message:=TMessage.Init(MSG_MAGNIFYCELRESP,0);
+  atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
   OnKeyDown:=KeyDown;
   MouseObjects.Add(Self);
@@ -234,7 +232,7 @@ end;
 
 constructor TBDRotateCELDialog.Create;
 const ROTATES:array[0..2] of integer=(90,180,270);
-var atmb:TBDButton;msg:TMessage;i:integer;
+var atmb:TBDButton;i:integer;
 begin
   inherited Create(ROTATEDIALOGWIDTH,ROTATEDIALOGHEIGHT);
   fName:='Rotate CEL';
@@ -245,13 +243,12 @@ begin
   fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[3]);
   MM.Fonts['Black'].OutText(fTexture.ARGBImage,'ROTATE CEL',ROTATEDIALOGWIDTH div 2,16,1);
   fTexture.Update;
-  msg.TypeID:=MSG_NONE;
   for i:=0 to 2 do begin
     fRotateButtons[i]:=TBDButton.Create(
       fWindowLeft+(ROTATEDIALOGWIDTH div 4)*(i+1)-NORMALBUTTONWIDTH div 2,
       fWindowTop+48,
       NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-      inttostr(ROTATES[i])+'°','',msg);
+      inttostr(ROTATES[i])+'°','');
     fRotateButtons[i].ZIndex:=MODALDIALOG_ZINDEX+1;
     fRotateButtons[i].Tag:=i;
     fRotateButtons[i].OnClick:=RotateButtonClick;
@@ -262,18 +259,17 @@ begin
     fWindowLeft+ROTATEDIALOGWIDTH div 3-NORMALBUTTONWIDTH div 2,
     fWindowTop+84,
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-    'OK','ROTATE CEL',msg);
-  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
-  atmb.OnClick:=OKButtonClick;
+    'OK','ROTATE CEL');
+  atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
+  atmB.OnClick:=OKButtonClick;
   AddChild(atmB);
-  msg.TypeID:=MSG_ROTATECELRESP;
-  msg.DataInt:=0;
   atmB:=TBDButton.Create(
     fWindowLeft+(ROTATEDIALOGWIDTH div 3*2)-NORMALBUTTONWIDTH div 2,
     fWindowTop+84,
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-    'CANCEL','DON''T ROTATE CEL',msg);
-  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
+    'CANCEL','DON''T ROTATE CEL');
+  atmB.Message:=TMessage.Init(MSG_ROTATECELRESP,0);
+  atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
   OnKeyDown:=KeyDown;
   MouseObjects.Add(Self);
@@ -346,8 +342,9 @@ begin
     fWindowLeft+SPLASHSCREENWIDTH-NORMALBUTTONWIDTH-6-16,
     fWindowTop+SPLASHSCREENHEIGHT-44,
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-    'OK','CLOSE DIALOG',TMessage.Init(MSG_ABOUTRESP,0));
-  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
+    'OK','CLOSE DIALOG');
+  atmB.Message:=TMessage.Init(MSG_ABOUTRESP,0);
+  atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
   Visible:=false;
   MouseObjects.Add(Self);
@@ -382,7 +379,8 @@ begin
       fWindowLeft+x,
       fWindowTop+MESSAGEBOXHEIGHT-44,
       NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-      s,'',TMessage.Init(MSG_MESSAGEBOXRESP,i));
+      s,'');
+    atmB.Message:=TMessage.Init(MSG_MESSAGEBOXRESP,i);
     atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
     atmB.Tag:=key;
     atmB.OnKeyDown:=KeyDown;
@@ -451,7 +449,7 @@ begin
     fWindowLeft+(DITHERDIALOGWIDTH div 3-NORMALBUTTONWIDTH div 2),
     fWindowTop+96,
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-    'OK','APPLY DITHER STRENGTH',TMessage.Init(MSG_NONE,0));
+    'OK','APPLY DITHER STRENGTH');
   atmb.OnClick:=OKButtonClick;
   atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
@@ -460,7 +458,8 @@ begin
     fWindowLeft+(DITHERDIALOGWIDTH div 3*2-NORMALBUTTONWIDTH div 2),
     fWindowTop+96,
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-    'CANCEL','CLOSE DIALOG',TMessage.Init(MSG_DITHERRESP,-1));
+    'CANCEL','CLOSE DIALOG');
+  atmB.Message:=TMessage.Init(MSG_DITHERRESP,-1);
   atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
 
