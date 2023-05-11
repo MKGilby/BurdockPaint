@@ -214,6 +214,19 @@ type
     fStart,fColorIndex:integer;
   end;
 
+  { TBDToolConfigureRGrad }
+
+  TBDToolConfigureRGrad=class(TBDTool)
+    constructor Create; override;
+    function Click(x,y,button:integer):boolean; override;
+    function MouseUp(x,y,button:integer):boolean; override;
+    procedure Draw; override;
+    procedure Clear; override;
+  private
+    fSX,fSY:integer;
+    procedure DrawCircleWithInk(cx,cy,r:integer);
+  end;
+
 implementation
 
 uses
@@ -289,6 +302,7 @@ begin
   AddObject('SELCOL',TBDToolSelectColor.Create);
   AddObject('SHOWCEL',TBDToolShowCEL.Create);
   AddObject('PICKCOLCLS',TBDToolPickColorCluster.Create);
+  AddObject('CONFRG',TBDToolConfigureRGrad.Create);
 end;
 
 // --------------------------------------------------------- [ TBDToolBox ] ---
@@ -1508,6 +1522,75 @@ begin
     fColorIndex:=-1;
     InfoBar.ShowText('');
   end;
+end;
+
+// ---------------------------------------------- [ TBDToolConfigureRGrad ] ---
+
+constructor TBDToolConfigureRGrad.Create;
+begin
+  inherited ;
+  fName:='CONFRG';
+  fHint:=uppercase('Select center then set radius.');
+end;
+
+function TBDToolConfigureRGrad.Click(x,y,button:integer):boolean;
+begin
+  if button=SDL_BUTTON_LEFT then begin
+    case fState of
+      0:begin
+          fSX:=x;
+          fSY:=y;
+          Result:=true;
+          fState:=1;
+        end;
+      1:begin
+          Settings.RGradCenterX:=fSX;
+          Settings.RGradCenterY:=fSY;
+          Settings.RGradRadius:=round(sqrt(sqr(fSX-x)+sqr(fSY-y)));
+          InfoBar.ShowText('');
+          Result:=true;
+          fState:=0;
+          MessageQueue.AddMessage(MSG_GETCELFINISHED);
+        end;
+    end;
+  end
+  else if Button=SDL_BUTTON_RIGHT then begin  // Right button
+    if fState>0 then begin
+      fState:=0;
+      InfoBar.ShowText('');
+      Result:=true;
+    end else Result:=false
+  end else Result:=false;
+end;
+
+function TBDToolConfigureRGrad.MouseUp(x,y,button:integer):boolean;
+begin
+  Result:=fState>0;
+end;
+
+procedure TBDToolConfigureRGrad.Draw;
+var r:integer;
+begin
+  case fState of
+    0:InfoBar.ShowText(Format('%d,%d - CONFIGURE R GRAD - '#132' SELECT CENTER '#133' CANCEL',[fX,fY]));
+    1:begin
+        r:=round(sqrt(sqr(fSX-fX)+sqr(fSY-fY)));
+        Project.OverlayImage.Circle(fSX,fSY,r,VibroColors.GetColorIndex);
+        InfoBar.ShowText(
+          Format('(%d,%d) R=%d %d,%d - CONFIGURE R GRAD - '#132' SET RADIUS '#133' CANCEL',[fSX,fSY,r,fX,fY]));
+      end;
+  end;
+end;
+
+procedure TBDToolConfigureRGrad.Clear;
+begin
+  if fState=1 then
+    Project.OverlayImage.Circle(fSX,fSY,round(sqrt(sqr(fSX-fX)+sqr(fSY-fY))),0);
+end;
+
+procedure TBDToolConfigureRGrad.DrawCircleWithInk(cx,cy,r:integer);
+begin
+
 end;
 
 end.
