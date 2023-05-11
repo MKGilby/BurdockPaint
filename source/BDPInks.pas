@@ -5,12 +5,15 @@ unit BDPInks;
 interface
 
 uses
-  Classes, SysUtils, Lists;
+  Classes, SysUtils, Lists, BDPModalDialogs;
 
 type
+
   // It is required to call InitializeArea[WH] before using GetColorIndexAt
   // or PostProcess! (Area must be set to the smallest rectangle containing
   // pixels need to be drawn!)
+
+  { TBDInk }
 
   TBDInk=class
     constructor Create; virtual;
@@ -18,25 +21,34 @@ type
     procedure InitializeArea(pX1,pY1,pX2,pY2:integer);
     function GetColorIndexAt(pX,pY:integer):integer; virtual;
     procedure PostProcess; virtual; abstract;
+    procedure Configure; virtual;
   protected
     fLeft,fTop,fWidth,fHeight:integer;
     fSupportsOnTheFly:boolean;
     fName,fHint:string;
+    fConfigureDialog:TBDModalDialog;
   public
     property Name:string read fName;
     property Hint:string read fHint;
     property SupportsOnTheFly:boolean read fSupportsOnTheFly;
+    property ConfigureDialog:TBDModalDialog read fConfigureDialog write fConfigureDialog;
   end;
+
+  { TBDInks }
 
   TBDInks=class(TNamedList<TBDInk>)
     constructor Create;
   end;
+
+  { TBDInkHGrad }
 
   TBDInkHGrad=class(TBDInk)
     constructor Create; override;
     function GetColorIndexAt(pX,pY: integer):integer; override;
     procedure PostProcess; override;
   end;
+
+  { TBDInkLGrad }
 
   TBDInkLGrad=class(TBDInk)
     constructor Create; override;
@@ -45,11 +57,15 @@ type
     function ProcessSegment(i,j:integer):integer;
   end;
 
+  { TBDInkOpaque }
+
   TBDInkOpaque=class(TBDInk)
     constructor Create; override;
     function GetColorIndexAt(pX, pY: integer):integer; override;
     procedure PostProcess; override;
   end;
+
+  { TBDInkVGrad }
 
   TBDInkVGrad=class(TBDInk)
     constructor Create; override;
@@ -63,6 +79,7 @@ type
     constructor Create; override;
     function GetColorIndexAt(pX,pY: integer):integer; override;
     procedure PostProcess; override;
+    procedure Configure; override;
   end;
 
 implementation
@@ -77,6 +94,7 @@ begin
   fTop:=0;
   fWidth:=WindowWidth;
   fHeight:=WindowHeight;
+  fConfigureDialog:=nil;
 end;
 
 procedure TBDInk.InitializeAreaWH(pLeft,pTop,pWidth,pHeight:integer);
@@ -122,6 +140,11 @@ begin
     raise Exception.Create('This ink ('+fName+') needs to override the GetColorIndexAt method!')
   else
     raise Exception.Create('This ink does not support OnTheFly, GetColorIndexAt method shouldn''t be called! ('+fName+')');
+end;
+
+procedure TBDInk.Configure;
+begin
+  if Assigned(fConfigureDialog) then fConfigureDialog.Show;
 end;
 
 // ------------------------------------------------------------- [ TBDInk ] ---
@@ -300,6 +323,12 @@ begin
     for i:=fLeft to fLeft+fWidth-1 do
       if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
         Project.CurrentImage.PutPixel(i,j,GetColorIndexAt(i,j));
+end;
+
+procedure TBDInkRGrad.Configure;
+begin
+  MessageQueue.AddMessage(MSG_TOGGLECONTROLS);
+  ActiveTool:=Tools.ItemByName['CONFRG'];
 end;
 
 end.
