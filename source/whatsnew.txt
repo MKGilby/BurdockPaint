@@ -4,21 +4,50 @@ Todo:
 - Check and warn if current project is modified on new project.
 - Add "Random" ink. It will use colors randomly from the selected cluster.
 - Ask for color fit when loading a CEL file.
-- Make ColorCluster clickable.
-  - Left to select color.
-  - Right to pick cluster, but only on the PaletteEditor.
 - Autosave state in every 1 min.
 - Configurable autosave interval.
 - Add setup dialogs to Tools:
-  - Circle (center+Radius vs. bounding box)
+  - Circle (center+radius vs. bounding box)
   - Sep. (boxed)
 - Add setup dialogs to Inks:
-  - L Grad (dither)
-  - V Grad (dither)
-  - H Grad (dither)
-  - R Grad (dither, Center)
+  - ...
 - Add Tool and Ink selector
+- Should create backups from project on saving if not the default temporary project.
 
+
+2023.05.11
+- Right clicking on RGrad button hides Controls and invokes RGrad configuration.
+
+2023.05.10
+- Added RGrad ink.
+
+2023.05.09
+- Added (D) button, it toggles gradient dithering. Right clicking it opens DitherDialog.
+- Inks respects dithering settings.
+
+2023.05.08
+- Right clicking on the palette area in PaletteEditor activates color picker
+  instead of closing PaletteEditor.
+- Left clicking on color bars in ColorCluster selects the clicked color.
+- Right clicking on color bars in ColorCluster activates color cluster picking.
+  Click on start color then click on end color.
+- Passing a filename to the program uses that file as temporary project file.
+- Removed console window in RELEASE mode.
+
+2023.05.04
+- Fix in BDPMap. Pingpong and Reversed ColorCluster flags was mixed up.
+- ColorCluster now has buttons for Reversed and Pingpong modes. They works!
+- Fix in saving ColorCluster flags.
+
+2023.05.03
+- Fixes in Project and UndoSystem to compile to Win32 target.
+
+2023.05.02
+- New ColorCluster outfit. Added an arrow to the right side, it will be used to
+  open the ColorClusterSelector.
+- GetIndexAt and GetIndexAtDithered fix. The last color was not given back.
+- PaletteEditor now shows the active image's color cluster.
+- Project/Quit was broken, fixed.
 
 2023.04.28
 - Project/Open works.
@@ -40,6 +69,7 @@ Todo:
 - Image/Remove works (if there are more than 1 images in Project). It brings up
   a confirmation dialog.
 - Image/Remove is enabled/disabled based on image count in Project.
+- Created a tool to show map of files created by BurdockPaint. (BDPMap)
 
 2023.04.25
 - BUGFIX: Losing the first click after receiving focus (after the external save dialog)
