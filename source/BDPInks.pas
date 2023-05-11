@@ -82,9 +82,18 @@ type
     procedure Configure; override;
   end;
 
+  { TBDInkRandom }
+
+  TBDInkRandom=class(TBDInk)
+    constructor Create; override;
+    function GetColorIndexAt(pX,pY: integer):integer; override;
+    procedure PostProcess; override;
+  end;
+
 implementation
 
 uses MKToolBox, BDPShared, Logger;
+
 
 // ------------------------------------------------------------- [ TBDInk ] ---
 
@@ -156,6 +165,7 @@ begin
   AddObject('L GRAD',TBDInkLGrad.Create);
   AddObject('V GRAD',TBDInkVGrad.Create);
   AddObject('R GRAD',TBDInkRGrad.Create);
+  AddObject('RANDOM',TBDInkRandom.Create);
 end;
 
 // -------------------------------------------------------- [ TBDInkHGrad ] ---
@@ -329,6 +339,31 @@ procedure TBDInkRGrad.Configure;
 begin
   MessageQueue.AddMessage(MSG_TOGGLECONTROLS);
   ActiveTool:=Tools.ItemByName['CONFRG'];
+end;
+
+// ------------------------------------------------------- [ TBDInkRandom ] ---
+
+constructor TBDInkRandom.Create;
+begin
+  inherited ;
+  fName:='RANDOM';
+  fHint:='RANDOM COLORS FROM THE SELECTED COLOR CLUSTER.';
+  fSupportsOnTheFly:=true;
+end;
+
+function TBDInkRandom.GetColorIndexAt(pX, pY: integer): integer;
+begin
+  Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].
+    GetIndexAt(random(2048),2048);
+end;
+
+procedure TBDInkRandom.PostProcess;
+var i,j:integer;
+begin
+  for j:=fTop to fTop+fHeight-1 do
+    for i:=fLeft to fLeft+fWidth-1 do
+      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+        Project.CurrentImage.PutPixel(i,j,GetColorIndexAt(i,j));
 end;
 
 end.
