@@ -378,7 +378,7 @@ end;
 
 procedure TMainMenu.MouseEnter(Sender:TObject);
 begin
-  if (fSelected<>-1) and not fSubMenus[fSelected].Visible then
+  if (fSelected<>-1) and not fSubMenus[fSelected].Visible and fItems[fSelected]._enabled then
     fSubMenus[fSelected].Show;
 end;
 
