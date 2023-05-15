@@ -40,7 +40,19 @@ type
     property Name:string read fName write fSetName;
   end;
 
-  TSubMenuList=TFPGObjectList<TSubMenu>;
+  { TSubMenuList }
+
+  TSubMenuList=class(TFPGObjectList<TSubMenu>)
+    function ItemByName(pName:string):TSubMenu;
+  end;
+
+  { TMainMenuItem }
+
+  TMainMenuItem=record
+    _name:string;
+    _enabled:boolean;
+    constructor Init(iName:string);
+  end;
 
   { TMainMenu }
 
@@ -53,17 +65,40 @@ type
     procedure MouseLeave(Sender:TObject);
     procedure MouseEnter(Sender:TObject);
     function ProcessMessage(msg:TMessage):boolean;
+    procedure DisableItem(item:string);
+    procedure EnableItem(item:string);
   protected
     procedure ReDraw; override;
   private
     fSubMenus:TSubMenuList;
-    fItems:TStringList;
+    fItems:array of TMainMenuItem;
     fSelected:integer;
   end;
 
 implementation
 
 uses BDPShared, MKStream;
+
+{ TSubMenuList }
+
+function TSubMenuList.ItemByName(pName:string):TSubMenu;
+var i:integer;
+begin
+  for i:=0 to Self.Count-1 do
+    if Self[i].Name=pName then begin
+      Result:=Self[i];
+      exit;
+    end;
+  Result:=nil;
+end;
+
+{ TMainMenuItem }
+
+constructor TMainMenuItem.Init(iName:string);
+begin
+  _name:=iName;
+  _enabled:=true;
+end;
 
 { TSubMenuItem }
 
@@ -231,7 +266,7 @@ begin
   Width:=WINDOWWIDTH;
   Height:=TOPMENUHEIGHT;
   Name:='MainMenu';
-  fItems:=TStringList.Create;
+  SetLength(fItems,0);
   fSubMenus:=TSubMenuList.Create;
   ZIndex:=LEVEL1CONTROLS_ZINDEX;
   fVisible:=true;
@@ -250,7 +285,9 @@ begin
     Xs.Read(menucount,1);
     while menucount>0 do begin
       s:=ReadString(Xs);
-      fItems.Add(s);
+      SetLength(fItems,length(fItems)+1);
+      fItems[length(fItems)-1]:=TMainMenuItem.Init(s);
+      if s='CLUSTER' then fItems[length(fItems)-1]._enabled:=false;
       atm:=TSubMenu.Create(x);
       atm.name:=s;
       atm.Visible:=false;
@@ -265,7 +302,7 @@ begin
         dec(submenucount);
       end;
       fSubMenus.Add(atm);
-      x+=(length(fItems[fItems.Count-1])+2)*18;
+      x+=(length(fItems[length(fItems)-1]._name)+2)*18;
       MouseObjects.Add(atm);
       dec(menucount);
     end;
@@ -276,14 +313,14 @@ end;
 destructor TMainMenu.Destroy;
 begin
   if Assigned(fSubMenus) then FreeAndNil(fSubMenus);
-  if Assigned(fItems) then FreeAndNil(fItems);
+//  if Assigned(fItems) then FreeAndNil(fItems);
   inherited Destroy;
 end;
 
 procedure TMainMenu.EnableCELSubMenusWithActiveCEL;
 var submenu:TSubMenu;
 begin
-  submenu:=fSubMenus[fItems.IndexOf('CEL')];
+  submenu:=fSubMenus.ItemByName('CEL');
   if Assigned(submenu) then begin
     submenu.EnableItem('PUT');
     submenu.EnableItem('RELEASE');
@@ -299,7 +336,7 @@ end;
 procedure TMainMenu.DisableCELSubMenusWithActiveCEL;
 var submenu:TSubMenu;
 begin
-  submenu:=fSubMenus[fItems.IndexOf('CEL')];
+  submenu:=fSubMenus.ItemByName('CEL');
   if Assigned(submenu) then begin
     submenu.DisableItem('PUT');
     submenu.DisableItem('RELEASE');
@@ -319,18 +356,18 @@ begin
   mx:=0;
   pre:=fSelected;
   fSelected:=-1;
-  for i:=0 to fItems.Count-1 do begin
-    if (x>=mx) and (x<mx+(length(fItems[i])+2)*18) then begin
+  for i:=0 to length(fItems)-1 do begin
+    if (x>=mx) and (x<mx+(length(fItems[i]._name)+2)*18) then begin
       fSelected:=i;
     end;
-    mx+=(length(fItems[i])+2)*18;
+    mx+=(length(fItems[i]._name)+2)*18;
   end;
   if fSelected<>pre then begin
     if pre<>-1 then fSubMenus[pre].Hide;
-    if fSelected<>-1 then fSubMenus[fSelected].Show;
+    if (fSelected<>-1) and fItems[fSelected]._enabled then fSubMenus[fSelected].Show;
     fNeedRedraw:=true;
   end;
-  if (fSelected<>-1) and not fSubMenus[fSelected].Visible then fSubMenus[fSelected].Show;
+  if (fSelected<>-1) and not fSubMenus[fSelected].Visible and fItems[fSelected]._enabled then fSubMenus[fSelected].Show;
 end;
 
 procedure TMainMenu.MouseLeave(Sender:TObject);
@@ -351,7 +388,7 @@ begin
   Result:=false;
   case msg.TypeID of
     MSG_PROJECTIMAGECOUNTCHANGED:begin
-      submenu:=fSubMenus[fItems.IndexOf('IMAGE')];
+      submenu:=fSubMenus.ItemByName('IMAGE');
       if Assigned(submenu) then begin
         if msg.DataInt=1 then begin
           submenu.DisableItem('REMOVE');
@@ -364,6 +401,26 @@ begin
   end;
 end;
 
+procedure TMainMenu.DisableItem(item:string);
+var i:integer;
+begin
+  for i:=0 to length(fItems)-1 do
+    if fItems[i]._name=item then begin
+      fItems[i]._enabled:=false;
+      exit;
+    end;
+end;
+
+procedure TMainMenu.EnableItem(item:string);
+var i:integer;
+begin
+  for i:=0 to length(fItems)-1 do
+    if fItems[i]._name=item then begin
+      fItems[i]._enabled:=true;
+      exit;
+    end;
+end;
+
 procedure TMainMenu.ReDraw;
 var x,i:integer;
 begin
@@ -371,16 +428,17 @@ begin
     fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,SystemPalette[3]);
     fTexture.ARGBImage.Bar(0,TOPMENUHEIGHT-3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,SystemPalette[2]);
     x:=0;
-    if Assigned(fItems) then begin
-      for i:=0 to fItems.Count-1 do begin
+    for i:=0 to length(fItems)-1 do begin
+      if fSelected=i then
+        fTexture.ARGBImage.Bar(x,0,(length(fItems[i]._name)+2)*18,TOPMENUHEIGHT-3,SystemPalette[4]);
+      if fItems[i]._enabled then begin
         if fSelected<>i then
-          MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i],x+18,3,0)
-        else begin
-          fTexture.ARGBImage.Bar(x,0,(length(fItems[i])+2)*18,TOPMENUHEIGHT-3,SystemPalette[4]);
-          MM.Fonts['Red'].OutText(fTexture.ARGBImage,fItems[i],x+18,3,0);
-        end;
-        x+=(length(fItems[i])+2)*18;
-      end;
+          MM.Fonts['Black'].OutText(fTexture.ARGBImage,fItems[i]._name,x+18,3,0)
+        else
+          MM.Fonts['Red'].OutText(fTexture.ARGBImage,fItems[i]._name,x+18,3,0);
+      end else
+        MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,fItems[i]._name,x+18,3,0);
+      x+=(length(fItems[i]._name)+2)*18;
     end;
     fTexture.Update;
   end;
