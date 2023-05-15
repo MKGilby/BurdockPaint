@@ -407,6 +407,7 @@ begin
   for i:=0 to length(fItems)-1 do
     if fItems[i]._name=item then begin
       fItems[i]._enabled:=false;
+      fNeedRedraw:=true;
       exit;
     end;
 end;
@@ -417,6 +418,7 @@ begin
   for i:=0 to length(fItems)-1 do
     if fItems[i]._name=item then begin
       fItems[i]._enabled:=true;
+      fNeedRedraw:=true;
       exit;
     end;
 end;
