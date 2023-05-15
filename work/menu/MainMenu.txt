@@ -89,6 +89,13 @@ CEL
     Export CEL to file. (PNG or TGA)
 
 ;------------------------------
+Cluster
+  Ramp
+    RAMPCLUSTER
+    Recalculate cluster colors ramping between the two ends.
+
+
+;------------------------------
 About
   About
     OPENABOUTDIALOG
