@@ -116,7 +116,7 @@ begin
   assign(incl,'..\..\source\MenuMessages.inc');
   rewrite(incl);
   writeln(incl,'// Menu message constants.');
-  writeln(incl,'// Generated on ',{$I %DATE%},'.');
+//  writeln(incl,'// Generated on '+datetostr(now,FS)+'.');
   writeln(incl);
   writeln(incl,'const');
   menucount:=0;

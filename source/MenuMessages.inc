@@ -1,5 +1,4 @@
 // Menu message constants.
-// Generated on 2023/04/14.
 
 const
   MSG_NEWPROJECT=200;
