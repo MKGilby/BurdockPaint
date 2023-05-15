@@ -163,11 +163,19 @@ begin
           MSG_ACTIVATEPALETTEEDITOR:begin
             fControls.Hide;
             fPaletteEditor.Show;
+            fMainMenu.DisableItem('PROJECT');
+            fMainMenu.DisableItem('IMAGE');
+            fMainMenu.DisableItem('CEL');
+            fMainMenu.EnableItem('CLUSTER');
             InfoBar.Top:=WINDOWHEIGHT-PALETTEEDITORHEIGHT-INFOBARHEIGHT;
           end;
           MSG_DEACTIVATEPALETTEEDITOR:begin
             fPaletteEditor.Hide;
             fControls.Show;
+            fMainMenu.EnableItem('PROJECT');
+            fMainMenu.EnableItem('IMAGE');
+            fMainMenu.EnableItem('CEL');
+            fMainMenu.DisableItem('CLUSTER');
             InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
           end;
           MSG_SELECTCOLOR:begin
@@ -357,6 +365,10 @@ begin
           MSG_DITHERRESP:begin
             if msg.DataInt>-1 then Settings.DitherStrength:=msg.DataInt;
             fDitherDialog.Hide;
+          end;
+          MSG_RAMPCLUSTER:begin
+            Project.CurrentImage.Palette.Ramp(Project.CurrentImage.ColorClusters[0]);
+            MessageQueue.AddMessage(MSG_PALETTEPICKEDCOLOR);
           end;
           MSG_QUIT:begin
             quit:=(msg.DataInt=1);
