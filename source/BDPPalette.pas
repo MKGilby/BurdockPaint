@@ -4,7 +4,7 @@ unit BDPPalette;
 
 interface
 
-uses Classes, SysUtils;
+uses Classes, SysUtils, BDPColorCluster;
 
 type
 
@@ -61,6 +61,9 @@ type
 
     // Resize the palette to fit the colors
     procedure ResizeAndCopyColorsFrom(Source:TBDPalette;start:integer=0;count:integer=-1);
+
+    // Creates a color ramp from the start color to the end color.
+    procedure Ramp(pColorCluster:TColorCluster);
   private
     fEntries:pointer;
     fMaxEntries:integer;
@@ -413,6 +416,25 @@ begin
     for i:=0 to fMaxEntries do Colors[i]:=Source.Colors[start+i];
     fChanged:=true;
   end;  // Start is out of range so nothing to copy.
+end;
+
+procedure TBDPalette.Ramp(pColorCluster:TColorCluster);
+var i,pi1,pi2,count:integer;
+begin
+  if pColorCluster.StartIndex>pColorCluster.EndIndex then begin
+    pi1:=pColorCluster.EndIndex;
+    pi2:=pColorCluster.StartIndex;
+  end else begin
+    pi1:=pColorCluster.StartIndex;
+    pi2:=pColorCluster.EndIndex;
+  end;
+  count:=pi2-pi1+1;
+  for i:=1 to Count-2 do begin
+    Self.ColorR[pi1+i]:=Self.ColorR[pi1]+(Self.ColorR[pi2]-Self.ColorR[pi1])*i div (count-1);
+    Self.ColorG[pi1+i]:=Self.ColorG[pi1]+(Self.ColorG[pi2]-Self.ColorG[pi1])*i div (count-1);
+    Self.ColorB[pi1+i]:=Self.ColorB[pi1]+(Self.ColorB[pi2]-Self.ColorB[pi1])*i div (count-1);
+    Self.ColorA[pi1+i]:=Self.ColorA[pi1]+(Self.ColorA[pi2]-Self.ColorA[pi1])*i div (count-1);
+  end;
 end;
 
 function TBDPalette.fGetColor(index:integer):uint32;
