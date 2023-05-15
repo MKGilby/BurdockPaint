@@ -1,0 +1,7 @@
+.\_release
+.\data
+.\source
+.\work
+.\aat
+.\*.bat
+.\readme.md
