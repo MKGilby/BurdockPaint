@@ -19,8 +19,11 @@ type
     procedure ActivateInkButton(index:integer);
     procedure MouseEnter(Sender:TObject);
     procedure FilledButtonClick(Sender:TObject;x,y,buttons: integer);
+    function FilledButtonKeyDown(Sender:TObject;key:integer):boolean;
     procedure ClearKeyColorButtonClick(Sender:TObject;x,y,buttons: integer);
+    function ClearKeyColorButtonKeyDown(Sender:TObject;key:integer):boolean;
     procedure DitherButtonClick(Sender:TObject;x,y,buttons: integer);
+    function DitherButtonKeyDown(Sender:TObject;key:integer):boolean;
     procedure ToolButtonClick(Sender:TObject;x,y,buttons: integer);
     procedure InkButtonClick(Sender:TObject;x,y,buttons: integer);
     procedure UndoButtonClick(Sender:TObject;x,y,buttons: integer);
@@ -41,7 +44,7 @@ type
 
 implementation
 
-uses SDL2, BDPShared, BDPTools, BDPInks, MKMouse2;
+uses SDL2, BDPShared, BDPTools, BDPInks, MKMouse2, BDPKeyMapping;
 
 { TBDControls }
 
@@ -115,6 +118,7 @@ begin
     SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'F', 'FILL SHAPES');
   atmB.Selected:=Settings.FillShapes;
   atmB.OnClick:=FilledButtonClick;
+  atmB.OnKeyDown:=FilledButtonKeyDown;
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(atmB);
 
@@ -122,6 +126,7 @@ begin
     SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'K', 'CLEAR KEY COLOR');
   atmB.Selected:=Settings.ClearKeyColor;
   atmB.OnClick:=ClearKeyColorButtonClick;
+  atmB.OnKeyDown:=ClearKeyColorButtonKeyDown;
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(atmB);
 
@@ -129,6 +134,7 @@ begin
     SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'D', 'DITHER GRADIENTS. '#132'TOGGLE '#133'CONFIGURE');
   atmB.Selected:=Settings.DitherGradients;
   atmB.OnClick:=DitherButtonClick;
+  atmB.OnKeyDown:=DitherButtonKeyDown;
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(atmB);
 
@@ -234,12 +240,34 @@ begin
   end;
 end;
 
+function TBDControls.FilledButtonKeyDown(Sender:TObject; key:integer):boolean;
+begin
+  if key=KeyMap[KEY_TOGGLEFILLSHAPES] then begin
+    if Sender is TBDButton then with Sender as TBDButton do begin
+      Selected:=not Selected;
+      Settings.FillShapes:=fSelected;
+    end;
+    Result:=true;
+  end else Result:=false;
+end;
+
 procedure TBDControls.ClearKeyColorButtonClick(Sender:TObject;x,y,buttons:integer);
 begin
   if Sender is TBDButton then with Sender as TBDButton do begin
     Selected:=not Selected;
     Settings.ClearKeyColor:=fSelected;
   end;
+end;
+
+function TBDControls.ClearKeyColorButtonKeyDown(Sender:TObject; key:integer):boolean;
+begin
+  if key=KeyMap[KEY_TOGGLEKEYCOLOR] then begin
+    if Sender is TBDButton then with Sender as TBDButton do begin
+      Selected:=not Selected;
+      Settings.ClearKeyColor:=fSelected;
+    end;
+    Result:=true;
+  end else Result:=false;
 end;
 
 procedure TBDControls.DitherButtonClick(Sender:TObject; x,y,buttons:integer);
@@ -252,6 +280,17 @@ begin
   end else begin
     MessageQueue.AddMessage(MSG_OPENDITHERDIALOG);
   end;
+end;
+
+function TBDControls.DitherButtonKeyDown(Sender:TObject; key:integer):boolean;
+begin
+  if key=KeyMap[KEY_TOGGLEDITHER] then begin
+    if Sender is TBDButton then with Sender as TBDButton do begin
+      Selected:=not Selected;
+      Settings.DitherGradients:=fSelected;
+    end;
+    Result:=true;
+  end else Result:=false;
 end;
 
 procedure TBDControls.ToolButtonClick(Sender:TObject; x,y,buttons:integer);
