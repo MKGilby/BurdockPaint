@@ -209,8 +209,9 @@ begin
 end;
 
 function TBDInkLGrad.ProcessSegment(i,j:integer):integer;
-var SegmentRight:integer;
+var SegmentLeft,SegmentRight:integer;
 begin
+  SegmentLeft:=i;
   SegmentRight:=i;
   repeat
     inc(SegmentRight);
@@ -220,12 +221,12 @@ begin
   if Result>0 then begin
     if Settings.DitherGradients then begin
       while i<SegmentRight+1 do begin
-        Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAtDithered(SegmentRight-i,Result+1,Settings.DitherStrength));
+        Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAtDithered(i-SegmentLeft,Result+1,Settings.DitherStrength));
         inc(i);
       end;
     end else begin
       while i<SegmentRight+1 do begin
-        Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(SegmentRight-i,Result+1));
+        Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(i-SegmentLeft,Result+1));
         inc(i);
       end;
     end;
