@@ -33,6 +33,8 @@
 //    * Added fNeedRedraw. Set it to true in descendants when visible change occurs.
 //  V1.02: Gilby - 2023.04.12
 //    * Bugfix in fSetEnabled.
+//  V1.03: Gilby - 2023.04.12
+//    * Added Refresh method. It sets fNeededRedraw to true.
 
 {$mode delphi}
 {$smartlink on}
@@ -52,6 +54,8 @@ type
     destructor Destroy; override;
     // Draws the Control to PrimaryWindow
     procedure Draw; override;
+    // Redraws the control to its internal texture
+    procedure Refresh; virtual;
   protected
     fNeedRedraw:boolean;
     fTexture:TStreamingTexture;
@@ -79,7 +83,7 @@ uses SysUtils, MKToolBox, Logger, SDL2;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.02';
+  Version='1.03';
 
 
 { TVisibleControl}
@@ -106,6 +110,11 @@ begin
     fNeedRedraw:=false;
     PutTexture(Left,Top,fTexture);
   end;
+end;
+
+procedure TVisibleControl.Refresh;
+begin
+  fNeedRedraw:=true;
 end;
 
 procedure TVisibleControl.fSetHeight(value:integer);
