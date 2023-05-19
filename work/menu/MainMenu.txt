@@ -79,7 +79,7 @@ CEL
     OPENMAGNIFYCELDIALOG
     Magnify CEL to 2x, 3x or 5x.
   OPEN
-    LOADCEL
+    OPENCEL
     Open CEL from file. (BDC or Legacy CEL)
   SAVE
     SAVECEL

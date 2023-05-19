@@ -332,7 +332,7 @@ begin
           MSG_OPENMAGNIFYCELDIALOG:begin
             fMagnifyDialog.Show;
           end;
-          MSG_LOADCEL:begin
+          MSG_OPENCEL:begin
             if fOpenCELDialog.Execute then begin
               if not assigned(Project.CELImage) then Project.CELImage:=TBDImage.Create(16,16);
               if UpperCase(ExtractFileExt(fOpenCELDialog.FileName))='.CEL' then
