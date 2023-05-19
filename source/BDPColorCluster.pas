@@ -75,7 +75,7 @@ type
 
   TBDColorCluster=class(TVisibleControl)
     constructor Create(iLeft,iTop:integer;iColorCluster:TColorCluster);
-    procedure Refresh;
+    procedure Refresh; override;
     procedure Click(Sender:TObject;x,y,button:integer);
     procedure Draw; override;
   protected
@@ -352,7 +352,7 @@ end;
 
 procedure TBDColorCluster.Refresh;
 begin
-  fNeedRedraw:=true;
+  inherited Refresh;
   fPicking:=false;
 end;
 
