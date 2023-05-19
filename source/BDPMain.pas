@@ -154,6 +154,9 @@ begin
       if not mres and fMainMenu.Visible then mres:=fMainMenu.ProcessMessage(msg);
       if not mres then begin
         case msg.TypeID of
+          MSG_QUIT:begin
+            quit:=(msg.DataInt=1);
+          end;
           MSG_TOGGLECONTROLS:begin
             if not fPaletteEditor.Visible then
               if fControls.Visible then
@@ -179,75 +182,12 @@ begin
             fMainMenu.DisableItem('CLUSTER');
             InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
           end;
-          MSG_SELECTCOLOR:begin
-            SDL_GetMouseState(@mx,@my);
-            mx:=fDrawArea.MouseXToFrame(mx);
-            my:=fDrawArea.MouseYToFrame(my);
-            if (mx>=0) and (mx<Project.CurrentImage.Width) and (my>=0) and (my<Project.CurrentImage.Height) then
-              Settings.ActiveColorIndex:=Project.CurrentImage.GetPixel(mx,my);
-          end;
-          MSG_LOADCEL:begin
-            if fOpenCELDialog.Execute then begin
-              if not assigned(Project.CELImage) then Project.CELImage:=TBDImage.Create(16,16);
-              if UpperCase(ExtractFileExt(fOpenCELDialog.FileName))='.CEL' then
-                Project.CELImage.ImportCEL(fOpenCELDialog.FileName)
-              else
-                Project.CELImage.LoadFromFile(fOpenCELDialog.FileName);
-              Project.CELImage.Left:=0;
-              Project.CELImage.Top:=0;
-              fMainMenu.EnableCELSubMenusWithActiveCEL;
-              MessageQueue.AddMessage(MSG_SHOWCEL);
-            end;
-          end;
-          MSG_CLEARIMAGE:begin
-            Project.CurrentImage.ImageUndo.AddImageUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);
-            Project.CurrentImage.Bar(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height,Settings.SelectedColors[0]);
-            Project.CurrentImage.ImageUndo.AddImageRedoToLastUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);
-          end;
-          MSG_RELEASECEL:begin
-            if Assigned(Project.CELImage) then begin
-              Project.CELImage.Free;
-              Project.CELImage:=nil;
-            end;
-            fMainMenu.DisableCELSubMenusWithActiveCEL;
-          end;
-          MSG_GETCEL:begin
-            HideMainControls;
-            SDL_ShowCursor(SDL_DISABLE);
-            ActiveTool:=Tools.ItemByName['GETCEL'];
-            SDL_GetMouseState(@mx,@my);
-            ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
-          end;
-          MSG_RESTORECONTROLS:begin
-            ShowMainControls;
-          end;
-          MSG_GETCELFINISHED:begin
-            fMainMenu.EnableCELSubMenusWithActiveCEL;
-            MessageQueue.AddMessage(MSG_RESTORECONTROLS);
-          end;
-          MSG_FLIPCEL:begin
-            if msg.DataInt=0 then Project.CELImage.FlipV
-            else if msg.DataInt=1 then Project.CelImage.FlipH
-            else raise Exception.Create('Invalid FLIPCEL message parameter!');
-            MessageQueue.AddMessage(MSG_SHOWCEL);
-          end;
-          MSG_SHOWCEL:begin
-            HideMainControls;
-            ActiveTool:=Tools.ItemByName['SHOWCEL'];
-            ActiveTool.Initialize;
-          end;
-          MSG_OPENMAGNIFYCELDIALOG:begin
-            fMagnifyDialog.Show;
-          end;
           MSG_MAGNIFYCELRESP:begin
             fMagnifyDialog.Hide;
             if msg.DataInt in [2..8] then begin
               Project.CELImage.Magnify(msg.DataInt);
               MessageQueue.AddMessage(MSG_SHOWCEL);
             end;
-          end;
-          MSG_OPENROTATECELDIALOG:begin
-            fRotateDialog.Show;
           end;
           MSG_ROTATECELRESP:begin
             fRotateDialog.Hide;
@@ -256,39 +196,47 @@ begin
               MessageQueue.AddMessage(MSG_SHOWCEL);
             end;
           end;
-          MSG_OPENABOUTDIALOG:begin
-            fSplashScreen.Show;
-          end;
           MSG_ABOUTRESP:begin
             fSplashScreen.Hide;
           end;
-          MSG_PUTCEL:begin
+          MSG_OPENDITHERDIALOG:begin
+            fDitherDialog.Show;
+          end;
+          MSG_DITHERRESP:begin
+            if msg.DataInt>-1 then Settings.DitherStrength:=msg.DataInt;
+            fDitherDialog.Hide;
+          end;
+          MSG_RESTORECONTROLS:begin
+            ShowMainControls;
+          end;
+          MSG_SHOWCEL:begin
             HideMainControls;
-            ActiveTool:=Tools.ItemByName['PUTCEL'];
+            ActiveTool:=Tools.ItemByName['SHOWCEL'];
             ActiveTool.Initialize;
+          end;
+          MSG_GETCELFINISHED:begin
+            fMainMenu.EnableCELSubMenusWithActiveCEL;
+            MessageQueue.AddMessage(MSG_RESTORECONTROLS);
+          end;
+          MSG_SELECTCOLOR:begin
             SDL_GetMouseState(@mx,@my);
-            ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
+            mx:=fDrawArea.MouseXToFrame(mx);
+            my:=fDrawArea.MouseYToFrame(my);
+            if (mx>=0) and (mx<Project.CurrentImage.Width) and (my>=0) and (my<Project.CurrentImage.Height) then
+              Settings.ActiveColorIndex:=Project.CurrentImage.GetPixel(mx,my);
           end;
-          MSG_SAVECEL:begin
-            if fSaveCELDialog.Execute then begin
+          MSG_OPENPROJECT:begin
+            if fOpenProjectDialog.Execute then begin
               try
-                Project.CELImage.SaveToFile(fSaveCELDialog.FileName);
+                FreeAndNil(Project);
+                Project:=TBDProject.CreateFromFile(fOpenProjectDialog.FileName);
+                MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
               except
-                on e:Exception do
+                on e:Exception do begin
                   Log.LogError(e.message);
+                  MessageBox(e.Message);
+                end;
               end;
-              MessageQueue.AddMessage(MSG_SHOWCEL);
-            end;
-          end;
-          MSG_EXPORTCEL:begin
-            if fExportCELDialog.Execute then begin
-              try
-                Project.CELImage.ExportTo(fExportCELDialog.FileName,copy(ExtractFileExt(fExportCELDialog.FileName),2));
-              except
-                on e:Exception do
-                  Log.LogError(e.message);
-              end;
-              MessageQueue.AddMessage(MSG_SHOWCEL);
             end;
           end;
           MSG_SAVEPROJECT:begin
@@ -310,20 +258,6 @@ begin
                 Project.Clean;
                 Project.SaveToFile(fSaveProjectDialog.FileName);
                 MessageBox('Project saved successfully.');
-              except
-                on e:Exception do begin
-                  Log.LogError(e.message);
-                  MessageBox(e.Message);
-                end;
-              end;
-            end;
-          end;
-          MSG_OPENPROJECT:begin
-            if fOpenProjectDialog.Execute then begin
-              try
-                FreeAndNil(Project);
-                Project:=TBDProject.CreateFromFile(fOpenProjectDialog.FileName);
-                MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
               except
                 on e:Exception do begin
                   Log.LogError(e.message);
@@ -360,19 +294,85 @@ begin
               end;
             end;
           end;
-          MSG_OPENDITHERDIALOG:begin
-            fDitherDialog.Show;
+          MSG_CLEARIMAGE:begin
+            Project.CurrentImage.ImageUndo.AddImageUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);
+            Project.CurrentImage.Bar(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height,Settings.SelectedColors[0]);
+            Project.CurrentImage.ImageUndo.AddImageRedoToLastUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);
           end;
-          MSG_DITHERRESP:begin
-            if msg.DataInt>-1 then Settings.DitherStrength:=msg.DataInt;
-            fDitherDialog.Hide;
+          MSG_GETCEL:begin
+            HideMainControls;
+            SDL_ShowCursor(SDL_DISABLE);
+            ActiveTool:=Tools.ItemByName['GETCEL'];
+            SDL_GetMouseState(@mx,@my);
+            ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
+          end;
+          MSG_PUTCEL:begin
+            HideMainControls;
+            ActiveTool:=Tools.ItemByName['PUTCEL'];
+            ActiveTool.Initialize;
+            SDL_GetMouseState(@mx,@my);
+            ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
+          end;
+          MSG_RELEASECEL:begin
+            if Assigned(Project.CELImage) then begin
+              Project.CELImage.Free;
+              Project.CELImage:=nil;
+            end;
+            fMainMenu.DisableCELSubMenusWithActiveCEL;
+          end;
+          MSG_OPENROTATECELDIALOG:begin
+            fRotateDialog.Show;
+          end;
+          MSG_FLIPCEL:begin
+            if msg.DataInt=0 then Project.CELImage.FlipV
+            else if msg.DataInt=1 then Project.CelImage.FlipH
+            else raise Exception.Create('Invalid FLIPCEL message parameter!');
+            MessageQueue.AddMessage(MSG_SHOWCEL);
+          end;
+          MSG_OPENMAGNIFYCELDIALOG:begin
+            fMagnifyDialog.Show;
+          end;
+          MSG_LOADCEL:begin
+            if fOpenCELDialog.Execute then begin
+              if not assigned(Project.CELImage) then Project.CELImage:=TBDImage.Create(16,16);
+              if UpperCase(ExtractFileExt(fOpenCELDialog.FileName))='.CEL' then
+                Project.CELImage.ImportCEL(fOpenCELDialog.FileName)
+              else
+                Project.CELImage.LoadFromFile(fOpenCELDialog.FileName);
+              Project.CELImage.Left:=0;
+              Project.CELImage.Top:=0;
+              fMainMenu.EnableCELSubMenusWithActiveCEL;
+              MessageQueue.AddMessage(MSG_SHOWCEL);
+            end;
+          end;
+          MSG_SAVECEL:begin
+            if fSaveCELDialog.Execute then begin
+              try
+                Project.CELImage.SaveToFile(fSaveCELDialog.FileName);
+              except
+                on e:Exception do
+                  Log.LogError(e.message);
+              end;
+              MessageQueue.AddMessage(MSG_SHOWCEL);
+            end;
+          end;
+          MSG_EXPORTCEL:begin
+            if fExportCELDialog.Execute then begin
+              try
+                Project.CELImage.ExportTo(fExportCELDialog.FileName,copy(ExtractFileExt(fExportCELDialog.FileName),2));
+              except
+                on e:Exception do
+                  Log.LogError(e.message);
+              end;
+              MessageQueue.AddMessage(MSG_SHOWCEL);
+            end;
           end;
           MSG_RAMPCLUSTER:begin
             Project.CurrentImage.Palette.Ramp(Project.CurrentImage.ColorClusters[0]);
             MessageQueue.AddMessage(MSG_PALETTEPICKEDCOLOR);
           end;
-          MSG_QUIT:begin
-            quit:=(msg.DataInt=1);
+          MSG_OPENABOUTDIALOG:begin
+            fSplashScreen.Show;
           end;
         end;
       end;
