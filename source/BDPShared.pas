@@ -78,6 +78,7 @@ const
 
   DATAFILE='BurdockPaint.data';
   TEMPPROJECTFILE:string='temp.bpprj';
+  PROJECTBASEPATH:string='.\';
   SETTINGSFILE='BurdockPaint.ini';
   STATEDATAID=$53;
 

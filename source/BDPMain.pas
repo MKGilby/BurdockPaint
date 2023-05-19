@@ -85,7 +85,8 @@ begin
 
   if (Parameters.Count=2) and (FileExists(Parameters[1])) then begin
     TEMPPROJECTFILE:=Parameters[1];
-  end;
+    PROJECTBASEPATH:=ExtractFileDir(TEMPPROJECTFILE);
+  end else PROJECTBASEPATH:=ExtractFileDir(Parameters[0]);
 
   LoadAssets;
 
@@ -431,7 +432,7 @@ begin
     FilterIndex:=0;
     Name:=pName;
     Title:=pTitle;
-    InitialDir:=ExtractFilePath(ParamStr(0));
+    InitialDir:=PROJECTBASEPATH;
   end;
 end;
 
@@ -443,7 +444,7 @@ begin
     FilterIndex:=0;
     Name:=pName;
     Title:=pTitle;
-    InitialDir:=ExtractFilePath(ParamStr(0));
+    InitialDir:=PROJECTBASEPATH;
   end;
 end;
 
