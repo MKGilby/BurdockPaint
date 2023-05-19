@@ -159,7 +159,7 @@ var len:uint32;ver:Byte;opcount,current:integer;
 begin
   len:=0;ver:=0;
   fStream.Read(len,4);
-//  fStream.Read(ver,1);
+  fStream.Read(ver,1);
   W(Format('U version %d (Start: %d, Len: %d)',[ver,fStream.Position-5,len]));
   opcount:=0;current:=0;
   fStream.Read(opcount,2);
@@ -178,7 +178,7 @@ var len:uint32;ver:Byte;opcount,current:integer;
 begin
   len:=0;ver:=0;
   fStream.Read(len,4);
-//  fStream.Read(ver,1);
+  fStream.Read(ver,1);
   W(Format('V version %d (Start: %d, Len: %d)',[ver,fStream.Position-5,len]));
   opcount:=0;current:=0;
   fStream.Read(opcount,2);
