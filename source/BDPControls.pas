@@ -32,6 +32,7 @@ type
     procedure SetMouseCoords(x,y:integer);
     function ProcessMessage(msg:TMessage):boolean;
     procedure ControlsShow(Sender:TObject);
+    function ControlsKeyDown(Sender:TObject;key:integer):boolean;
   private
     fTexture:TStreamingTexture;
     fToolButtons:array[0..5] of TBDButton;
@@ -65,6 +66,7 @@ begin
   fVisible:=true;
   OnMouseEnter:=MouseEnter;
   OnShow:=ControlsShow;
+  OnKeyDown:=ControlsKeyDown;
   ZIndex:=LEVEL1CONTROLS_ZINDEX;
   fName:='Controls';
 
@@ -360,6 +362,27 @@ procedure TBDControls.ControlsShow(Sender:TObject);
 begin
   ActivateToolButton(-1);
   InfoBar.ShowText('');
+end;
+
+function TBDControls.ControlsKeyDown(Sender:TObject; key:integer):boolean;
+begin
+  Result:=false;
+  if key=KeyMap[KEY_GETCEL] then begin
+    if ActiveTool.Pinnable then begin  // Not GetCEL or PutCEL
+      MessageQueue.AddMessage(MSG_GETCEL);
+    end else begin
+      MessageQueue.AddMessage(MSG_RESTORECONTROLS);
+    end;
+    Result:=true;
+  end else
+  if key=KeyMap[KEY_PUTCEL] then begin
+    if ActiveTool.Pinnable and (Assigned(Project.CELImage)) then begin  // Not GetCEL or PutCEL
+      MessageQueue.AddMessage(MSG_PUTCEL);
+    end else begin
+      MessageQueue.AddMessage(MSG_RESTORECONTROLS);
+    end;
+    Result:=true;
+  end;
 end;
 
 end.

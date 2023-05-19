@@ -384,29 +384,6 @@ begin
       keys[KeyMap[KEY_QUIT]]:=false;
       quit:=MessageBox('EXIT BURDOCK PAINT?','^YES;^NO')=0
     end;
-    if keys[KeyMap[KEY_GETCEL]] then begin
-      if ActiveTool.Pinnable then begin  // Not GetCEL or PutCEL
-        HideMainControls;
-        ActiveTool:=Tools.ItemByName['GETCEL'];
-        SDL_GetMouseState(@mx,@my);
-        ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
-      end else begin
-        ShowMainControls;
-      end;
-      keys[KeyMap[KEY_GETCEL]]:=false;
-    end;
-    if keys[KeyMap[KEY_PUTCEL]] then begin
-      if ActiveTool.Pinnable and (Assigned(Project.CELImage)) then begin  // Not GetCEL or PutCEL
-        HideMainControls;
-        ActiveTool:=Tools.ItemByName['PUTCEL'];
-        ActiveTool.Initialize;
-        SDL_GetMouseState(@mx,@my);
-        ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
-      end else begin
-        ShowMainControls;
-      end;
-      keys[KeyMap[KEY_PUTCEL]]:=false;
-    end;
   until quit;
 end;
 
