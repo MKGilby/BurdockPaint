@@ -33,6 +33,7 @@ type
     fDitherGradients:boolean;
     fDitherStrength:integer;
     fModernGraphics:boolean;
+    fShowGrid:boolean;
     fRGradCenterX,fRGradCenterY,fRGradRadius:integer;
     function fGetSelectedColor(index:integer):integer;
     function fGetSelectedTool(index:integer):string;
@@ -62,6 +63,7 @@ type
     property RGradCenterX:integer read fRGradCenterX write fRGradCenterX;
     property RGradCenterY:integer read fRGradCenterY write fRGradCenterY;
     property RGradRadius:integer read fRGradRadius write fRGradRadius;
+    property ShowGrid:boolean read fShowGrid write fShowGrid;
   end;
 
 
@@ -102,6 +104,7 @@ begin
   fRGradCenterX:=0;
   fRGradCenterY:=0;
   fRGradRadius:=32;
+  fShowGrid:=false;
 end;
 
 procedure TSettings.LoadFromFile(pFilename:String);
@@ -134,6 +137,7 @@ begin
   fShowSplash:=INI.ReadBool('Settings','ShowSplash',false);
   fUndoLimit:=INI.ReadInteger('Settings','UndoLimit',16);
   fModernGraphics:=INI.ReadBool('Settings','ModernGraphics',true);
+  fShowGrid:=INI.ReadBool('Settings','ShowGrid',false);
   LoadKeyMap(INI);
   for i:=0 to COLORSELECTORCOLORS-1 do
     fColorSelectorColors[i]:=INI.ReadInteger('Colors',Format('Selected%d',[i]),i);
@@ -165,6 +169,7 @@ begin
   INI.WriteBool('Settings','ShowSplash',fShowSplash);
   INI.WriteInteger('Settings','UndoLimit',fUndoLimit);
   INI.WriteBool('Settings','ModernGraphics',fModernGraphics);
+  INI.WriteBool('Settings','ShowGrid',fShowGrid);
   SaveKeyMap(INI);
   for i:=0 to COLORSELECTORCOLORS-1 do
     INI.WriteInteger('Colors',Format('Selected%d',[i]),fColorSelectorColors[i]);
