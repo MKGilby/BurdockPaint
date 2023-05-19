@@ -233,7 +233,7 @@ begin
     fRealStart:=fStart;
     fRealEnd:=fEnd;
   end;
-  if fStart<fEnd then fDirection:=1 else fDirection:=-1;
+  if fRealStart<fRealEnd then fDirection:=1 else fDirection:=-1;
 end;
 
 procedure TColorCluster.LoadFromStreamV1(pStream:TStream);
