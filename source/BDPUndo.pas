@@ -400,6 +400,8 @@ begin
   curr:=pStream.Position;
   i:=0;
   pStream.Write(i,4);
+  i:=1;
+  pStream.Write(i,1);  // Version
   i:=Self.Count;
   pStream.Write(i,2);
   pStream.Write(fPointer,2);
@@ -420,13 +422,16 @@ begin
   size:=0;
   pStream.Read(Size,4);
   curr:=pStream.Position;
-  count:=0;
-  pStream.Read(count,2);
-  fPointer:=0;
-  pStream.Read(fPointer,2);
-  if fPointer=65535 then fPointer:=-1;
-  for i:=0 to Count-1 do
-    Self.Add(TBDRegionUndoItem.CreateFromStream(pStream));
+  pStream.read(b,1);
+  if b=1 then begin // Version 1
+    count:=0;
+    pStream.Read(count,2);
+    fPointer:=0;
+    pStream.Read(fPointer,2);
+    if fPointer=65535 then fPointer:=-1;
+    for i:=0 to Count-1 do
+      Self.Add(TBDRegionUndoItem.CreateFromStream(pStream));
+  end;
   pStream.Position:=curr+size;
   fAfterUndoRedoMessage:=TMessage.Init(MSG_SETIMAGEUNDOREDOBUTTON,0);
 end;
@@ -474,6 +479,9 @@ begin
   curr:=pStream.Position;
   i:=0;
   pStream.Write(i,4);
+
+  i:=1;
+  pStream.Write(i,1);  // Version
   i:=Self.Count;
   pStream.Write(i,2);
   pStream.Write(fPointer,2);
@@ -494,13 +502,16 @@ begin
   size:=0;
   pStream.Read(Size,4);
   curr:=pStream.Position;
-  count:=0;
-  pStream.Read(count,2);
-  fPointer:=0;
-  pStream.Read(fPointer,2);
-  if fPointer=65535 then fPointer:=-1;
-  for i:=0 to Count-1 do
-    Self.Add(TBDColorUndoItem.CreateFromStream(pStream));
+  pStream.Read(b,1);
+  if b=1 then begin  // Version 1
+    count:=0;
+    pStream.Read(count,2);
+    fPointer:=0;
+    pStream.Read(fPointer,2);
+    if fPointer=65535 then fPointer:=-1;
+    for i:=0 to Count-1 do
+      Self.Add(TBDColorUndoItem.CreateFromStream(pStream));
+  end;
   pStream.Position:=curr+size;
   fAfterUndoRedoMessage:=TMessage.Init(MSG_SETPALETTEUNDOREDOBUTTON,0);
 end;
