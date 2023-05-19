@@ -5,7 +5,8 @@ unit BDPControls;
 interface
 
 uses
-  SysUtils, mk_sdl2, vcc2_Container, BDPBasicControls, BDPMessage, BDPColorSelector;
+  SysUtils, mk_sdl2, vcc2_Container, BDPBasicControls, BDPMessage, BDPColorSelector,
+  BDPColorCluster;
 
 type
 
@@ -39,6 +40,7 @@ type
     fInkButtons:array[0..5] of TBDButton;
     fUndoButton,fRedoButton:TBDButton;
     fColorSelector:TBDColorSelector;
+    fColorCluster:TBDColorCluster;
     fImageCountSlider:TBDHorizontalSlider;
     fMouseX,fMouseY:integer;
   end;
@@ -70,6 +72,7 @@ begin
   ZIndex:=LEVEL1CONTROLS_ZINDEX;
   fName:='Controls';
 
+  // Tool buttons
   for i:=0 to 5 do begin
     atmT:=Tools[Tools.IndexOf(Settings.SelectedTools[i])];
     if atmT=nil then raise Exception.Create('Tool not found! ('+Settings.SelectedTools[i]+')');
@@ -87,12 +90,15 @@ begin
   end;
   ActivateToolButton(Settings.ActiveTool);
 
+  // Ink buttons
   for i:=0 to 5 do begin
     atmi:=Inks[Inks.IndexOf(Settings.SelectedInks[i])];
     if atmT=nil then raise Exception.Create('Ink not found! ('+Settings.SelectedInks[i]+')');
     fInkButtons[i]:=TBDButton.Create(
-      fLeft+InkButtonsLeft+i mod 2*130,
-      fTop+InkButtonsTop+i div 2*30,
+//      fLeft+InkButtonsLeft+i mod 2*130,
+//      fTop+InkButtonsTop+i div 2*30,
+      fLeft+InkButtonsLeft+i mod 3*130,
+      fTop+InkButtonsTop+i div 3*30,
       NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
       atmI.Name,
       atmI.Hint,
@@ -104,28 +110,30 @@ begin
   end;
   ActivateInkButton(Settings.ActiveInk);
 
+  // Undo/redo buttons
   fUndoButton:=TBDButton.Create(fLeft+CONTROLUNDOBUTTONSLEFT, fTop+CONTROLUNDOBUTTONSTOP,
-    NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT, 'UNDO', 'UNDO LAST OPERATION');
+    CONTROLUNDOBUTTONWIDTH, NORMALBUTTONHEIGHT, 'UNDO', 'UNDO LAST OPERATION.');
   fUndoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fUndoButton.OnClick:=UndoButtonClick;
   AddChild(fUndoButton);
 
   fRedoButton:=TBDButton.Create(fLeft+CONTROLUNDOBUTTONSLEFT, fTop+CONTROLUNDOBUTTONSTOP+30,
-    NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT, 'REDO', 'REDO LAST UNDOED OPERATION');
+    CONTROLUNDOBUTTONWIDTH, NORMALBUTTONHEIGHT, 'REDO', 'REDO LAST UNDOED OPERATION.');
   fRedoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fRedoButton.OnClick:=RedoButtonClick;
   AddChild(fRedoButton);
 
-  atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP,
-    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'F', 'FILL SHAPES');
+  // Toggle buttons
+  atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+30,
+    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'F', 'FILL SHAPES.');
   atmB.Selected:=Settings.FillShapes;
   atmB.OnClick:=FilledButtonClick;
   atmB.OnKeyDown:=FilledButtonKeyDown;
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(atmB);
 
-  atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+30,
-    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'K', 'CLEAR KEY COLOR');
+  atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT+SMALLBUTTONWIDTH+3, fTop+TOGGLEBUTTONSTOP+30,
+    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'K', 'CLEAR KEY COLOR.');
   atmB.Selected:=Settings.ClearKeyColor;
   atmB.OnClick:=ClearKeyColorButtonClick;
   atmB.OnKeyDown:=ClearKeyColorButtonKeyDown;
@@ -140,13 +148,23 @@ begin
   atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   AddChild(atmB);
 
-  fColorSelector:=TBDColorSelector.Create(fLeft+COLORSELECTORLEFT, fTop+COLORSELECTORTOP);
+  atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT+SMALLBUTTONWIDTH+3, fTop+TOGGLEBUTTONSTOP+60,
+    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'G', 'SHOW GRID. '#132'TOGGLE '#133'CONFIGURE');
+  atmB.Selected:=Settings.ShowGrid;
+//  atmB.OnClick:=DitherButtonClick;
+//  atmB.OnKeyDown:=DitherButtonKeyDown;
+  atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  AddChild(atmB);
+
+  // Color selector
+  fColorSelector:=TBDColorSelector.Create(fLeft+CONTROLCOLORSELECTORLEFT, fTop+CONTROLCOLORSELECTORTOP);
   fColorSelector.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fColorSelector.Name:='ColorSelector';
   AddChild(fColorSelector);
 
+  // Imagecount slider
   fImageCountSlider:=TBDHorizontalSlider.Create(
-    fLeft+IMAGECOUNTSLIDERLEFT, fTop+IMAGECOUNTSLIDERTOP, IMAGESCOUNTLIDERWIDTH, IMAGECOUNTSLIDERHEIGHT);
+    fLeft+IMAGECOUNTSLIDERLEFT, fTop+IMAGECOUNTSLIDERTOP, IMAGECOUNTSLIDERWIDTH, IMAGECOUNTSLIDERHEIGHT);
   fImageCountSlider.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fImageCountSlider.Name:='ImagesSlider';
   fImageCountSlider.MinValue:=1;
@@ -154,6 +172,14 @@ begin
   fImageCountSlider.Position:=Project.CurrentImageIndex+1;
   fImageCountSlider.OnChange:=ActiveImageChange;
   AddChild(fImageCountSlider);
+
+  // Color cluster
+  fColorCluster:=TBDColorCluster.Create(fLeft+INKBUTTONSLEFT,fTop+6,Project.CurrentImage.ColorClusters.Items[0]);
+  fColorCluster.Height:=NORMALBUTTONHEIGHT;
+  fColorCluster.Width:=CONTROLCOLORCLUSTERWIDTH;
+  fColorCluster.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fColorCluster.Name:='ColorCluster (PalEd)';
+  AddChild(fColorCluster);
 
   MouseObjects.Add(Self);
 end;
@@ -354,6 +380,10 @@ begin
       fImageCountSlider.Position:=Project.CurrentImageIndex+1;
       MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
       Result:=false;  // Not true, let the others also know about the count change!
+    end;
+    MSG_ACTIVECOLORINDEXCHANGED:begin
+      fColorSelector.Refresh;
+      fColorCluster.Refresh;
     end;
   end;
 end;
