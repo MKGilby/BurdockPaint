@@ -6,7 +6,7 @@ interface
 
 uses
   SysUtils, mk_sdl2, vcc2_Container, BDPBasicControls, BDPMessage, BDPColorSelector,
-  BDPColorCluster;
+  BDPColorCluster, BDPTools, BDPInks;
 
 type
 
@@ -34,6 +34,8 @@ type
     function ProcessMessage(msg:TMessage):boolean;
     procedure ControlsShow(Sender:TObject);
     function ControlsKeyDown(Sender:TObject;key:integer):boolean;
+    procedure ChangeActiveToolButtonTo(pTool:TBDTool);
+    procedure ChangeActiveInkButtonTo(pInk:TBDInk);
   private
     fTexture:TStreamingTexture;
     fToolButtons:array[0..5] of TBDButton;
@@ -47,7 +49,7 @@ type
 
 implementation
 
-uses SDL2, BDPShared, BDPTools, BDPInks, MKMouse2, BDPKeyMapping;
+uses SDL2, BDPShared, MKMouse2, BDPKeyMapping;
 
 { TBDControls }
 
@@ -385,6 +387,20 @@ begin
       fColorSelector.Refresh;
       fColorCluster.Refresh;
     end;
+    MSG_TOOLDRAW:ChangeActiveToolButtonTo(Tools.ItemByName['DRAW']);
+    MSG_TOOLBOX:ChangeActiveToolButtonTo(Tools.ItemByName['BOX']);
+    MSG_TOOLLINE:ChangeActiveToolButtonTo(Tools.ItemByName['LINE']);
+    MSG_TOOLCIRCLE:ChangeActiveToolButtonTo(Tools.ItemByName['CIRCLE']);
+    MSG_TOOLFILL:ChangeActiveToolButtonTo(Tools.ItemByName['FILL']);
+    MSG_TOOLFILLTO:ChangeActiveToolButtonTo(Tools.ItemByName['FILLTO']);
+    MSG_TOOLSEP:ChangeActiveToolButtonTo(Tools.ItemByName['SEP.']);
+    MSG_INKOPAQUE:ChangeActiveInkButtonTo(Inks.ItemByName['OPAQUE']);
+    MSG_INKHGRAD:ChangeActiveInkButtonTo(Inks.ItemByName['H GRAD']);
+    MSG_INKVGRAD:ChangeActiveInkButtonTo(Inks.ItemByName['V GRAD']);
+    MSG_INKLGRAD:ChangeActiveInkButtonTo(Inks.ItemByName['L GRAD']);
+    MSG_INKRGRAD:ChangeActiveInkButtonTo(Inks.ItemByName['R GRAD']);
+    MSG_INKRANDOM:ChangeActiveInkButtonTo(Inks.ItemByName['RANDOM']);
+    MSG_INKSOFTEN:ChangeActiveInkButtonTo(Inks.ItemByName['SOFTEN']);
   end;
 end;
 
@@ -413,6 +429,24 @@ begin
     end;
     Result:=true;
   end;
+end;
+
+procedure TBDControls.ChangeActiveToolButtonTo(pTool:TBDTool);
+begin
+  fToolButtons[Settings.ActiveTool].Caption:=pTool.Name;
+  fToolButtons[Settings.ActiveTool].Hint:=pTool.Hint;
+  fToolButtons[Settings.ActiveTool].Refresh;
+  Settings.SelectedTools[Settings.ActiveTool]:=pTool.Name;
+  ActiveTool:=pTool;
+end;
+
+procedure TBDControls.ChangeActiveInkButtonTo(pInk:TBDInk);
+begin
+  fInkButtons[Settings.ActiveInk].Caption:=pInk.Name;
+  fInkButtons[Settings.ActiveInk].Hint:=pInk.Hint;
+  fInkButtons[Settings.ActiveInk].Refresh;
+  Settings.SelectedInks[Settings.ActiveInk]:=pInk.Name;
+  ActiveInk:=pInk;
 end;
 
 end.
