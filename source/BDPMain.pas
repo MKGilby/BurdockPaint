@@ -170,6 +170,8 @@ begin
             fMainMenu.DisableItem('PROJECT');
             fMainMenu.DisableItem('IMAGE');
             fMainMenu.DisableItem('CEL');
+            fMainMenu.DisableItem('TOOLS');
+            fMainMenu.DisableItem('INKS');
             fMainMenu.EnableItem('CLUSTER');
             InfoBar.Top:=WINDOWHEIGHT-PALETTEEDITORHEIGHT-INFOBARHEIGHT;
           end;
@@ -179,6 +181,8 @@ begin
             fMainMenu.EnableItem('PROJECT');
             fMainMenu.EnableItem('IMAGE');
             fMainMenu.EnableItem('CEL');
+            fMainMenu.EnableItem('TOOLS');
+            fMainMenu.EnableItem('INKS');
             fMainMenu.DisableItem('CLUSTER');
             InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
           end;
