@@ -94,6 +94,54 @@ Cluster
     RAMPCLUSTER
     Recalculate cluster colors ramping between the two ends.
 
+;------------------------------
+Tools
+  Draw
+    TOOLDRAW
+    Select draw tool instead of selected one.
+  Box
+    TOOLBOX
+    Select box tool instead of selected one.
+  Line
+    TOOLLINE
+    Select line tool instead of selected one.
+  Circle
+    TOOLCIRCLE
+    Select circle tool instead of selected one.
+  Fill
+    TOOLFILL
+    Select fill tool instead of selected one.
+  FillTo
+    TOOLFILLTO
+    Select fillto tool instead of selected one.
+  Sep.
+    TOOLSEP
+    Select "sep." tool instead of selected one.
+
+;------------------------------
+Inks
+  Opaque
+    INKOPAQUE
+    Select opaque ink instead of selected one.
+  H Grad
+    INKHGRAD
+    Select H grad ink instead of selected one.
+  V Grad
+    INKVGRAD
+    Select V grad ink instead of selected one.
+  L Grad
+    INKLGRAD
+    Select L grad ink instead of selected one.
+  R Grad
+    INKRGRAD
+    Select R grad ink instead of selected one.
+  Random
+    INKRANDOM
+    Select Random pixels ink instead of selected one.
+  Soften
+    INKSOFTEN
+    Select soften ink instead of selected one.
+
 
 ;------------------------------
 About
