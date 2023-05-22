@@ -64,6 +64,10 @@ type
 
     // Creates a color ramp from the start color to the end color.
     procedure Ramp(pColorCluster:TColorCluster);
+
+    // Returns the closest color to the specified r,g,b values.
+    // Difference is calculated weighted: r*0.3, g*0.59 and b*0.11
+    function GetClosestColor(r,g,b:byte):word;
   private
     fEntries:pointer;
     fMaxEntries:integer;
@@ -434,6 +438,19 @@ begin
     Self.ColorG[pi1+i]:=Self.ColorG[pi1]+(Self.ColorG[pi2]-Self.ColorG[pi1])*i div (count-1);
     Self.ColorB[pi1+i]:=Self.ColorB[pi1]+(Self.ColorB[pi2]-Self.ColorB[pi1])*i div (count-1);
     Self.ColorA[pi1+i]:=Self.ColorA[pi1]+(Self.ColorA[pi2]-Self.ColorA[pi1])*i div (count-1);
+  end;
+end;
+
+function TBDPalette.GetClosestColor(r, g, b: byte): word;
+var i,min,diff:integer;
+begin
+  Result:=0;min:=10000;
+  for i:=0 to Size-1 do begin
+    diff:=abs(fGetColorR(i)-r)*30+abs(fGetColorG(i)-g)*59+abs(fGetColorB(i)-b)*11;
+    if diff<min then begin
+      min:=diff;
+      Result:=i;
+    end;
   end;
 end;
 
