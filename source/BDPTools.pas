@@ -186,7 +186,7 @@ type
     function Click(x,y,button:integer):boolean; override;
     // Tell the color under the mouse to the tool.
     // It remembers the color and updates the InfoBar accordingly.
-    procedure SetColor(colorindex:integer);
+    procedure SetColor(colorindex:integer;pRMBText:string='');
   private
     fColorIndex:integer;
   end;
@@ -1390,7 +1390,7 @@ procedure TBDToolSelectColor.Move(x,y:integer);
 begin
   inherited Move(x,y);
   if (fX>=0) and (fX<Project.CurrentImage.Width) and (fY>=0) and (fY<Project.CurrentImage.Height) then
-    SetColor(Project.CurrentImage.GetPixel(fX,fY))
+    SetColor(Project.CurrentImage.GetPixel(fX,fY),'CLOSE PAL. ED.')
   else
     SetColor(-1);
 end;
@@ -1407,12 +1407,12 @@ begin
   Result:=true;
 end;
 
-procedure TBDToolSelectColor.SetColor(colorindex:integer);
+procedure TBDToolSelectColor.SetColor(colorindex: integer; pRMBText: string);
 begin
   if (colorindex>=-1) and (colorindex<Project.CurrentImage.Palette.Size) then begin
     fColorIndex:=colorindex;
     if colorindex>-1 then begin
-      InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d) '#132'SELECT '#133'PICK COLOR',
+      InfoBar.ShowText(Format('COLOR INDEX=%d (R=%d, G=%d, B=%d, A=%d) '#132'SELECT '#133+pRMBText,
         [fColorIndex,
          Project.CurrentImage.Palette.ColorR[fColorIndex],
          Project.CurrentImage.Palette.ColorG[fColorIndex],

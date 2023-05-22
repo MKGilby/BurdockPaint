@@ -229,7 +229,7 @@ begin
        (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
       x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
       y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
-      TBDToolSelectColor(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256);
+      TBDToolSelectColor(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256,'PICK COLOR');
     end else
       TBDToolSelectColor(ActiveTool).SetColor(-1);
   end else
