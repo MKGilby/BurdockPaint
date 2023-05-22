@@ -438,6 +438,7 @@ begin
   fToolButtons[Settings.ActiveTool].Refresh;
   Settings.SelectedTools[Settings.ActiveTool]:=pTool.Name;
   ActiveTool:=pTool;
+  MessageQueue.AddMessage(MSG_SETTOOLSMENU);
 end;
 
 procedure TBDControls.ChangeActiveInkButtonTo(pInk:TBDInk);
@@ -447,6 +448,7 @@ begin
   fInkButtons[Settings.ActiveInk].Refresh;
   Settings.SelectedInks[Settings.ActiveInk]:=pInk.Name;
   ActiveInk:=pInk;
+  MessageQueue.AddMessage(MSG_SETINKSMENU);
 end;
 
 end.

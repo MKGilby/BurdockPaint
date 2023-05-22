@@ -28,6 +28,8 @@ type
     procedure AddItem(item,hint:string;msg:TMessage;enabled:boolean=true);
     procedure DisableItem(item:string);
     procedure EnableItem(item:string);
+    procedure DisableAllItems;
+    procedure EnableAllItems;
   protected
     procedure ReDraw; override;
   private
@@ -61,6 +63,8 @@ type
     destructor Destroy; override;
     procedure EnableCELSubMenusWithActiveCEL;
     procedure DisableCELSubMenusWithActiveCEL;
+    procedure SetToolsMenuStates;
+    procedure SetInksMenuStates;
     procedure MouseMove(Sender:TObject;x,y:integer);
     procedure MouseLeave(Sender:TObject);
     procedure MouseEnter(Sender:TObject);
@@ -175,6 +179,20 @@ end;
 procedure TSubMenu.EnableItem(item:string);
 begin
   SetItemEnabled(item,true);
+end;
+
+procedure TSubMenu.DisableAllItems;
+var i:integer;
+begin
+  for i:=0 to length(fItems)-1 do fItems[i]._enabled:=false;
+  fNeedRedraw:=true;
+end;
+
+procedure TSubMenu.EnableAllItems;
+var i:integer;
+begin
+  for i:=0 to length(fItems)-1 do fItems[i]._enabled:=true;
+  fNeedRedraw:=true;
 end;
 
 procedure TSubMenu.fSetName(value:string);
@@ -308,6 +326,8 @@ begin
     end;
     FreeAndNil(Xs);
   end;
+  SetToolsMenuStates;
+  SetInksMenuStates;
 end;
 
 destructor TMainMenu.Destroy;
@@ -346,6 +366,26 @@ begin
     submenu.DisableItem('MAGNIFY');
     submenu.DisableItem('SAVE');
     submenu.DisableItem('EXPORT');
+  end;
+end;
+
+procedure TMainMenu.SetToolsMenuStates;
+var submenu:TSubMenu;i:integer;
+begin
+  submenu:=fSubMenus.ItemByName('TOOLS');
+  if Assigned(submenu) then begin
+    submenu.EnableAllItems;
+    for i:=0 to 5 do submenu.DisableItem(Settings.SelectedTools[i]);
+  end;
+end;
+
+procedure TMainMenu.SetInksMenuStates;
+var submenu:TSubMenu;i:integer;
+begin
+  submenu:=fSubMenus.ItemByName('INKS');
+  if Assigned(submenu) then begin
+    submenu.EnableAllItems;
+    for i:=0 to 5 do submenu.DisableItem(Settings.SelectedInks[i]);
   end;
 end;
 

@@ -113,6 +113,10 @@ const
   MSG_OPENDITHERDIALOG=11;
   // Response from DitherDialog. Data is the new dither strength or -1 if cancelled.
   MSG_DITHERRESP=12;
+  // Set TOOLS menu item states based on Settings.SelectedTools
+  MSG_SETTOOLSMENU=13;
+  // Set INKS menu item states based on Settings.SelectedInks
+  MSG_SETINKSMENU=14;
 
   // ------- Tool Messages ------- Range: 100-199 -------
   // PICKCOLCS finished, Data is the selected color index or -1 if no color selected.

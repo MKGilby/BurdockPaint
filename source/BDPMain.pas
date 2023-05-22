@@ -210,6 +210,12 @@ begin
             if msg.DataInt>-1 then Settings.DitherStrength:=msg.DataInt;
             fDitherDialog.Hide;
           end;
+          MSG_SETTOOLSMENU:begin
+            fMainMenu.SetToolsMenuStates;
+          end;
+          MSG_SETINKSMENU:begin
+            fMainMenu.SetInksMenuStates;
+          end;
           MSG_RESTORECONTROLS:begin
             ShowMainControls;
           end;
