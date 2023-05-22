@@ -144,7 +144,7 @@ begin
     MouseObjects.Draw;
     InfoBar.Draw;
     MM.Fonts['Pinky'].OutText('FPS: '+st(fps,3,'0'),WINDOWWIDTH-141,3,0);
-    MM.Fonts['Pinky'].OutText('LOI: '+st(MouseObjects.LastOverIndex,3,'0'),WINDOWWIDTH-282-16,3,0);
+//    MM.Fonts['Pinky'].OutText('LOI: '+st(MouseObjects.LastOverIndex,3,'0'),WINDOWWIDTH-282-16,3,0);
     FlipNoLimit;
     while MessageQueue.HasNewMessage do begin
       msg:=MessageQueue.GetNextMessage;
