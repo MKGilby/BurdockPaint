@@ -5,7 +5,7 @@ unit BDPInks;
 interface
 
 uses
-  Classes, SysUtils, Lists, BDPModalDialogs;
+  Classes, SysUtils, Lists, BDPImage, BDPModalDialogs;
 
 type
 
@@ -17,10 +17,10 @@ type
 
   TBDInk=class
     constructor Create; virtual;
-    procedure InitializeAreaWH(pLeft,pTop,pWidth,pHeight:integer);
-    procedure InitializeArea(pX1,pY1,pX2,pY2:integer);
+    procedure InitializeAreaWH(pLeft,pTop,pWidth,pHeight:integer); virtual;
+    procedure InitializeArea(pX1,pY1,pX2,pY2:integer); virtual;
     function GetColorIndexAt(pX,pY:integer):integer; virtual;
-    procedure PostProcess; virtual; abstract;
+    procedure PostProcess; virtual;
     procedure Configure; virtual;
   protected
     fLeft,fTop,fWidth,fHeight:integer;
@@ -45,7 +45,6 @@ type
   TBDInkHGrad=class(TBDInk)
     constructor Create; override;
     function GetColorIndexAt(pX,pY: integer):integer; override;
-    procedure PostProcess; override;
   end;
 
   { TBDInkLGrad }
@@ -62,7 +61,6 @@ type
   TBDInkOpaque=class(TBDInk)
     constructor Create; override;
     function GetColorIndexAt(pX, pY: integer):integer; override;
-    procedure PostProcess; override;
   end;
 
   { TBDInkVGrad }
@@ -70,7 +68,6 @@ type
   TBDInkVGrad=class(TBDInk)
     constructor Create; override;
     function GetColorIndexAt(pX,pY: integer):integer; override;
-    procedure PostProcess; override;
   end;
 
   { TBDInkRGrad }
@@ -78,7 +75,6 @@ type
   TBDInkRGrad=class(TBDInk)
     constructor Create; override;
     function GetColorIndexAt(pX,pY: integer):integer; override;
-    procedure PostProcess; override;
     procedure Configure; override;
   end;
 
@@ -87,7 +83,18 @@ type
   TBDInkRandom=class(TBDInk)
     constructor Create; override;
     function GetColorIndexAt(pX,pY: integer):integer; override;
+  end;
+
+  { TBDInkSoften }
+
+  TBDInkSoften=class(TBDInk)
+    constructor Create; override;
+    procedure InitializeAreaWH(pLeft,pTop,pWidth,pHeight:integer); override;
+    procedure InitializeArea(pX1,pY1,pX2,pY2:integer); override;
+    function GetColorIndexAt(pX,pY: integer):integer; override;
     procedure PostProcess; override;
+  private
+    fTempImage:TBDImage;
   end;
 
 implementation
@@ -151,6 +158,15 @@ begin
     raise Exception.Create('This ink does not support OnTheFly, GetColorIndexAt method shouldn''t be called! ('+fName+')');
 end;
 
+procedure TBDInk.PostProcess;
+var i,j:integer;
+begin
+  for j:=fTop to fTop+fHeight-1 do
+    for i:=fLeft to fLeft+fWidth-1 do
+      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+        Project.CurrentImage.PutPixel(i,j,GetColorIndexAt(i,j));
+end;
+
 procedure TBDInk.Configure;
 begin
   if Assigned(fConfigureDialog) then fConfigureDialog.Show;
@@ -166,6 +182,7 @@ begin
   AddObject('V GRAD',TBDInkVGrad.Create);
   AddObject('R GRAD',TBDInkRGrad.Create);
   AddObject('RANDOM',TBDInkRandom.Create);
+  AddObject('SOFTEN',TBDInkSoften.Create);
 end;
 
 // -------------------------------------------------------- [ TBDInkHGrad ] ---
@@ -187,15 +204,6 @@ begin
       Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(px-fLeft,fWidth-1)
   end else
     Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2);
-end;
-
-procedure TBDInkHGrad.PostProcess;
-var i,j:integer;
-begin
-  for j:=fTop to fTop+fHeight-1 do
-    for i:=fLeft to fLeft+fWidth-1 do
-      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
-        Project.CurrentImage.PutPixel(i,j,GetColorIndexAt(i,j));
 end;
 
 // -------------------------------------------------------- [ TBDInkLGrad ] ---
@@ -263,15 +271,6 @@ begin
   Result:=Settings.ActiveColorIndex;
 end;
 
-procedure TBDInkOpaque.PostProcess;
-var i,j:integer;
-begin
-  for j:=fTop to fTop+fHeight-1 do
-    for i:=fLeft to fLeft+fWidth-1 do
-      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
-        Project.CurrentImage.PutPixel(i,j,Settings.ActiveColorIndex);
-end;
-
 // -------------------------------------------------------- [ TBDInkVGrad ] ---
 
 constructor TBDInkVGrad.Create;
@@ -293,22 +292,13 @@ begin
     Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2);
 end;
 
-procedure TBDInkVGrad.PostProcess;
-var i,j:integer;
-begin
-  for j:=fTop to fTop+fHeight-1 do
-    for i:=fLeft to fLeft+fWidth-1 do
-      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
-        Project.CurrentImage.PutPixel(i,j,GetColorIndexAt(i,j));
-end;
-
 // -------------------------------------------------------- [ TBDInkRGrad ] ---
 
 constructor TBDInkRGrad.Create;
 begin
   inherited ;
   fName:='R GRAD';
-  fHint:='ROUND GRADIENT.';
+  fHint:='ROUND GRADIENT. '#132'SELECT '#133'CONFIGURE';
   fSupportsOnTheFly:=true;
 end;
 
@@ -325,15 +315,6 @@ begin
         GetIndexAt(r,Settings.RGradRadius)
   end else
     Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2);
-end;
-
-procedure TBDInkRGrad.PostProcess;
-var i,j:integer;
-begin
-  for j:=fTop to fTop+fHeight-1 do
-    for i:=fLeft to fLeft+fWidth-1 do
-      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
-        Project.CurrentImage.PutPixel(i,j,GetColorIndexAt(i,j));
 end;
 
 procedure TBDInkRGrad.Configure;
@@ -358,13 +339,73 @@ begin
     GetIndexAt(random(2048),2048);
 end;
 
-procedure TBDInkRandom.PostProcess;
+// ------------------------------------------------------- [ TBDInkSoften ] ---
+
+constructor TBDInkSoften.Create;
+begin
+  inherited Create;
+  fName:='SOFTEN';
+  fHint:='AVERAGES PIXEL COLORS WITH NEIGHBOURS.';
+  fSupportsOnTheFly:=false;
+end;
+
+procedure TBDInkSoften.InitializeAreaWH(pLeft,pTop,pWidth,pHeight:integer);
+begin
+  inherited ;
+  fTempImage:=TBDImage.Create(fWidth,fHeight);
+  fTempImage.PutImagePart(0,0,fLeft,fTop,fWidth,fHeight,Project.CurrentImage);
+end;
+
+procedure TBDInkSoften.InitializeArea(pX1,pY1,pX2,pY2:integer);
+begin
+  inherited ;
+  fTempImage:=TBDImage.Create(fWidth,fHeight);
+  fTempImage.PutImagePart(0,0,fLeft,fTop,fWidth,fHeight,Project.CurrentImage);
+end;
+
+function TBDInkSoften.GetColorIndexAt(pX, pY: integer): integer;
+var r,g,b,c:integer;
+begin
+  pX-=fLeft;pY-=fTop;
+  c:=1;
+  r:=Project.CurrentImage.Palette.ColorR[fTempImage.GetPixel(px,py)];
+  g:=Project.CurrentImage.Palette.ColorG[fTempImage.GetPixel(px,py)];
+  b:=Project.CurrentImage.Palette.ColorB[fTempImage.GetPixel(px,py)];
+  if px>0 then begin
+    r+=Project.CurrentImage.Palette.ColorR[fTempImage.GetPixel(px-1,py)];
+    g+=Project.CurrentImage.Palette.ColorG[fTempImage.GetPixel(px-1,py)];
+    b+=Project.CurrentImage.Palette.ColorB[fTempImage.GetPixel(px-1,py)];
+    inc(c);
+  end;
+  if px<fTempImage.Width-1 then begin
+    r+=Project.CurrentImage.Palette.ColorR[fTempImage.GetPixel(px+1,py)];
+    g+=Project.CurrentImage.Palette.ColorG[fTempImage.GetPixel(px+1,py)];
+    b+=Project.CurrentImage.Palette.ColorB[fTempImage.GetPixel(px+1,py)];
+    inc(c);
+  end;
+  if py>0 then begin
+    r+=Project.CurrentImage.Palette.ColorR[fTempImage.GetPixel(px,py-1)];
+    g+=Project.CurrentImage.Palette.ColorG[fTempImage.GetPixel(px,py-1)];
+    b+=Project.CurrentImage.Palette.ColorB[fTempImage.GetPixel(px,py-1)];
+    inc(c);
+  end;
+  if py<fTempImage.Height-1 then begin
+    r+=Project.CurrentImage.Palette.ColorR[fTempImage.GetPixel(px,py+1)];
+    g+=Project.CurrentImage.Palette.ColorG[fTempImage.GetPixel(px,py+1)];
+    b+=Project.CurrentImage.Palette.ColorB[fTempImage.GetPixel(px,py+1)];
+    inc(c);
+  end;
+  Result:=Project.CurrentImage.Palette.GetClosestColor(r div c,g div c,b div c);
+end;
+
+procedure TBDInkSoften.PostProcess;
 var i,j:integer;
 begin
   for j:=fTop to fTop+fHeight-1 do
     for i:=fLeft to fLeft+fWidth-1 do
       if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
         Project.CurrentImage.PutPixel(i,j,GetColorIndexAt(i,j));
+  if Assigned(fTempImage) then FreeAndNil(fTempImage);
 end;
 
 end.
