@@ -1,7 +1,7 @@
 .\_release
-.\data
 .\source
 .\work
 .\aat
 .\*.bat
 .\readme.md
+.\gpl-3.0.txt
