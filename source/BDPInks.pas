@@ -29,10 +29,6 @@ uses
 
 type
 
-  // It is required to call InitializeArea[WH] before using GetColorIndexAt
-  // or PostProcess! (Area must be set to the smallest rectangle containing
-  // pixels need to be drawn!)
-
   { TBDInk }
 
   TBDInk=class
@@ -42,6 +38,7 @@ type
     function GetColorIndexAt(pX,pY:integer):integer; virtual;
     procedure PostProcess; virtual;
     procedure Configure; virtual;
+    procedure ProcessWithCEL(pX,pY:integer); virtual;
   protected
     fLeft,fTop,fWidth,fHeight:integer;
     fSupportsOnTheFly:boolean;
@@ -81,6 +78,7 @@ type
   TBDInkOpaque=class(TBDInk)
     constructor Create; override;
     function GetColorIndexAt(pX, pY: integer):integer; override;
+    procedure ProcessWithCEL(pX,pY:integer); override;
   end;
 
   { TBDInkVGrad }
@@ -192,6 +190,20 @@ begin
   if Assigned(fConfigureDialog) then fConfigureDialog.Show;
 end;
 
+procedure TBDInk.ProcessWithCEL(pX,pY:integer);
+var i,j:integer;
+begin
+  InitializeAreaWH(pX,pY,Project.CELImage.Width,Project.CELImage.Height);
+  if Assigned(Project.CELImage) then begin
+    for j:=0 to Project.CELImage.Height-1 do
+      for i:=0 to Project.CELImage.Width-1 do
+        if not Settings.ClearKeyColor or
+           (Settings.ClearKeyColor and (Project.CELImage.GetPixel(i,j)<>Settings.SelectedColors[0])) then
+        Project.CurrentImage.PutPixel(px+i,py+j,POSTPROCESSCOLOR);
+    PostProcess;
+  end;
+end;
+
 // ------------------------------------------------------------- [ TBDInk ] ---
 
 constructor TBDInks.Create;
@@ -289,6 +301,14 @@ end;
 function TBDInkOpaque.GetColorIndexAt(pX,pY: integer):integer;
 begin
   Result:=Settings.ActiveColorIndex;
+end;
+
+procedure TBDInkOpaque.ProcessWithCEL(pX,pY:integer);
+begin
+  if Settings.ClearKeyColor then
+    Project.CurrentImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,Settings.SelectedColors[0])
+  else
+    Project.CurrentImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage);
 end;
 
 // -------------------------------------------------------- [ TBDInkVGrad ] ---
