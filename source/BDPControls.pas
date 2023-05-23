@@ -456,6 +456,7 @@ begin
   fToolButtons[Settings.ActiveTool].Caption:=pTool.Name;
   fToolButtons[Settings.ActiveTool].Hint:=pTool.Hint;
   fToolButtons[Settings.ActiveTool].Refresh;
+  fToolButtons[Settings.ActiveTool].AssignedObject:=pTool;
   Settings.SelectedTools[Settings.ActiveTool]:=pTool.Name;
   ActiveTool:=pTool;
   MessageQueue.AddMessage(MSG_SETTOOLSMENU);
@@ -466,6 +467,7 @@ begin
   fInkButtons[Settings.ActiveInk].Caption:=pInk.Name;
   fInkButtons[Settings.ActiveInk].Hint:=pInk.Hint;
   fInkButtons[Settings.ActiveInk].Refresh;
+  fInkButtons[Settings.ActiveInk].AssignedObject:=pInk;
   Settings.SelectedInks[Settings.ActiveInk]:=pInk.Name;
   ActiveInk:=pInk;
   MessageQueue.AddMessage(MSG_SETINKSMENU);
