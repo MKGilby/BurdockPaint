@@ -141,6 +141,9 @@ Inks
   Soften
     INKSOFTEN
     Select soften ink instead of selected one.
+  Add
+    INKADD
+    Select add ink instead of selected one.
 
 
 ;------------------------------

@@ -421,6 +421,7 @@ begin
     MSG_INKRGRAD:ChangeActiveInkButtonTo(Inks.ItemByName['R GRAD']);
     MSG_INKRANDOM:ChangeActiveInkButtonTo(Inks.ItemByName['RANDOM']);
     MSG_INKSOFTEN:ChangeActiveInkButtonTo(Inks.ItemByName['SOFTEN']);
+    MSG_INKADD:ChangeActiveInkButtonTo(Inks.ItemByName['ADD']);
   end;
 end;
 

@@ -2,7 +2,6 @@ Todo:
 - Add "Project"/"New" dialog.
 - Check and warn if current project is modified on opening project.
 - Check and warn if current project is modified on new project.
-- Add "Random" ink. It will use colors randomly from the selected cluster.
 - Ask for color fit when loading a CEL file.
 - Autosave state in every 1 min.
 - Configurable autosave interval.
@@ -11,12 +10,38 @@ Todo:
   - Sep. (boxed)
 - Add setup dialogs to Inks:
   - ...
-- Add Tool and Ink selector
 - Should create backups from project on saving if not the default temporary project.
+- Add "ADD" ink.
 
+
+2023.05.23
+- Changed licensing to GNU GPL v3.
+- PutCEL now uses current ink to put CEL, as in original. To simply put CEL as
+  it is, select Opaque ink.
+
+2023.05.22
+- Added Soften ink.
+- Added menus for Tools and Inks. Clicking the items will change the currently
+  selected tool or ink to the selected one.
+- The tools/inks that are selected to the six button on Controls are disabled in
+  TOOLS/INKS menu.
+
+2023.05.19
+- When passing a project file as parameter to open, the open/save dialogs will
+  bring up the project's folder by default.
+
+2023.05.18
+- You can toggle (F), (C) and (D) buttons by keyboard (F2-F4 respectively).
+
+2023.05.15
+- Added CLUSTER menu with one item (RAMP).
+- Menus are disabled/enabled as switching to PaletteEditor and back.
+- Cluster/Ramp works. It creates a color ramp from the start color to the
+  end color of the specified color cluster.
 
 2023.05.11
 - Right clicking on RGrad button hides Controls and invokes RGrad configuration.
+- Added Random ink.
 
 2023.05.10
 - Added RGrad ink.

@@ -115,6 +115,14 @@ type
     fTempImage:TBDImage;
   end;
 
+  { TBDInkAdd }
+
+  TBDInkAdd=class(TBDInk)
+    constructor Create; override;
+    function GetColorIndexAt(pX,pY: integer):integer; override;
+    procedure ProcessWithCEL(pX,pY:integer); override;
+  end;
+
 implementation
 
 uses MKToolBox, BDPShared, Logger;
@@ -215,6 +223,7 @@ begin
   AddObject('R GRAD',TBDInkRGrad.Create);
   AddObject('RANDOM',TBDInkRandom.Create);
   AddObject('SOFTEN',TBDInkSoften.Create);
+  AddObject('ADD',TBDInkAdd.Create);
 end;
 
 // -------------------------------------------------------- [ TBDInkHGrad ] ---
@@ -446,6 +455,38 @@ begin
       if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
         Project.CurrentImage.PutPixel(i,j,GetColorIndexAt(i,j));
   if Assigned(fTempImage) then FreeAndNil(fTempImage);
+end;
+
+// ---------------------------------------------------------- [ TBDInkAdd ] ---
+
+constructor TBDInkAdd.Create;
+begin
+  inherited Create;
+  fName:='ADD';
+  fHint:='ADDS SELECTED COLOR INDEX TO THE IMAGE''S COLOR INDEX.';
+  fSupportsOnTheFly:=true;
+end;
+
+function TBDInkAdd.GetColorIndexAt(pX,pY:integer):integer;
+var c:integer;
+begin
+  c:=Project.CurrentImage.GetPixel(pX,pY);
+  Result:=(c and $FF00)+((c+Settings.ActiveColorIndex) and $FF);
+end;
+
+procedure TBDInkAdd.ProcessWithCEL(pX,pY:integer);
+var i,j,c:integer;
+begin
+  if Assigned(Project.CELImage) then begin
+    for j:=0 to Project.CELImage.Height-1 do
+      for i:=0 to Project.CELImage.Width-1 do
+        if not Settings.ClearKeyColor or
+           (Settings.ClearKeyColor and (Project.CELImage.GetPixel(i,j)<>Settings.SelectedColors[0])) then begin
+          c:=Project.CurrentImage.GetPixel(pX+i,pY+j);
+          Project.CurrentImage.PutPixel(pX+i,pY+j,
+            (c and $FF00)+((c+Project.CELImage.GetPixel(i,j)) and $FF));
+        end;
+  end;
 end;
 
 end.
