@@ -161,7 +161,7 @@ const
   MSG_COLORCLUSTERPICKED=109;
 
   // ------- Menu Messages ------- Range: 200-299 -------
-  {$i MenuMessages.inc}
+  {$i includes\menu.inc}
 
 var
   MM:TGFXManager;  // MediaManager to hold fonts and internal images
@@ -195,6 +195,9 @@ implementation
 
 uses Classes, SysUtils, MKRFont2Unit, Logger, MKStream;
 
+{$i includes\fonts.inc}
+{$i includes\burdock.inc}
+
 const
   ArchModern=
     '.....xxx'+
@@ -204,15 +207,6 @@ const
     '.xxxx   '+
     'xxxx    '+
     'xxxx    '+
-    'xxx     ';
-  ArchOriginal=
-    '......xx'+
-    '......xx'+
-    '......xx'+
-    '...xxx  '+
-    '...xxx  '+
-    '...xxx  '+
-    'xxx     '+
     'xxx     ';
 
 procedure CreateArches;
@@ -226,7 +220,7 @@ begin
   BLImage.Bar(0,0,BLImage.Width,BLImage.Height,0,0,0,0);
   BRImage:=TARGBImage.Create(8,8);
   BRImage.Bar(0,0,BRImage.Width,BRImage.Height,0,0,0,0);
-  if Settings.ModernGraphics then s:=ArchModern else s:=ArchOriginal;
+  s:=ArchModern;
   c:=0;
   for y:=0 to 7 do
     for x:=0 to 7 do begin
@@ -248,20 +242,32 @@ begin
 end;
 
 procedure LoadSystemFont(pR,pG,pB:integer;pName:string);
+var Xs:TStream;
 begin
-  if Settings.ModernGraphics then begin
-    MM.Fonts.Add(TPNGFont.Create('bdpfont.png'),pName);
+  Xs:=TStringStream.Create(bdpfont);
+  try
+    MM.Fonts.Add(TPNGFont.Create(Xs),pName);
     MM.Fonts[pName].LetterSpace:=3;
     MM.Fonts[pName].SpaceSpace:=15;
-  end else begin
-    MM.Fonts.Add(TMKRFont.Create('system.mkr'),pName);
-    MM.Fonts[pName].Size:=3;
-    MM.Fonts[pName].LetterSpace:=1;
-    MM.Fonts[pName].SpaceSpace:=5;
+    MM.Fonts[pName].SetRecolorExcludeChars(#132#133);
+    MM.Fonts[pName].SetColorKey(0,0,0);
+    MM.Fonts[pName].SetColor(pR,pG,pB);
+  finally
+    Xs.Free;
   end;
-  MM.Fonts[pName].SetRecolorExcludeChars(#132#133);
-  MM.Fonts[pName].SetColorKey(0,0,0);
-  MM.Fonts[pName].SetColor(pR,pG,pB);
+end;
+
+procedure LoadImage(incstring,name:string);
+var Xs:TStream;atm:TARGBImage;
+begin
+  Xs:=TStringStream.Create(incstring);
+  atm:=TARGBImage.Create;
+  try
+    atm.ReadFile(Xs,'PNG');
+    MM.AddImage(atm,name);
+  finally
+    Xs.Free;
+  end;
 end;
 
 procedure LoadAssets;
@@ -279,8 +285,11 @@ begin
   LoadSystemFont($ee,$aa,$cc,'Pinky');
   LoadSystemFont($9a,$9a,$9a,'LightGray');
   LoadSystemFont($40,$40,$40,'DarkGray');
-  MM.Load('logofont.png','LogoFont');
-  MM.LoadImage('burdock.png','Burdock');
+  LoadImage(LogoFont,'LogoFont');
+  MM.Fonts['LogoFont'].SetColorkey(0,0,0);
+  LoadImage(BurdockPNG,'Burdock');
+//  MM.Load('logofont.png','LogoFont');
+//  MM.LoadImage('burdock.png','Burdock');
   MM.Images.ItemByName['Burdock'].Resize2x;
   Log.LogStatus('  Creating message queue...');
   MessageQueue:=TMessageQueue.Create(32);

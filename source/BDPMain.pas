@@ -114,7 +114,7 @@ begin
   fControls:=TBDControls.Create;
   fPaletteEditor:=TBDPaletteEditor.Create;
   fSplashScreen:=TBDAboutDialog.Create;
-  fMainMenu:=TMainMenu.Create('menu.bin');
+  fMainMenu:=TMainMenu.Create(MenuBin);
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   // To enable/disable Image/Remove menuitem.
   fMainMenu.ProcessMessage(TMessage.Init(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count));

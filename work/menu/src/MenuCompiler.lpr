@@ -111,12 +111,12 @@ begin
 end;
 
 function GetNextMessageID(message:string):integer;
-var s:string;i:integer;
+var s:string;
 begin
   if pos(',',message)>0 then begin
     s:=copy(message,pos(',',message)+1);
     message:=copy(message,1,pos(',',message)-1);
-    val(s,submenu._messageparam,i);
+    submenu._messageparam:=strtoint(s);
   end;
   Result:=GetMessageID(message);
 end;
@@ -132,7 +132,7 @@ begin
 end;
 
 begin
-  assign(incl,'..\..\source\MenuMessages.inc');
+  assign(incl,'..\..\source\includes\menu.inc');
   rewrite(incl);
   assign(t,'..\base_copyright_notice.txt');
   reset(t);
@@ -143,7 +143,7 @@ begin
   close(t);
   assign(t,'mainmenu.txt');
   reset(t);
-  assign(bin,'..\..\data\menu.bin');
+  assign(bin,'menu.bin');
   rewrite(bin,1);
   writeln(incl,'// Menu message constants.');
   FS.ShortDateFormat:='YYYY.MM.DD.';
@@ -200,6 +200,7 @@ begin
   end;
   seek(bin,0);
   blockwrite(bin,menucount,1);
+  writeln(incl);
   closefile(incl);
   closefile(bin);
   closefile(t);

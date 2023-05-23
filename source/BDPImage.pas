@@ -167,7 +167,7 @@ implementation
 
 uses MyZStreamUnit, SDL2, Logger, ARGBImageUnit, BDPShared;
 
-{$i ntsccol.inc}
+{$i includes\ntsccol.inc}
 
 const
   IMAGEDATAID=$49;

@@ -79,7 +79,7 @@ type
   { TMainMenu }
 
   TMainMenu=class(TVisibleControl)
-    constructor Create(iFilename:string);
+    constructor Create(iBINstring:string);
     destructor Destroy; override;
     procedure EnableCELSubMenusWithActiveCEL;
     procedure DisableCELSubMenusWithActiveCEL;
@@ -278,7 +278,7 @@ end;
 
 { TMainMenu }
 
-constructor TMainMenu.Create(iFilename:string);
+constructor TMainMenu.Create(iBINstring:string);
 var atm:TSubMenu;x,menucount,submenucount:integer;msg:TMessage;Xs:TStream;
   s,hint:string;
 
@@ -316,9 +316,9 @@ begin
   MouseObjects.Add(Self);
 
   // Add menu items
-  if MKStreamOpener.FileExists(iFilename) then begin
+  Xs:=TStringStream.Create(iBINstring);
+  try
     x:=0;
-    Xs:=MKStreamOpener.OpenStream(iFilename);
     menucount:=0;
     Xs.Read(menucount,1);
     while menucount>0 do begin
@@ -344,7 +344,8 @@ begin
       MouseObjects.Add(atm);
       dec(menucount);
     end;
-    FreeAndNil(Xs);
+  finally
+    Xs.Free;
   end;
   SetToolsMenuStates;
   SetInksMenuStates;
