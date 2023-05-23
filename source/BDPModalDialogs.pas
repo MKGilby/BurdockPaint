@@ -1,3 +1,23 @@
+{
+  BurdockPaint - Copyright 2023 MKSZTSZ
+  Written by Szabó "Gilby" Zsolt / MKSZTSZ
+
+  This file is part of the source code of BurdockPaint.
+
+  BurdockPaint is free software: you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the
+  Free Software Foundation, either version 3 of the License,
+  or (at your option) any later version.
+
+  BurdockPaint is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  See the GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along with
+  BurdockPaint. If not, see <https://www.gnu.org/licenses/>.
+}
+
 unit BDPModalDialogs;
 
 {$mode Delphi}
@@ -334,8 +354,8 @@ begin
   fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[3]);
   MM.Fonts['LogoFont'].OutText(fTexture.ARGBImage,'BURDoCK PAINT',80,24,0);
   MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'CODE: GILBY/MKSZTSZ',80,56,0);
-  MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'LICENSED UNDER THE UNLICENSE',80,88,0);
-  MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'HUNGARY - 2023',80,120,0);
+  MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'LICENSED UNDER GNU GPL 3',80,88,0);
+  MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'COPYRIGHT 2023 MKSZTSZ',80,120,0);
   MM.Images.ItemByName['Burdock'].CopyTo(0,0,46,52,16,(SPLASHSCREENHEIGHT-52) div 2,fTexture.ARGBImage,true);
   fTexture.Update;
   atmB:=TBDButton.Create(

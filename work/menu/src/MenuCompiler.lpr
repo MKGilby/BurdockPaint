@@ -1,6 +1,28 @@
+{
+  BurdockPaint - Copyright 2023 MKSZTSZ
+  Written by Szabó "Gilby" Zsolt / MKSZTSZ
+
+  This file is part of the source code of BurdockPaint.
+
+  BurdockPaint is free software: you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the
+  Free Software Foundation, either version 3 of the License,
+  or (at your option) any later version.
+
+  BurdockPaint is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  See the GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along with
+  BurdockPaint. If not, see <https://www.gnu.org/licenses/>.
+}
+
 program MenuCompiler;
 
 {$mode delphi}
+
+uses sysutils;
 
 type
 
@@ -21,6 +43,7 @@ var
   submenupos:integer;
   menucount,submenucount:integer;
   submenu:TSubMenu;
+  FS:TFormatSettings;
 
   msgs:array of string;
 
@@ -109,14 +132,22 @@ begin
 end;
 
 begin
+  assign(incl,'..\..\source\MenuMessages.inc');
+  rewrite(incl);
+  assign(t,'..\base_copyright_notice.txt');
+  reset(t);
+  while not eof(t) do begin
+    readln(t,s);
+    writeln(incl,s);
+  end;
+  close(t);
   assign(t,'mainmenu.txt');
   reset(t);
   assign(bin,'..\..\data\menu.bin');
   rewrite(bin,1);
-  assign(incl,'..\..\source\MenuMessages.inc');
-  rewrite(incl);
   writeln(incl,'// Menu message constants.');
-//  writeln(incl,'// Generated on '+datetostr(now,FS)+'.');
+  FS.ShortDateFormat:='YYYY.MM.DD.';
+  writeln(incl,'// Generated on '+datetostr(now,FS));
   writeln(incl);
   writeln(incl,'const');
   menucount:=0;
