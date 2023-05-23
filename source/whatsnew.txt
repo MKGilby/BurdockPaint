@@ -11,13 +11,16 @@ Todo:
 - Add setup dialogs to Inks:
   - ...
 - Should create backups from project on saving if not the default temporary project.
-- Add "ADD" ink.
 
 
 2023.05.23
 - Changed licensing to GNU GPL v3.
 - PutCEL now uses current ink to put CEL, as in original. To simply put CEL as
   it is, select Opaque ink.
+- Added "ADD" ink. It adds the selected color index to the image's color index.
+  The color index can't change color bank, if it under/overflows, it comes back
+  from the other side. (So you can substract selecting colors from the end of the bank.)
+- When used with PutCEL it processes CEL's every pixel with the underlying image's pixel.
 
 2023.05.22
 - Added Soften ink.
