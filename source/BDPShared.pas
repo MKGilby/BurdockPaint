@@ -187,8 +187,6 @@ var
   Inks:TBDInks;  // All inks are loaded into this list
   ActiveInk:TBDInk;  // This is the selected ink
 
-  ActiveColorClusterIndex:integer;
-
   // Load assets and create shared objects
   procedure LoadAssets;
 
@@ -324,7 +322,6 @@ begin
   Inks:=TBDInks.Create;
   Log.LogStatus('  Creating tools...');
   Tools:=TBDTools.Create;
-  ActiveColorClusterIndex:=0;
   Log.LogStatus('Loading previous session data...');
   if FileExists(TEMPPROJECTFILE) then
     Project:=TBDProject.CreateFromFile(TEMPPROJECTFILE)

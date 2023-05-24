@@ -240,11 +240,11 @@ function TBDInkHGrad.GetColorIndexAt(pX,pY: integer):integer;
 begin
   if fWidth>1 then begin
     if Settings.DitherGradients then
-      Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAtDithered(px-fLeft,fWidth-1,Settings.DitherStrength)
+      Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.GetIndexAtDithered(px-fLeft,fWidth-1,Settings.DitherStrength)
     else
-      Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(px-fLeft,fWidth-1)
+      Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.GetIndexAt(px-fLeft,fWidth-1)
   end else
-    Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2);
+    Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.GetIndexAt(1,2);
 end;
 
 // -------------------------------------------------------- [ TBDInkLGrad ] ---
@@ -270,17 +270,17 @@ begin
   if Result>0 then begin
     if Settings.DitherGradients then begin
       while i<SegmentRight+1 do begin
-        Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAtDithered(i-SegmentLeft,Result+1,Settings.DitherStrength));
+        Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters.ActiveColorCluster.GetIndexAtDithered(i-SegmentLeft,Result+1,Settings.DitherStrength));
         inc(i);
       end;
     end else begin
       while i<SegmentRight+1 do begin
-        Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(i-SegmentLeft,Result+1));
+        Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters.ActiveColorCluster.GetIndexAt(i-SegmentLeft,Result+1));
         inc(i);
       end;
     end;
   end else begin
-    Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2));
+    Project.CurrentImage.PutPixel(i,j,Project.CurrentImage.ColorClusters.ActiveColorCluster.GetIndexAt(1,2));
   end;
 end;
 
@@ -334,11 +334,11 @@ function TBDInkVGrad.GetColorIndexAt(pX,pY: integer):integer;
 begin
   if fHeight>1 then begin
     if Settings.DitherGradients then
-      Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAtDithered(pY-fTop,fHeight-1,Settings.DitherStrength)
+      Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.GetIndexAtDithered(pY-fTop,fHeight-1,Settings.DitherStrength)
     else
-      Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(pY-fTop,fHeight-1)
+      Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.GetIndexAt(pY-fTop,fHeight-1)
   end else
-    Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2);
+    Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.GetIndexAt(1,2);
 end;
 
 // -------------------------------------------------------- [ TBDInkRGrad ] ---
@@ -357,13 +357,13 @@ begin
   if Settings.RGradRadius>1 then begin
     r:=trunc(Sqrt(sqr(px-Settings.RGradCenterX)+sqr(py-Settings.RGradCenterY))) mod Settings.RGradRadius;
     if Settings.DitherGradients then
-      Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].
+      Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.
         GetIndexAtDithered(r,Settings.RGradRadius,Settings.DitherStrength)
     else
-      Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].
+      Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.
         GetIndexAt(r,Settings.RGradRadius)
   end else
-    Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].GetIndexAt(1,2);
+    Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.GetIndexAt(1,2);
 end;
 
 procedure TBDInkRGrad.Configure;
@@ -384,7 +384,7 @@ end;
 
 function TBDInkRandom.GetColorIndexAt(pX, pY: integer): integer;
 begin
-  Result:=Project.CurrentImage.ColorClusters[ActiveColorClusterIndex].
+  Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.
     GetIndexAt(random(2048),2048);
 end;
 

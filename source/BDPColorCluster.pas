@@ -88,7 +88,14 @@ type
     procedure LoadFromFile(pFilename:string);
     procedure LoadFromStream(pStream:TStream);
   private
+    fActiveIndex:integer;
     procedure LoadFromStreamV1(pStream:TStream);
+    procedure LoadFromStreamV2(pStream:TStream);
+    function fGetActiveColorCluster:TColorCluster;
+    procedure fSetActiveIndex(value:integer);
+  public
+    property ActiveColorCluster:TColorCluster read fGetActiveColorCluster;
+    property ActiveIndex:integer read fActiveIndex write fSetActiveIndex;
   end;
 
   { TBDColorCluster }
@@ -308,10 +315,11 @@ begin
   curr:=pStream.Position;
   i:=0;
   pStream.Write(i,4);
-  i:=1;
+  i:=2;
   pStream.Write(i,1);  // Version
   i:=Self.Count;
   pStream.Write(i,1);
+  pStream.Write(fActiveIndex,1);
   for i:=0 to Count-1 do Items[i].SaveToStream(pStream);
   i:=pStream.Position-curr-4;
   pStream.Position:=curr;
@@ -354,6 +362,32 @@ begin
     Add(tmp);
     dec(count);
   end;
+end;
+
+procedure TColorClusters.LoadFromStreamV2(pStream:TStream);
+var count:integer;tmp:TColorCluster;
+begin
+  count:=0;
+  pStream.Read(count,1);
+  fActiveIndex:=0;
+  pStream.Read(fActiveIndex,1);
+  Clear;
+  while count>0 do begin
+    tmp:=TColorCluster.Create(0,16);
+    tmp.LoadFromStream(pStream);
+    Add(tmp);
+    dec(count);
+  end;
+end;
+
+function TColorClusters.fGetActiveColorCluster:TColorCluster;
+begin
+  Result:=Self[fActiveIndex];
+end;
+
+procedure TColorClusters.fSetActiveIndex(value:integer);
+begin
+  if (value>=0) and (value<Count) then fActiveIndex:=value;
 end;
 
 { TBDColorCluster }

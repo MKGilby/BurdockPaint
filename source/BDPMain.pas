@@ -401,7 +401,7 @@ begin
             end;
           end;
           MSG_RAMPCLUSTER:begin
-            Project.CurrentImage.Palette.Ramp(Project.CurrentImage.ColorClusters[0]);
+            Project.CurrentImage.Palette.Ramp(Project.CurrentImage.ColorClusters.ActiveColorCluster);
             MessageQueue.AddMessage(MSG_PALETTEPICKEDCOLOR);
           end;
           MSG_OPENABOUTDIALOG:begin
@@ -414,6 +414,8 @@ begin
             MouseObjects.ListVisible;
           end;
           MSG_COLORCLUSTERDIALOGRESP:begin
+            if msg.DataInt>-1 then
+              Project.CurrentImage.ColorClusters.ActiveIndex:=msg.DataInt;
             fSelectColorClusterDialog.Hide;
           end;
         end;
