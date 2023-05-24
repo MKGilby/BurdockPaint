@@ -137,6 +137,10 @@ const
   MSG_SETTOOLSMENU=13;
   // Set INKS menu item states based on Settings.SelectedInks
   MSG_SETINKSMENU=14;
+  // Open select color cluster dialog. Data is left of the dialog.
+  MSG_OPENCOLORCLUSTERDIALOG=15;
+  // Response from SelectColorClusterDialog. Data is new color cluster index or -1 if not changed.
+  MSG_COLORCLUSTERDIALOGRESP=16;
 
   // ------- Tool Messages ------- Range: 100-199 -------
   // PICKCOLCS finished, Data is the selected color index or -1 if no color selected.
