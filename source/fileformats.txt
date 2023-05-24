@@ -225,12 +225,20 @@
   Contains multiple color clusters (T-blocks).
   It's an L-block with uncompressed data.
 
-  Color clusters data format
-  --------------------------
+  Color clusters data format (v1 - deprecated, loading only)
+  -------------------------------
     Start   Size        Description (content)
     5       1           Version (0x01)
     6       1           Color cluster count
     7       ???         Color cluster data [T-block], count times
+
+  Color clusters data format (v2)
+  -------------------------------
+    Start   Size        Description (content)
+    5       1           Version (0x02)
+    6       1           Color cluster count
+    7       1           Active color cluster index
+    8       ???         Color cluster data [T-block], count times
 
 
 2.2.5. Extended Image data (E-block)
