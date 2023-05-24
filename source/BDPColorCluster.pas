@@ -114,6 +114,17 @@ type
     property Width:integer read fWidth write fSetWidth;
   end;
 
+  { TBDSimpleColorCluster }
+
+  TBDSimpleColorCluster=class(TVisibleControl)
+    constructor Create(iLeft,iTop:integer;iColorCluster:TColorCluster);
+    procedure Draw; override;
+  protected
+    procedure ReDraw; override;
+  private
+    fColorCluster:TColorCluster;
+  end;
+
 implementation
 
 uses BDPShared, SDL2;
@@ -396,6 +407,9 @@ begin
         fPicking:=true;
         MessageQueue.AddMessage(MSG_ACTIVATEPICKCOLORCLUSTER);
       end;
+    end else
+    if (x>=fArrowLeft) then begin
+      MessageQueue.AddMessage(MSG_OPENCOLORCLUSTERDIALOG,fLeft+(fTop<<16));
     end;
   end;
 end;
@@ -486,6 +500,44 @@ begin
   inherited fSetWidth(value);
   fArrowLeft:=Width-ARROWWIDTH-3;
   fColorsWidth:=fArrowLeft-fColorsLeft;
+end;
+
+{ TBDSimpleColorCluster }
+
+constructor TBDSimpleColorCluster.Create(iLeft,iTop:integer;iColorCluster:TColorCluster);
+begin
+  inherited Create;
+  fLeft:=iLeft;
+  fTop:=iTop;
+  fColorCluster:=iColorCluster;
+  Width:=COLORCLUSTERWIDTH;
+  Height:=COLORCLUSTERHEIGHT;
+  fNeedRedraw:=true;
+end;
+
+procedure TBDSimpleColorCluster.Draw;
+begin
+  inherited Draw;
+end;
+
+procedure TBDSimpleColorCluster.ReDraw;
+var i:integer;
+begin
+  if Assigned(fTexture) then begin
+    with fTexture.ARGBImage do begin
+      // Outer border
+      Bar(0,0,Width,3,SystemPalette[2]);
+      Bar(0,Height-3,Width,3,SystemPalette[2]);
+      Bar(0,3,3,Height-6,SystemPalette[2]);
+      Bar(Width-3,3,3,Height-6,SystemPalette[2]);
+      // Color cluster bar
+      if Assigned(fColorCluster) then begin
+        for i:=0 to fWidth-6 do
+          VLine(i+3,3,Height-6,Project.CurrentImage.Palette[fColorCluster.GetIndexAt(i,fWidth-6)]);
+      end;
+    end;
+    fTexture.Update;
+  end;
 end;
 
 end.
