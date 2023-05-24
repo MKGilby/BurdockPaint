@@ -45,6 +45,7 @@ type
     fMagnifyDialog:TBDMagnifyCELDialog;
     fRotateDialog:TBDRotateCELDialog;
     fDitherDialog:TBDDitherDialog;
+    fSelectColorClusterDialog:TBDSelectColorClusterDialog;
     fOpenCELDialog,
     fOpenProjectDialog:TOpenDialog;
     fSaveCELDialog,
@@ -121,6 +122,7 @@ begin
   fMagnifyDialog:=TBDMagnifyCELDialog.Create;
   fRotateDialog:=TBDRotateCELDialog.Create;
   fDitherDialog:=TBDDitherDialog.Create;
+  fSelectColorClusterDialog:=TBDSelectColorClusterDialog.Create;
   MouseObjects.Sort;
   MouseObjects.List;
 
@@ -138,6 +140,7 @@ begin
   if Assigned(fSaveProjectDialog) then FreeAndNil(fSaveProjectDialog);
   if Assigned(fSaveCELDialog) then FreeAndNil(fSaveCELDialog);
   if Assigned(fOpenCELDialog) then FreeAndNil(fOpenCELDialog);
+  if Assigned(fSelectColorClusterDialog) then fSelectColorClusterDialog.Free;
   if Assigned(fDitherDialog) then FreeAndNil(fDitherDialog);
   if Assigned(fRotateDialog) then FreeAndNil(fRotateDialog);
   if Assigned(fMagnifyDialog) then FreeAndNil(fMagnifyDialog);
@@ -403,6 +406,15 @@ begin
           end;
           MSG_OPENABOUTDIALOG:begin
             fSplashScreen.Show;
+          end;
+          MSG_OPENCOLORCLUSTERDIALOG:begin
+            fSelectColorClusterDialog.WindowLeft:=msg.DataInt and $ffff;
+            fSelectColorClusterDialog.WindowTop:=(msg.DataInt and $ffff0000)>>16;
+            fSelectColorClusterDialog.Show;
+            MouseObjects.ListVisible;
+          end;
+          MSG_COLORCLUSTERDIALOGRESP:begin
+            fSelectColorClusterDialog.Hide;
           end;
         end;
       end;
