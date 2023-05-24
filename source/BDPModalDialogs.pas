@@ -87,12 +87,28 @@ type
     fSlider:TBDHorizontalSlider;
   end;
 
+  { TBDSelectColorClusterDialog }
+
+  TBDSelectColorClusterDialog=class(TBDModalDialog)
+    constructor Create;
+    procedure Refresh;
+    procedure Click(Sender:TObject;x,y,buttons:integer);
+    procedure ColorClusterClick(Sender:TObject;x,y,buttons:integer);
+  private
+    procedure fSetWindowLeft(value:integer);
+    procedure fSetWindowTop(value:integer);
+  public
+    property WindowLeft:integer write fSetWindowLeft;
+    property WindowTop:integer write fSetWindowTop;
+  end;
+
 function MessageBox(iMessage:string;iButtons:string='OK'):integer;
 
 implementation
 
 uses
-  sdl2, BDPShared, BDPMessage, BDPKeyMapping, MKMouse2, MKToolbox;
+  sdl2, BDPShared, BDPMessage, BDPKeyMapping, MKMouse2, MKToolbox,
+  BDPColorCluster;
 
 const
   MAGNIFYDIALOGWIDTH=480;
@@ -105,15 +121,19 @@ const
   MESSAGEBOXHEIGHT=96;
   DITHERDIALOGWIDTH=480;
   DITHERDIALOGHEIGHT=144;
+  COLORCLUSTERDIALOGWIDTH=COLORCLUSTERWIDTH;
 
 function MessageBox(iMessage:string; iButtons:string):integer;
 var MessageBox:TBDMessageBox;j:integer;
 begin
   MessageBox:=TBDMessageBox.Create(uppercase(iMessage),uppercase(iButtons));
-  Result:=MessageBox.Run;
-  j:=MouseObjects.IndexOf(MessageBox);
-  if j>-1 then MouseObjects.Delete(j);
-  FreeAndNil(MessageBox);
+  try
+    Result:=MessageBox.Run;
+    j:=MouseObjects.IndexOf(MessageBox);
+    if j>-1 then MouseObjects.Delete(j);
+  finally
+    MessageBox.Free;
+  end;
 end;
 
 
@@ -491,6 +511,64 @@ end;
 procedure TBDDitherDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   MessageQueue.AddMessage(MSG_DITHERRESP,fSlider.Position);
+end;
+
+{ TBDSelectColorClusterDialog }
+
+constructor TBDSelectColorClusterDialog.Create;
+begin
+  inherited Create(COLORCLUSTERDIALOGWIDTH,36*Project.CurrentImage.ColorClusters.Count+12);
+  fName:='SelectColorClusterDialog';
+  Visible:=false;
+  MouseObjects.Add(Self);
+  Refresh;
+  OnClick:=CLick;
+end;
+
+procedure TBDSelectColorClusterDialog.Refresh;
+var i:integer;atmC:TBDSimpleColorCluster;
+begin
+  ClearChilds;
+  fTexture.Free;
+  fTexture:=TStreamingTexture.Create(COLORCLUSTERDIALOGWIDTH,36*Project.CurrentImage.ColorClusters.Count+12);
+  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[2]);
+  fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[3]);
+  fTexture.Update;
+
+  for i:=0 to Project.CurrentImage.ColorClusters.Count-1 do begin
+    atmC:=TBDSimpleColorCluster.Create(fWindowLeft+6,fWindowTop+6+i*36,Project.CurrentImage.ColorClusters[i]);
+    atmC.Width:=fTexture.Width-12;
+    atmC.ZIndex:=MODALDIALOG_ZINDEX+1;
+    atmC.Tag:=i;
+    atmC.OnClick:=ColorClusterClick;
+    atmC.Name:=Format('SimpleColorCluster %d',[i]);
+    AddChild(atmC);
+  end;
+end;
+
+procedure TBDSelectColorClusterDialog.Click(Sender:TObject; x,y,buttons:integer);
+begin
+  if (x<fWindowLeft) or (x>=fWindowLeft+fTexture.Width) or (y<fWindowTop) or (y>fWindowTop+fTexture.Height) then
+    MessageQueue.AddMessage(MSG_COLORCLUSTERDIALOGRESP);
+end;
+
+procedure TBDSelectColorClusterDialog.ColorClusterClick(Sender:TObject; x,y,buttons:integer);
+begin
+  MessageQueue.AddMessage(MSG_COLORCLUSTERDIALOGRESP,(Sender as TBDSimpleColorCluster).Tag);
+end;
+
+procedure TBDSelectColorClusterDialog.fSetWindowLeft(value:integer);
+var i:integer;
+begin
+  fWindowLeft:=value;
+  for i:=0 to fChilds.Count-1 do fChilds[i].Left:=fWindowLeft+6;
+end;
+
+procedure TBDSelectColorClusterDialog.fSetWindowTop(value:integer);
+var i:integer;
+begin
+  fWindowTop:=value-fTexture.Height;
+  for i:=0 to fChilds.Count-1 do fChilds[i].Top:=fWindowTop+6+i*36;
 end;
 
 end.
