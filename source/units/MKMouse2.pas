@@ -50,6 +50,13 @@
 //     * Added ZIndex to MouseObjects.List.
 //   V1.13 - 2023.04.25 - Gilby
 //     * Better logging of MouseObjects event handling.
+//   V1.14 - 2023.05.25 - Gilby
+//     * Removed SoftDelete feature.
+//   V1.15 - 2023.05.31 - Gilby
+//     * MouseObjects.Sort uses then internal sorting feature of TFPGObjectList.
+//     * MouseObjects.Add inserts object to the sorted place (by ZIndex), no
+//       need to call Sort. You need Sort when an already added object's
+//       ZIndex value is changed.
 }
 
 {$ifdef fpc}
@@ -61,7 +68,7 @@ unit MKMouse2;
 interface
 
 uses
-  Classes, SDL2, StackUnit, fgl;
+  Classes, SDL2, StackUnit, fgl, BinarySearchUnit;
 
 type
   TSimpleEvent=procedure(Sender:TObject) of object;
@@ -124,9 +131,9 @@ type
   TMouseObjects=class(TFPGObjectList<TMouseObject>)
     constructor Create;
     destructor Destroy; override;
+    procedure Add(Item:TMouseObject);
     procedure Draw;
-    procedure Delete(index:integer);
-    procedure Remove(Item:pointer);
+    procedure Remove(Item:TMouseObject);
     function HandleEvent(Event:PSDL_Event):boolean;
     procedure NewSession;
     procedure EndSession;
@@ -136,9 +143,9 @@ type
   private
     fStack:TStack;
     fTop:integer;
-    fSoftDelete:boolean;
     fLastOverIndex,
     fLastMouseDownIndex:integer;
+    function MouseObjectCompare(index:integer;Item:pointer):Integer;
   public
     property LastOverIndex:integer read fLastOverIndex;
   end;
@@ -152,14 +159,13 @@ uses SysUtils, Logger, MK_SDL2;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.12a';
+  Version='1.15';
 
 constructor TMouseObjects.Create;
 begin
   inherited Create;
   fStack:=TStack.Create;
   fTop:=0;
-  fSoftDelete:=false;
   fLastOverIndex:=-1;
   fLastMouseDownIndex:=-1;
 end;
@@ -170,16 +176,26 @@ begin
   inherited ;
 end;
 
-procedure TMouseObjects.Delete(index:integer);
+function TMouseObjects.MouseObjectCompare(index:integer;Item:pointer):Integer;
 begin
-  if fSoftDelete then begin
-    Items[index]:=nil;
-  end else begin
-    inherited ;
-  end;
+  Result:=TMouseObject(Item).ZIndex-Self[index].ZIndex;
 end;
 
-procedure TMouseObjects.Remove(Item:pointer);
+procedure TMouseObjects.Add(Item:TMouseObject);
+var i:integer;
+begin
+  if Self.Count>2 then begin
+    i:=BinaryInsert(0,Count-1,MouseObjectCompare,Item);
+    Insert(i,Item);
+  end else if Self.Count=1 then begin
+    if Item.ZIndex>=Self[0].ZIndex then
+      Inherited Add(Item)
+    else
+      Insert(0,Item);
+  end else Inherited Add(Item);
+end;
+
+procedure TMouseObjects.Remove(Item:TMouseObject);
 begin
   if IndexOf(Item)>-1 then Delete(IndexOf(Item));
 end;
@@ -189,7 +205,6 @@ var i,overindex,mx,my:integer;
 begin
   if fLastOverIndex>Count-1 then fLastOverIndex:=-1;
   if fLastMouseDownIndex>Count-1 then fLastMouseDownIndex:=-1;
-  fSoftDelete:=true;
   Result:=false;
   Log.LogDebug('MouseObjects.HandleEvent starts...');
   Log.IncreaseIndent(2);
@@ -302,17 +317,17 @@ begin
       Result:=true;
     end;
   end;
-  fSoftDelete:=false;
-  for i:=Count-1 downto fTop do
-    if Self[i]=nil then Delete(i);
   Log.DecreaseIndent(2);
 end;
 
 procedure TMouseObjects.Draw;
 var i:integer;
 begin
-  for i:=fTop to Count-1 do
+  for i:=fTop to Count-1 do begin
+    Log.Trace(i);
+    Log.Trace(Self[i].Name);
     if Assigned(Self[i]) and Self[i].Visible then Self[i].Draw;
+  end;
 end;
 
 procedure TMouseObjects.NewSession;
@@ -359,16 +374,16 @@ begin
   Log.LogDebug('Mouse objects listing ends.',Istr);
 end;
 
-procedure TMouseObjects.Sort;
-var i,j:integer;
+function MouseObjectCompare2(const Item1,Item2:TMouseObject):Integer;
 begin
-  // Sort ascending, the events are distributed from the last to the first object.
-  // So bigger Zindex means getting the event earlier.
-  // Yep, it's only a quick bubblesort solution.
-  // I will improve it if there will be speed problems.
-  for i:=0 to Count-2 do
-    for j:=Count-2 downto i do
-      if Self[j].ZIndex>Self[j+1].ZIndex then Exchange(j,j+1);
+  Result:=Item1.ZIndex-Item2.ZIndex;
+end;
+
+procedure TMouseObjects.Sort;
+begin
+  // Sort ascending, draw occurs from the last to the first object.
+  // So bigger Zindex means getting drawn later.
+  inherited Sort(MouseObjectCompare2);
 end;
 
 constructor TMouseObject.Create;

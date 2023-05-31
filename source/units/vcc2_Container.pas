@@ -46,6 +46,8 @@
 //    * Initial creation from vcc_Container2.
 //  V1.01: Gilby - 2023.04.24
 //    * BugFix in Destroy. Child objects weren't removed from MouseObjects.
+//  V1.02: Gilby - 2023.05.25
+//    * BugFix in ClearChildren. Child objects weren't removed from MouseObjects.
 
 {$mode delphi}{$H+}
 
@@ -65,9 +67,9 @@ type
     procedure AddChild(pObject:TMouseObject);
     procedure DeleteChild(pObject:TMouseObject);  overload;
     procedure DeleteChild(pName:String);  overload;
-    procedure ClearChilds;
+    procedure ClearChildren;
   protected
-    fChilds:TMouseObjectList;
+    fChildren:TMouseObjectList;
     procedure fSetVisible(pValue:boolean); override;
   public
     property Visible:boolean read fVisible write fSetVisible;
@@ -79,12 +81,12 @@ uses SysUtils, Logger;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.00';
+  Version='1.02';
 
 constructor TContainer.Create;
 begin
   inherited Create;
-  fChilds:=TMouseObjectList.Create;
+  fChildren:=TMouseObjectList.Create;
   fLeft:=0;
   fTop:=0;
   fWidth:=64;
@@ -96,7 +98,7 @@ end;
 constructor TContainer.Create(iINI:TINIFile;iSection:string); overload;
 begin
   inherited Create;
-  fChilds:=TMouseObjectList.Create;
+  fChildren:=TMouseObjectList.Create;
   Left:=iINI.ReadInteger(iSection,'Left',0);
   Top:=iINI.ReadInteger(iSection,'Top',0);
   Width:=iINI.ReadInteger(iSection,'Width',0);;
@@ -107,57 +109,62 @@ end;
 destructor TContainer.Destroy;
 var i,j:integer;
 begin
-  if Assigned(fChilds) then begin
-    for i:=0 to fChilds.Count-1 do begin
-      j:=MouseObjects.IndexOf(fChilds[i]);
+  if Assigned(fChildren) then begin
+    for i:=0 to fChildren.Count-1 do begin
+      j:=MouseObjects.IndexOf(fChildren[i]);
       if j>-1 then MouseObjects.Delete(j);
     end;
-    FreeAndNil(fChilds);
+    fChildren.Free;
   end;
   inherited Destroy;
 end;
 
 procedure TContainer.AddChild(pObject:TMouseObject);
 begin
-  fChilds.AddObject(pObject.Name,pObject);
+  fChildren.AddObject(pObject.Name,pObject);
   pObject.Visible:=fVisible;
   MouseObjects.Add(pObject);
-  MouseObjects.Sort;
 end;
 
 procedure TContainer.DeleteChild(pObject:TMouseObject);
 var i,j:integer;
 begin
-  i:=fChilds.IndexOfObject(pObject);
+  i:=fChildren.IndexOfObject(pObject);
   if i>0 then begin
-    j:=MouseObjects.IndexOf(fChilds[i]);
+    j:=MouseObjects.IndexOf(fChildren[i]);
     if j>0 then MouseObjects.Delete(i);
-    fChilds.Delete(i);
+    fChildren.Delete(i);
   end;
 end;
 
 procedure TContainer.DeleteChild(pName:String);
 var i,j:integer;
 begin
-  i:=fChilds.IndexOf(pName);
+  i:=fChildren.IndexOf(pName);
   if i>0 then begin
-    j:=MouseObjects.IndexOf(fChilds[i]);
+    j:=MouseObjects.IndexOf(fChildren[i]);
     if j>0 then MouseObjects.Delete(i);
-    fChilds.Delete(i);
+    fChildren.Delete(i);
   end;
 end;
 
-procedure TContainer.ClearChilds;
+procedure TContainer.ClearChildren;
+var i,j:integer;
 begin
-  fChilds.Clear;
+  for i:=0 to fChildren.Count-1 do begin
+    j:=MouseObjects.IndexOf(fChildren[i]);
+    Log.Trace('ClearChildren '+inttostr(i)+'. '+inttostr(j));
+    if j>-1 then MouseObjects.Delete(j);
+  end;
+  fChildren.Clear;
 end;
 
 procedure TContainer.fSetVisible(pValue:boolean);
 var i:integer;
 begin
   inherited ;
-  for i:=0 to fChilds.Count-1 do
-    fChilds[i].Visible:=pValue;
+  for i:=0 to fChildren.Count-1 do
+    fChildren[i].Visible:=pValue;
 
   fVisible:=pValue;
 end;

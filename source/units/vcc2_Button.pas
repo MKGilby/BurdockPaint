@@ -48,6 +48,9 @@
 //    * Following change in MKMouse2
 //  V1.02: Gilby - 2023.04.07
 //    * Following change in vcc2_VisibleControl
+//  V1.03: Gilby - 2023.05.24
+//    * Added Top and Height properties, without it fSetTop and fSetHeight
+//      won't be called.
 
 {$mode delphi}
 {$smartlink on}
@@ -76,6 +79,8 @@ type
     procedure fSetFont(font:TFont);
     procedure ReDraw; override;
   public
+    property Top:integer read fTop write fSetTop;
+    property Height:integer read fHeight write fSetHeight;
     property Font:TFont read fFont write fSetFont;
     property BorderColor:UInt32 read fBorderColor write fBorderColor;
     property NormalColor:UInt32 read fNormalColor write fNormalColor;
@@ -89,7 +94,7 @@ uses SysUtils, MKToolBox, Logger;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.02';
+  Version='1.03';
 
 
 { TButton }
