@@ -52,9 +52,9 @@ type
     fUndoLimit:integer;
     fDitherGradients:boolean;
     fDitherStrength:integer;
-    fModernGraphics:boolean;
     fShowGrid:boolean;
-    fRGradCenterX,fRGradCenterY,fRGradRadius:integer;
+    fCGradCenterX,fCGradCenterY,fCGradRadius:integer;
+    fRGradCenterX,fRGradCenterY,fRGradRepetitions,fRGradRotation:integer;
     function fGetSelectedColor(index:integer):integer;
     function fGetSelectedTool(index:integer):string;
     procedure fSetSelectedColor(index:integer; AValue:integer);
@@ -77,12 +77,16 @@ type
     property SelectedColors[index:integer]:integer read fGetSelectedColor write fSetSelectedColor;
     property ActiveColorIndex:integer read fActiveColorIndex write fSetActiveColorIndex;
     property UndoLimit:integer read fUndoLimit write fUndoLimit;
-    property ModernGraphics:boolean read fModernGraphics write fModernGraphics;
+//    property ModernGraphics:boolean read fModernGraphics write fModernGraphics;
     property DitherGradients:boolean read fDitherGradients write fDitherGradients;
     property DitherStrength:integer read fDitherStrength write fDitherStrength;
+    property CGradCenterX:integer read fCGradCenterX write fCGradCenterX;
+    property CGradCenterY:integer read fCGradCenterY write fCGradCenterY;
+    property CGradRadius:integer read fCGradRadius write fCGradRadius;
     property RGradCenterX:integer read fRGradCenterX write fRGradCenterX;
     property RGradCenterY:integer read fRGradCenterY write fRGradCenterY;
-    property RGradRadius:integer read fRGradRadius write fRGradRadius;
+    property RGradRepetitions:integer read fRGradRepetitions write fRGradRepetitions;
+    property RGradRotation:integer read fRGradRotation write fRGradRotation;
     property ShowGrid:boolean read fShowGrid write fShowGrid;
   end;
 
@@ -107,11 +111,11 @@ begin
   fSelectedTools[5]:='FILL';
   fActiveTool:=0;
   fSelectedInks[0]:='OPAQUE';
-  fSelectedInks[1]:='OPAQUE';
-  fSelectedInks[2]:='L GRAD';
-  fSelectedInks[3]:='L GRAD';
-  fSelectedInks[4]:='H GRAD';
-  fSelectedInks[5]:='H GRAD';
+  fSelectedInks[1]:='H GRAD';
+  fSelectedInks[2]:='V GRAD';
+  fSelectedInks[3]:='ADD';
+  fSelectedInks[4]:='L GRAD';
+  fSelectedInks[5]:='C GRAD';
   fActiveInk:=0;
   fFillShapes:=false;
   fClearKeyColor:=false;
@@ -121,9 +125,13 @@ begin
   fUndoLimit:=16;
   fDitherGradients:=false;
   fDitherStrength:=10;
+  fCGradCenterX:=0;
+  fCGradCenterY:=0;
+  fCGradRadius:=32;
   fRGradCenterX:=0;
   fRGradCenterY:=0;
-  fRGradRadius:=32;
+  fRGradRepetitions:=1;
+  fRGradRotation:=0;
   fShowGrid:=false;
 end;
 
@@ -144,11 +152,11 @@ begin
   fActiveTool:=INI.ReadInteger('BasicControls','ActiveTool',0);
   if (fActiveTool<0) or (fActiveTool>5) then fActiveTool:=0;
   fSelectedInks[0]:=INI.ReadString('BasicControls','Ink0','OPAQUE');
-  fSelectedInks[1]:=INI.ReadString('BasicControls','Ink1','OPAQUE');
-  fSelectedInks[2]:=INI.ReadString('BasicControls','Ink2','L GRAD');
-  fSelectedInks[3]:=INI.ReadString('BasicControls','Ink3','L GRAD');
-  fSelectedInks[4]:=INI.ReadString('BasicControls','Ink4','H GRAD');
-  fSelectedInks[5]:=INI.ReadString('BasicControls','Ink5','V GRAD');
+  fSelectedInks[1]:=INI.ReadString('BasicControls','Ink1','H GRAD');
+  fSelectedInks[2]:=INI.ReadString('BasicControls','Ink2','V GRAD');
+  fSelectedInks[3]:=INI.ReadString('BasicControls','Ink3','ADD');
+  fSelectedInks[4]:=INI.ReadString('BasicControls','Ink4','L GRAD');
+  fSelectedInks[5]:=INI.ReadString('BasicControls','Ink5','C GRAD');
   fActiveInk:=INI.ReadInteger('BasicControls','ActiveInk',0);
   if (fActiveInk<0) or (fActiveInk>5) then fActiveInk:=0;
   fFillShapes:=INI.ReadBool('BasicControls','FillShapes',false);
@@ -156,7 +164,7 @@ begin
   fUseAlpha:=INI.ReadBool('BasicControls','UseAlpha',false);
   fShowSplash:=INI.ReadBool('Settings','ShowSplash',false);
   fUndoLimit:=INI.ReadInteger('Settings','UndoLimit',16);
-  fModernGraphics:=INI.ReadBool('Settings','ModernGraphics',true);
+//  fModernGraphics:=INI.ReadBool('Settings','ModernGraphics',true);
   fShowGrid:=INI.ReadBool('Settings','ShowGrid',false);
   LoadKeyMap(INI);
   for i:=0 to COLORSELECTORCOLORS-1 do
@@ -164,9 +172,13 @@ begin
   fActiveColorIndex:=INI.ReadInteger('Colors','ActiveColor',0);
   fDitherGradients:=INI.ReadBool('Inks','DitherGradients',false);
   fDitherStrength:=INI.ReadInteger('Inks','DitherStrength',10);
+  fCGradCenterX:=INI.ReadInteger('Inks','CGradCenterX',0);
+  fCGradCenterY:=INI.ReadInteger('Inks','CGradCenterY',0);
+  fCGradRadius:=INI.ReadInteger('Inks','CGradRadius',32);
   fRGradCenterX:=INI.ReadInteger('Inks','RGradCenterX',0);
   fRGradCenterY:=INI.ReadInteger('Inks','RGradCenterY',0);
-  fRGradRadius:=INI.ReadInteger('Inks','RGradRadius',32);
+  fRGradRepetitions:=INI.ReadInteger('Inks','RGradRepetitions',1);
+  fRGradRotation:=INI.ReadInteger('Inks','RGradRotation',0);
   FreeAndNil(INI);
 end;
 
@@ -188,7 +200,7 @@ begin
   INI.WriteBool('BasicControls','UseAlpha',fUseAlpha);
   INI.WriteBool('Settings','ShowSplash',fShowSplash);
   INI.WriteInteger('Settings','UndoLimit',fUndoLimit);
-  INI.WriteBool('Settings','ModernGraphics',fModernGraphics);
+//  INI.WriteBool('Settings','ModernGraphics',fModernGraphics);
   INI.WriteBool('Settings','ShowGrid',fShowGrid);
   SaveKeyMap(INI);
   for i:=0 to COLORSELECTORCOLORS-1 do
@@ -196,9 +208,13 @@ begin
   INI.WriteInteger('Colors','ActiveColor',fActiveColorIndex);
   INI.WriteBool('Inks','DitherGradients',fDitherGradients);
   INI.WriteInteger('Inks','DitherStrength',fDitherStrength);
+  INI.WriteInteger('Inks','CGradCenterX',fCGradCenterX);
+  INI.WriteInteger('Inks','CGradCenterY',fCGradCenterY);
+  INI.WriteInteger('Inks','CGradRadius',fCGradRadius);
   INI.WriteInteger('Inks','RGradCenterX',fRGradCenterX);
   INI.WriteInteger('Inks','RGradCenterY',fRGradCenterY);
-  INI.WriteInteger('Inks','RGradRadius',fRGradRadius);
+  INI.WriteInteger('Inks','RGradRepetitions',fRGradRepetitions);
+  INI.WriteInteger('Inks','RGradRotation',fRGradRotation);
   FreeAndNil(INI);
 end;
 
