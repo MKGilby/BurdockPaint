@@ -11,7 +11,35 @@ Todo:
 - Add setup dialogs to Inks:
   - ...
 - Should create backups from project on saving if not the default temporary project.
+- Color undo should be grouped into one operation when changing the same color
+  as in the previous operation. (So clicking multiple times on RGBA arrows would
+  be stored as one operation.)
+- Right clicking on color cluster color area on Controls should invoke PaletteEditor.
+- Fix Circle with Add ink. It seems that circle sometimes draws the same row
+  twice, so Add is called twice for these rows.
 
+2023.06.01
+- Color cluster selector completed:
+  - Click "ADD" to add new color cluster (up to 16)
+  - Click "X" on the right side of the cluster to remove it.
+  - The selected color cluster is highlighted with red border.
+  - You cannot delete selected color cluster. (This ensures that at least one
+    color cluster exists.)
+- Right clicking on color cluster colors part behaves two way:
+  - Opens palette editor if color cluster is on Controls.
+  - Starts color cluster picking of color cluster is on PaletteEditor.
+
+2023.05.25
+- Color cluster selector's width is matched with the calling control.
+- "X" added to each color clusters in selector.
+- Clicking "X" removes the color cluster.
+
+2023.05.24
+- Clicking on the arrow on the right of the color cluster invokes color cluster
+  selector. Click on a color cluster to select it or click anywhere outside the
+  window to close it.
+- There's and ADD button on the color cluster selector. Click to add a new color
+  cluster.
 
 2023.05.23
 - Changed licensing to GNU GPL v3.
