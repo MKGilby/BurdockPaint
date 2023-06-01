@@ -1,9 +1,31 @@
-{
- ------------------------------------------------------------------
- Written by Gilby/MKSZTSZ
- Hungary, 2023
- Freeware
- ------------------------------------------------------------------
+{ -[Name]--------------------------------------------------------------
+
+                              MKMouse2 Unit
+
+  -[Disclaimer]--------------------------------------------------------
+
+  Written by Gilby
+  Copyright 2021-2023 MKSZTSZ
+
+  This unit is free software: you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by the
+  Free Software Foundation, either version 3 of the License,
+  or (at your option) any later version.
+
+  This unit is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  See the GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this unit. If not, see <https://www.gnu.org/licenses/>.
+
+  -[Description]-------------------------------------------------------
+
+  Mouse objects, event handling, etc. (with mk_sdl2)
+
+  ---------------------------------------------------------------------
+}
 
 // Version info:
 //   V1.00 - 2021.01.30 - Gilby
@@ -57,7 +79,6 @@
 //     * MouseObjects.Add inserts object to the sorted place (by ZIndex), no
 //       need to call Sort. You need Sort when an already added object's
 //       ZIndex value is changed.
-}
 
 {$ifdef fpc}
   {$mode delphi}
@@ -323,11 +344,8 @@ end;
 procedure TMouseObjects.Draw;
 var i:integer;
 begin
-  for i:=fTop to Count-1 do begin
-    Log.Trace(i);
-    Log.Trace(Self[i].Name);
+  for i:=fTop to Count-1 do
     if Assigned(Self[i]) and Self[i].Visible then Self[i].Draw;
-  end;
 end;
 
 procedure TMouseObjects.NewSession;
