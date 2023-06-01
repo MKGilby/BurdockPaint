@@ -88,9 +88,9 @@ type
     function GetColorIndexAt(pX,pY: integer):integer; override;
   end;
 
-  { TBDInkRGrad }
+  { TBDInkCGrad }
 
-  TBDInkRGrad=class(TBDInk)
+  TBDInkCGrad=class(TBDInk)
     constructor Create; override;
     function GetColorIndexAt(pX,pY: integer):integer; override;
     procedure Configure; override;
@@ -225,7 +225,7 @@ begin
   AddObject('H GRAD',TBDInkHGrad.Create);
   AddObject('L GRAD',TBDInkLGrad.Create);
   AddObject('V GRAD',TBDInkVGrad.Create);
-  AddObject('R GRAD',TBDInkRGrad.Create);
+  AddObject('C GRAD',TBDInkCGrad.Create);
   AddObject('RANDOM',TBDInkRandom.Create);
   AddObject('SOFTEN',TBDInkSoften.Create);
   AddObject('ADD',TBDInkAdd.Create);
@@ -346,17 +346,17 @@ begin
     Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.GetIndexAt(1,2);
 end;
 
-// -------------------------------------------------------- [ TBDInkRGrad ] ---
+// -------------------------------------------------------- [ TBDInkCGrad ] ---
 
-constructor TBDInkRGrad.Create;
+constructor TBDInkCGrad.Create;
 begin
   inherited ;
-  fName:='R GRAD';
-  fHint:='ROUND GRADIENT. '#132'SELECT '#133'CONFIGURE';
+  fName:='C GRAD';
+  fHint:='CIRCULAR GRADIENT. '#132'SELECT '#133'CONFIGURE';
   fSupportsOnTheFly:=true;
 end;
 
-function TBDInkRGrad.GetColorIndexAt(pX, pY: integer): integer;
+function TBDInkCGrad.GetColorIndexAt(pX, pY: integer): integer;
 var r:integer;
 begin
   if Settings.RGradRadius>1 then begin
@@ -371,10 +371,10 @@ begin
     Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.GetIndexAt(1,2);
 end;
 
-procedure TBDInkRGrad.Configure;
+procedure TBDInkCGrad.Configure;
 begin
   MessageQueue.AddMessage(MSG_TOGGLECONTROLS);
-  ActiveTool:=Tools.ItemByName['CONFRG'];
+  ActiveTool:=Tools.ItemByName['CONFCG'];
 end;
 
 // ------------------------------------------------------- [ TBDInkRandom ] ---

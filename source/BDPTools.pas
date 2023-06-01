@@ -234,9 +234,9 @@ type
     fStart,fColorIndex:integer;
   end;
 
-  { TBDToolConfigureRGrad }
+  { TBDToolConfigureCGrad }
 
-  TBDToolConfigureRGrad=class(TBDTool)
+  TBDToolConfigureCGrad=class(TBDTool)
     constructor Create; override;
     function Click(x,y,button:integer):boolean; override;
     function MouseUp(x,y,button:integer):boolean; override;
@@ -322,7 +322,7 @@ begin
   AddObject('SELCOL',TBDToolSelectColor.Create);
   AddObject('SHOWCEL',TBDToolShowCEL.Create);
   AddObject('PICKCOLCLS',TBDToolPickColorCluster.Create);
-  AddObject('CONFRG',TBDToolConfigureRGrad.Create);
+  AddObject('CONFCG',TBDToolConfigureCGrad.Create);
 end;
 
 // --------------------------------------------------------- [ TBDToolBox ] ---
@@ -1541,16 +1541,16 @@ begin
   end;
 end;
 
-// ---------------------------------------------- [ TBDToolConfigureRGrad ] ---
+// ---------------------------------------------- [ TBDToolConfigureCGrad ] ---
 
-constructor TBDToolConfigureRGrad.Create;
+constructor TBDToolConfigureCGrad.Create;
 begin
   inherited ;
   fName:='CONFRG';
   fHint:=uppercase('Select center then set radius.');
 end;
 
-function TBDToolConfigureRGrad.Click(x,y,button:integer):boolean;
+function TBDToolConfigureCGrad.Click(x,y,button:integer):boolean;
 begin
   if button=SDL_BUTTON_LEFT then begin
     case fState of
@@ -1580,12 +1580,12 @@ begin
   end else Result:=false;
 end;
 
-function TBDToolConfigureRGrad.MouseUp(x,y,button:integer):boolean;
+function TBDToolConfigureCGrad.MouseUp(x,y,button:integer):boolean;
 begin
   Result:=fState>0;
 end;
 
-procedure TBDToolConfigureRGrad.Draw;
+procedure TBDToolConfigureCGrad.Draw;
 var r:integer;
 begin
   case fState of
@@ -1599,13 +1599,13 @@ begin
   end;
 end;
 
-procedure TBDToolConfigureRGrad.Clear;
+procedure TBDToolConfigureCGrad.Clear;
 begin
   if fState=1 then
     Project.OverlayImage.Circle(fSX,fSY,round(sqrt(sqr(fSX-fX)+sqr(fSY-fY))),0);
 end;
 
-procedure TBDToolConfigureRGrad.DrawCircleWithInk(cx,cy,r:integer);
+procedure TBDToolConfigureCGrad.DrawCircleWithInk(cx,cy,r:integer);
 begin
 
 end;
