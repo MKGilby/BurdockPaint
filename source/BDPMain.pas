@@ -123,7 +123,6 @@ begin
   fRotateDialog:=TBDRotateCELDialog.Create;
   fDitherDialog:=TBDDitherDialog.Create;
   fSelectColorClusterDialog:=TBDSelectColorClusterDialog.Create;
-  MouseObjects.Sort;
   MouseObjects.List;
 
   fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','CEL files|*.bdc|Legacy CEL files|*.cel');
@@ -408,15 +407,22 @@ begin
             fSplashScreen.Show;
           end;
           MSG_OPENCOLORCLUSTERDIALOG:begin
-            fSelectColorClusterDialog.WindowLeft:=msg.DataInt and $ffff;
-            fSelectColorClusterDialog.WindowTop:=(msg.DataInt and $ffff0000)>>16;
+            fSelectColorClusterDialog.SetPositionAndWidth(msg.DataInt and $07ff,(msg.DataInt and $003ff800)>>11,(msg.DataInt and $ffc00000)>>22);
+//            fSelectColorClusterDialog.WindowLeft:=msg.DataInt and $07ff;
+//            fSelectColorClusterDialog.Bottom:=(msg.DataInt and $003ff800)>>11;
+//            fSelectColorClusterDialog.WindowWidth:=(msg.DataInt and $ffc00000)>>22;
             fSelectColorClusterDialog.Show;
-            MouseObjects.ListVisible;
           end;
           MSG_COLORCLUSTERDIALOGRESP:begin
-            if msg.DataInt>-1 then
-              Project.CurrentImage.ColorClusters.ActiveIndex:=msg.DataInt;
-            fSelectColorClusterDialog.Hide;
+            if msg.DataInt=-2 then begin
+              fSelectColorClusterDialog.Refresh;
+            end else begin
+              if msg.DataInt>-1 then begin
+                Project.CurrentImage.ColorClusters.ActiveIndex:=msg.DataInt;
+                MessageQueue.AddMessage(MSG_ACTIVECOLORCLUSTERCHANGED);
+              end;
+              fSelectColorClusterDialog.Hide;
+            end;
           end;
         end;
       end;

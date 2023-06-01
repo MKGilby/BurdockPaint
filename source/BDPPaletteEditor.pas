@@ -177,7 +177,7 @@ begin
   fColorBox.Name:='ColorBox';
   AddChild(fColorBox);
 
-  fColorCluster:=TBDColorCluster.Create(COLORCLUSTERLEFT,fTop+6,Project.CurrentImage.ColorClusters.Items[0]);
+  fColorCluster:=TBDColorCluster.Create(COLORCLUSTERLEFT,fTop+6,Project.CurrentImage.ColorClusters.ActiveColorCluster,true);
   fColorCluster.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fColorCluster.Name:='ColorCluster (PalEd)';
   AddChild(fColorCluster);

@@ -101,7 +101,7 @@ type
   { TBDColorCluster }
 
   TBDColorCluster=class(TVisibleControl)
-    constructor Create(iLeft,iTop:integer;iColorCluster:TColorCluster);
+    constructor Create(iLeft,iTop:integer;iColorCluster:TColorCluster;iRMBPicks:boolean);
     procedure Refresh; override;
     procedure Click(Sender:TObject;x,y,button:integer);
     procedure Draw; override;
@@ -114,6 +114,7 @@ type
     fFont,fFont2:TFont;
     fPingpongSwitchLeft,fReverseSwitchLeft,
     fColorsLeft,fColorsWidth,fArrowLeft:integer;
+    fRMBPicks:boolean;
     fPicking:boolean;
     procedure fSetColorCluster(value:TColorCluster);
   public
@@ -125,11 +126,15 @@ type
 
   TBDSimpleColorCluster=class(TVisibleControl)
     constructor Create(iLeft,iTop:integer;iColorCluster:TColorCluster);
-    procedure Draw; override;
   protected
     procedure ReDraw; override;
   private
     fColorCluster:TColorCluster;
+    fColorsWidth:integer;
+    procedure Click(Sender:TObject;x,y,buttons:integer);
+    function fGetColorsWidth:integer;
+  public
+    property ColorsWidth:integer read fGetColorsWidth;
   end;
 
 implementation
@@ -151,8 +156,7 @@ begin
   fEnd:=iEnd;
   fReversed:=false;
   fPingpong:=false;
-  fRealStart:=fStart;
-  fRealEnd:=fEnd;
+  SetReal;
 end;
 
 constructor TColorCluster.CreateFromStream(iStream:TStream);
@@ -346,6 +350,7 @@ begin
   curr:=pStream.Position;
   pStream.Read(b,1);
   if b=1 then LoadFromStreamV1(pStream)
+  else if b=2 then LoadFromStreamV2(pStream)
   else raise Exception.Create(Format('Unknow color clusters data version! (%d)',[b]));
   pStream.Position:=curr+size;
 end;
@@ -392,7 +397,8 @@ end;
 
 { TBDColorCluster }
 
-constructor TBDColorCluster.Create(iLeft, iTop: integer;iColorCluster: TColorCluster);
+constructor TBDColorCluster.Create(iLeft,iTop:integer;iColorCluster:TColorCluster;
+  iRMBPicks:boolean);
 begin
   fLeft:=iLeft;
   fTop:=iTop;
@@ -412,6 +418,7 @@ begin
   fArrowLeft:=Width-ARROWWIDTH-3;
   fColorsWidth:=fArrowLeft-fColorsLeft;
   OnClick:=Click;
+  fRMBPicks:=iRMBPicks;
   fPicking:=false;
 end;
 
@@ -438,12 +445,16 @@ begin
       if button=SDL_BUTTON_LEFT then
         Settings.ActiveColorIndex:=fColorCluster.GetIndexAt(x-fColorsLeft-3,fColorsWidth-3)
       else if (button=SDL_BUTTON_RIGHT) then begin
-        fPicking:=true;
-        MessageQueue.AddMessage(MSG_ACTIVATEPICKCOLORCLUSTER);
+        if fRMBPicks then begin
+          fPicking:=true;
+          MessageQueue.AddMessage(MSG_ACTIVATEPICKCOLORCLUSTER);
+        end else begin
+          MessageQueue.AddMessage(MSG_ACTIVATEPALETTEEDITOR);
+        end;
       end;
     end else
     if (x>=fArrowLeft) then begin
-      MessageQueue.AddMessage(MSG_OPENCOLORCLUSTERDIALOG,fLeft+(fTop<<16));
+      MessageQueue.AddMessage(MSG_OPENCOLORCLUSTERDIALOG,fLeft+(fTop<<11)+(fWidth<<22));
     end;
   end;
 end;
@@ -547,31 +558,60 @@ begin
   Width:=COLORCLUSTERWIDTH;
   Height:=COLORCLUSTERHEIGHT;
   fNeedRedraw:=true;
-end;
-
-procedure TBDSimpleColorCluster.Draw;
-begin
-  inherited Draw;
+//  OnClick:=Click;
 end;
 
 procedure TBDSimpleColorCluster.ReDraw;
-var i:integer;
+const XWidth=27;
+var i:integer;XLeft:integer;
 begin
   if Assigned(fTexture) then begin
+    fColorsWidth:=Width-3-XWidth;
+    XLeft:=Width-XWidth;
     with fTexture.ARGBImage do begin
       // Outer border
-      Bar(0,0,Width,3,SystemPalette[2]);
-      Bar(0,Height-3,Width,3,SystemPalette[2]);
-      Bar(0,3,3,Height-6,SystemPalette[2]);
-      Bar(Width-3,3,3,Height-6,SystemPalette[2]);
+      if Selected then i:=5 else i:=2;
+      Bar(0,0,Width,3,SystemPalette[i]);
+      Bar(0,Height-3,Width,3,SystemPalette[i]);
+      Bar(0,3,3,Height-6,SystemPalette[i]);
+      Bar(Width-3,3,3,Height-6,SystemPalette[i]);
+      // X left border and background
+      Bar(XLeft,3,3,Height-6,SystemPalette[2]);
+      if not Selected then
+        Bar(XLeft+3,3,XWidth-6,Height-6,SystemPalette[3])
+      else
+        Bar(XLeft+3,3,XWidth-6,Height-6,SystemPalette[2]);
       // Color cluster bar
       if Assigned(fColorCluster) then begin
-        for i:=0 to fWidth-6 do
-          VLine(i+3,3,Height-6,Project.CurrentImage.Palette[fColorCluster.GetIndexAt(i,fWidth-6)]);
+        for i:=0 to fColorsWidth-1 do
+          VLine(i+3,3,Height-6,Project.CurrentImage.Palette[fColorCluster.GetIndexAt(i,fColorsWidth-1)]);
       end;
+      // X
+      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'X',XLeft+XWidth div 2,9,1);
     end;
     fTexture.Update;
   end;
+end;
+
+procedure TBDSimpleColorCluster.Click(Sender:TObject; x,y,buttons:integer);
+begin
+  x-=Left;
+  if x<fColorsWidth then
+    MessageQueue.AddMessage(MSG_COLORCLUSTERDIALOGRESP,Self.Tag)
+  else begin
+    if not Selected then begin
+      Project.CurrentImage.ColorClusters.Delete(Self.Tag);
+      if Project.CurrentImage.ColorClusters.ActiveIndex>=Project.CurrentImage.ColorClusters.Count then begin
+        Project.CurrentImage.ColorClusters.ActiveIndex:=Project.CurrentImage.ColorClusters.Count-1;
+      end;
+      MessageQueue.AddMessage(MSG_COLORCLUSTERDIALOGRESP,-2)
+    end;
+  end;
+end;
+
+function TBDSimpleColorCluster.fGetColorsWidth: integer;
+begin
+  Result:=fColorsWidth+6;
 end;
 
 end.

@@ -163,6 +163,8 @@ const
   MSG_ACTIVATEPICKCOLORCLUSTER=108;
   // PICKCOLCLS finished, Data is the start in upper word and end in lower word.
   MSG_COLORCLUSTERPICKED=109;
+  // Active color cluster changed, refresh color clusters.
+  MSG_ACTIVECOLORCLUSTERCHANGED=110;
 
   // ------- Menu Messages ------- Range: 200-299 -------
   {$i includes\menu.inc}

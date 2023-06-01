@@ -196,11 +196,11 @@ begin
   AddChild(fImageCountSlider);
 
   // Color cluster
-  fColorCluster:=TBDColorCluster.Create(fLeft+INKBUTTONSLEFT,fTop+6,Project.CurrentImage.ColorClusters.Items[0]);
+  fColorCluster:=TBDColorCluster.Create(fLeft+INKBUTTONSLEFT,fTop+6,Project.CurrentImage.ColorClusters.ActiveColorCluster,false);
   fColorCluster.Height:=NORMALBUTTONHEIGHT;
   fColorCluster.Width:=CONTROLCOLORCLUSTERWIDTH;
   fColorCluster.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-  fColorCluster.Name:='ColorCluster (PalEd)';
+  fColorCluster.Name:='ColorCluster (Controls)';
   AddChild(fColorCluster);
 
   MouseObjects.Add(Self);
@@ -406,6 +406,9 @@ begin
     MSG_ACTIVECOLORINDEXCHANGED:begin
       fColorSelector.Refresh;
       fColorCluster.Refresh;
+    end;
+    MSG_ACTIVECOLORCLUSTERCHANGED:begin
+      fColorCluster.ColorCluster:=Project.CurrentImage.ColorClusters.ActiveColorCluster;
     end;
     MSG_TOOLDRAW:ChangeActiveToolButtonTo(Tools.ItemByName['DRAW']);
     MSG_TOOLBOX:ChangeActiveToolButtonTo(Tools.ItemByName['BOX']);
