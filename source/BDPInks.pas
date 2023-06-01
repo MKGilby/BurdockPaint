@@ -119,8 +119,13 @@ type
 
   TBDInkAdd=class(TBDInk)
     constructor Create; override;
+    procedure InitializeAreaWH(pLeft,pTop,pWidth,pHeight:integer); override;
+    procedure InitializeArea(pX1,pY1,pX2,pY2:integer); override;
     function GetColorIndexAt(pX,pY: integer):integer; override;
     procedure ProcessWithCEL(pX,pY:integer); override;
+    procedure PostProcess; override;
+  private
+    fTempImage:TBDImage;
   end;
 
 implementation
@@ -464,13 +469,27 @@ begin
   inherited Create;
   fName:='ADD';
   fHint:='ADDS SELECTED COLOR INDEX TO THE IMAGE''S COLOR INDEX.';
-  fSupportsOnTheFly:=true;
+  fSupportsOnTheFly:=false;
+end;
+
+procedure TBDInkAdd.InitializeAreaWH(pLeft,pTop,pWidth,pHeight:integer);
+begin
+  inherited InitializeAreaWH(pLeft,pTop,pWidth,pHeight);
+  fTempImage:=TBDImage.Create(fWidth,fHeight);
+  fTempImage.PutImagePart(0,0,fLeft,fTop,fWidth,fHeight,Project.CurrentImage);
+end;
+
+procedure TBDInkAdd.InitializeArea(pX1,pY1,pX2,pY2:integer);
+begin
+  inherited InitializeArea(pX1,pY1,pX2,pY2);
+  fTempImage:=TBDImage.Create(fWidth,fHeight);
+  fTempImage.PutImagePart(0,0,fLeft,fTop,fWidth,fHeight,Project.CurrentImage);
 end;
 
 function TBDInkAdd.GetColorIndexAt(pX,pY:integer):integer;
 var c:integer;
 begin
-  c:=Project.CurrentImage.GetPixel(pX,pY);
+  c:=fTempImage.GetPixel(pX-fLeft,pY-fTop);
   Result:=(c and $FF00)+((c+Settings.ActiveColorIndex) and $FF);
 end;
 
@@ -487,6 +506,16 @@ begin
             (c and $FF00)+((c+Project.CELImage.GetPixel(i,j)) and $FF));
         end;
   end;
+end;
+
+procedure TBDInkAdd.PostProcess;
+var i,j:integer;
+begin
+  for j:=fTop to fTop+fHeight-1 do
+    for i:=fLeft to fLeft+fWidth-1 do
+      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+        Project.CurrentImage.PutPixel(i,j,GetColorIndexAt(i,j));
+  if Assigned(fTempImage) then FreeAndNil(fTempImage);
 end;
 
 end.
