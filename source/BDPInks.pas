@@ -560,8 +560,7 @@ end;
 
 procedure TBDInkRGrad.Configure;
 begin
-{  MessageQueue.AddMessage(MSG_TOGGLECONTROLS);
-  ActiveTool:=Tools.ItemByName['CONFCG'];}
+  MessageQueue.AddMessage(MSG_OPENCONFIGURERGRADDIALOG);
 end;
 
 end.

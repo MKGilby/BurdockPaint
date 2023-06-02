@@ -46,6 +46,7 @@ type
     fRotateDialog:TBDRotateCELDialog;
     fDitherDialog:TBDDitherDialog;
     fSelectColorClusterDialog:TBDSelectColorClusterDialog;
+    fConfigureRGradDialog:TBDConfigureRGradDialog;
     fOpenCELDialog,
     fOpenProjectDialog:TOpenDialog;
     fSaveCELDialog,
@@ -123,6 +124,7 @@ begin
   fRotateDialog:=TBDRotateCELDialog.Create;
   fDitherDialog:=TBDDitherDialog.Create;
   fSelectColorClusterDialog:=TBDSelectColorClusterDialog.Create;
+  fConfigureRGradDialog:=TBDConfigureRGradDialog.Create;
   MouseObjects.List;
 
   fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','CEL files|*.bdc|Legacy CEL files|*.cel');
@@ -139,6 +141,7 @@ begin
   if Assigned(fSaveProjectDialog) then FreeAndNil(fSaveProjectDialog);
   if Assigned(fSaveCELDialog) then FreeAndNil(fSaveCELDialog);
   if Assigned(fOpenCELDialog) then FreeAndNil(fOpenCELDialog);
+  if Assigned(fConfigureRGradDialog) then fConfigureRGradDialog.Free;
   if Assigned(fSelectColorClusterDialog) then fSelectColorClusterDialog.Free;
   if Assigned(fDitherDialog) then FreeAndNil(fDitherDialog);
   if Assigned(fRotateDialog) then FreeAndNil(fRotateDialog);
@@ -208,29 +211,8 @@ begin
             fMainMenu.DisableItem('CLUSTER');
             InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
           end;
-          MSG_MAGNIFYCELRESP:begin
-            fMagnifyDialog.Hide;
-            if msg.DataInt in [2..8] then begin
-              Project.CELImage.Magnify(msg.DataInt);
-              MessageQueue.AddMessage(MSG_SHOWCEL);
-            end;
-          end;
-          MSG_ROTATECELRESP:begin
-            fRotateDialog.Hide;
-            if msg.DataInt in [1..3] then begin
-              Project.CELImage.Rotate(msg.DataInt);
-              MessageQueue.AddMessage(MSG_SHOWCEL);
-            end;
-          end;
-          MSG_ABOUTRESP:begin
-            fSplashScreen.Hide;
-          end;
           MSG_OPENDITHERDIALOG:begin
             fDitherDialog.Show;
-          end;
-          MSG_DITHERRESP:begin
-            if msg.DataInt>-1 then Settings.DitherStrength:=msg.DataInt;
-            fDitherDialog.Hide;
           end;
           MSG_SETTOOLSMENU:begin
             fMainMenu.SetToolsMenuStates;
@@ -408,9 +390,6 @@ begin
           end;
           MSG_OPENCOLORCLUSTERDIALOG:begin
             fSelectColorClusterDialog.SetPositionAndWidth(msg.DataInt and $07ff,(msg.DataInt and $003ff800)>>11,(msg.DataInt and $ffc00000)>>22);
-//            fSelectColorClusterDialog.WindowLeft:=msg.DataInt and $07ff;
-//            fSelectColorClusterDialog.Bottom:=(msg.DataInt and $003ff800)>>11;
-//            fSelectColorClusterDialog.WindowWidth:=(msg.DataInt and $ffc00000)>>22;
             fSelectColorClusterDialog.Show;
           end;
           MSG_COLORCLUSTERDIALOGRESP:begin
@@ -423,6 +402,9 @@ begin
               end;
               fSelectColorClusterDialog.Hide;
             end;
+          end;
+          MSG_OPENCONFIGURERGRADDIALOG:begin
+            fConfigureRGradDialog.Show;
           end;
         end;
       end;

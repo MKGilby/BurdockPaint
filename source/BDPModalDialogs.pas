@@ -49,6 +49,7 @@ type
     function KeyDown(Sender:TObject;key:integer):boolean;
     procedure MagnifyButtonClick(Sender:TObject;x,y,buttons:integer);
     procedure OKButtonClick(Sender:TObject;x,y,buttons:integer);
+    procedure CancelButtonClick(Sender:TObject;x,y,buttons:integer);
   private
     fMagnifyButtons:array[0..2] of TBDButton;
   end;
@@ -60,6 +61,7 @@ type
     function KeyDown(Sender:TObject;key:integer):boolean;
     procedure RotateButtonClick(Sender:TObject;x,y,buttons:integer);
     procedure OKButtonClick(Sender:TObject;x,y,buttons:integer);
+    procedure CancelButtonClick(Sender:TObject;x,y,buttons:integer);
   private
     fRotateButtons:array[0..2] of TBDButton;
   end;
@@ -68,6 +70,7 @@ type
 
   TBDAboutDialog=class(TBDModalDialog)
     constructor Create;
+    procedure OKButtonClick(Sender:TObject;x,y,buttons:integer);
   end;
 
   { TBDMessageBox }
@@ -83,6 +86,7 @@ type
   TBDDitherDialog=class(TBDModalDialog)
     constructor Create;
     procedure OKButtonClick(Sender:TObject;x,y,buttons:integer);
+    procedure CancelButtonClick(Sender:TObject;x,y,buttons:integer);
   private
     fSlider:TBDHorizontalSlider;
   end;
@@ -108,6 +112,19 @@ type
     property Bottom:integer write fSetBottom;
   end;
 
+  { TBDConfigureRGradDialog }
+
+  TBDConfigureRGradDialog=class(TBDModalDialog)
+    constructor Create;
+    procedure OKButtonClick(Sender:TObject;x,y,buttons:integer);
+    procedure CenterButtonClick(Sender:TObject;x,y,buttons:integer);
+    procedure CancelButtonClick(Sender:TObject;x,y,buttons:integer);
+  private
+    fRepetitionSlider:TBDHorizontalSlider;
+    fRotationSlider:TBDHorizontalSlider;
+    procedure Show(Sender:TObject);
+  end;
+
 function MessageBox(iMessage:string;iButtons:string='OK'):integer;
 
 implementation
@@ -128,6 +145,8 @@ const
   DITHERDIALOGWIDTH=480;
   DITHERDIALOGHEIGHT=144;
   COLORCLUSTERDIALOGWIDTH=COLORCLUSTERWIDTH;
+  CONFIGURERGRADDIALOGWIDTH=480;
+  CONFIGURERGRADDIALOGHEIGHT=256;
 
 function MessageBox(iMessage:string; iButtons:string):integer;
 var MessageBox:TBDMessageBox;j:integer;
@@ -219,7 +238,7 @@ begin
     fWindowTop+84,
     NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT,
     'CANCEL','DON''T MAGNIFY CEL');
-  atmB.Message:=TMessage.Init(MSG_MAGNIFYCELRESP,0);
+  atmB.OnClick:=CancelButtonClick;
   atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
   OnKeyDown:=KeyDown;
@@ -244,15 +263,14 @@ begin
     fMagnifyButtons[2].Selected:=true;
   end else
   if key=SDL_SCANCODE_ESCAPE then begin
-    MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,0);
+    Self.Hide;
   end else
   if key=SDL_SCANCODE_RETURN then begin
-    if fMagnifyButtons[0].Selected then
-      MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,2)
-    else if fMagnifyButtons[1].Selected then
-      MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,3)
-    else if fMagnifyButtons[2].Selected then
-      MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,5);
+    if fMagnifyButtons[0].Selected then Project.CELImage.Magnify(2)
+    else if fMagnifyButtons[1].Selected then Project.CELImage.Magnify(3)
+    else if fMagnifyButtons[2].Selected then Project.CELImage.Magnify(5);
+    MessageQueue.AddMessage(MSG_SHOWCEL);
+    Self.Hide;
   end;
   Result:=true;
 end;
@@ -266,12 +284,16 @@ end;
 
 procedure TBDMagnifyCELDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
-  if fMagnifyButtons[0].Selected then
-    MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,2)
-  else if fMagnifyButtons[1].Selected then
-    MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,3)
-  else if fMagnifyButtons[2].Selected then
-    MessageQueue.AddMessage(MSG_MAGNIFYCELRESP,5);
+  if fMagnifyButtons[0].Selected then Project.CELImage.Magnify(2)
+  else if fMagnifyButtons[1].Selected then Project.CELImage.Magnify(3)
+  else if fMagnifyButtons[2].Selected then Project.CELImage.Magnify(5);
+  MessageQueue.AddMessage(MSG_SHOWCEL);
+  Self.Hide;
+end;
+
+procedure TBDMagnifyCELDialog.CancelButtonClick(Sender:TObject;x,y,buttons:integer);
+begin
+  Self.Hide;
 end;
 
 { TBDRotateCELDialog }
@@ -314,7 +336,7 @@ begin
     fWindowTop+84,
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'CANCEL','DON''T ROTATE CEL');
-  atmB.Message:=TMessage.Init(MSG_ROTATECELRESP,0);
+  atmB.OnClick:=CancelButtonClick;
   atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
   OnKeyDown:=KeyDown;
@@ -339,15 +361,14 @@ begin
     fRotateButtons[2].Selected:=true;
   end else
   if key=SDL_SCANCODE_ESCAPE then begin
-    MessageQueue.AddMessage(MSG_ROTATECELRESP,0);
+    Self.Hide;
   end else
   if key=SDL_SCANCODE_RETURN then begin
-    if fRotateButtons[0].Selected then
-      MessageQueue.AddMessage(MSG_ROTATECELRESP,1)
-    else if fRotateButtons[1].Selected then
-      MessageQueue.AddMessage(MSG_ROTATECELRESP,2)
-    else if fRotateButtons[2].Selected then
-      MessageQueue.AddMessage(MSG_ROTATECELRESP,3);
+    if fRotateButtons[0].Selected then Project.CELImage.Rotate(1)
+    else if fRotateButtons[1].Selected then Project.CELImage.Rotate(2)
+    else if fRotateButtons[2].Selected then Project.CELImage.Rotate(3);
+    MessageQueue.AddMessage(MSG_SHOWCEL);
+    Self.Hide;
   end;
   Result:=true;
 end;
@@ -361,12 +382,16 @@ end;
 
 procedure TBDRotateCELDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
-  if fRotateButtons[0].Selected then
-    MessageQueue.AddMessage(MSG_ROTATECELRESP,1)
-  else if fRotateButtons[1].Selected then
-    MessageQueue.AddMessage(MSG_ROTATECELRESP,2)
-  else if fRotateButtons[2].Selected then
-    MessageQueue.AddMessage(MSG_ROTATECELRESP,3);
+  if fRotateButtons[0].Selected then Project.CELImage.Rotate(1)
+  else if fRotateButtons[1].Selected then Project.CELImage.Rotate(2)
+  else if fRotateButtons[2].Selected then Project.CELImage.Rotate(3);
+  MessageQueue.AddMessage(MSG_SHOWCEL);
+  Self.Hide;
+end;
+
+procedure TBDRotateCELDialog.CancelButtonClick(Sender:TObject;x,y,buttons:integer);
+begin
+  Self.Hide;
 end;
 
 { TBDAboutDialog }
@@ -389,11 +414,16 @@ begin
     fWindowTop+SPLASHSCREENHEIGHT-44,
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'OK','CLOSE DIALOG');
-  atmB.Message:=TMessage.Init(MSG_ABOUTRESP,0);
+  atmB.OnClick:=OKButtonClick;
   atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
   Visible:=false;
   MouseObjects.Add(Self);
+end;
+
+procedure TBDAboutDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);
+begin
+  Self.Hide;
 end;
 
 { TBDMessageBox }
@@ -505,7 +535,7 @@ begin
     fWindowTop+96,
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'CANCEL','CLOSE DIALOG');
-  atmB.Message:=TMessage.Init(MSG_DITHERRESP,-1);
+  atmb.OnClick:=CancelButtonClick;
   atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
 
@@ -516,7 +546,13 @@ end;
 
 procedure TBDDitherDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
-  MessageQueue.AddMessage(MSG_DITHERRESP,fSlider.Position);
+  Settings.DitherStrength:=fSlider.Position;
+  Self.Hide;
+end;
+
+procedure TBDDitherDialog.CancelButtonClick(Sender:TObject; x,y,buttons:integer);
+begin
+  Self.Hide;
 end;
 
 { TBDSelectColorClusterDialog }
@@ -626,6 +662,94 @@ procedure TBDSelectColorClusterDialog.fSetBottom(value: integer);
 begin
   fBottom:=value;
   Refresh;
+end;
+
+{ TBDConfigureRGradDialog }
+
+constructor TBDConfigureRGradDialog.Create;
+const SLIDERWIDTH=300;
+      SLIDERHEIGHT=33;
+var atmB:TBDButton;
+begin
+  inherited Create(CONFIGURERGRADDIALOGWIDTH,CONFIGURERGRADDIALOGHEIGHT);
+  fName:='ConfigureRGradDialog';
+  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[2]);
+  fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[3]);
+  MM.Fonts['Black'].OutText(fTexture.ARGBImage,'REPETITIONS',DITHERDIALOGWIDTH div 2,16,1);
+  MM.Fonts['Black'].OutText(fTexture.ARGBImage,'ROTATION °',DITHERDIALOGWIDTH div 2,96,1);
+  fTexture.Update;
+
+  fRepetitionSlider:=TBDHorizontalSlider.Create(
+    fWindowLeft+(DITHERDIALOGWIDTH-SLIDERWIDTH) div 2, fWindowTop+48, SLIDERWIDTH, SLIDERHEIGHT);
+  fRepetitionSlider.ZIndex:=MODALDIALOG_ZINDEX+1;
+  fRepetitionSlider.Name:='RGradRepSlider';
+  fRepetitionSlider.MinValue:=1;
+  fRepetitionSlider.MaxValue:=16;
+  fRepetitionSlider.Position:=Settings.RGradRepetitions;
+  AddChild(fRepetitionSlider);
+
+  fRotationSlider:=TBDHorizontalSlider.Create(
+    fWindowLeft+(DITHERDIALOGWIDTH-SLIDERWIDTH) div 2, fWindowTop+128, SLIDERWIDTH, SLIDERHEIGHT);
+  fRotationSlider.ZIndex:=MODALDIALOG_ZINDEX+1;
+  fRotationSlider.Name:='RGradRotSlider';
+  fRotationSlider.MinValue:=0;
+  fRotationSlider.MaxValue:=359;
+  fRotationSlider.Position:=Settings.RGradRotation;
+  AddChild(fRotationSlider);
+
+  atmB:=TBDButton.Create(
+    fWindowLeft+(DITHERDIALOGWIDTH div 2-NORMALBUTTONWIDTH div 2),
+    fWindowTop+176,
+    NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
+    'CENTER','SET RADIAL GRADIENT CENTER POINT');
+  atmb.OnClick:=CenterButtonClick;
+  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
+  AddChild(atmB);
+
+  atmB:=TBDButton.Create(
+    fWindowLeft+(DITHERDIALOGWIDTH div 3-NORMALBUTTONWIDTH div 2),
+    fWindowTop+216,
+    NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
+    'OK','APPLY VALUES');
+  atmb.OnClick:=OKButtonClick;
+  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
+  AddChild(atmB);
+
+  atmB:=TBDButton.Create(
+    fWindowLeft+(DITHERDIALOGWIDTH div 3*2-NORMALBUTTONWIDTH div 2),
+    fWindowTop+216,
+    NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
+    'CANCEL','CLOSE DIALOG');
+  atmb.OnClick:=CancelButtonClick;
+  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
+  AddChild(atmB);
+
+  OnShow:=Show;
+  Visible:=false;
+  MouseObjects.Add(Self);
+end;
+
+procedure TBDConfigureRGradDialog.OKButtonClick(Sender:TObject;x,y,buttons:integer);
+begin
+  Settings.RGradRepetitions:=fRepetitionSlider.Position;
+  Settings.RGradRotation:=fRotationSlider.Position;
+  Self.Hide;
+end;
+
+procedure TBDConfigureRGradDialog.CenterButtonClick(Sender:TObject;x,y,buttons:integer);
+begin
+
+end;
+
+procedure TBDConfigureRGradDialog.CancelButtonClick(Sender:TObject;x,y,buttons:integer);
+begin
+  Self.Hide;
+end;
+
+procedure TBDConfigureRGradDialog.Show(Sender:TObject);
+begin
+  fRotationSlider.Position:=Settings.RGradRotation;
+  fRepetitionSlider.Position:=Settings.RGradRepetitions;
 end;
 
 end.

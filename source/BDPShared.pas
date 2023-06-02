@@ -121,18 +121,18 @@ const
   MSG_SETIMAGEUNDOREDOBUTTON=5;
   // Set Undo/Redo buttons' state depending on PaletteUndosystem state.
   MSG_SETPALETTEUNDOREDOBUTTON=6;
-  // Response from Magnify CEL dialog. Data contains magnification or 0 if cancelled.
-  MSG_MAGNIFYCELRESP=7;
-  // Response from Rotate CEL dialog. Rotate data*90 degrees clockwise.
-  MSG_ROTATECELRESP=8;
-  // Response from About dialog.
-  MSG_ABOUTRESP=9;
+  // Not used, you can put something here...
+  // *** MSG_MAGNIFYCELRESP=7;
+  // Not used, you can put something here...
+  // *** MSG_ROTATECELRESP=8;
+  // Not used, you can put something here...
+  // *** MSG_ABOUTRESP=9;
   // Response from MessageBox. Data is the pressed button number.
   MSG_MESSAGEBOXRESP=10;
   // Open DitherDialog.
   MSG_OPENDITHERDIALOG=11;
-  // Response from DitherDialog. Data is the new dither strength or -1 if cancelled.
-  MSG_DITHERRESP=12;
+  // Not used, you can put something here...
+  // *** MSG_DITHERRESP=12;
   // Set TOOLS menu item states based on Settings.SelectedTools
   MSG_SETTOOLSMENU=13;
   // Set INKS menu item states based on Settings.SelectedInks
@@ -141,6 +141,8 @@ const
   MSG_OPENCOLORCLUSTERDIALOG=15;
   // Response from SelectColorClusterDialog. Data is new color cluster index or -1 if not changed.
   MSG_COLORCLUSTERDIALOGRESP=16;
+  // Open ConfigureRGradDialog.
+  MSG_OPENCONFIGURERGRADDIALOG=17;
 
   // ------- Tool Messages ------- Range: 100-199 -------
   // PICKCOLCS finished, Data is the selected color index or -1 if no color selected.
