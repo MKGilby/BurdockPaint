@@ -132,6 +132,9 @@ Inks
   L Grad
     INKLGRAD
     Select L grad ink instead of selected one.
+  C Grad
+    INKCGRAD
+    Select C grad ink instead of selected one.  
   R Grad
     INKRGRAD
     Select R grad ink instead of selected one.

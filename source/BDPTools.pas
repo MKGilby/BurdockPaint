@@ -1561,9 +1561,9 @@ begin
           fState:=1;
         end;
       1:begin
-          Settings.RGradCenterX:=fSX;
-          Settings.RGradCenterY:=fSY;
-          Settings.RGradRadius:=round(sqrt(sqr(fSX-x)+sqr(fSY-y)));
+          Settings.CGradCenterX:=fSX;
+          Settings.CGradCenterY:=fSY;
+          Settings.CGradRadius:=round(sqrt(sqr(fSX-x)+sqr(fSY-y)));
           InfoBar.ShowText('');
           Result:=true;
           fState:=0;

@@ -422,6 +422,7 @@ begin
     MSG_INKVGRAD:ChangeActiveInkButtonTo(Inks.ItemByName['V GRAD']);
     MSG_INKLGRAD:ChangeActiveInkButtonTo(Inks.ItemByName['L GRAD']);
     MSG_INKRGRAD:ChangeActiveInkButtonTo(Inks.ItemByName['R GRAD']);
+    MSG_INKCGRAD:ChangeActiveInkButtonTo(Inks.ItemByName['C GRAD']);
     MSG_INKRANDOM:ChangeActiveInkButtonTo(Inks.ItemByName['RANDOM']);
     MSG_INKSOFTEN:ChangeActiveInkButtonTo(Inks.ItemByName['SOFTEN']);
     MSG_INKADD:ChangeActiveInkButtonTo(Inks.ItemByName['ADD']);

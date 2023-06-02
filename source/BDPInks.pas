@@ -128,6 +128,14 @@ type
     fTempImage:TBDImage;
   end;
 
+  { TBDInkRGrad }
+
+  TBDInkRGrad=class(TBDInk)
+    constructor Create; override;
+    function GetColorIndexAt(pX,pY: integer):integer; override;
+    procedure Configure; override;
+  end;
+
 implementation
 
 uses MKToolBox, BDPShared, Logger;
@@ -217,7 +225,7 @@ begin
   end;
 end;
 
-// ------------------------------------------------------------- [ TBDInk ] ---
+// ------------------------------------------------------------ [ TBDInks ] ---
 
 constructor TBDInks.Create;
 begin
@@ -229,6 +237,7 @@ begin
   AddObject('RANDOM',TBDInkRandom.Create);
   AddObject('SOFTEN',TBDInkSoften.Create);
   AddObject('ADD',TBDInkAdd.Create);
+  AddObject('R GRAD',TBDInkRGrad.Create);
 end;
 
 // -------------------------------------------------------- [ TBDInkHGrad ] ---
@@ -359,14 +368,14 @@ end;
 function TBDInkCGrad.GetColorIndexAt(pX, pY: integer): integer;
 var r:integer;
 begin
-  if Settings.RGradRadius>1 then begin
-    r:=trunc(Sqrt(sqr(px-Settings.RGradCenterX)+sqr(py-Settings.RGradCenterY))) mod Settings.RGradRadius;
+  if Settings.CGradRadius>1 then begin
+    r:=trunc(Sqrt(sqr(px-Settings.CGradCenterX)+sqr(py-Settings.CGradCenterY))) mod Settings.CGradRadius;
     if Settings.DitherGradients then
       Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.
-        GetIndexAtDithered(r,Settings.RGradRadius,Settings.DitherStrength)
+        GetIndexAtDithered(r,Settings.CGradRadius,Settings.DitherStrength)
     else
       Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.
-        GetIndexAt(r,Settings.RGradRadius)
+        GetIndexAt(r,Settings.CGradRadius)
   end else
     Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.GetIndexAt(1,2);
 end;
@@ -518,6 +527,42 @@ begin
   if Assigned(fTempImage) then FreeAndNil(fTempImage);
 end;
 
-end.
+// -------------------------------------------------------- [ TBDInkRGrad ] ---
 
+constructor TBDInkRGrad.Create;
+begin
+  inherited ;
+  fName:='R GRAD';
+  fHint:='RADIAL GRADIENT. '#132'SELECT '#133'CONFIGURE';
+  fSupportsOnTheFly:=true;
+end;
+
+function TBDInkRGrad.GetColorIndexAt(pX,pY:integer):integer;
+var d:integer;
+begin
+  if (Settings.RGradCenterX>pX) then begin
+    d:=trunc(arctan((Settings.RGradCenterY-pY)/(Settings.RGradCenterX-pX))*180/pi)+270;
+  end else
+  if (Settings.RGradCenterX<pX) then begin
+    d:=trunc(arctan((Settings.RGradCenterY-pY)/(Settings.RGradCenterX-pX))*180/pi)+90;
+  end else begin
+    if (Settings.RGradCenterY>=pY) then begin
+      d:=0;
+    end else begin
+      d:=180;
+    end;
+  end;
+  if Settings.DitherGradients then
+    Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.GetIndexAtDithered((round((d+Settings.RGradRotation)*Settings.RGradRepetitions)) mod 360,359,Settings.DitherStrength)
+  else
+    Result:=Project.CurrentImage.ColorClusters.ActiveColorCluster.GetIndexAt((round((d+Settings.RGradRotation)*Settings.RGradRepetitions)) mod 360,359)
+end;
+
+procedure TBDInkRGrad.Configure;
+begin
+{  MessageQueue.AddMessage(MSG_TOGGLECONTROLS);
+  ActiveTool:=Tools.ItemByName['CONFCG'];}
+end;
+
+end.
 
