@@ -136,7 +136,8 @@
   Undo operation data format
   --------------------------
     Start   Size        Description (content)
-    5       ???         The affected region before the operation in, an R-block
+    5       1           Version (0x01)
+    6       ???         The affected region before the operation in, an R-block
     .       ???         The affected region after the operation in, an R-block
 
 
@@ -149,8 +150,9 @@
   Undo operation data format
   --------------------------
     Start   Size        Description (content)
-    5       2           First affected color in the palette
-    7       ???         The affected color data before the operation, in a C-block
+    5       1           Version (0x01)
+    6       2           First affected color in the palette
+    8       ???         The affected color data before the operation, in a C-block
     .       ???         The affected color data after the operation, in a C-block
 
 
@@ -180,12 +182,12 @@
   Image data consist of two parts, color data and region data containing the
   full image. It is an I-block containing a C-block and an R-block, so itself has
   uncommpressed data, but the two inside block has compressed data as written above.
-  The usual extension is .bdi.
 
   Image data format
   -----------------
     Start   Size        Description (content)
-    5       ???         Color data in a C-block
+    5       1           Version (0x01)
+    6       ???         Color data in a C-block
     .       ???         Region data in an R-block
 
 
@@ -301,7 +303,7 @@ It is an Extended Image data block (E-block). Loading an image replaces the
 current image (and palette), undo states and color clusters.
 
 
-3.2. CEL file format (.bpcel)
+3.2. CEL file format (.bpc)
 ---------------------------
 
 It is an Image data block (I-block). The difference between an Image and a CEL is
@@ -318,13 +320,7 @@ in one of the ways below:
     color index not changing.)
 
 
-3.3. System state file format (.bpstate)
-------------------------------------
-
-It is a System State data block (S-block).
-
-
-3.4. Project file format (.bpprj)
+3.3. Project file format (.bpprj)
 ---------------------------------
 It is a Project data block (P-block).
 
