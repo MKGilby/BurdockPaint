@@ -57,6 +57,7 @@ type
     procedure LoadFromStream(pStream:TStream); override;
   private
     fBefore,fAfter:TBDImage;
+    procedure LoadFromStreamV1(pStream:TStream);
   end;
 
   { TBDColorUndoItem }
@@ -73,6 +74,7 @@ type
   private
     fStart:integer;
     fBefore,fAfter:TBDPalette;
+    procedure LoadFromStreamV1(pStream:TStream);
   end;
 
   TBDUndoList=TFPGObjectList<TBDUndoItem>;
@@ -198,6 +200,8 @@ begin
     curr:=pStream.Position;
     i:=0;
     pStream.Write(i,4);
+    i:=1;                // Version
+    pStream.Write(i,1);
     fBefore.SaveWholeImageDataToStream(pStream);
     fAfter.SaveWholeImageDataToStream(pStream);
     i:=pStream.Position-curr-4;
@@ -217,14 +221,19 @@ begin
   size:=0;
   pStream.Read(Size,4);
   curr:=pStream.Position;
-  fBefore:=TBDImage.Create(16,16);
-//  fBefore.Palette.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette);
-  fBefore.LoadWholeImageDataFromStream(pStream);
-  fAfter:=TBDImage.Create(16,16);
-//  fAfter.Palette.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette);
-  fAfter.LoadWholeImageDataFromStream(pStream);
+  pstream.Read(b,1);
+  if b=1 then LoadFromStreamV1(pStream)
+  else raise Exception.Create(Format('Unknown RegionUndoItem version! (%d)',[b]));
   fRedoable:=true;
   pStream.Position:=curr+size;
+end;
+
+procedure TBDRegionUndoItem.LoadFromStreamV1(pStream:TStream);
+begin
+  fBefore:=TBDImage.Create(16,16);
+  fBefore.LoadWholeImageDataFromStream(pStream);
+  fAfter:=TBDImage.Create(16,16);
+  fAfter.LoadWholeImageDataFromStream(pStream);
 end;
 
 { TBDColorUndoItem }
@@ -274,6 +283,8 @@ begin
     curr:=pStream.Position;
     i:=0;
     pStream.Write(i,4);
+    i:=1;
+    pStream.Write(i,1);
     pStream.Write(fStart,2);
     fBefore.SaveToStream(pStream);
     fAfter.SaveToStream(pStream);
@@ -294,14 +305,21 @@ begin
   size:=0;
   pStream.Read(Size,4);
   curr:=pStream.Position;
+  pStream.Read(b,1);
+  if b=1 then LoadFromStreamV1(pStream)
+  else raise Exception.Create(Format('Unknown ColorUndoItem version! (%d)',[b]));
+  pStream.Position:=curr+size;
+  fRedoable:=true;
+end;
+
+procedure TBDColorUndoItem.LoadFromStreamV1(pStream:TStream);
+begin
   fStart:=0;
   pStream.Read(fStart,2);
   fBefore:=TBDPalette.Create;
   fBefore.LoadFromStream(pStream);
   fAfter:=TBDPalette.Create;
   fAfter.LoadFromStream(pStream);
-  pStream.Position:=curr+size;
-  fRedoable:=true;
 end;
 
 { TBDUndoSystem }

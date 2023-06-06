@@ -153,6 +153,8 @@ type
     fPalette:TBDPalette;
     // Is the pixel data changed?
     fChanged:boolean;
+  private
+    procedure LoadFromStreamV1(pStream:TStream);
   public
     property Left:integer read fLeft write fLeft;
     property Top:integer read fTop write fTop;
@@ -928,6 +930,8 @@ begin
   curr:=Target.Position;
   i:=0;
   Target.Write(i,4);
+  i:=1;
+  Target.Write(i,1);
   fPalette.SaveToStream(Target);
   SaveWholeImageDataToStream(Target);
   i:=Target.Position-curr-4;
@@ -953,8 +957,9 @@ begin
   size:=0;
   Source.Read(size,4);
   curr:=Source.Position;
-  fPalette:=TBDPalette.CreateFromStream(Source);
-  LoadWholeImageDataFromStream(Source);
+  Source.Read(b,1);
+  if b=1 then LoadFromStreamV1(Source)
+  else raise Exception.Create(Format('Invalid image version! (%d)',[b]));
   Source.Position:=curr+size;
   fChanged:=false;
 end;
@@ -1078,6 +1083,12 @@ begin
       word(pp^):=atm;
       inc(pp,2);
     end;
+end;
+
+procedure TBDImage.LoadFromStreamV1(pStream:TStream);
+begin
+  fPalette:=TBDPalette.CreateFromStream(pStream);
+  LoadWholeImageDataFromStream(pStream);
 end;
 
 end.
