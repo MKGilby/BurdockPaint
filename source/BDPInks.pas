@@ -518,12 +518,8 @@ begin
 end;
 
 procedure TBDInkAdd.PostProcess;
-var i,j:integer;
 begin
-  for j:=fTop to fTop+fHeight-1 do
-    for i:=fLeft to fLeft+fWidth-1 do
-      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
-        Project.CurrentImage.PutPixel(i,j,GetColorIndexAt(i,j));
+  inherited ;
   if Assigned(fTempImage) then FreeAndNil(fTempImage);
 end;
 
