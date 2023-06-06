@@ -721,6 +721,7 @@ var i,j,ic,cc:integer;w:boolean;
 
 begin
   cc:=Project.CurrentImage.GetPixel(x,y);
+  if cc=POSTPROCESSCOLOR then exit;
   Project.CurrentImage.PutPixel(x,y,POSTPROCESSCOLOR);
   ic:=0;
   repeat
@@ -874,6 +875,7 @@ var i,j,ic:integer;w:boolean;
   end;
 
 begin
+  if fSourceColor=POSTPROCESSCOLOR then exit;
   Project.CurrentImage.PutPixel(x,y,POSTPROCESSCOLOR);
   ic:=0;
   repeat
