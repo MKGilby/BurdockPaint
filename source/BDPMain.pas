@@ -68,29 +68,13 @@ uses SDL2, BDPShared, MKToolbox, MKStream, MKMouse2, Logger,
 { TMain }
 
 constructor TMain.Create(iVersion,iBuildDate:string);
-{$IFNDEF DEBUG}var MAD4:TMAD4MidLevel;{$ENDIF}
 begin
 {$IFDEF DEBUG}
   // Set logging level
   Log.SetLogLevel(llAll);
-  // Set data directory path to allow running without datafile
-  MKStreamOpener.AddDirectory('..\data',100);
 {$ELSE}
 // Set logging level
   Log.SetLogLevel(llStatus);
-// Try to mount the datafile.
-  if FileExists(ExtractFileDir(Parameters[0])+'\'+DATAFILE) then begin
-    try
-      MAD4:=TMAD4MidLevel.Create(ExtractFileDir(Parameters[0])+'\'+DATAFILE);
-      MKStreamOpener.AddOtherSource(MAD4, 0);
-    except
-      on exception do ;
-    end;
-  end else begin
-    Log.LogError('Datafile not found!');
-    Log.LogStatus(ExtractFileDir(Parameters[0])+'\'+DATAFILE);
-    raise Exception.Create('Datafile not found!');
-  end;
 {$ENDIF}
 
   MKStreamOpener.AddDirectory('.',0);
