@@ -55,6 +55,7 @@ type
     fShowGrid:boolean;
     fCGradCenterX,fCGradCenterY,fCGradRadius:integer;
     fRGradCenterX,fRGradCenterY,fRGradRepetitions,fRGradRotation:integer;
+    fTempRGradCenterX,fTempRGradCenterY:integer;
     function fGetSelectedColor(index:integer):integer;
     function fGetSelectedTool(index:integer):string;
     procedure fSetSelectedColor(index:integer; AValue:integer);
@@ -88,6 +89,8 @@ type
     property RGradRepetitions:integer read fRGradRepetitions write fRGradRepetitions;
     property RGradRotation:integer read fRGradRotation write fRGradRotation;
     property ShowGrid:boolean read fShowGrid write fShowGrid;
+    property TempRGradCenterX:integer read fTempRGradCenterX write fTempRGradCenterX;
+    property TempRGradCenterY:integer read fTempRGradCenterY write fTempRGradCenterY;
   end;
 
 
