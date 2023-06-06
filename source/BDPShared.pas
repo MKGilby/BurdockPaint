@@ -106,7 +106,7 @@ const
 
   // Message typeID constants
 
-  // ------- System Messages ------- Range: 0-99 -------
+  // ------- System Messages ------- Range: 0-199 -------
   // Don't want to send message but buttons need one? Give them this.
   MSG_NONE=0;
   // ConfirmQUIT dialog finished, IntValue is 1 if really quit, 0 if not.
@@ -121,18 +121,18 @@ const
   MSG_SETIMAGEUNDOREDOBUTTON=5;
   // Set Undo/Redo buttons' state depending on PaletteUndosystem state.
   MSG_SETPALETTEUNDOREDOBUTTON=6;
-  // Not used, you can put something here...
-  // *** MSG_MAGNIFYCELRESP=7;
-  // Not used, you can put something here...
-  // *** MSG_ROTATECELRESP=8;
-  // Not used, you can put something here...
-  // *** MSG_ABOUTRESP=9;
+  // GETCEL or PUTCEL finished, reactivate selected tool.
+  MSG_RESTORECONTROLS=7;
+  // ActiveColorIndex changed. Data is the active color index.
+  MSG_ACTIVECOLORINDEXCHANGED=8;
+  // PICKCOLCS finished, Data is the selected color index or -1 if no color selected.
+  MSG_COLORSELECTORPICKEDCOLOR=9;
   // Response from MessageBox. Data is the pressed button number.
   MSG_MESSAGEBOXRESP=10;
   // Open DitherDialog.
   MSG_OPENDITHERDIALOG=11;
-  // Not used, you can put something here...
-  // *** MSG_DITHERRESP=12;
+  // Show CEL image. Hides Controls and MainMenu then activates SHOWCEL tool.
+  MSG_SHOWCEL=12;
   // Set TOOLS menu item states based on Settings.SelectedTools
   MSG_SETTOOLSMENU=13;
   // Set INKS menu item states based on Settings.SelectedInks
@@ -143,30 +143,24 @@ const
   MSG_COLORCLUSTERDIALOGRESP=16;
   // Open ConfigureRGradDialog.
   MSG_OPENCONFIGURERGRADDIALOG=17;
-
-  // ------- Tool Messages ------- Range: 100-199 -------
-  // PICKCOLCS finished, Data is the selected color index or -1 if no color selected.
-  MSG_COLORSELECTORPICKEDCOLOR=100;
-  // GETCEL or PUTCEL finished, reactivate selected tool.
-  MSG_RESTORECONTROLS=101;
-  // ActiveColorIndex changed. Data is the active color index.
-  MSG_ACTIVECOLORINDEXCHANGED=102;
-  // Show CEL image. Hides Controls and MainMenu then activates SHOWCEL tool.
-  MSG_SHOWCEL=103;
   // GetCEL tool finished *successfully*. We should enable menus associated with CEL.
-  MSG_GETCELFINISHED=104;
+  MSG_GETCELFINISHED=18;
   // KEY_GETCOLOR pressed, select color value under the cursor (if over drawarea).
-  MSG_SELECTCOLOR=105;
+  MSG_SELECTCOLOR=19;
   // Project image count changed. Used to refresh Controls' slider.
-  MSG_PROJECTIMAGECOUNTCHANGED=106;
+  MSG_PROJECTIMAGECOUNTCHANGED=20;
   // PICKCOLP finished, Data is the selected color index or -1 of no color selected.
-  MSG_PALETTEPICKEDCOLOR=107;
+  MSG_PALETTEPICKEDCOLOR=21;
   // Activate PickColorCluster tool.
-  MSG_ACTIVATEPICKCOLORCLUSTER=108;
+  MSG_ACTIVATEPICKCOLORCLUSTER=22;
   // PICKCOLCLS finished, Data is the start in upper word and end in lower word.
-  MSG_COLORCLUSTERPICKED=109;
+  MSG_COLORCLUSTERPICKED=23;
   // Active color cluster changed, refresh color clusters.
-  MSG_ACTIVECOLORCLUSTERCHANGED=110;
+  MSG_ACTIVECOLORCLUSTERCHANGED=24;
+  // Hide controls and select RGradCenter tool.
+  MSG_CONFIGRGRADCENTER=25;
+  // RGrad configuration "Center" finished. (Data is stored in Settings.TempRGradCenter<X|Y>
+  MSG_CONFIGRGRADCENTERFINISHED=26;
 
   // ------- Menu Messages ------- Range: 200-299 -------
   {$i includes\menu.inc}
