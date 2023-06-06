@@ -390,6 +390,17 @@ begin
           MSG_OPENCONFIGURERGRADDIALOG:begin
             fConfigureRGradDialog.Show;
           end;
+          MSG_CONFIGRGRADCENTER:begin
+            HideMainControls;
+            ActiveTool:=Tools.ItemByName['CONFRG'];
+            ActiveTool.Initialize;
+          end;
+          MSG_CONFIGRGRADCENTERFINISHED:begin
+            ShowMainControls;
+            Settings.RGradCenterX:=Settings.TempRGradCenterX;
+            Settings.RGradCenterY:=Settings.TempRGradCenterY;
+            fConfigureRGradDialog.Show;
+          end;
         end;
       end;
     end;

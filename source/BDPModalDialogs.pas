@@ -738,7 +738,8 @@ end;
 
 procedure TBDConfigureRGradDialog.CenterButtonClick(Sender:TObject;x,y,buttons:integer);
 begin
-
+  Self.Hide;
+  MessageQueue.AddMessage(MSG_CONFIGRGRADCENTER);
 end;
 
 procedure TBDConfigureRGradDialog.CancelButtonClick(Sender:TObject;x,y,buttons:integer);

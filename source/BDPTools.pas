@@ -247,6 +247,15 @@ type
     procedure DrawCircleWithInk(cx,cy,r:integer);
   end;
 
+  { TBDToolConfigureRGrad }
+
+  TBDToolConfigureRGrad=class(TBDTool)
+    constructor Create; override;
+    function Click(x,y,button:integer):boolean; override;
+    procedure Draw; override;
+    procedure Clear; override;
+  end;
+
 implementation
 
 uses
@@ -323,6 +332,7 @@ begin
   AddObject('SHOWCEL',TBDToolShowCEL.Create);
   AddObject('PICKCOLCLS',TBDToolPickColorCluster.Create);
   AddObject('CONFCG',TBDToolConfigureCGrad.Create);
+  AddObject('CONFRG',TBDToolConfigureRGrad.Create);
 end;
 
 // --------------------------------------------------------- [ TBDToolBox ] ---
@@ -1546,7 +1556,7 @@ end;
 constructor TBDToolConfigureCGrad.Create;
 begin
   inherited ;
-  fName:='CONFRG';
+  fName:='CONFCG';
   fHint:=uppercase('Select center then set radius.');
 end;
 
@@ -1589,12 +1599,12 @@ procedure TBDToolConfigureCGrad.Draw;
 var r:integer;
 begin
   case fState of
-    0:InfoBar.ShowText(Format('%d,%d - CONFIGURE R GRAD - '#132' SELECT CENTER '#133' CANCEL',[fX,fY]));
+    0:InfoBar.ShowText(Format('%d,%d - CONFIGURE C GRAD - '#132' SELECT CENTER '#133' CANCEL',[fX,fY]));
     1:begin
         r:=round(sqrt(sqr(fSX-fX)+sqr(fSY-fY)));
         Project.OverlayImage.Circle(fSX,fSY,r,VibroColors.GetColorIndex);
         InfoBar.ShowText(
-          Format('(%d,%d) R=%d %d,%d - CONFIGURE R GRAD - '#132' SET RADIUS '#133' CANCEL',[fSX,fSY,r,fX,fY]));
+          Format('(%d,%d) R=%d %d,%d - CONFIGURE C GRAD - '#132' SET RADIUS '#133' CANCEL',[fSX,fSY,r,fX,fY]));
       end;
   end;
 end;
@@ -1608,6 +1618,46 @@ end;
 procedure TBDToolConfigureCGrad.DrawCircleWithInk(cx,cy,r:integer);
 begin
 
+end;
+
+// ---------------------------------------------- [ TBDToolConfigureRGrad ] ---
+
+constructor TBDToolConfigureRGrad.Create;
+begin
+  inherited Create;
+  fName:='CONFRG';
+  fHint:=uppercase('Select center.');
+end;
+
+function TBDToolConfigureRGrad.Click(x,y,button:integer):boolean;
+begin
+  if button=SDL_BUTTON_LEFT then begin
+    InfoBar.ShowText('');
+    Settings.TempRGradCenterX:=x;
+    Settings.TempRGradCenterY:=y;
+    MessageQueue.AddMessage(MSG_CONFIGRGRADCENTERFINISHED);
+    Result:=true;
+  end
+  else if Button=SDL_BUTTON_RIGHT then begin  // Right button
+    InfoBar.ShowText('');
+    Settings.TempRGradCenterX:=Settings.RGradCenterX;
+    Settings.TempRGradCenterY:=Settings.RGradCenterY;
+    MessageQueue.AddMessage(MSG_CONFIGRGRADCENTERFINISHED);
+    Result:=true;
+  end else Result:=false;
+end;
+
+procedure TBDToolConfigureRGrad.Draw;
+begin
+  Project.OverlayImage.VLine(fX,0,Project.OverlayImage.Height,VibroColors.GetColorIndex);
+  Project.OverlayImage.HLine(0,fY,Project.OverlayImage.Width,VibroColors.GetColorIndex);
+  InfoBar.ShowText(Format('%d,%d - CONFIGURE R GRAD - '#132' SELECT CENTER '#133' CANCEL',[fX,fY]));
+end;
+
+procedure TBDToolConfigureRGrad.Clear;
+begin
+  Project.OverlayImage.VLine(fX,0,Project.OverlayImage.Height,0);
+  Project.OverlayImage.HLine(0,fY,Project.OverlayImage.Width,0);
 end;
 
 end.
