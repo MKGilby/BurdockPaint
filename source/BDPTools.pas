@@ -110,9 +110,6 @@ type
   TBDToolFill=class(TBDTool)
     constructor Create; override;
     function Click(x,y,button:integer):boolean; override;
-  private
-    fLeft,fTop,fRight,fBottom:integer;
-    procedure FloodFillWithPostProcessColor(x,y:integer);
   end;
 
   { TBDToolFillTo }
@@ -669,116 +666,44 @@ begin
 end;
 
 function TBDToolFill.Click(x,y,button:integer):boolean;
-var fTempImage:TBDImage;
+var fTempImage:TBDImage;i,j:integer;
+    fLeft,fTop,fRight,fBottom:integer;
 begin
   if button=SDL_BUTTON_LEFT then begin
     fLeft:=x;
     fTop:=y;
     fRight:=x;
     fBottom:=y;
+    // Create temporary image.
     fTempImage:=TBDImage.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
+    // Copy current image to temporary image.
     fTempImage.Palette.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette);
     fTempImage.PutImage(0,0,Project.CurrentImage);
-
-    FloodFillWithPostProcessColor(x,y);
-
-    Project.CurrentImage.ImageUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
-    FreeAndNil(fTempImage);
+    // Process Fill on temporary image.
+    fTempImage.FloodFill(x,y,POSTPROCESSCOLOR);
+    // Scan affected area.
+    for j:=0 to fTempImage.Height-1 do
+      for i:=0 to fTempImage.Width-1 do
+        if word((fTempImage.RawData+(j*fTempImage.Width+i)*2)^)=POSTPROCESSCOLOR then begin
+          if fLeft>i then fLeft:=i;
+          if fRight<i then fRight:=i;
+          if fTop>j then fTop:=j;
+          if fBottom<j then fBottom:=j;
+        end;
+    // Create Undo operation with the still unchanged image.
+    Project.CurrentImage.ImageUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
+    // Initialize ink with affected area. (Current image still unchanged.)
     ActiveInk.InitializeArea(fLeft,fTop,fRight,fBottom);
+    // Copy affected area from temporary image to current image.
+    Project.CurrentImage.PutImagePart(fLeft,fTop,fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+    // Free temporory image.
+    fTempImage.Free;
+    // PostProcess with ink.
     ActiveInk.PostProcess;
+    // Add Redo image to undo operation.
     Project.CurrentImage.ImageUndo.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
     Result:=true;
   end else Result:=false;
-end;
-
-procedure TBDToolFill.FloodFillWithPostProcessColor(x,y:integer);
-var i,j,ic,cc:integer;w:boolean;
-
-  function FFCheckPixel(x,y,src:integer):boolean;
-  begin
-    Result:=false;
-    if (y>0) and (Project.CurrentImage.GetPixel(x,y-1)=src) then begin
-      Project.CurrentImage.PutPixel(x,y-1,POSTPROCESSCOLOR);
-      if y-1<fTop then fTop:=y-1;
-      Result:=true;
-    end;
-    if (x<Project.CurrentImage.Width-1) and (Project.CurrentImage.GetPixel(x+1,y)=src) then begin
-      Project.CurrentImage.PutPixel(x+1,y,POSTPROCESSCOLOR);
-      if x+1>fRight then fRight:=x+1;
-      Result:=true;
-    end;
-    if (y<Project.CurrentImage.Height-1) and (Project.CurrentImage.GetPixel(x,y+1)=src) then begin
-      Project.CurrentImage.PutPixel(x,y+1,POSTPROCESSCOLOR);
-      if y+1>fBottom then fBottom:=y+1;
-      Result:=true;
-    end;
-    if (x>0) and (Project.CurrentImage.GetPixel(x-1,y)=src) then begin
-      Project.CurrentImage.PutPixel(x-1,y,POSTPROCESSCOLOR);
-      if x-1<fLeft then fLeft:=x-1;
-      Result:=true;
-    end;
-  end;
-
-begin
-  cc:=Project.CurrentImage.GetPixel(x,y);
-  if cc=POSTPROCESSCOLOR then exit;
-  Project.CurrentImage.PutPixel(x,y,POSTPROCESSCOLOR);
-  ic:=0;
-  repeat
-    w:=false;
-    case (ic mod 4) of
-      0:begin
-          j:=fTop;
-          while j<=fBottom do begin
-            i:=fLeft;
-            while i<=fRight do begin
-              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
-                if FFCheckPixel(i,j,cc) then w:=true;
-              inc(i);
-            end;
-            inc(j);
-          end;
-        end;
-      1:begin
-          j:=fBottom;
-          while j>=fTop do begin
-            i:=fLeft;
-            while i<=fRight do begin
-              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
-                if FFCheckPixel(i,j,cc) then w:=true;
-              inc(i);
-            end;
-            dec(j);
-          end;
-        end;
-      2:begin
-          j:=fBottom;
-          while j>=fTop do begin
-            i:=fRight;
-            while i>=fLeft do begin
-              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
-                if FFCheckPixel(i,j,cc) then w:=true;
-              dec(i);
-            end;
-            dec(j);
-          end;
-        end;
-      3:begin
-          j:=fTop;
-          while j<=fBottom do begin
-            i:=fRight;
-            while i>=fLeft do begin
-              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
-                if FFCheckPixel(i,j,cc) then w:=true;
-              dec(i);
-            end;
-            inc(j);
-          end;
-        end;
-    end;
-    inc(ic);
-  until not w;
-  Infobar.ShowText(Format('FLOODFILL COMPLETED WITH %d ITERATIONS.',[ic]));
 end;
 
 // ------------------------------------------------------ [ TBDToolFillTo ] ---
