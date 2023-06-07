@@ -167,7 +167,7 @@ type
 
 implementation
 
-uses MyZStreamUnit, SDL2, Logger, ARGBImageUnit, BDPShared;
+uses MyZStreamUnit, SDL2, Logger, ARGBImageUnit, BDPShared, MKToolbox;
 
 {$i includes\ntsccol.inc}
 
@@ -554,31 +554,39 @@ var i,j,cc:integer;w:boolean;
 
 begin
   cc:=GetPixel(x,y);
-  PutPixel(x,y,ColorIndex);
-  w:=false;
+  PutPixel(x,y,POSTPROCESSCOLOR);
   repeat
+    w:=false;
     for j:=0 to fHeight-1 do
       for i:=0 to fWidth-1 do
-        w:=w or FFCheckPixel(i,j,cc,ColorIndex);
+        if GetPixel(i,j)=POSTPROCESSCOLOR then
+          if FFCheckPixel(i,j,cc,POSTPROCESSCOLOR) then w:=true;
     if w then begin
       w:=false;
       for j:=fHeight-1 downto 0 do
         for i:=0 to fWidth-1 do
-          w:=w or FFCheckPixel(i,j,cc,ColorIndex);
+          if GetPixel(i,j)=POSTPROCESSCOLOR then
+            if FFCheckPixel(i,j,cc,ColorIndex) then w:=true;
     end;
     if w then begin
       w:=false;
       for j:=fHeight-1 downto 0 do
         for i:=fWidth-1 downto 0 do
-          w:=w or FFCheckPixel(i,j,cc,ColorIndex);
+          if GetPixel(i,j)=POSTPROCESSCOLOR then
+            if FFCheckPixel(i,j,cc,ColorIndex) then w:=true;
     end;
     if w then begin
       w:=false;
       for j:=0 to fHeight-1 do
         for i:=fWidth-1 downto 0 do
-          w:=w or FFCheckPixel(i,j,cc,ColorIndex);
+          if GetPixel(i,j)=POSTPROCESSCOLOR then
+            if FFCheckPixel(i,j,cc,ColorIndex) then w:=true;
     end;
   until not w;
+  if ColorIndex<>POSTPROCESSCOLOR then
+    for j:=0 to fHeight-1 do
+      for i:=0 to fWidth-1 do
+        if GetPixel(i,j)=POSTPROCESSCOLOR then PutPixel(i,j,ColorIndex);
 end;
 
 procedure TBDImage.PutImage(x,y:integer; frame:TBDImage; colorkey:word);
