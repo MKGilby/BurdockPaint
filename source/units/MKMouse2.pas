@@ -79,6 +79,8 @@
 //     * MouseObjects.Add inserts object to the sorted place (by ZIndex), no
 //       need to call Sort. You need Sort when an already added object's
 //       ZIndex value is changed.
+//   V1.15a - 2023.06.07 - Gilby
+//     * Only mouse and keyup keydown events are consumed.
 
 {$ifdef fpc}
   {$mode delphi}
@@ -180,7 +182,7 @@ uses SysUtils, Logger, MK_SDL2;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.15';
+  Version='1.15a';
 
 constructor TMouseObjects.Create;
 begin
@@ -236,6 +238,7 @@ begin
     SDL_KEYDOWN:Log.LogDebug('KeyDown');
     SDL_KEYUP:Log.LogDebug('KeyUp');
     SDL_MOUSEWHEEL:Log.LogDebug('MouseWheel');
+    SDL_QUITEV:Log.LogDebug('Quit');
   end;
   overindex:=-1;
   if Count>0 then begin
@@ -301,6 +304,7 @@ begin
               end;
           end;
         end;
+        Result:=true;
       end;
 
       // This part checks if the control under the mouse is changed and
@@ -335,7 +339,6 @@ begin
         end;
         fLastMouseDownIndex:=-1;
       end;
-      Result:=true;
     end;
   end;
   Log.DecreaseIndent(2);
