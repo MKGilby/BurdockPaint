@@ -131,7 +131,6 @@ type
   private
     fColorCluster:TColorCluster;
     fColorsWidth:integer;
-    procedure Click(Sender:TObject;x,y,buttons:integer);
     function fGetColorsWidth:integer;
   public
     property ColorsWidth:integer read fGetColorsWidth;
@@ -590,22 +589,6 @@ begin
       MM.Fonts['Black'].OutText(fTexture.ARGBImage,'X',XLeft+XWidth div 2,9,1);
     end;
     fTexture.Update;
-  end;
-end;
-
-procedure TBDSimpleColorCluster.Click(Sender:TObject; x,y,buttons:integer);
-begin
-  x-=Left;
-  if x<fColorsWidth then
-    MessageQueue.AddMessage(MSG_COLORCLUSTERDIALOGRESP,Self.Tag)
-  else begin
-    if not Selected then begin
-      Project.CurrentImage.ColorClusters.Delete(Self.Tag);
-      if Project.CurrentImage.ColorClusters.ActiveIndex>=Project.CurrentImage.ColorClusters.Count then begin
-        Project.CurrentImage.ColorClusters.ActiveIndex:=Project.CurrentImage.ColorClusters.Count-1;
-      end;
-      MessageQueue.AddMessage(MSG_COLORCLUSTERDIALOGRESP,-2)
-    end;
   end;
 end;
 
