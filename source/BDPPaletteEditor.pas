@@ -379,9 +379,9 @@ begin
   if fSavedColor<>Project.CurrentImage.Palette.Colors[Settings.ActiveColorIndex] then begin
     tmp:=Project.CurrentImage.Palette.Colors[Settings.ActiveColorIndex];
     Project.CurrentImage.Palette.Colors[Settings.ActiveColorIndex]:=fSavedColor;
-    Project.CurrentImage.PaletteUndo.AddPaletteUndo(Settings.ActiveColorIndex,1);
+    Project.CurrentImage.PaletteUndo.AddSingleColorUndo(Settings.ActiveColorIndex);
     Project.CurrentImage.Palette.Colors[Settings.ActiveColorIndex]:=tmp;
-    Project.CurrentImage.PaletteUndo.AddPaletteRedoToLastUndo(Settings.ActiveColorIndex,1);
+    Project.CurrentImage.PaletteUndo.AddSingleColorRedoToLastUndo;
     fColorBox.ColorChanged;
   end;
 end;
