@@ -144,16 +144,31 @@
 2.1.4. Palette undo operation data (Q-block)
 -------------------------------------------
 
-  Palette undo operation data contains information about one undo/redo operation.
-  It is an Q-block and has uncompressed data with other blocks inside.
+  Palette undo operation data contains information about one undo/redo operation
+  on one or more colors. It is a Q-block with uncompressed data.
 
-  Undo operation data format
-  --------------------------
+  Palette undo operation data format (v1)
+  ---------------------------------------
     Start   Size        Description (content)
     5       1           Version (0x01)
     6       2           First affected color in the palette
     8       ???         The affected color data before the operation, in a C-block
     .       ???         The affected color data after the operation, in a C-block
+
+
+2.1.5. Single color undo operation data (S-block)
+-------------------------------------------------
+
+  Single color undo operation data contains information about one undo/redo
+  operation on a single color. It is an S-block with uncompressed data.
+
+  Single color undo operation data format (v1)
+  --------------------------------------------
+    Start   Size        Description (content)
+    5       1           Version (0x01)
+    6       2           The affected color's index in the palette
+    8       4           The affected color before the operation (4 bytes: RGBA)
+    12      4           The affected color after the operation (4 bytes: RGBA)
 
 
 2.1.5. Color cluster data (T-block)
