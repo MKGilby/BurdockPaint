@@ -60,13 +60,13 @@ type
     procedure LoadFromStreamV1(pStream:TStream);
   end;
 
-  { TBDColorUndoItem }
+  { TBDPaletteUndoItem }
 
-  TBDColorUndoItem=class(TBDUndoItem)
+  TBDPaletteUndoItem=class(TBDUndoItem)
     constructor Create(iStart:integer;iBefore:TBDPalette);
     constructor CreateFromStream(iStream:TStream);
     destructor Destroy; override;
-    procedure AddAfter(iAfter:TBDPalette);
+    procedure AddAfter(pAfter:TBDPalette);
     procedure Undo; override;
     procedure Redo; override;
     procedure SaveToStream(pStream:TStream); override;
@@ -75,6 +75,27 @@ type
     fStart:integer;
     fBefore,fAfter:TBDPalette;
     procedure LoadFromStreamV1(pStream:TStream);
+  public
+    property Start:integer read fStart;
+    property After:TBDPalette read fAfter;
+  end;
+
+  { TBDSingleColorUndoItem }
+
+  TBDSingleColorUndoItem=class(TBDUndoItem)
+    constructor Create(iStart:integer;iBefore:uint32);
+    constructor CreateFromStream(iStream:TStream);
+    procedure AddAfter(pAfter:uint32);
+    procedure Undo; override;
+    procedure Redo; override;
+    procedure SaveToStream(pStream:TStream); override;
+    procedure LoadFromStream(pStream:TStream); override;
+  private
+    fStart:integer;
+    fBefore,fAfter:uint32;
+    procedure LoadFromStreamV1(pStream:TStream);
+  public
+    property Start:integer read fStart;
   end;
 
   TBDUndoList=TFPGObjectList<TBDUndoItem>;
@@ -115,6 +136,8 @@ type
     constructor Create;
     procedure AddPaletteUndo(Start,Count:integer);
     procedure AddPaletteRedoToLastUndo(Start,Count:integer);
+    procedure AddSingleColorUndo(pStart:integer);
+    procedure AddSingleColorRedoToLastUndo;
     procedure SaveToStream(pStream:TStream); override;
     procedure LoadFromStream(pStream:TStream); override;
   end;
@@ -128,6 +151,7 @@ const
   UNDOOPERATIONREGIONID=$4F;
   UNDOSYSTEMPALETTEID=$56;
   UNDOOPERATIONPALETTEID=$51;
+  UNDOOPERATIONSINGLECOLORID=$53;
 
 { TBDUndoItem }
 
@@ -236,46 +260,46 @@ begin
   fAfter.LoadWholeImageDataFromStream(pStream);
 end;
 
-{ TBDColorUndoItem }
+{ TBDPaletteUndoItem }
 
-constructor TBDColorUndoItem.Create(iStart:integer; iBefore:TBDPalette);
+constructor TBDPaletteUndoItem.Create(iStart:integer; iBefore:TBDPalette);
 begin
   fStart:=iStart;
   fBefore:=iBefore;
 end;
 
-constructor TBDColorUndoItem.CreateFromStream(iStream:TStream);
+constructor TBDPaletteUndoItem.CreateFromStream(iStream:TStream);
 begin
   inherited Create;
   LoadFromStream(iStream);
 end;
 
-destructor TBDColorUndoItem.Destroy;
+destructor TBDPaletteUndoItem.Destroy;
 begin
   if Assigned(fBefore) then FreeAndNil(fBefore);
   if Assigned(fAfter) then FreeAndNil(fAfter);
   inherited Destroy;
 end;
 
-procedure TBDColorUndoItem.AddAfter(iAfter:TBDPalette);
+procedure TBDPaletteUndoItem.AddAfter(pAfter:TBDPalette);
 begin
-  fAfter:=iAfter;
+  fAfter:=pAfter;
   fRedoable:=true;
 end;
 
-procedure TBDColorUndoItem.Undo;
+procedure TBDPaletteUndoItem.Undo;
 begin
   Project.CurrentImage.Palette.CopyColorsFrom(fBefore,0,fStart,fBefore.Size);
 end;
 
-procedure TBDColorUndoItem.Redo;
+procedure TBDPaletteUndoItem.Redo;
 begin
   if Assigned(fAfter) then
     Project.CurrentImage.Palette.CopyColorsFrom(fAfter,0,fStart,fAfter.Size);
 end;
 
-procedure TBDColorUndoItem.SaveToStream(pStream:TStream);
-var i:integer;curr:int64;
+procedure TBDPaletteUndoItem.SaveToStream(pStream:TStream);
+var i:uint32;curr:int64;
 begin
   if Assigned(fAfter) then begin
     i:=UNDOOPERATIONPALETTEID;
@@ -296,7 +320,7 @@ begin
     raise Exception.Create('UndoColorItem save error: No AfterPalette assigned!');
 end;
 
-procedure TBDColorUndoItem.LoadFromStream(pStream:TStream);
+procedure TBDPaletteUndoItem.LoadFromStream(pStream:TStream);
 var size,curr:int64;b:byte;
 begin
   b:=0;
@@ -312,7 +336,7 @@ begin
   fRedoable:=true;
 end;
 
-procedure TBDColorUndoItem.LoadFromStreamV1(pStream:TStream);
+procedure TBDPaletteUndoItem.LoadFromStreamV1(pStream:TStream);
 begin
   fStart:=0;
   pStream.Read(fStart,2);
@@ -320,6 +344,78 @@ begin
   fBefore.LoadFromStream(pStream);
   fAfter:=TBDPalette.Create;
   fAfter.LoadFromStream(pStream);
+end;
+
+{ TBDSingleColorUndoItem }
+
+constructor TBDSingleColorUndoItem.Create(iStart:integer; iBefore:uint32);
+begin
+  fStart:=iStart;
+  fBefore:=iBefore;
+end;
+
+constructor TBDSingleColorUndoItem.CreateFromStream(iStream:TStream);
+begin
+  inherited Create;
+  LoadFromStream(iStream);
+end;
+
+procedure TBDSingleColorUndoItem.AddAfter(pAfter:uint32);
+begin
+  fAfter:=pAfter;
+end;
+
+procedure TBDSingleColorUndoItem.Undo;
+begin
+  Project.CurrentImage.Palette[fStart]:=fBefore;
+end;
+
+procedure TBDSingleColorUndoItem.Redo;
+begin
+  Project.CurrentImage.Palette[fStart]:=fAfter;
+end;
+
+procedure TBDSingleColorUndoItem.SaveToStream(pStream:TStream);
+var i:uint32;curr:int64;
+begin
+  i:=UNDOOPERATIONSINGLECOLORID;
+  pStream.Write(i,1);
+  curr:=pStream.Position;
+  i:=0;
+  pStream.Write(i,4);
+  i:=1;
+  pStream.Write(i,1);
+  pStream.Write(fStart,2);
+  pStream.Write(fBefore,4);
+  pStream.Write(fAfter,4);
+  i:=pStream.Position-curr-4;
+  pStream.Position:=curr;
+  pStream.write(i,4);
+  pStream.Position:=pStream.Position+i;
+end;
+
+procedure TBDSingleColorUndoItem.LoadFromStream(pStream:TStream);
+var size,curr:int64;b:byte;
+begin
+  b:=0;
+  pStream.Read(b,1);
+  if b<>UNDOOPERATIONSINGLECOLORID then raise Exception.Create(Format('ID is not for single color undo operation data! (%.2x)',[b]));
+  size:=0;
+  pStream.Read(Size,4);
+  curr:=pStream.Position;
+  pStream.Read(b,1);
+  if b=1 then LoadFromStreamV1(pStream)
+  else raise Exception.Create(Format('Unknown SingleColorUndoItem version! (%d)',[b]));
+  pStream.Position:=curr+size;
+  fRedoable:=true;
+end;
+
+procedure TBDSingleColorUndoItem.LoadFromStreamV1(pStream:TStream);
+begin
+  fStart:=0;
+  pStream.Read(fStart,2);
+  pStream.Read(fBefore,4);
+  pStream.Read(fAfter,4);
 end;
 
 { TBDUndoSystem }
@@ -483,14 +579,14 @@ begin
 end;
 
 procedure TBDPaletteUndoSystem.AddPaletteUndo(Start,Count:integer);
-var atm:TBDColorUndoItem;atmP:TBDPalette;
+var atm:TBDPaletteUndoItem;atmP:TBDPalette;
 begin
   if (fPointer<>Self.Count-1) then   // If not the last item, delete items after it.
     Self.DeleteRange(fPointer+1,Self.Count-1);
   if Self.Count=Settings.UndoLimit then Self.Delete(0);
   atmP:=TBDPalette.Create(Count);
   atmP.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette,Start,Count);
-  atm:=TBDColorUndoItem.Create(Start,atmP);
+  atm:=TBDPaletteUndoItem.Create(Start,atmP);
   Self.Add(atm);
   fPointer:=Self.Count-1;
   MessageQueue.AddMessage(fAfterUndoRedoMessage);
@@ -503,9 +599,35 @@ begin
     if not Self[fPointer].Redoable then begin
       atmP:=TBDPalette.Create(Count);
       atmP.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette,Start,Count);
-      TBDColorUndoItem(Self[fPointer]).AddAfter(atmP);
+      TBDPaletteUndoItem(Self[fPointer]).AddAfter(atmP);
       MessageQueue.AddMessage(fAfterUndoRedoMessage);
     end;
+  end;
+end;
+
+procedure TBDPaletteUndoSystem.AddSingleColorUndo(pStart:integer);
+var atm:TBDSingleColorUndoItem;
+begin
+  if (fPointer<>Self.Count-1) then   // If not the last item, delete items after it.
+    Self.DeleteRange(fPointer+1,Self.Count-1);
+  if not (
+      (fPointer>-1) and
+      (Self[fPointer] is TBDSingleColorUndoItem) and
+      (TBDSingleColorUndoItem(Self[fPointer]).Start=pStart)) then begin
+    if Self.Count=Settings.UndoLimit then Self.Delete(0);
+    atm:=TBDSingleColorUndoItem.Create(pStart,Project.CurrentImage.Palette[pStart]);
+    Self.Add(atm);
+    fPointer:=Self.Count-1;
+    MessageQueue.AddMessage(fAfterUndoRedoMessage);
+  end;
+end;
+
+procedure TBDPaletteUndoSystem.AddSingleColorRedoToLastUndo;
+begin
+  if fPointer>-1 then begin
+    with TBDSingleColorUndoItem(Self[fPointer]) do
+      AddAfter(Project.CurrentImage.Palette[Start]);
+    MessageQueue.AddMessage(fAfterUndoRedoMessage);
   end;
 end;
 
@@ -547,8 +669,14 @@ begin
     fPointer:=0;
     pStream.Read(fPointer,2);
     if fPointer=65535 then fPointer:=-1;
-    for i:=0 to Count-1 do
-      Self.Add(TBDColorUndoItem.CreateFromStream(pStream));
+    for i:=0 to Count-1 do begin
+      pStream.Read(b,1);
+      pStream.Seek(-1,soFromCurrent);
+      if b=UNDOOPERATIONPALETTEID then
+        Self.Add(TBDPaletteUndoItem.CreateFromStream(pStream))
+      else if b=UNDOOPERATIONSINGLECOLORID then
+        Self.Add(TBDSingleColorUndoItem.CreateFromStream(pStream))
+    end;
   end;
   pStream.Position:=curr+size;
   fAfterUndoRedoMessage:=TMessage.Init(MSG_SETPALETTEUNDOREDOBUTTON,0);
