@@ -433,6 +433,7 @@ procedure TBDControls.ControlsShow(Sender:TObject);
 begin
   ActivateToolButton(-1);
   InfoBar.ShowText('');
+  fColorCluster.ColorCluster:=Project.CurrentImage.ColorClusters.ActiveColorCluster;
 end;
 
 function TBDControls.ControlsKeyDown(Sender:TObject; key:integer):boolean;
