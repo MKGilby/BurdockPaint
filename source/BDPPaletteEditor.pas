@@ -467,6 +467,9 @@ begin
         InfoBar.ShowText('');
         Result:=true;
       end;
+      MSG_ACTIVECOLORCLUSTERCHANGED:begin
+        fColorCluster.ColorCluster:=Project.CurrentImage.ColorClusters.ActiveColorCluster;
+      end;
     end;
   end;
 end;
