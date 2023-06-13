@@ -11,19 +11,27 @@ Todo:
 - Add setup dialogs to Inks:
   - ...
 - Should create backups from project on saving if not the default temporary project.
-- Color undo should be grouped into one operation when changing the same color
-  as in the previous operation. (So clicking multiple times on RGBA arrows would
-  be stored as one operation.)
 - Add palette ramping as undoable operation.
 - Add picking color cluster range as undoable operation.
 - Add removing color cluster as undoable operation.
 
 
+2023.06.13
+- Changing a single color multiple times now counts as one undo operation.
+
+2023.06.08
+- Selecting a color cluster in Palette Editor now changes visible color cluster
+  on Controls too.
+
+2023.06.07
+- Fill tool with Add ink is fixed.
+- App can be closed with red X again.
+
 2023.06.06
 - "Center" button works in R Grad tool configuration.
 
 2023.06.02
-- New R Grad tools is ready.
+- New R Grad tool is ready.
 - Right clicking R Grad tool invokes tool configuration.
   ("Center" button not working yet.)
 
