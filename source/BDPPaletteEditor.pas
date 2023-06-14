@@ -390,6 +390,7 @@ procedure TBDPaletteEditor.UndoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   Project.CurrentImage.PaletteUndo.Undo;
   fColorBox.ColorChanged;
+  fColorCluster.Refresh;
   RefreshSliders;
 end;
 
@@ -397,6 +398,7 @@ procedure TBDPaletteEditor.RedoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   Project.CurrentImage.PaletteUndo.Redo;
   fColorBox.ColorChanged;
+  fColorCluster.Refresh;
   RefreshSliders;
 end;
 
