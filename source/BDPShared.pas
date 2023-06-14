@@ -24,9 +24,8 @@ unit BDPShared;
 
 interface
 
-uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, BDPInfoBar, BDPImage,
-  BDPSettings, BDPMessage, BDPCursor, BDPTools, BDPInks,
-  BDPPalette, PNGFont2Unit, BDPProject;
+uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, BDPInfoBar, BDPImage, BDPSettings,
+  BDPMessage, BDPCursor, BDPTools, BDPInks, BDPPalette, PNGFont2Unit, BDPProject;
 
 const
   WINDOWWIDTH=1280;
@@ -191,9 +190,13 @@ var
   // Free assets and shared objects
   procedure FreeAssets;
 
+  // Creates a backup copy of the file by expanding its name to
+  // filename.YYYYMMDDHHMISS.ext
+  procedure BackupFile(pFilename:string);
+
 implementation
 
-uses Classes, SysUtils, MKRFont2Unit, Logger, MKStream;
+uses Classes, SysUtils, MKRFont2Unit, Logger, MKStream, MKToolbox;
 
 {$i includes\fonts.inc}
 {$i includes\burdock.inc}
@@ -349,6 +352,18 @@ begin
   if Assigned(MessageQueue) then FreeAndNil(MessageQueue);
   if Assigned(InfoBar) then FreeAndNil(InfoBar);
   if Assigned(MM) then FreeAndNil(MM);
+end;
+
+procedure BackupFile(pFilename:string);
+var s:string;
+begin
+  if not fileexists(pFilename) then
+    raise Exception.Create(Format('File not found! (%s)',[pFilename]));
+  if not DirectoryExists('backups') then mkdir('backups');
+  s:=copy(DateToStr(Date,FS)+TimeToStr(Time,FS),1,19);
+  s:=replace(replace(replace(s,'.',''),':',''),' ','');
+  s:='.'+copy(s,1,8)+'.'+copy(s,9,6);
+  CopyFile(pFilename,'backups\'+ChangeFileExt(pFilename,s+ExtractFileExt(pFilename)));
 end;
 
 end.
