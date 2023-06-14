@@ -56,6 +56,7 @@ type
     fCGradCenterX,fCGradCenterY,fCGradRadius:integer;
     fRGradCenterX,fRGradCenterY,fRGradRepetitions,fRGradRotation:integer;
     fTempRGradCenterX,fTempRGradCenterY:integer;
+    fBackupIntervalTicks:uint64;
     function fGetSelectedColor(index:integer):integer;
     function fGetSelectedTool(index:integer):string;
     procedure fSetSelectedColor(index:integer; AValue:integer);
@@ -91,6 +92,7 @@ type
     property ShowGrid:boolean read fShowGrid write fShowGrid;
     property TempRGradCenterX:integer read fTempRGradCenterX write fTempRGradCenterX;
     property TempRGradCenterY:integer read fTempRGradCenterY write fTempRGradCenterY;
+    property BackupIntervalTicks:uint64 read fBackupIntervalTicks write fBackupIntervalTicks;
   end;
 
 
@@ -136,6 +138,7 @@ begin
   fRGradRepetitions:=1;
   fRGradRotation:=0;
   fShowGrid:=false;
+  fBackupIntervalTicks:=60*1000;
 end;
 
 procedure TSettings.LoadFromFile(pFilename:String);
@@ -169,6 +172,7 @@ begin
   fUndoLimit:=INI.ReadInteger('Settings','UndoLimit',16);
 //  fModernGraphics:=INI.ReadBool('Settings','ModernGraphics',true);
   fShowGrid:=INI.ReadBool('Settings','ShowGrid',false);
+  fBackupIntervalTicks:=INI.ReadInteger('Settings','BackupIntervalTicks',60*1000);
   LoadKeyMap(INI);
   for i:=0 to COLORSELECTORCOLORS-1 do
     fColorSelectorColors[i]:=INI.ReadInteger('Colors',Format('Selected%d',[i]),i);
@@ -205,6 +209,7 @@ begin
   INI.WriteInteger('Settings','UndoLimit',fUndoLimit);
 //  INI.WriteBool('Settings','ModernGraphics',fModernGraphics);
   INI.WriteBool('Settings','ShowGrid',fShowGrid);
+  INI.WriteInteger('Settings','BackupIntervalTicks',fBackupIntervalTicks);
   SaveKeyMap(INI);
   for i:=0 to COLORSELECTORCOLORS-1 do
     INI.WriteInteger('Colors',Format('Selected%d',[i]),fColorSelectorColors[i]);
