@@ -77,6 +77,7 @@ type
     procedure LoadFromStreamV1(pStream:TStream);
   public
     property Start:integer read fStart;
+    property Before:TBDPalette read fBefore;
     property After:TBDPalette read fAfter;
   end;
 
@@ -135,7 +136,7 @@ type
   TBDPaletteUndoSystem=class(TBDUndoSystem)
     constructor Create;
     procedure AddPaletteUndo(Start,Count:integer);
-    procedure AddPaletteRedoToLastUndo(Start,Count:integer);
+    procedure AddPaletteRedoToLastUndo;
     procedure AddSingleColorUndo(pStart:integer);
     procedure AddSingleColorRedoToLastUndo;
     procedure SaveToStream(pStream:TStream); override;
@@ -592,13 +593,13 @@ begin
   MessageQueue.AddMessage(fAfterUndoRedoMessage);
 end;
 
-procedure TBDPaletteUndoSystem.AddPaletteRedoToLastUndo(Start,Count:integer);
+procedure TBDPaletteUndoSystem.AddPaletteRedoToLastUndo;
 var atmP:TBDPalette;
 begin
   if fPointer>-1 then begin
     if not Self[fPointer].Redoable then begin
-      atmP:=TBDPalette.Create(Count);
-      atmP.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette,Start,Count);
+      atmP:=TBDPalette.Create(TBDPaletteUndoItem(Self[fPointer]).Before.Size);
+      atmP.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette,TBDPaletteUndoItem(Self[fPointer]).Start,TBDPaletteUndoItem(Self[fPointer]).Before.Size);
       TBDPaletteUndoItem(Self[fPointer]).AddAfter(atmP);
       MessageQueue.AddMessage(fAfterUndoRedoMessage);
     end;
