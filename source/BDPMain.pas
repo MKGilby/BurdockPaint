@@ -91,6 +91,7 @@ begin
 
   if (Parameters.Count=2) and (FileExists(Parameters[1])) then begin
     TEMPPROJECTFILE:=Parameters[1];
+    BackupFile(TEMPPROJECTFILE);
     PROJECTBASEPATH:=ExtractFileDir(TEMPPROJECTFILE);
   end else PROJECTBASEPATH:=ExtractFileDir(Parameters[0]);
 
@@ -141,11 +142,16 @@ begin
 end;
 
 procedure TMain.Run;
-var msg:TMessage;mres,quit:boolean;mx,my:integer;
+var
+  msg:TMessage;
+  mres,quit:boolean;
+  mx,my:integer;
+  PrevBackupTick:uint64;
 begin
   quit:=false;
+  PrevBackupTick:=0;
 //  fQuitWindow.Visible:=true;
-  MouseObjects.List;
+//  MouseObjects.List;
   repeat
     SDL_SetRenderDrawColor(PrimaryWindow.Renderer,48,12,24,255);
     SDL_RenderClear(fMainWindow.Renderer);
@@ -365,8 +371,14 @@ begin
               MessageQueue.AddMessage(MSG_SHOWCEL);
             end;
           end;
-          MSG_RAMPCLUSTER:begin
+          MSG_RAMPCLUSTER:with Project.CurrentImage do begin
+            with ColorClusters.ActiveColorCluster do
+              PaletteUndo.AddPaletteUndo(
+                min(StartIndex,EndIndex),
+                max(StartIndex,EndIndex)-min(StartIndex,EndIndex)+1
+              );
             Project.CurrentImage.Palette.Ramp(Project.CurrentImage.ColorClusters.ActiveColorCluster);
+            PaletteUndo.AddPaletteRedoToLastUndo;
             MessageQueue.AddMessage(MSG_PALETTEPICKEDCOLOR);
           end;
           MSG_OPENABOUTDIALOG:begin
@@ -410,6 +422,11 @@ begin
     if keys[KeyMap[KEY_QUIT]] then begin
       keys[KeyMap[KEY_QUIT]]:=false;
       quit:=MessageBox('EXIT BURDOCK PAINT?','^YES;^NO')=0
+    end;
+    if GetTickCount64-PrevBackupTick>Settings.BackupIntervalTicks then begin
+      Project.SaveToFile(TEMPPROJECTFILE);
+      BackupFile(TEMPPROJECTFILE);
+      PrevBackupTick:=GetTickCount64;
     end;
   until quit;
 end;
