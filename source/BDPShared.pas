@@ -359,11 +359,11 @@ var s:string;
 begin
   if not fileexists(pFilename) then
     raise Exception.Create(Format('File not found! (%s)',[pFilename]));
-  if not DirectoryExists('backups') then mkdir('backups');
+  if not DirectoryExists(PROJECTBASEPATH+'\backups') then mkdir(PROJECTBASEPATH+'\backups');
   s:=copy(DateToStr(Date,FS)+TimeToStr(Time,FS),1,19);
   s:=replace(replace(replace(s,'.',''),':',''),' ','');
   s:='.'+copy(s,1,8)+'.'+copy(s,9,6);
-  CopyFile(pFilename,'backups\'+ChangeFileExt(pFilename,s+ExtractFileExt(pFilename)));
+  CopyFile(pFilename,PROJECTBASEPATH+'\backups\'+ChangeFileExt(ExtractFileName(pFilename),s+ExtractFileExt(pFilename)));
 end;
 
 end.
