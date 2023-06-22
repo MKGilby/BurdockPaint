@@ -38,6 +38,8 @@
 //      + Added Terminate. Check this in every loop, if true, close the program.
 //      + Added FlipNoLimit. This fLipping will not limit the fps and updates
 //        the FPS counter. Will fully use one cpu core.
+//   V1.10 - 2023.06.22
+//      * Added FPS counter update to Flip.
 
 
 {$ifdef fpc}
@@ -150,7 +152,7 @@ uses SysUtils, Logger;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.09';
+  Version='1.10';
 
 type
   TEventHandlers=array of TEventHandlerProc;
@@ -367,8 +369,14 @@ var i:integer;
 begin
   i:=TimeLeft;
   FullTime+=i;
-  Log.Trace(i);
   while Timeleft>0 do SDL_Delay(TimeLeft);
+  i:=SDL_GetTicks;
+  if i-prevTicks>1000 then begin
+    fps:=FrameCount;
+    FrameCount:=0;
+    prevTicks:=i;
+  end;
+  inc(FrameCount);
   SDL_RenderPresent(PrimaryWindow.Renderer);
 end;
 
