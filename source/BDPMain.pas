@@ -21,6 +21,7 @@
 unit BDPMain;
 
 {$mode Delphi}{$H+}
+{$define LimitFPS}
 
 interface
 
@@ -160,7 +161,7 @@ begin
     InfoBar.Draw;
     MM.Fonts['Pinky'].OutText('FPS: '+st(fps,3,'0'),WINDOWWIDTH-141,3,0);
 //    MM.Fonts['Pinky'].OutText('LOI: '+st(MouseObjects.LastOverIndex,3,'0'),WINDOWWIDTH-282-16,3,0);
-    FlipNoLimit;
+  {$ifndef LimitFPS} FlipNoLimit; {$else} Flip; {$endif}
     while MessageQueue.HasNewMessage do begin
       msg:=MessageQueue.GetNextMessage;
       mres:=false;
