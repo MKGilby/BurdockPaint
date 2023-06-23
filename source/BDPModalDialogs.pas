@@ -684,7 +684,7 @@ begin
   fRepetitionSlider.ZIndex:=MODALDIALOG_ZINDEX+1;
   fRepetitionSlider.Name:='RGradRepSlider';
   fRepetitionSlider.MinValue:=1;
-  fRepetitionSlider.MaxValue:=16;
+  fRepetitionSlider.MaxValue:=64;
   fRepetitionSlider.Position:=Settings.RGradRepetitions;
   AddChild(fRepetitionSlider);
 
