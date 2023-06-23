@@ -373,6 +373,7 @@ end;
 procedure TBDControls.ActiveImageChange(Sender:TObject; newvalue:integer);
 begin
   Project.CurrentImageIndex:=newvalue-1;
+  fColorCluster.ColorCluster:=Project.CurrentImage.ColorClusters.ActiveColorCluster;
   MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
 end;
 
