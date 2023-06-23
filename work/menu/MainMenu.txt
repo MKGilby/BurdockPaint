@@ -10,11 +10,11 @@
 ;
 ; You can add comment lines and empty lines anywhere.
 ;
-; During compilation two files will be created:
-;   menu.bin - This one will be consumed by the TMenu.Create to create menu structure.
-;              It will be created in \data folder.
-;   MenuMessages.inc - This one is included in BDPSharedUnit.pas and contains MSG_ constants for MenuItems.
-;                      It will be created in \source folder.
+; During compilation one file will be created:
+;   menu.inc - It will be created in \source\includes folder, is included in
+;              BDPSharedUnit.pas and contains the following things:
+;                - MSG_ constants for MenuItems.
+;                - Menu structure data for TMenu.Create.
 ;
 ; Compilation:
 ;   Run MenuCompiler.exe in this folder.
@@ -48,6 +48,9 @@ Image
   Save
     SAVEIMAGE
     Save image to file.
+  Duplicate
+    DUPLICATEIMAGE
+    Duplicate image.  
   Remove
     REMOVEIMAGE
     Remove image from project.
