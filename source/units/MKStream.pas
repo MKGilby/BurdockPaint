@@ -80,6 +80,8 @@
 //    * Complete rework
 //  V3.01: 2022.10.06 - Gilby
 //    * Using fgl.TFGObjectList for TStreams instead of Lists.TGenericList
+//  V3.01a: 2023.06.26 - Gilby
+//    * Removed an unneeded variable declaration and two commented out lines.
 
 {$ifdef fpc}
   {$mode delphi}
@@ -168,7 +170,7 @@ uses SysUtils, MKToolBox, Logger;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='3.01';
+  Version='3.01a';
 
 var ExePath:string;
 
@@ -193,11 +195,8 @@ begin
 end;
 
 destructor TMKStreamOpener.Destroy;
-var i:integer;
 begin
-//  for i:=0 to fStreams.Count-1 do FreeAndNil(fStreams[i]._StreamOpener);
   FreeAndNil(fStreams);
-//  for i:=0 to fCache.Count-1 do FreeAndNil(fCache[i]._stream);
   FreeAndNil(fCache);
   inherited ;
 end;
