@@ -46,17 +46,18 @@ type
     fActiveInk:integer;  // within fSelectedInks
     fFillShapes,
     fClearKeyColor,
-    fUseAlpha:boolean;
+    fShowGrid:boolean;
     fColorSelectorColors:array of integer;
     fActiveColorIndex:integer;
     fUndoLimit:integer;
     fDitherGradients:boolean;
     fDitherStrength:integer;
-    fShowGrid:boolean;
     fCGradCenterX,fCGradCenterY,fCGradRadius:integer;
     fRGradCenterX,fRGradCenterY,fRGradRepetitions,fRGradRotation:integer;
     fTempRGradCenterX,fTempRGradCenterY:integer;
-    fBackupIntervalTicks:uint64;
+    fBackupIntervalTicks:uint64;  // in milliseconds
+    fBackupFolderMaxSize:integer;  // in bytes, set 0 to disable size check
+    fBackupFolderRetentionTime:integer; // in seconds, set 0 to disable file age check
     function fGetSelectedColor(index:integer):integer;
     function fGetSelectedTool(index:integer):string;
     procedure fSetSelectedColor(index:integer; AValue:integer);
@@ -74,12 +75,10 @@ type
     property ActiveInk:integer read fActiveInk write fActiveInk;
     property FillShapes:boolean read fFillShapes write fFillShapes;
     property ClearKeyColor:boolean read fClearKeyColor write fClearKeyColor;
-    property UseAlpha:boolean read fUseAlpha write fUseAlpha;
     property ShowSplash:Boolean read fShowSplash write fShowSplash;
     property SelectedColors[index:integer]:integer read fGetSelectedColor write fSetSelectedColor;
     property ActiveColorIndex:integer read fActiveColorIndex write fSetActiveColorIndex;
     property UndoLimit:integer read fUndoLimit write fUndoLimit;
-//    property ModernGraphics:boolean read fModernGraphics write fModernGraphics;
     property DitherGradients:boolean read fDitherGradients write fDitherGradients;
     property DitherStrength:integer read fDitherStrength write fDitherStrength;
     property CGradCenterX:integer read fCGradCenterX write fCGradCenterX;
@@ -93,6 +92,8 @@ type
     property TempRGradCenterX:integer read fTempRGradCenterX write fTempRGradCenterX;
     property TempRGradCenterY:integer read fTempRGradCenterY write fTempRGradCenterY;
     property BackupIntervalTicks:uint64 read fBackupIntervalTicks write fBackupIntervalTicks;
+    property BackupFolderMaxSize:integer read fBackupFolderMaxSize write fBackupFolderMaxSize;
+    property BackupFolderRetentionTime:integer read fBackupFolderRetentionTime write fBackupFolderRetentionTime;
   end;
 
 
@@ -139,6 +140,8 @@ begin
   fRGradRotation:=0;
   fShowGrid:=false;
   fBackupIntervalTicks:=60*1000;
+  fBackupFolderMaxSize:=0;
+  fBackupFolderRetentionTime:=0;
 end;
 
 procedure TSettings.LoadFromFile(pFilename:String);
@@ -146,9 +149,11 @@ var INI:TIniFile;i:integer;
 begin
   if not FileExists(pFilename) then exit;
   INI:=TIniFile.Create(pFilename);
+  // DrawArea state
   fZoom:=INI.ReadInteger('DrawArea','Zoom',2);
   fZoomLeft:=INI.ReadInteger('DrawArea','ZoomLeft',0);
   fZoomTop:=INI.ReadInteger('DrawArea','ZoomTop',0);
+  // Controls state
   fSelectedTools[0]:=INI.ReadString('BasicControls','Tool0','DRAW');
   fSelectedTools[1]:=INI.ReadString('BasicControls','Tool1','BOX');
   fSelectedTools[2]:=INI.ReadString('BasicControls','Tool2','LINE');
@@ -167,16 +172,20 @@ begin
   if (fActiveInk<0) or (fActiveInk>5) then fActiveInk:=0;
   fFillShapes:=INI.ReadBool('BasicControls','FillShapes',false);
   fClearKeyColor:=INI.ReadBool('BasicControls','ClearKeyColor',false);
-  fUseAlpha:=INI.ReadBool('BasicControls','UseAlpha',false);
+  // System settings
   fShowSplash:=INI.ReadBool('Settings','ShowSplash',false);
   fUndoLimit:=INI.ReadInteger('Settings','UndoLimit',16);
-//  fModernGraphics:=INI.ReadBool('Settings','ModernGraphics',true);
   fShowGrid:=INI.ReadBool('Settings','ShowGrid',false);
-  fBackupIntervalTicks:=INI.ReadInteger('Settings','BackupIntervalTicks',60*1000);
+  fBackupIntervalTicks:=INI.ReadInteger('Settings','BackupInterval',60)*1000;
+  fBackupFolderMaxSize:=INI.ReadInteger('Settings','BackupFolderMaxSize',16*1024*1024);
+  fBackupFolderRetentionTime:=INI.ReadInteger('Settings','BackupFolderRetentionTime',0);
+  // Keymap
   LoadKeyMap(INI);
+  // Colors selector state
   for i:=0 to COLORSELECTORCOLORS-1 do
     fColorSelectorColors[i]:=INI.ReadInteger('Colors',Format('Selected%d',[i]),i);
   fActiveColorIndex:=INI.ReadInteger('Colors','ActiveColor',0);
+  // Inks' settings
   fDitherGradients:=INI.ReadBool('Inks','DitherGradients',false);
   fDitherStrength:=INI.ReadInteger('Inks','DitherStrength',10);
   fCGradCenterX:=INI.ReadInteger('Inks','CGradCenterX',0);
@@ -193,9 +202,11 @@ procedure TSettings.SaveToFile(pFilename:String);
 var INI:TIniFile;i:integer;
 begin
   INI:=TIniFile.Create(pFilename,false);
+  // DrawArea state
   INI.WriteInteger('DrawArea','Zoom',fZoom);
   INI.WriteInteger('DrawArea','ZoomLeft',fZoomLeft);
   INI.WriteInteger('DrawArea','ZoomTop',fZoomTop);
+  // Controls state
   for i:=0 to 5 do
     INI.WriteString('BasicControls','Tool'+inttostr(i),fSelectedTools[i]);
   INI.WriteInteger('BasicControls','ActiveTool',fActiveTool);
@@ -204,16 +215,20 @@ begin
   INI.WriteInteger('BasicControls','ActiveInk',fActiveInk);
   INI.WriteBool('BasicControls','FillShapes',fFillShapes);
   INI.WriteBool('BasicControls','ClearKeyColor',fClearKeyColor);
-  INI.WriteBool('BasicControls','UseAlpha',fUseAlpha);
+  // System settings
   INI.WriteBool('Settings','ShowSplash',fShowSplash);
   INI.WriteInteger('Settings','UndoLimit',fUndoLimit);
-//  INI.WriteBool('Settings','ModernGraphics',fModernGraphics);
   INI.WriteBool('Settings','ShowGrid',fShowGrid);
-  INI.WriteInteger('Settings','BackupIntervalTicks',fBackupIntervalTicks);
+  INI.WriteInteger('Settings','BackupInterval',fBackupIntervalTicks div 1000);
+  INI.WriteInteger('Settings','BackupFolderMaxSize',fBackupFolderMaxSize);
+  INI.WriteInteger('Settings','BackupFolderRetentionTime',fBackupFolderRetentionTime);
+  // Keymap
   SaveKeyMap(INI);
+  // Color selector state
   for i:=0 to COLORSELECTORCOLORS-1 do
     INI.WriteInteger('Colors',Format('Selected%d',[i]),fColorSelectorColors[i]);
   INI.WriteInteger('Colors','ActiveColor',fActiveColorIndex);
+  // Inks' settings
   INI.WriteBool('Inks','DitherGradients',fDitherGradients);
   INI.WriteInteger('Inks','DitherStrength',fDitherStrength);
   INI.WriteInteger('Inks','CGradCenterX',fCGradCenterX);
