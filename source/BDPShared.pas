@@ -190,10 +190,6 @@ var
   // Free assets and shared objects
   procedure FreeAssets;
 
-  // Creates a backup copy of the file by expanding its name to
-  // filename.YYYYMMDDHHMISS.ext
-  procedure BackupFile(pFilename:string);
-
 implementation
 
 uses Classes, SysUtils, MKRFont2Unit, Logger, MKStream, MKToolbox;
@@ -275,9 +271,6 @@ end;
 
 procedure LoadAssets;
 begin
-  Log.LogStatus('Loading settings...');
-  Settings:=TSettings.Create;
-  Settings.LoadFromFile(SETTINGSFILE);
   Log.LogStatus('Loading and creating assets...');
   MM:=TGFXManager.Create;
   Log.LogStatus('  Loading fonts...');
@@ -340,10 +333,6 @@ begin
     FreeAndNil(Project);
   end;
   if Assigned(CELHelperImage) then FreeAndNil(CELHelperImage);
-  if Assigned(Settings) then begin
-    Settings.SaveToFile(SETTINGSFILE);
-    FreeAndNil(Settings);
-  end;
   if Assigned(Tools) then FreeAndNil(Tools);
   if Assigned(Inks) then FreeAndNil(Inks);
   if Assigned(VibroColors) then FreeAndNil(VibroColors);
@@ -352,18 +341,6 @@ begin
   if Assigned(MessageQueue) then FreeAndNil(MessageQueue);
   if Assigned(InfoBar) then FreeAndNil(InfoBar);
   if Assigned(MM) then FreeAndNil(MM);
-end;
-
-procedure BackupFile(pFilename:string);
-var s:string;
-begin
-  if not fileexists(pFilename) then
-    raise Exception.Create(Format('File not found! (%s)',[pFilename]));
-  if not DirectoryExists(PROJECTBASEPATH+'\backups') then mkdir(PROJECTBASEPATH+'\backups');
-  s:=copy(DateToStr(Date,FS)+TimeToStr(Time,FS),1,19);
-  s:=replace(replace(replace(s,'.',''),':',''),' ','');
-  s:='.'+copy(s,1,8)+'.'+copy(s,9,6);
-  CopyFile(pFilename,PROJECTBASEPATH+'\backups\'+ChangeFileExt(ExtractFileName(pFilename),s+ExtractFileExt(pFilename)));
 end;
 
 end.

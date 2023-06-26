@@ -25,8 +25,8 @@ unit BDPMain;
 
 interface
 
-uses SysUtils, mk_sdl2, Dialogs, BDPControls, BDPDrawArea,
-  BDPModalDialogs, BDPPaletteEditor, BDPMenu, BDPMessage;
+uses SysUtils, mk_sdl2, Dialogs, BDPControls, BDPDrawArea, BDPModalDialogs,
+  BDPPaletteEditor, BDPMenu, BDPMessage, FileBackup;
 
 type
 
@@ -48,6 +48,7 @@ type
     fDitherDialog:TBDDitherDialog;
     fSelectColorClusterDialog:TBDSelectColorClusterDialog;
     fConfigureRGradDialog:TBDConfigureRGradDialog;
+    fBackup:TFileBackup;
     fOpenCELDialog,
     fOpenProjectDialog:TOpenDialog;
     fSaveCELDialog,
@@ -87,7 +88,7 @@ type
 implementation
 
 uses Classes, SDL2, BDPShared, MKToolbox, MKStream, MKMouse2, Logger,
-  BDPKeyMapping, BDPTools, MAD4MidLevelUnit, BDPImage,
+  BDPKeyMapping, BDPTools, MAD4MidLevelUnit, BDPImage, BDPSettings,
   BDPProject, ParametersUnit;
 
 
@@ -115,11 +116,20 @@ begin
 
   SetFPS(60);
 
+  Log.LogStatus('Loading settings...');
+  Settings:=TSettings.Create;
+  Settings.LoadFromFile(SETTINGSFILE);
+
+
   if (Parameters.Count=2) and (FileExists(Parameters[1])) then begin
     TEMPPROJECTFILE:=Parameters[1];
-    BackupFile(TEMPPROJECTFILE);
     PROJECTBASEPATH:=ExtractFileDir(TEMPPROJECTFILE);
-  end else PROJECTBASEPATH:=ExtractFileDir(Parameters[0]);
+    fBackup:=TFileBackup.Create(PROJECTBASEPATH+'\backups');
+    fBackup.BackupFile(TEMPPROJECTFILE);
+  end else begin
+    PROJECTBASEPATH:=ExtractFileDir(Parameters[0]);
+    fBackup:=TFileBackup.Create(PROJECTBASEPATH+'\backups');
+  end;
 
   LoadAssets;
 
@@ -163,6 +173,10 @@ begin
   if Assigned(fControls) then FreeAndNil(fControls);
   if Assigned(fDrawArea) then FreeAndNil(fDrawArea);
   FreeAssets;
+  if Assigned(Settings) then begin
+    Settings.SaveToFile(SETTINGSFILE);
+    FreeAndNil(Settings);
+  end;
   if Assigned(fMainWindow) then FreeAndNil(fMainWindow);
   inherited Destroy;
 end;
@@ -239,7 +253,7 @@ begin
     end;
     if GetTickCount64-PrevBackupTick>Settings.BackupIntervalTicks then begin
       Project.SaveToFile(TEMPPROJECTFILE);
-      BackupFile(TEMPPROJECTFILE);
+      fBackup.BackupFile(TEMPPROJECTFILE);
       PrevBackupTick:=GetTickCount64;
     end;
   until quit;
