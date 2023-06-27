@@ -3,18 +3,33 @@ Todo:
 - Check and warn if current project is modified on opening project.
 - Check and warn if current project is modified on new project.
 - Ask for color fit when loading a CEL file.
-- Autosave state in every 1 min.
-- Configurable autosave interval.
 - Add setup dialogs to Tools:
   - Circle (center+radius vs. bounding box)
   - Sep. (boxed)
 - Add setup dialogs to Inks:
   - ...
-- Should create backups from project on saving if not the default temporary project.
-- Add palette ramping as undoable operation.
-- Add picking color cluster range as undoable operation.
-- Add removing color cluster as undoable operation.
+- Add picking color cluster range as undoable operation. (Needs new undo type.)
+- Add removing color cluster as undoable operation. (Needs new undo type.)
+- Create GUI for settings:
+  - Autosave/backup:
+    - Max folder size.
+    - Max retention time.
 
+
+2023.06.26
+- You can set "backups" folder max size in .INI file (BackupFolderMaxSize, in bytes)
+- You can set "backups" folder max retention time in .INI file (BackupFolderRetentionTime, in seconds)
+
+2023.06.23
+- Added "Image"/"Duplicate" menuitem. Same as "Image"/"New" but instead a
+  new empty image, it duplicates the current image.
+- BUGFIX: Changing active image doesn't refreshed visible color cluster.
+- R Grad max repetition count is raised from 16 to 64.
+
+2023.06.14
+- Palette ramping is undoable/redoable now.
+- Project file is save and backed up once per minute.
+  (Backup interval is read from the settings.)
 
 2023.06.13
 - Changing a single color multiple times now counts as one undo operation.
