@@ -153,6 +153,7 @@ begin
   fZoom:=INI.ReadInteger('DrawArea','Zoom',2);
   fZoomLeft:=INI.ReadInteger('DrawArea','ZoomLeft',0);
   fZoomTop:=INI.ReadInteger('DrawArea','ZoomTop',0);
+  fShowGrid:=INI.ReadBool('DrawArea','ShowGrid',false);
   // Controls state
   fSelectedTools[0]:=INI.ReadString('BasicControls','Tool0','DRAW');
   fSelectedTools[1]:=INI.ReadString('BasicControls','Tool1','BOX');
@@ -175,7 +176,6 @@ begin
   // System settings
   fShowSplash:=INI.ReadBool('Settings','ShowSplash',false);
   fUndoLimit:=INI.ReadInteger('Settings','UndoLimit',16);
-  fShowGrid:=INI.ReadBool('Settings','ShowGrid',false);
   fBackupIntervalTicks:=INI.ReadInteger('Settings','BackupInterval',60)*1000;
   fBackupFolderMaxSize:=INI.ReadInteger('Settings','BackupFolderMaxSize',16*1024*1024);
   fBackupFolderRetentionTime:=INI.ReadInteger('Settings','BackupFolderRetentionTime',0);
@@ -206,6 +206,7 @@ begin
   INI.WriteInteger('DrawArea','Zoom',fZoom);
   INI.WriteInteger('DrawArea','ZoomLeft',fZoomLeft);
   INI.WriteInteger('DrawArea','ZoomTop',fZoomTop);
+  INI.WriteBool('DrawArea','ShowGrid',fShowGrid);
   // Controls state
   for i:=0 to 5 do
     INI.WriteString('BasicControls','Tool'+inttostr(i),fSelectedTools[i]);
@@ -218,7 +219,6 @@ begin
   // System settings
   INI.WriteBool('Settings','ShowSplash',fShowSplash);
   INI.WriteInteger('Settings','UndoLimit',fUndoLimit);
-  INI.WriteBool('Settings','ShowGrid',fShowGrid);
   INI.WriteInteger('Settings','BackupInterval',fBackupIntervalTicks div 1000);
   INI.WriteInteger('Settings','BackupFolderMaxSize',fBackupFolderMaxSize);
   INI.WriteInteger('Settings','BackupFolderRetentionTime',fBackupFolderRetentionTime);
