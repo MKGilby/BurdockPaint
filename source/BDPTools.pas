@@ -362,14 +362,14 @@ begin
             if ActiveInk.SupportsOnTheFly then
               DrawBarWithInk(fSX,fSY,x,y)
             else begin
-              Project.CurrentImage.Bar(fSX,fSY,fX,fY,POSTPROCESSCOLOR);
+              Project.CurrentImage.Bar(fSX,fSY,x,y,POSTPROCESSCOLOR);
               ActiveInk.PostProcess;
             end;
           end else begin
             if ActiveInk.SupportsOnTheFly then
               DrawRectangleWithInk(fSX,fSY,x,y)
             else begin
-              Project.CurrentImage.Rectangle(fSX,fSY,fX,fY,POSTPROCESSCOLOR);
+              Project.CurrentImage.Rectangle(fSX,fSY,x,y,POSTPROCESSCOLOR);
               ActiveInk.PostProcess;
             end;
           end;
