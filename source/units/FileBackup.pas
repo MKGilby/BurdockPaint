@@ -37,7 +37,9 @@
 // Version info:
 //
 //  V1.00: Gilby
-//     - Initial creation
+//     - Initial creation.
+//  V1.00a: Gilby
+//     - Fix in BackupFile.
 
 unit FileBackup;
 
@@ -75,7 +77,7 @@ uses MKToolBox, Logger;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.00';
+  Version='1.00a';
 
 
 { TFileBackup }
@@ -98,7 +100,7 @@ begin
   s:=copy(DateToStr(Date,FS)+TimeToStr(Time,FS),1,19);
   s:=replace(replace(replace(s,'.',''),':',''),' ','');
   s:='.'+copy(s,1,8)+'.'+copy(s,9,6);
-  CopyFile(pFilename,fTargetPath+ChangeFileExt(ExtractFileName(pFilename),s+ExtractFileExt(pFilename)));
+  CopyFile(pFilename,fTargetPath+'\'+ChangeFileExt(ExtractFileName(pFilename),s+ExtractFileExt(pFilename)));
 end;
 
 procedure TFileBackup.DeleteOldestFile;

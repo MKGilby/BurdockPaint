@@ -157,27 +157,28 @@ end;
 
 destructor TMain.Destroy;
 begin
-  if Assigned(fExportCELDialog) then FreeAndNil(fExportCELDialog);
-  if Assigned(fOpenProjectDialog) then FreeAndNil(fOpenProjectDialog);
-  if Assigned(fSaveProjectDialog) then FreeAndNil(fSaveProjectDialog);
-  if Assigned(fSaveCELDialog) then FreeAndNil(fSaveCELDialog);
-  if Assigned(fOpenCELDialog) then FreeAndNil(fOpenCELDialog);
+  if Assigned(fExportCELDialog) then fExportCELDialog.Free;
+  if Assigned(fOpenProjectDialog) then fOpenProjectDialog.Free;
+  if Assigned(fSaveProjectDialog) then fSaveProjectDialog.Free;
+  if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
+  if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
   if Assigned(fConfigureRGradDialog) then fConfigureRGradDialog.Free;
   if Assigned(fSelectColorClusterDialog) then fSelectColorClusterDialog.Free;
-  if Assigned(fDitherDialog) then FreeAndNil(fDitherDialog);
-  if Assigned(fRotateDialog) then FreeAndNil(fRotateDialog);
-  if Assigned(fMagnifyDialog) then FreeAndNil(fMagnifyDialog);
-  if Assigned(fMainMenu) then FreeAndNil(fMainMenu);
-  if Assigned(fSplashScreen) then FreeAndNil(fSplashScreen);
-  if Assigned(fPaletteEditor) then FreeAndNil(fPaletteEditor);
-  if Assigned(fControls) then FreeAndNil(fControls);
-  if Assigned(fDrawArea) then FreeAndNil(fDrawArea);
+  if Assigned(fDitherDialog) then fDitherDialog.Free;
+  if Assigned(fRotateDialog) then fRotateDialog.Free;
+  if Assigned(fMagnifyDialog) then fMagnifyDialog.Free;
+  if Assigned(fMainMenu) then fMainMenu.Free;
+  if Assigned(fSplashScreen) then fSplashScreen.Free;
+  if Assigned(fPaletteEditor) then fPaletteEditor.Free;
+  if Assigned(fControls) then fControls.Free;
+  if Assigned(fDrawArea) then fDrawArea.Free;
   FreeAssets;
+  if Assigned(fBackup) then fBackup.Free;
   if Assigned(Settings) then begin
     Settings.SaveToFile(SETTINGSFILE);
-    FreeAndNil(Settings);
+    Settings.Free;
   end;
-  if Assigned(fMainWindow) then FreeAndNil(fMainWindow);
+  if Assigned(fMainWindow) then fMainWindow.Free;
   inherited Destroy;
 end;
 
