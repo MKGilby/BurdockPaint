@@ -44,6 +44,7 @@ type
     procedure ProcessL;
     procedure ProcessO;
     procedure ProcessQ;
+    procedure ProcessS;
     procedure ProcessT;
     procedure W(s:string);
   end;
@@ -89,6 +90,7 @@ begin
     'L':ProcessL;
     'O':ProcessO;
     'Q':ProcessQ;
+    'S':ProcessS;
     'T':ProcessT;
   end;
 end;
@@ -119,11 +121,12 @@ begin
 end;
 
 procedure TMain.ProcessI;
-var len:uint32;
+var len:uint32;ver:byte;
 begin
-  len:=0;
+  len:=0;ver:=0;
   fStream.Read(len,4);
-  W(Format('I (Start: %d, Len: %d)',[fStream.Position-5,len]));
+  fStream.Read(ver,1);
+  W(Format('I version %d (Start: %d, Len: %d)',[ver,fStream.Position-5,len]));
   inc(fIndent,2);
   ProcessBlock;
   ProcessBlock;
@@ -161,7 +164,7 @@ var len:uint32;
 begin
   len:=0;
   fStream.Read(len,4);
-  W(Format('C *skipped* (Start: %d, Len: %d)',[fStream.Position-5,len]));
+  W(Format('C *skipping* (Start: %d, Len: %d)',[fStream.Position-5,len]));
   fStream.Position:=fStream.Position+len;
 end;
 
@@ -170,7 +173,7 @@ var len:uint32;
 begin
   len:=0;
   fStream.Read(len,4);
-  W(Format('R *skipped* (Start: %d, Len: %d)',[fStream.Position-5,len]));
+  W(Format('R *skipping* (Start: %d, Len: %d)',[fStream.Position-5,len]));
   fStream.Position:=fStream.Position+len;
 end;
 
@@ -213,7 +216,7 @@ begin
 end;
 
 procedure TMain.ProcessL;
-var len:uint32;ver:Byte;count:integer;
+var len:uint32;ver:Byte;count,active:integer;
 begin
   len:=0;ver:=0;
   fStream.Read(len,4);
@@ -222,6 +225,11 @@ begin
   count:=0;
   fStream.Read(count,1);
   W(Format('  ItemCount: %d',[count]));
+  if ver=2 then begin
+    active:=0;
+    fStream.Read(active,1);
+    W(Format('  Active item index: %d',[active]));
+  end;
   inc(fIndent,2);
   while count>0 do begin
     ProcessBlock;
@@ -231,11 +239,12 @@ begin
 end;
 
 procedure TMain.ProcessO;
-var len:uint32;
+var len:uint32;ver:byte;
 begin
-  len:=0;
+  len:=0;ver:=0;
   fStream.Read(len,4);
-  W(Format('O (Start: %d, Len: %d)',[fStream.Position-5,len]));
+  fStream.Read(ver,1);
+  W(Format('O version %d (Start: %d, Len: %d)',[ver,fStream.Position-5,len]));
   inc(fIndent,2);
   ProcessBlock;
   ProcessBlock;
@@ -243,17 +252,36 @@ begin
 end;
 
 procedure TMain.ProcessQ;
-var len:uint32;firstcolor:integer;
+var len:uint32;ver:byte;firstcolor:integer;
 begin
-  len:=0;
+  len:=0;ver:=0;
   fStream.Read(len,4);
-  W(Format('Q (Start: %d, Len: %d)',[fStream.Position-5,len]));
+  fStream.Read(ver,1);
+  W(Format('Q version %d (Start: %d, Len: %d)',[ver,fStream.Position-5,len]));
   firstcolor:=0;
   fStream.Read(firstcolor,2);
   W(Format('  First affected color: %d',[firstcolor]));
   inc(fIndent,2);
   ProcessBlock;
   ProcessBlock;
+  dec(fIndent,2);
+end;
+
+procedure TMain.ProcessS;
+var len:uint32;ver:byte;color:integer;
+begin
+  len:=0;ver:=0;
+  fStream.Read(len,4);
+  fStream.Read(ver,1);
+  W(Format('S version %d (Start: %d, Len: %d)',[ver,fStream.Position-5,len]));
+  color:=0;
+  fStream.Read(color,2);
+  W(Format('  Affected color: %d',[color]));
+  inc(fIndent,2);
+  fStream.Read(len,4);
+  W(Format('  Value before: %8.x',[len]));
+  fStream.Read(len,4);
+  W(Format('  Value after: %8.x',[len]));
   dec(fIndent,2);
 end;
 
