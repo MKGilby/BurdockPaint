@@ -460,7 +460,7 @@ begin
   if x1>x2 then begin i:=x1;x1:=x2;x2:=i;end;
   if y1>y2 then begin i:=y1;y1:=y2;y2:=i;end;
   // If overlaps our image
-  if (x1<fWidth) and (x2>0) and (y1<fHeight) and (y2>0) then begin
+  if (x1<fWidth) and (x2>=0) and (y1<fHeight) and (y2>=0) then begin
     // Still check for clipping
     if x1<0 then x1:=0;
     if x2>=fWidth then x2:=fWidth-1;
@@ -482,7 +482,7 @@ procedure TBDImage.RectangleWH(x1,y1,wi,he:integer; ColorIndex:word);
 var i:integer;
 begin
   // If overlaps our image
-  if (x1<fWidth) and (x1+wi>0) and (y1<fHeight) and (y1+he>0) then begin
+  if (x1<fWidth) and (x1+wi>=0) and (y1<fHeight) and (y1+he>=0) then begin
     // Still check for clipping
     if x1<0 then begin wi+=x1;x1:=0;end;
     if x1+wi>fWidth then wi:=fWidth-x1;
