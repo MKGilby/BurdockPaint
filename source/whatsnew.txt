@@ -16,6 +16,16 @@ Todo:
     - Max retention time.
 
 
+2023.07.15
+- Added EDGE tool. It draws the clicked color's edge with the current ink.
+  (It does it everywhere on the image!)
+
+2023.07.14
+- BUGFIX: Drawing one line thick vibrocolor in topmost row or in leftmost column.
+
+2023.06.27
+- BUGFIX: Drawing box upwards with "Add" ink only draws it's upper line.
+
 2023.06.26
 - You can set "backups" folder max size in .INI file (BackupFolderMaxSize, in bytes)
 - You can set "backups" folder max retention time in .INI file (BackupFolderRetentionTime, in seconds)
