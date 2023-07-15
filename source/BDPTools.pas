@@ -145,6 +145,13 @@ type
     function Click(x,y,button:integer):boolean; override;
   end;
 
+  { TBDToolEdge }
+
+  TBDToolEdge=class(TBDTool)
+    constructor Create; override;
+    function Click(x,y,button:integer):boolean; override;
+  end;
+
   { TBDToolGetCel }
 
   TBDToolGetCel=class(TBDTool)
@@ -321,6 +328,7 @@ begin
   AddObject('FILLTO',TBDToolFillTo.Create);
   AddObject('LINE',TBDToolLine.Create);
   AddObject('SEP.',TBDToolSep.Create);
+  AddObject('EDGE',TBDToolEdge.Create);
   AddObject('GETCEL',TBDToolGetCel.Create);
   AddObject('PUTCEL',TBDToolPutCel.Create);
   AddObject('PICKCOLCS',TBDToolPickColorCOLSEL.Create);
@@ -1048,6 +1056,63 @@ begin
           if i<fLeft then fLeft:=i;
           if j>fBottom then fBottom:=j;
           if j<fTop then fTop:=j;
+        end;
+    Project.CurrentImage.ImageUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+    FreeAndNil(fTempImage);
+    ActiveInk.InitializeArea(fLeft,fTop,fRight,fBottom);
+    ActiveInk.PostProcess;
+    Project.CurrentImage.ImageUndo.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
+    Result:=true;
+  end else Result:=false;
+end;
+
+// -------------------------------------------------------- [ TBDToolEdge ] ---
+
+constructor TBDToolEdge.Create;
+begin
+  inherited Create;
+  fName:='EDGE';
+  fHint:=uppercase('Draws the selected color''s edge with the current ink.');
+  fPinnable:=true;
+end;
+
+function TBDToolEdge.Click(x, y, button: integer): boolean;
+var i,j,sc,cnt:integer;
+  fLeft,fRight,fTop,fBottom:integer;
+  fTempImage:TBDImage;
+begin
+  if button=SDL_BUTTON_LEFT then begin
+    fTempImage:=TBDImage.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
+    fTempImage.Palette.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette);
+    fTempImage.PutImage(0,0,Project.CurrentImage);
+    fLeft:=Project.CurrentImage.Width;
+    fRight:=-1;
+    fTop:=Project.CurrentImage.Height;
+    fBottom:=-1;
+    sc:=Project.CurrentImage.GetPixel(x,y);
+    for j:=0 to Project.CurrentImage.Height-1 do
+      for i:=0 to Project.CurrentImage.Width-1 do
+        if Project.CurrentImage.GetPixel(i,j)=sc then begin
+          cnt:=0;
+          if (i>0) then begin
+            if (j>0) and (fTempImage.GetPixel(i-1,j-1)=sc) then inc(cnt);
+            if (fTempImage.GetPixel(i-1,j)=sc) then inc(cnt);
+            if (j<fTempImage.Height-1) and (fTempImage.GetPixel(i-1,j+1)=sc) then inc(cnt);
+          end;
+          if (j>0) and (fTempImage.GetPixel(i,j-1)=sc) then inc(cnt);
+          if (j<fTempImage.Height-1) and (fTempImage.GetPixel(i,j+1)=sc) then inc(cnt);
+          if (i<fTempImage.Width-1) then begin
+            if (j>0) and (fTempImage.GetPixel(i+1,j-1)=sc) then inc(cnt);
+            if (fTempImage.GetPixel(i+1,j)=sc) then inc(cnt);
+            if (j<fTempImage.Height-1) and (fTempImage.GetPixel(i+1,j+1)=sc) then inc(cnt);
+          end;
+          if cnt<8 then begin
+            Project.CurrentImage.Putpixel(i,j,POSTPROCESSCOLOR);
+            if i>fRight then fRight:=i;
+            if i<fLeft then fLeft:=i;
+            if j>fBottom then fBottom:=j;
+            if j<fTop then fTop:=j;
+          end;
         end;
     Project.CurrentImage.ImageUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
     FreeAndNil(fTempImage);

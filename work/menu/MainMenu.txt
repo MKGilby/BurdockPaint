@@ -120,6 +120,9 @@ Tools
   Sep.
     TOOLSEP
     Select "sep." tool instead of selected one.
+  Edge
+    TOOLEDGE
+    Select edge tool instead of selected one.
 
 ;------------------------------
 Inks

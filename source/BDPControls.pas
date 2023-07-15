@@ -418,6 +418,7 @@ begin
     MSG_TOOLFILL:ChangeActiveToolButtonTo(Tools.ItemByName['FILL']);
     MSG_TOOLFILLTO:ChangeActiveToolButtonTo(Tools.ItemByName['FILLTO']);
     MSG_TOOLSEP:ChangeActiveToolButtonTo(Tools.ItemByName['SEP.']);
+    MSG_TOOLEDGE:ChangeActiveToolButtonTo(Tools.ItemByName['EDGE']);
     MSG_INKOPAQUE:ChangeActiveInkButtonTo(Inks.ItemByName['OPAQUE']);
     MSG_INKHGRAD:ChangeActiveInkButtonTo(Inks.ItemByName['H GRAD']);
     MSG_INKVGRAD:ChangeActiveInkButtonTo(Inks.ItemByName['V GRAD']);
