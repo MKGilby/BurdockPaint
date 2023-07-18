@@ -25,7 +25,7 @@ unit BDPImage;
 interface
 
 uses
-  Classes, SysUtils, mk_sdl2, BDPPalette;
+  Classes, SysUtils, mk_sdl2, BDPPalette, ARGBImageUnit;
 
 type
 
@@ -137,9 +137,9 @@ type
     // (probably later will be added method to load only a region)
     procedure LoadWholeImageDataFromStream(Source:TStream);
     // Imports a legacy AAT CEL file.
-    procedure ImportCEL(aFilename:string); overload;
-    // Imports a legacy AAT CEL file from stream.
-    procedure ImportCEL(Source:TStream); overload;
+    procedure ImportSupported(iFilename:string;pFormat:string); overload;
+    // Imports a supported format from stream.
+    procedure ImportSupported(Source:TStream;pFormat:string); overload;
   protected
     // Image position (used for CELImage, leave on 0,0 otherwise)
     fLeft,fTop:integer;
@@ -155,6 +155,7 @@ type
     fChanged:boolean;
   private
     procedure LoadFromStreamV1(pStream:TStream);
+    procedure ColorFit(pARGBImage:TARGBImage);
   public
     property Left:integer read fLeft write fLeft;
     property Top:integer read fTop write fTop;
@@ -167,7 +168,8 @@ type
 
 implementation
 
-uses MyZStreamUnit, SDL2, Logger, ARGBImageUnit, BDPShared, MKToolbox;
+uses MyZStreamUnit, SDL2, Logger, BDPShared, MKToolbox,
+  FastPaletteUnit;
 
 {$i includes\ntsccol.inc}
 
@@ -1042,61 +1044,56 @@ begin
   FreeAndNil(Xs);
 end;
 
-procedure TBDImage.ImportCEL(aFilename:string);
+procedure TBDImage.ImportSupported(iFilename:string; pFormat:string);
 var Xs:TStream;
 begin
-  Xs:=TFileStream.Create(aFilename,fmOpenRead or fmShareDenyNone);
-  ImportCel(Xs);
-  FreeAndNil(Xs);
+  Xs:=TFileStream.Create(iFilename,fmOpenRead or fmShareDenyNone);
+  try ImportSupported(Xs,pFormat); finally Xs.Free; end;
 end;
 
-procedure TBDImage.ImportCEL(Source:TStream);
-var wi,he:word;
-    i,j:longint;
-    atm:byte;
-    pp:pointer;
-    colorarray:array[0..2] of byte;
+procedure TBDImage.ImportSupported(Source:TStream; pFormat:string);
+var img:TARGBImage;
 begin
-  wi:=0;he:=0;
-  Source.Read(wi,2);   // Image Identifier Field
-  if wi<>$9119 then begin
-    Log.LogWarning('Not a .CEL file!');
-    exit;
-  end;
-  Source.Read(wi,2);
-  Source.Read(he,2);
-  Source.Position:=32;
-  fPalette.Resize(256);
-  colorarray[0]:=0;
-  for i:=0 to 255 do begin
-    Source.Read(colorarray[0],3);
-    fPalette.ColorR[i]:=colorarray[0]*4;
-    fPalette.ColorG[i]:=colorarray[1]*4;
-    fPalette.ColorB[i]:=colorarray[2]*4;
-    fPalette.ColorA[i]:=255;
-  end;
-
-  fWidth:=wi;
-  fHeight:=he;
-
-  Freemem(fData);
-  fDataSize:=fWidth*fHeight*2;
-  fData:=Getmem(fDataSize);
-
-  pp:=fData;
-  atm:=0;
-  for j:=0 to he-1 do
-    for i:=0 to wi-1 do begin
-      Source.Read(atm,1);
-      word(pp^):=atm;
-      inc(pp,2);
-    end;
+  img:=TARGBImage.Create;
+  img.ReadFile(Source,pFormat);
+  ColorFit(img);
+  img.Free;
 end;
 
 procedure TBDImage.LoadFromStreamV1(pStream:TStream);
 begin
   fPalette:=TBDPalette.CreateFromStream(pStream);
   LoadWholeImageDataFromStream(pStream);
+end;
+
+procedure TBDImage.ColorFit(pARGBImage:TARGBImage);
+var pp,palimage,palette,fittedpal:pointer;i,palcount:integer;grayscaled:boolean;
+begin
+  GetPalettedImage32(pARGBImage.Width,pARGBImage.Height,pARGBImage.Rawdata,palimage,palette,palcount,grayscaled);
+  if palimage=nil then raise Exception.Create('Imported CEL should be 256 colours or less!');
+  fPalette.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette);
+  fittedpal:=GetMem(palcount*2);
+  for i:=0 to palcount-1 do begin
+    word((fittedpal+i*2)^):=Project.CurrentImage.Palette.GetClosestColor(
+      byte((palette+i*4+2)^),
+      byte((palette+i*4+1)^),
+      byte((palette+i*4+0)^));
+//    Log.Trace(Format('%d,%d,%d=%d',[byte((palette+i*4+2)^),byte((palette+i*4+1)^),
+//                      byte((palette+i*4+0)^),word((fittedpal+i*2)^)]));
+  end;
+  fWidth:=pARGBImage.Width;
+  fHeight:=pARGBImage.Height;
+  Freemem(fData);
+  fDataSize:=fWidth*fHeight*2;
+  fData:=Getmem(fDataSize);
+  pp:=fData;
+  for i:=0 to fWidth*fHeight-1 do begin
+    word(pp^):=word((fittedpal+2*byte((palimage+i)^))^);
+    inc(pp,2);
+  end;
+  Freemem(fittedpal);
+  Freemem(palimage);
+  Freemem(palette);
 end;
 
 end.

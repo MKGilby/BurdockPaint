@@ -83,13 +83,10 @@ CEL
     Magnify CEL to 2x, 3x or 5x.
   OPEN
     OPENCEL
-    Open CEL from file. (BDC or Legacy CEL)
+    Open CEL from file. (BDC, Legacy CEL, PNG, TGA)
   SAVE
     SAVECEL
-    Save CEL to file. (BDC)
-  EXPORT
-    EXPORTCEL
-    Export CEL to file. (PNG or TGA)
+    Save CEL to file. (BDC, PNG, TGA)
 
 ;------------------------------
 Cluster

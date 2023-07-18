@@ -77,7 +77,6 @@ type
     procedure FlipCEL(msg:TMessage);
     procedure OpenCEL;
     procedure SaveCEL;
-    procedure ExportCEL;
     procedure RampCluster;
     procedure OpenColorClusterDialog(msg:TMessage);
     procedure ColorClusterDialogResp(msg:TMessage);
@@ -148,16 +147,14 @@ begin
   fConfigureRGradDialog:=TBDConfigureRGradDialog.Create;
   MouseObjects.List;
 
-  fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','CEL files|*.bdc|Legacy CEL files|*.cel');
+  fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','All supported file|*.bdc;*.cel;*.png;*.tga|CEL files|*.bdc|Legacy CEL files|*.cel|PNG files|*.png|TGA files|*.tga');
   fOpenProjectDialog:=CreateOpenDialog('OpenProjectDialog','Open Project','Project files|*.bpprj');
-  fSaveCELDialog:=CreateSaveDialog('SaveCELDialog','Save CEL','CEL files|*.bdc');
+  fSaveCELDialog:=CreateSaveDialog('SaveCELDialog','Save CEL','CEL files|*.bdc|PNG files|*.png|TGA files|*.tga');
   fSaveProjectDialog:=CreateSaveDialog('SaveProjectDialog','Save Project','Project files|*.bpprj');
-  fExportCELDialog:=CreateSaveDialog('ExportCELDialog','Export CEL to ...','PNG files|*.png|TGA files|*.tga');
 end;
 
 destructor TMain.Destroy;
 begin
-  if Assigned(fExportCELDialog) then fExportCELDialog.Free;
   if Assigned(fOpenProjectDialog) then fOpenProjectDialog.Free;
   if Assigned(fSaveProjectDialog) then fSaveProjectDialog.Free;
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
@@ -235,7 +232,6 @@ begin
           MSG_OPENMAGNIFYCELDIALOG:      fMagnifyDialog.Show;
           MSG_OPENCEL:                   OpenCEL;
           MSG_SAVECEL:                   SaveCEL;
-          MSG_EXPORTCEL:                 ExportCEL;
           MSG_RAMPCLUSTER:               RampCluster;
           MSG_OPENABOUTDIALOG:           fSplashScreen.Show;
           MSG_OPENCOLORCLUSTERDIALOG:    OpenColorClusterDialog(msg);
@@ -525,10 +521,10 @@ procedure TMain.OpenCEL;
 begin
   if fOpenCELDialog.Execute then begin
     if not assigned(Project.CELImage) then Project.CELImage:=TBDImage.Create(16,16);
-    if UpperCase(ExtractFileExt(fOpenCELDialog.FileName))='.CEL' then
-      Project.CELImage.ImportCEL(fOpenCELDialog.FileName)
+    if UpperCase(ExtractFileExt(fOpenCELDialog.FileName))='.BDC' then
+      Project.CELImage.LoadFromFile(fOpenCELDialog.FileName)
     else
-      Project.CELImage.LoadFromFile(fOpenCELDialog.FileName);
+      Project.CELImage.ImportSupported(fOpenCELDialog.FileName,replace(ExtractFileExt(fOpenCELDialog.FileName),'.',''));
     Project.CELImage.Left:=0;
     Project.CELImage.Top:=0;
     fMainMenu.EnableCELSubMenusWithActiveCEL;
@@ -540,20 +536,10 @@ procedure TMain.SaveCEL;
 begin
   if fSaveCELDialog.Execute then begin
     try
-      Project.CELImage.SaveToFile(fSaveCELDialog.FileName);
-    except
-      on e:Exception do
-        Log.LogError(e.message);
-    end;
-    MessageQueue.AddMessage(MSG_SHOWCEL);
-  end;
-end;
-
-procedure TMain.ExportCEL;
-begin
-  if fExportCELDialog.Execute then begin
-    try
-      Project.CELImage.ExportTo(fExportCELDialog.FileName,copy(ExtractFileExt(fExportCELDialog.FileName),2));
+      if uppercase(ExtractFileExt(fSaveCELDialog.FileName))='.BDC' then
+        Project.CELImage.SaveToFile(fSaveCELDialog.FileName)
+      else
+        Project.CELImage.ExportTo(fExportCELDialog.FileName,copy(ExtractFileExt(fExportCELDialog.FileName),2));
     except
       on e:Exception do
         Log.LogError(e.message);
