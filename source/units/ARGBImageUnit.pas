@@ -87,13 +87,25 @@
 //     + HalveImage(n:integer) added. It shrinks the image to 2^-n
 //     * Changed freemems to sizeless versions.
 //   1.22 - Gilby - 2023.01.13-16
-//     + Added Bar with uint32 color parameter
-//     + Added PutPixel with uint32 color parameter
-//     + Added HLine with uint32 color parameter
-//     + Added VLine with uint32 color parameter
-//     + Added Rectangle with uint32 color parameter
+//     + Added Bar with uint32 color parameter.
+//     + Added PutPixel with uint32 color parameter.
+//     + Added HLine with uint32 color parameter.
+//     + Added VLine with uint32 color parameter.
+//     + Added Rectangle with uint32 color parameter.
 //   1.22a - Gilby - 2023.01.25
-//     * Tidying code
+//     * Tidying code.
+//   1.23 - Gilby - 2023.07.31-08.02
+//     * Changed dwords to uint32.
+//     + Added Line with uint32 color parameter.
+//     + Added Circle with uint32 color parameter.
+//     + Added FilledCircle with uint32 color parameter.
+//     + Added FloodFill with uint32 color parameter.
+//     + Added PutImage with uint32 color parameter.
+//     + Added PutImagePart with uint32 color parameter.
+//     * Renamed ResizeN to Magnify.
+//   1.24 - Gilby - 2023.08.10
+//     * Fixed FlipV.
+
 
 {$ifdef fpc}
   {$mode delphi}
@@ -135,6 +147,11 @@ type
 
   TARGBPalette=array[0..255,0..3] of byte;
 
+  TClipBox=record
+    x1,x2,y1,y2:integer;
+    wi,he:integer;
+  end;
+
   TLMatrix=array[-1..1,-1..1] of integer;
 
   { TARGBImage }
@@ -146,8 +163,13 @@ type
 
     destructor Destroy; override;
 
-    // Delete pixels from RawPicture where iMask has black (0,0,0) pixels
-    // iMask must have the same size as RawPicture.
+    // Checks if the two rectangle (1 and 2) overlaps. If yes, gives back the
+    // overlapping area in the TClipBox record. If not, gives back -1 in x1
+    // of the result.
+    function GetClipBox(x1,y1,w1,h1,x2,y2,w2,h2:integer):TClipBox;
+
+    // Delete pixels from image where iMask has black (0,0,0) pixels
+    // iMask must have the same size as image.
     procedure CombineMask(iMask:TARGBImage);
 
     // Multiplies all distinct color channel values in Self by iSource
@@ -164,6 +186,12 @@ type
 
     // Copies a portion of Self to a specified position on iTarget
     procedure CopyTo(x1,y1,wi,he,x2,y2:integer;iTarget:TARGBImage;usecolorkey:boolean=false);
+
+    // Copies source onto Self at x,y
+    procedure PutImage(x,y:integer;source:TARGBImage;usecolorkey:boolean=false);
+
+    // Copies a part of Source onto Self at x,y
+    procedure PutImagePart(x,y,sx,sy,w,h:integer; source:TARGBImage;usecolorkey:boolean=false);
 
     // Inverts the image
     procedure Invert;
@@ -187,7 +215,7 @@ type
     procedure PutPixel(x,y:integer;color32:uint32); overload;
 
     // Gets a pixel.
-    function GetPixel(x,y:integer):dword;
+    function GetPixel(x,y:integer):uint32;
 
     // Draws a bar. If any color value is -1, it leaves that channel unchanged
     procedure Bar(x,y,w,h,r,g,b:integer;a:integer=255); overload;
@@ -208,13 +236,31 @@ type
     procedure VLine(x,y,h:integer;color32:uint32); overload;
 
     // Draws a line between two points. (using Bresenham's line drawing algorithm)
-    procedure Line(x1,y1,x2,y2,r,g,b:integer;a:integer=255);
+    // If any color value is -1, it leaves that channel unchanged
+    procedure Line(x1,y1,x2,y2,r,g,b:integer;a:integer=255); overload;
+
+    // Draws a line between two points. (using Bresenham's line drawing algorithm)
+    // Fills all channels with given pixel data.
+    procedure Line(x1,y1,x2,y2,color32:uint32); overload;
 
     // Draws a rectangle. If any color value is -1, it leaves that channel unchanged
     procedure Rectangle(x,y,w,h,r,g,b:integer;a:integer=255); overload;
 
     // Draws a rectangle. Fills all channels with given pixel data.
     procedure Rectangle(x,y,w,h:integer;color32:uint32); overload;
+
+    // Draws a circle. (Using Bresenham's circle drawing algorithm.)
+    // Fills all channels with given pixel data.
+    // Taken from https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
+    procedure Circle(cx,cy,r:integer;color32:uint32);
+
+    // Draws a filled circle. (Using Bresenham's circle drawing algorithm.)
+    // Fills all channels with given pixel data.
+    // Taken from https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
+    procedure FilledCircle(cx,cy,r:integer;color32:uint32);
+
+    // Replaces a continuous color patch starting at the selected pixel.
+    procedure FloodFill(x,y:integer;color32:uint32);
 
     // Crops the image to the smallest size possible containing all pixels
     // not equal the given color.
@@ -233,7 +279,7 @@ type
     procedure Resize2x;
 
     // Makes the image N times bigger.
-    procedure ResizeN(n:integer);
+    procedure Magnify(n:integer);
 
     // Shrinks the image to 2^-n  (1=/2, 2=/4, etc...)
     procedure HalveImage(n:integer);
@@ -278,10 +324,11 @@ type
     procedure ReadFile(iFileName:string); overload;
     Procedure ReadFile(pStream:TStream;pFileType:string); overload;
 
-  private
+  protected
     fWidth:integer;
     fHeight:integer;
     fRawdata:pointer;
+  private
     fAnimations:TAnimationDatas;
     fUseAlpha:boolean;
     fFontData:TFontData;
@@ -312,7 +359,8 @@ uses SysUtils, MKToolBox, Logger, MKStream;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.22a';
+  Version='1.24';
+  POSTPROCESSCOLOR=$00FF00FF;  // Fully transparent magenta is the magic color!
 
 var
   ARGBImageReaders:TARGBImageReaderList;
@@ -365,6 +413,60 @@ begin
   inherited;
 end;
 
+function TARGBImage.GetClipBox(x1,y1,w1,h1,x2,y2,w2,h2:integer):TClipBox;
+begin
+  if x1<x2 then begin
+    if x1+w1<x2 then begin
+      Result.x1:=-1;  // 1
+    end else begin
+      Result.x2:=0;
+      Result.x1:=x2-x1;
+      if x1+w1<=x2+w2 then begin  // 2
+        Result.wi:=x1+w1-x2;
+      end else begin  // 3
+        Result.wi:=w2;
+      end;
+    end;
+  end else begin
+    if x1<x2+w2 then begin
+      Result.x1:=0;
+      Result.x2:=x1-x2;
+      if x1+w1<=x2+w2 then begin
+        Result.wi:=w2;
+      end else begin
+        Result.wi:=x2+w2-x1;
+      end;
+    end else begin
+      Result.x1:=-1;  // 6
+    end;
+  end;
+  if y1<y2 then begin
+    if y1+h1<y2 then begin
+      Result.x1:=-1;  // 1 - Must be x1, it indicates when the areas are not overlapping
+    end else begin
+      Result.y2:=0;
+      Result.y1:=y2-y1;
+      if y1+h1<=y2+h2 then begin  // 2
+        Result.he:=y1+h1-y2;
+      end else begin  // 3
+        Result.he:=h2;
+      end;
+    end;
+  end else begin
+    if y1<y2+h2 then begin
+      Result.y1:=0;
+      Result.y2:=y1-y2;
+      if y1+h1<=y2+h2 then begin
+        Result.he:=h2;
+      end else begin
+        Result.he:=y2+h2-y1;
+      end;
+    end else begin
+      Result.x1:=-1;  // 6 - Must be x1, it indicates when the areas are not overlapping
+    end;
+  end;
+end;
+
 procedure TARGBImage.CombineMask(iMask:TARGBImage);
 const Istr=Fstr+'TRawPicture.CombineMask';
 var cnt:integer;s,m:pointer;sx:uint32;
@@ -409,7 +511,7 @@ var i:integer;
 begin
   if (fRawdata<>nil) and (fWidth<>0) and (fHeight<>0) then begin
     for i:=0 to fWidth*fHeight-1 do
-      dword((fRawData+i*4)^):=$ff000000;
+      uint32((fRawData+i*4)^):=$ff000000;
   end
   else
     Log.LogWarning('Attempt to clear an uninitialized rawpicture!',Istr);
@@ -528,6 +630,53 @@ begin
     end;
   end else
     raise Exception.Create('TARGBImage.CopyTo: Target is not assigned!');
+end;
+
+procedure TARGBImage.PutImage(x,y:integer;source:TARGBImage;usecolorkey:boolean);
+var clipbox:TClipBox;i,j:integer;c:uint32;
+begin
+  if Assigned(source) then begin
+    clipbox:=GetClipBox(0,0,Width,Height,x,y,source.Width,source.Height);
+    if clipbox.x1<>-1 then with clipbox do begin
+      if usecolorkey then begin
+        for i:=0 to he-1 do
+          for j:=0 to wi-1 do begin
+            c:=uint32((source.RawData+(x2+j+(y2+i)*source.Width)*4)^);
+            if c and $ff000000<>0 then uint32((fRawdata+(x1+j+(y1+i)*Width)*4)^):=c;
+          end;
+      end else begin
+        for i:=0 to he-1 do
+          move((source.RawData+(x2+(y2+i)*source.Width)*4)^,(fRawdata+(x1+(y1+i)*fWidth)*4)^,wi*4);
+      end;
+    end;
+  end else
+    raise Exception.Create('TARGBImage.PutImage: Source is not assigned!');
+end;
+
+procedure TARGBImage.PutImagePart(x,y,sx,sy,w,h:integer; source:TARGBImage;
+  usecolorkey:boolean);
+var clip1,clip2:TClipBox;i,j:integer;c:uint32;
+begin
+  // 1. Clip the source image with the specified area
+  clip1:=GetClipBox(0,0,source.Width,source.Height,sx,sy,w,h);
+  if clip1.x1=-1 then exit;  // Specified an area that is is not overlapping with source image.
+  // 2. Clip the target image with remaining area
+  clip2:=GetClipBox(0,0,Width,Height,x,y,clip1.wi,clip1.he);
+  if clip2.x1<>-1 then begin
+    // Still left some pixels to work with
+    if usecolorkey then begin
+      for i:=0 to clip2.he-1 do
+        for j:=0 to clip2.wi-1 do begin
+          c:=uint32((source.RawData+(clip1.x1+j+(clip1.y1+i)*source.Width)*4)^);
+          if c and $FF000000<>0 then
+            uint32((fRawdata+(clip2.x1+j+(clip2.y1+i)*fWidth)*4)^):=c;
+        end;
+    end else begin
+      for i:=0 to clip2.he-1 do
+        move((source.RawData+(clip1.x1+(clip1.y1+i)*source.Width)*4)^,
+             (fRawdata+(clip2.x1+(clip2.y1+i)*fWidth)*4)^,clip2.wi*4);
+    end;
+  end;
 end;
 
 procedure TARGBImage.Invert;
@@ -657,12 +806,12 @@ end;
 
 procedure TARGBImage.PutPixel(x,y:integer; color32:uint32);
 begin
-  dword((fRawdata+(x+y*fWidth)*4)^):=color32;
+  uint32((fRawdata+(x+y*fWidth)*4)^):=color32;
 end;
 
-function TARGBImage.GetPixel(x,y:integer):dword;
+function TARGBImage.GetPixel(x,y:integer):uint32;
 begin
-  Result:=dword((fRawData+(x+y*fWidth)*4)^);
+  Result:=uint32((fRawData+(x+y*fWidth)*4)^);
 end;
 
 procedure TARGBImage.Bar(x, y, w, h, r, g, b: integer; a: integer);
@@ -700,7 +849,7 @@ begin
     for j:=y to y+h-1 do begin
       p:=fRawdata+(j*fWidth+x)*4;
       for i:=0 to w-1 do begin
-        dword(p^):=color32;
+        uint32(p^):=color32;
         inc(p,4);
       end;
     end;
@@ -740,7 +889,7 @@ begin
     // And now draw
     p:=fRawdata+(y*fWidth+x)*4;
     while w>0 do begin
-      dword(p^):=color32;
+      uint32(p^):=color32;
       dec(w);
       inc(p,4);
     end;
@@ -779,7 +928,7 @@ begin
     // And now draw
     p:=fRawdata+(y*fWidth+x)*4;
     while h>0 do begin
-      dword(p^):=color32;
+      uint32(p^):=color32;
       dec(h);
       inc(p,fWidth*4);
     end;
@@ -789,6 +938,66 @@ end;
 // Taken from http://www.efg2.com/Lab/Library/Delphi/Graphics/Bresenham.txt
 // Stripped a few comments, variable names changed here and there...
 procedure TARGBImage.Line(x1, y1, x2, y2, r, g, b: integer; a: integer);
+var
+  _a,_b,_d : integer;
+  diag_inc, nondiag_inc : integer;
+  dx_diag, dx_nondiag, dy_diag, dy_nondiag : integer;
+  i,swap,x,y : integer;
+  p:pointer;
+begin
+  x := x1;
+  y := y1;
+  {Determine drawing direction and step to the next pixel.}
+  _a := x2 - x1;
+  _b := y2 - y1;
+  {Determine whether end point lies to right or left of start point.}
+  if _a < 0 then begin
+    _a := -_a;
+    dx_diag := -1;
+  end else
+    dx_diag := 1;
+  {Determine whether end point lies above or below start point.}
+  if _b < 0 then begin
+    _b := -_b;
+    dy_diag := -1
+  end else
+    dy_diag := 1;
+  {Identify octant containing end point.}
+  if _a < _b then begin
+    swap := _a;
+    _a := _b;
+    _b := swap;
+    dx_nondiag := 0;
+    dy_nondiag := dy_diag
+  end else begin
+    dx_nondiag := dx_diag;
+    dy_nondiag := 0
+  end;
+  _d := _b + _b - _a;
+  nondiag_inc := _b + _b;
+  diag_inc    := _b + _b - _a - _a;
+  for i := 0 to _a do begin   {draw the a+1 pixels}
+    p:=RawData+(y*fWidth+x)*4;
+    if a<>-1 then byte(p^):=a and $ff;
+    if r<>-1 then byte((p+1)^):=r and $ff;
+    if g<>-1 then byte((p+2)^):=g and $ff;
+    if b<>-1 then byte((p+3)^):=b and $ff;
+
+    if _d < 0 then begin
+      x := x + dx_nondiag;
+      y := y + dy_nondiag;
+      _d := _d + nondiag_inc
+    end else begin
+      x := x + dx_diag;
+      y := y + dy_diag;
+      _d := _d + diag_inc
+    end;
+  end;
+end;
+
+// Taken from http://www.efg2.com/Lab/Library/Delphi/Graphics/Bresenham.txt
+// Stripped a few comments, variable names changed here and there...
+procedure TARGBImage.Line(x1,y1,x2,y2,color32:uint32);
 var
   _a,_b,_d : integer;
   diag_inc, nondiag_inc : integer;
@@ -827,7 +1036,7 @@ begin
   nondiag_inc := _b + _b;
   diag_inc    := _b + _b - _a - _a;
   for i := 0 to _a do begin   {draw the a+1 pixels}
-    PutPixel(x,y,r,g,b,a);
+    PutPixel(x,y,color32);
     if _d < 0 then begin
       x := x + dx_nondiag;
       y := y + dy_nondiag;
@@ -854,6 +1063,136 @@ begin
   VLine(x+w-1,y,h,color32);
   HLine(x,y,w,color32);
   HLine(x,y+h-1,w,color32);
+end;
+
+// Taken from https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
+procedure TARGBImage.Circle(cx,cy,r:integer; color32:uint32);
+
+  procedure PutPixel8(x,y:integer);
+  begin
+    PutPixel(cx+x, cy+y, color32);
+    PutPixel(cx-x, cy+y, color32);
+    PutPixel(cx+x, cy-y, color32);
+    PutPixel(cx-x, cy-y, color32);
+    PutPixel(cx+y, cy+x, color32);
+    PutPixel(cx-y, cy+x, color32);
+    PutPixel(cx+y, cy-x, color32);
+    PutPixel(cx-y, cy-x, color32);
+  end;
+
+var x,y,d:integer;
+
+begin
+  x:=0;
+  y:=r;
+  d:=3-2*r;
+  PutPixel8(x,y);
+  while (y>=x) do begin
+    inc(x);
+    // check for decision parameter and correspondingly update d, x, y
+    if d>0 then begin
+      dec(y);
+      d:=d+4*(x-y)+10;
+    end else
+      d:=d+4*x+6;
+    PutPixel8(x,y);
+  end;
+end;
+
+procedure TARGBImage.FilledCircle(cx,cy,r:integer; color32:uint32);
+
+  procedure HLine(x,y:integer);
+  var i:integer;
+  begin
+    for i:=-x to +x do begin
+      PutPixel(cx+i,cy+y,color32);
+      PutPixel(cx+i,cy-y,color32);
+    end;
+    for i:=-y to +y do begin
+      PutPixel(cx+i,cy+x,color32);
+      PutPixel(cx+i,cy-x,color32);
+    end;
+  end;
+
+var x,y,d:integer;
+
+begin
+  x:=0;
+  y:=r;
+  d:=3-2*r;
+  HLine(x,y);
+  while (y>=x) do begin
+    inc(x);
+    // check for decision parameter and correspondingly update d, x, y
+    if d>0 then begin
+      dec(y);
+      d:=d+4*(x-y)+10;
+    end else
+      d:=d+4*x+6;
+    HLine(x,y);
+  end;
+end;
+
+procedure TARGBImage.FloodFill(x,y:integer; color32:uint32);
+var i,j:integer;w:boolean;cc:uint32;
+
+  function FFCheckPixel(x,y:integer;src,trg:uint32):boolean;
+  begin
+    Result:=false;
+    if (y>0) and (GetPixel(x,y-1)=src) then begin
+      PutPixel(x,y-1,trg);
+      Result:=true;
+    end;
+    if (x<Width-1) and (GetPixel(x+1,y)=src) then begin
+      PutPixel(x+1,y,trg);
+      Result:=true;
+    end;
+    if (y<Height-1) and (GetPixel(x,y+1)=src) then begin
+      PutPixel(x,y+1,trg);
+      Result:=true;
+    end;
+    if (x>0) and (GetPixel(x-1,y)=src) then begin
+      PutPixel(x-1,y,trg);
+      Result:=true;
+    end;
+  end;
+
+begin
+  cc:=GetPixel(x,y);
+  if cc=color32 then exit;  // The two color is identical.
+  PutPixel(x,y,POSTPROCESSCOLOR);
+  repeat
+    w:=false;
+    for j:=0 to Height-1 do
+      for i:=0 to Width-1 do
+        if GetPixel(i,j)=POSTPROCESSCOLOR then
+          if FFCheckPixel(i,j,cc,POSTPROCESSCOLOR) then w:=true;
+    if w then begin
+      w:=false;
+      for j:=Height-1 downto 0 do
+        for i:=0 to Width-1 do
+          if GetPixel(i,j)=POSTPROCESSCOLOR then
+            if FFCheckPixel(i,j,cc,POSTPROCESSCOLOR) then w:=true;
+    end;
+    if w then begin
+      w:=false;
+      for j:=Height-1 downto 0 do
+        for i:=Width-1 downto 0 do
+          if GetPixel(i,j)=POSTPROCESSCOLOR then
+            if FFCheckPixel(i,j,cc,POSTPROCESSCOLOR) then w:=true;
+    end;
+    if w then begin
+      w:=false;
+      for j:=0 to Height-1 do
+        for i:=Width-1 downto 0 do
+          if GetPixel(i,j)=POSTPROCESSCOLOR then
+            if FFCheckPixel(i,j,cc,POSTPROCESSCOLOR) then w:=true;
+    end;
+  until not w;
+  if color32<>POSTPROCESSCOLOR then
+    for j:=0 to Height-1 do
+      for i:=0 to Width-1 do
+        if GetPixel(i,j)=POSTPROCESSCOLOR then PutPixel(i,j,color32);
 end;
 
 procedure TARGBImage.Crop(r, g, b, a: integer);
@@ -923,19 +1262,16 @@ begin
 end;
 
 procedure TARGBImage.FlipV;
-var x,y:integer;s,t,p:pointer;
+var y:integer;s,t,p:pointer;
 begin
   p:=getmem(fWidth*fHeight*4);
   s:=fRawdata+(fHeight-1)*fWidth*4;
   t:=p;
 
-  for x:=0 to fWidth-1 do begin
-    for y:=0 to fHeight-1 do begin
-      move(s^,t^,4);
-      t+=4;
-      s+=4;
-    end;
-    s-=fWidth*4*2;
+  for y:=0 to fHeight-1 do begin
+    move(s^,t^,fWidth*4);
+    t+=fwidth*4;
+    s-=fWidth*4;
   end;
   freemem(fRawData);
   fRawdata:=p;
@@ -958,7 +1294,7 @@ begin
   fHeight:=fHeight<<1;
 end;
 
-procedure TARGBImage.ResizeN(n:integer);
+procedure TARGBImage.Magnify(n:integer);
 var s,t:pointer;x,y,i,j:integer;p:pointer;
 begin
   if n<2 then exit;
@@ -1183,7 +1519,7 @@ begin
     if (Width=pOtherImage.Width) and (Height=pOtherImage.Height) then begin
       Result:=true;
       for i:=0 to Width*height-1 do
-        if dword((Rawdata+i*4)^)<>dword((pOtherImage.Rawdata+i*4)^) then begin
+        if uint32((Rawdata+i*4)^)<>uint32((pOtherImage.Rawdata+i*4)^) then begin
           Result:=false;
           exit;
         end;
@@ -1232,13 +1568,13 @@ begin
 end;
 
 procedure TARGBImage.fBarFull(x,y,w,h:integer;r,g,b,a:uint32);
-var p:pointer;i,j:integer;v:dword;
+var p:pointer;i,j:integer;v:uint32;
 begin
   v:=b and $ff+(g and $ff)<<8+(r and $ff)<<16+(a and $ff)<<24;
   for j:=y to y+h-1 do begin
     p:=fRawdata+(j*fWidth+x)*4;
     for i:=0 to w-1 do begin
-      dword(p^):=v;
+      uint32(p^):=v;
       inc(p,4);
     end;
   end;
@@ -1261,12 +1597,12 @@ begin
 end;
 
 procedure TARGBImage.fHLineFull(x,y,w:integer;r,g,b,a:uint32);
-var p:pointer;v:dword;
+var p:pointer;v:uint32;
 begin
   p:=fRawdata+(y*fWidth+x)*4;
   v:=b and $ff+(g and $ff)<<8+(r and $ff)<<16+(a and $ff)<<24;
   while w>0 do begin
-    dword(p^):=v;
+    uint32(p^):=v;
     dec(w);
     inc(p,4);
   end;
@@ -1286,12 +1622,12 @@ begin
 end;
 
 procedure TARGBImage.fVLineFull(x,y,h:integer;r,g,b,a:uint32);
-var p:pointer;v:dword;
+var p:pointer;v:uint32;
 begin
   p:=fRawdata+(y*fWidth+x)*4;
   v:=b and $ff+((g and $ff)<<8)+((r and $ff)<<16)+((a and $ff)<<24);
   while h>0 do begin
-    dword(p^):=v;
+    uint32(p^):=v;
     dec(h);
     inc(p,fWidth*4);
   end;

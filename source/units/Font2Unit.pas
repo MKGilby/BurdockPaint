@@ -305,7 +305,7 @@ begin
     fARGBImage.ReplaceColor(fCKr,fCKg,fCKb,0,0,0,0);
     fARGBImage.SetColorkey(fCKr,fCKg,fCKb);
   end;
-  if fSize<>1 then fARGBImage.ResizeN(fSize);
+  if fSize<>1 then fARGBImage.Magnify(fSize);
   fTexture:=TStaticTexture.Create(fARGBImage);
   if SDL_SetTextureAlphaMod(fTexture.Texture,fAlpha)=-1 then
     Log.LogWarning('SetAlpha failed! (Font: '+fName+')');
