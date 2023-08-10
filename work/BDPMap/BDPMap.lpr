@@ -20,7 +20,7 @@
 
 program BDPMap;
 
-uses Classes, SysUtils;
+uses Classes, SysUtils, MyZStreamUnit;
 
 type
 
@@ -128,8 +128,13 @@ begin
   fStream.Read(ver,1);
   W(Format('I version %d (Start: %d, Len: %d)',[ver,fStream.Position-5,len]));
   inc(fIndent,2);
-  ProcessBlock;
-  ProcessBlock;
+  if ver=1 then begin
+    ProcessBlock;
+    ProcessBlock;
+  end
+  else if ver=2 then begin
+    ProcessBlock;
+  end;
   dec(fIndent,2);
 end;
 
@@ -160,21 +165,42 @@ begin
 end;
 
 procedure TMain.ProcessC;
-var len:uint32;
+var pos,len:uint32;ver:byte;Xs:TStream;cnt:integer;
 begin
   len:=0;
   fStream.Read(len,4);
-  W(Format('C *skipping* (Start: %d, Len: %d)',[fStream.Position-5,len]));
-  fStream.Position:=fStream.Position+len;
+  pos:=fStream.Position;
+  Xs:=TMemoryStream.Create;
+  UnCompressStream(fStream,Xs);
+  Xs.Position:=0;
+  ver:=0;cnt:=0;
+  Xs.Read(ver,1);
+  Xs.Read(cnt,2);
+  W(Format('C version %d (Start: %d, Len: %d)',[ver,pos-5,len]));
+  W(Format('  Color count: %d',[cnt]));
+  Xs.Free;
+  fStream.Position:=pos+len;
 end;
 
 procedure TMain.ProcessR;
-var len:uint32;
+var pos,len:uint32;ver:byte;left,top,width,height:integer;Xs:TStream;
 begin
   len:=0;
   fStream.Read(len,4);
-  W(Format('R *skipping* (Start: %d, Len: %d)',[fStream.Position-5,len]));
-  fStream.Position:=fStream.Position+len;
+  pos:=fStream.Position;
+  Xs:=TMemoryStream.Create;
+  UnCompressStream(fStream,Xs);
+  Xs.Position:=0;
+  ver:=0;left:=0;top:=0;width:=0;height:=0;
+  Xs.Read(ver,1);
+  Xs.Read(left,2);
+  Xs.Read(top,2);
+  Xs.Read(width,2);
+  Xs.Read(height,2);
+  W(Format('R version %d (Start: %d, Len: %d)',[ver,pos-5,len]));
+  W(Format('  Left: %d, Top: %d, Width: %d, Height: %d',[left,top,width,height]));
+  Xs.Free;
+  fStream.Position:=pos+len;
 end;
 
 procedure TMain.ProcessU;
@@ -279,24 +305,35 @@ begin
   W(Format('  Affected color: %d',[color]));
   inc(fIndent,2);
   fStream.Read(len,4);
-  W(Format('  Value before: %8.x',[len]));
+  W('  Value before: '+hexstr(len,8));
   fStream.Read(len,4);
-  W(Format('  Value after: %8.x',[len]));
+  W('  Value after : '+hexstr(len,8));
   dec(fIndent,2);
 end;
 
 procedure TMain.ProcessT;
 var len:uint32;ver,flags:Byte;startc,endc:integer;s:string;
+  c1,c2:uint32;
 begin
   len:=0;ver:=0;
   fStream.Read(len,4);
   fStream.Read(ver,1);
   W(Format('T version %d (Start: %d, Len: %d)',[ver,fStream.Position-6,len]));
-  startc:=0;endc:=0;flags:=0;
-  fStream.Read(startc,2);
-  fStream.Read(endc,2);
-  fStream.Read(flags,1);
-  W(Format('  Start: %d, End: %d',[startc,endc]));
+  flags:=0;
+  if ver=1 then begin
+    startc:=0;endc:=0;
+    fStream.Read(startc,2);
+    fStream.Read(endc,2);
+    fStream.Read(flags,1);
+    W(Format('  Start: %d, End: %d',[startc,endc]));
+  end
+  else if ver=2 then begin
+    c1:=0;c2:=0;
+    fStream.Read(c1,4);
+    fStream.Read(c2,4);
+    fStream.Read(flags,1);
+    W(Format('  Color1: %s, Color2: %s',[hexstr(c1,8),hexstr(c2,8)]));
+  end;
   W(Format('  Flags: %d',[flags]));
   s:='    [';
   if flags and 1<>0 then s+='X' else s+=' ';
