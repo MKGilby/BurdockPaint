@@ -25,13 +25,13 @@ unit BDPProject;
 interface
 
 uses
-  Classes, SysUtils, fgl, BDPImage, BDPUndo, BDPColorCluster;
+  Classes, SysUtils, fgl, BDPImage, BDPUndo, BDPColorCluster, BDPPalette;
 
 type
 
   { TBDExtendedImage }
 
-  TBDExtendedImage=class(TBDImage)
+  TBDExtendedImage=class
     // Creates a new empty 320x200 image with the NTSC.COL palette,
     // creates empty UndoSystems and default color clusters.
     constructor Create; overload;
@@ -52,13 +52,16 @@ type
     // Clears undo/redo data
     procedure ClearUndoData;
   private
-//    fImage:TBDImage;
+    fImage:TBDImage;
+    fPalette:TBDPalette;
     fImageUndoSystem:TBDImageUndoSystem;
     fPaletteUndoSystem:TBDPaletteUndoSystem;
     fColorClusters:TColorClusters;
     procedure LoadFromStreamV1(pStream:TStream);
+    procedure LoadFromStreamV2(pStream:TStream);
   public
-//    property Image:TBDImage read fImage;
+    property Image:TBDImage read fImage;
+    property Palette:TBDPalette read fPalette;
     property ImageUndo:TBDImageUndoSystem read fImageUndoSystem;
     property PaletteUndo:TBDPaletteUndoSystem read fPaletteUndoSystem;
     property ColorClusters:TColorClusters read fColorClusters;
@@ -98,18 +101,24 @@ type
     procedure LoadFromStreamV1(pStream:TStream);
     procedure SetOverlayPalette;
     procedure fSetCurrentImageIndex(value:integer);
-    function fGetCurrentImage:TBDExtendedImage;
+    function fGetCurrentImage:TBDImage;
+    function fGetCurrentPalette:TBDPalette;
+    function fGetCurrentColorClusters:TColorClusters;
+    function fGetCurrentExtImage:TBDExtendedImage;
   public
     property Images:TBDExtendedImages read fImages;
     property CurrentImageIndex:integer read fCurrentImageIndex write fSetCurrentImageIndex;
     property OverlayImage:TBDImage read fOverlayImage;
-    property CurrentImage:TBDExtendedImage read fGetCurrentImage;
+    property CurrentExtImage:TBDExtendedImage read fGetCurrentExtImage;
+    property CurrentImage:TBDImage read fGetCurrentImage;
+    property CurrentPalette:TBDPalette read fGetCurrentPalette;
+    property CurrentColorClusters:TColorClusters read fGetCurrentColorClusters;
     property CELImage:TBDImage read fCELImage write fCELImage;
   end;
 
 implementation
 
-uses BDPShared, BDPPalette;
+uses BDPShared;
 
 const
   EXTENDEDIMAGEID=$45;
@@ -124,7 +133,8 @@ end;
 
 constructor TBDExtendedImage.Create(iWidth,iHeight:integer);
 begin
-  inherited Create(iWidth,iHeight);
+  fImage:=TBDImage.Create(iWidth,iHeight);
+  fPalette:=TBDPalette.Create(256);
   fImageUndoSystem:=TBDImageUndoSystem.Create;
   fPaletteUndoSystem:=TBDPaletteUndoSystem.Create;
   fColorClusters:=TColorClusters.Create;
@@ -141,6 +151,7 @@ begin
   curr:=iStream.Position;
   iStream.Read(b,1);  // Version
   if b=1 then LoadFromStreamV1(iStream)
+  else if b=2 then LoadFromStreamV2(iStream)
   else raise Exception.Create(Format('Unknown extended image data version! (%d)',[b]));
   iStream.Position:=curr+size;
 
@@ -152,9 +163,14 @@ end;
 
 destructor TBDExtendedImage.Destroy;
 begin
-  if Assigned(fColorClusters) then FreeAndNil(fColorClusters);
-  if Assigned(fImageUndoSystem) then FreeAndNil(fImageUndoSystem);
-  if Assigned(fPaletteUndoSystem) then FreeAndNil(fPaletteUndoSystem);
+  if Assigned(fImage) then fImage.Free;
+  if Assigned(fPalette) then begin
+    fPalette.Free;
+    GlobalV1Palette:=nil;
+  end;
+  if Assigned(fColorClusters) then fColorClusters.Free;
+  if Assigned(fImageUndoSystem) then fImageUndoSystem.Free;
+  if Assigned(fPaletteUndoSystem) then fPaletteUndoSystem.Free;
   inherited Destroy;
 end;
 
@@ -165,7 +181,7 @@ begin
   pStream.Write(i,1);
   curr:=pStream.Position;
   i:=0;  pStream.Write(i,4);  // Size placeholder
-  i:=1;  pStream.Write(i,1);  // version
+  i:=2;  pStream.Write(i,1);  // version
 
   flags:=0;
   if fImageUndoSystem.Count>0 then flags:=flags or 2;
@@ -173,8 +189,8 @@ begin
   if fColorClusters.Count>0 then flags:=flags or 8;
   pStream.Write(flags,1);
 
-  Palette.SaveToStream(pStream);
-  SaveWholeImageDataToStream(pStream);
+  fPalette.SaveToStream(pStream);
+  fImage.SaveToStream(pStream);
   if fImageUndoSystem.Count>0 then fImageUndoSystem.SaveToStream(pStream);
   if fPaletteUndoSystem.Count>0 then fPaletteUndoSystem.SaveToStream(pStream);
   if fColorClusters.Count>0 then fColorClusters.SaveToStream(pStream);
@@ -196,9 +212,22 @@ var flags:byte;
 begin
   flags:=0;
   pStream.Read(flags,1);
-  fPalette:=TBDPalette.Create;
-  Palette.LoadFromStream(pStream);
-  LoadWholeImageDataFromStream(pStream);
+  fPalette:=TBDPalette.CreateFromStream(pStream);
+  GlobalV1Palette:=fPalette;
+  fImage:=TBDImage.Create(16,16);
+  fImage.LoadRegionFromStream(pStream,fPalette);
+  if flags and 2<>0 then fImageUndoSystem:=TBDImageUndoSystem.CreateFromStream(pStream);
+  if flags and 4<>0 then fPaletteUndoSystem:=TBDPaletteUndoSystem.CreateFromStream(pStream);
+  if flags and 8<>0 then fColorClusters:=TColorClusters.CreateFromStream(pStream);
+end;
+
+procedure TBDExtendedImage.LoadFromStreamV2(pStream:TStream);
+var flags:byte;
+begin
+  flags:=0;
+  pStream.Read(flags,1);
+  fPalette:=TBDPalette.CreateFromStream(pStream);
+  fImage:=TBDImage.CreateFromStream(pStream);
   if flags and 2<>0 then fImageUndoSystem:=TBDImageUndoSystem.CreateFromStream(pStream);
   if flags and 4<>0 then fPaletteUndoSystem:=TBDPaletteUndoSystem.CreateFromStream(pStream);
   if flags and 8<>0 then fColorClusters:=TColorClusters.CreateFromStream(pStream);
@@ -212,7 +241,7 @@ begin
   fImages:=TBDExtendedImages.Create;
   fImages.Add(TBDExtendedImage.Create);
   fCurrentImageIndex:=0;
-  fOverlayImage:=TBDImage.Create(fImages[0].Width,fImages[0].Height);
+  fOverlayImage:=TBDImage.Create(fImages[0].Image.Width,fImages[0].Image.Height);
   SetOverlayPalette;
   fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
   fCELImage:=nil;
@@ -245,9 +274,9 @@ begin
 
   if (fCurrentImageIndex<0) or (fCurrentImageIndex>=fImages.Count) then
     fCurrentImageIndex:=0;
-  fOverlayImage:=TBDImage.Create(fImages[fCurrentImageIndex].Width,fImages[fCurrentImageIndex].Height);
+  fOverlayImage:=TBDImage.Create(fImages[fCurrentImageIndex].Image.Width,fImages[fCurrentImageIndex].Image.Height);
 //  SetOverlayPalette;
-  fOverlayImage.Palette.ResizeAndCopyColorsFrom(SystemPalette);
+//  fOverlayImage.Palette.ResizeAndCopyColorsFrom(SystemPalette);
   fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
 end;
 
@@ -319,7 +348,7 @@ end;
 procedure TBDProject.SetOverlayPalette;
 begin
   with fOverlayImage do begin
-    Palette.Colors[0]:=$00000000;
+{    Palette.Colors[0]:=$00000000;
     Palette.Colors[1]:=$ff040404;
     Palette.Colors[2]:=$ff5d5d5d;
     Palette.Colors[3]:=$ff9a9a9a;
@@ -329,7 +358,7 @@ begin
     Palette.Colors[7]:=$ff505050;
     Palette.Colors[8]:=$ff808080;
     Palette.Colors[9]:=$ffb0b0b0;
-    Palette.Colors[10]:=$ffe0e0e0;
+    Palette.Colors[10]:=$ffe0e0e0;}
   end;
 end;
 
@@ -337,12 +366,27 @@ procedure TBDProject.fSetCurrentImageIndex(value:integer);
 begin
   if (value<>fCurrentImageIndex) and (value>=0) and (value<fImages.Count) then begin
     fCurrentImageIndex:=value;
-    fOverlayImage.Recreate(fImages[fCurrentImageIndex].Width,fImages[fCurrentImageIndex].Height);
+    fOverlayImage.Recreate(fImages[fCurrentImageIndex].Image.Width,fImages[fCurrentImageIndex].Image.Height);
     fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
   end;
 end;
 
-function TBDProject.fGetCurrentImage:TBDExtendedImage;
+function TBDProject.fGetCurrentImage:TBDImage;
+begin
+  Result:=fImages[fCurrentImageIndex].Image;
+end;
+
+function TBDProject.fGetCurrentPalette:TBDPalette;
+begin
+  Result:=fImages[fCurrentImageIndex].Palette;
+end;
+
+function TBDProject.fGetCurrentColorClusters:TColorClusters;
+begin
+  Result:=fImages[fCurrentImageIndex].ColorClusters;
+end;
+
+function TBDProject.fGetCurrentExtImage:TBDExtendedImage;
 begin
   Result:=fImages[fCurrentImageIndex];
 end;

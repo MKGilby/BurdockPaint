@@ -145,7 +145,7 @@ type
 
 implementation
 
-uses BDPShared, BDPSettings;
+uses BDPShared, BDPSettings, MKToolbox;
 
 const
   UNDOSYSTEMREGIONID=$55;
@@ -153,6 +153,8 @@ const
   UNDOSYSTEMPALETTEID=$56;
   UNDOOPERATIONPALETTEID=$51;
   UNDOOPERATIONSINGLECOLORID=$53;
+
+//  SaveCount:integer=0;
 
 { TBDUndoItem }
 
@@ -227,8 +229,8 @@ begin
     pStream.Write(i,4);
     i:=1;                // Version
     pStream.Write(i,1);
-    fBefore.SaveWholeImageDataToStream(pStream);
-    fAfter.SaveWholeImageDataToStream(pStream);
+    fBefore.SaveRegionToStream(pStream);
+    fAfter.SaveRegionToStream(pStream);
     i:=pStream.Position-curr-4;
     pStream.Position:=curr;
     pStream.write(i,4);
@@ -256,9 +258,12 @@ end;
 procedure TBDRegionUndoItem.LoadFromStreamV1(pStream:TStream);
 begin
   fBefore:=TBDImage.Create(16,16);
-  fBefore.LoadWholeImageDataFromStream(pStream);
+  fBefore.LoadRegionFromStream(pStream,GlobalV1Palette);
+//  fBefore.WriteFile(st(SaveCount,4,'0')+'_0.png','PNG');
   fAfter:=TBDImage.Create(16,16);
-  fAfter.LoadWholeImageDataFromStream(pStream);
+  fAfter.LoadRegionFromStream(pStream,GlobalV1Palette);
+//  fAfter.WriteFile(st(SaveCount,4,'0')+'_1.png','PNG');
+//  inc(SaveCount);
 end;
 
 { TBDPaletteUndoItem }
@@ -290,13 +295,13 @@ end;
 
 procedure TBDPaletteUndoItem.Undo;
 begin
-  Project.CurrentImage.Palette.CopyColorsFrom(fBefore,0,fStart,fBefore.Size);
+  Project.CurrentPalette.CopyColorsFrom(fBefore,0,fStart,fBefore.Size);
 end;
 
 procedure TBDPaletteUndoItem.Redo;
 begin
   if Assigned(fAfter) then
-    Project.CurrentImage.Palette.CopyColorsFrom(fAfter,0,fStart,fAfter.Size);
+    Project.CurrentPalette.CopyColorsFrom(fAfter,0,fStart,fAfter.Size);
 end;
 
 procedure TBDPaletteUndoItem.SaveToStream(pStream:TStream);
@@ -368,12 +373,12 @@ end;
 
 procedure TBDSingleColorUndoItem.Undo;
 begin
-  Project.CurrentImage.Palette[fStart]:=fBefore;
+  Project.CurrentPalette[fStart]:=fBefore;
 end;
 
 procedure TBDSingleColorUndoItem.Redo;
 begin
-  Project.CurrentImage.Palette[fStart]:=fAfter;
+  Project.CurrentPalette[fStart]:=fAfter;
 end;
 
 procedure TBDSingleColorUndoItem.SaveToStream(pStream:TStream);
@@ -425,7 +430,7 @@ constructor TBDUndoSystem.Create;
 begin
   inherited Create;
   fPointer:=-1;
-  fAfterUndoRedoMessage:=TMessage.Init(MSG_NONE,0);
+  fAfterUndoRedoMessage:=TMessage.Init(MSG_NONE,0,0);
 end;
 
 constructor TBDUndoSystem.CreateFromStream(pStream:TStream);
@@ -490,7 +495,7 @@ end;
 constructor TBDImageUndoSystem.Create;
 begin
   inherited Create;
-  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETIMAGEUNDOREDOBUTTON,0);
+  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETIMAGEUNDOREDOBUTTON,0,0);
 end;
 
 procedure TBDImageUndoSystem.AddImageUndo(Left,Top,Width,Height:integer;Image:TBDImage);
@@ -568,7 +573,7 @@ begin
       Self.Add(TBDRegionUndoItem.CreateFromStream(pStream));
   end;
   pStream.Position:=curr+size;
-  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETIMAGEUNDOREDOBUTTON,0);
+  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETIMAGEUNDOREDOBUTTON,0,0);
 end;
 
 { TBDPaletteUndoSystem }
@@ -576,7 +581,7 @@ end;
 constructor TBDPaletteUndoSystem.Create;
 begin
   inherited Create;
-  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETPALETTEUNDOREDOBUTTON,0);
+  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETPALETTEUNDOREDOBUTTON,0,0);
 end;
 
 procedure TBDPaletteUndoSystem.AddPaletteUndo(Start,Count:integer);
@@ -586,7 +591,7 @@ begin
     Self.DeleteRange(fPointer+1,Self.Count-1);
   if Self.Count=Settings.UndoLimit then Self.Delete(0);
   atmP:=TBDPalette.Create(Count);
-  atmP.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette,Start,Count);
+  atmP.ResizeAndCopyColorsFrom(Project.CurrentPalette,Start,Count);
   atm:=TBDPaletteUndoItem.Create(Start,atmP);
   Self.Add(atm);
   fPointer:=Self.Count-1;
@@ -599,7 +604,7 @@ begin
   if fPointer>-1 then begin
     if not Self[fPointer].Redoable then begin
       atmP:=TBDPalette.Create(TBDPaletteUndoItem(Self[fPointer]).Before.Size);
-      atmP.ResizeAndCopyColorsFrom(Project.CurrentImage.Palette,TBDPaletteUndoItem(Self[fPointer]).Start,TBDPaletteUndoItem(Self[fPointer]).Before.Size);
+      atmP.ResizeAndCopyColorsFrom(Project.CurrentPalette,TBDPaletteUndoItem(Self[fPointer]).Start,TBDPaletteUndoItem(Self[fPointer]).Before.Size);
       TBDPaletteUndoItem(Self[fPointer]).AddAfter(atmP);
       MessageQueue.AddMessage(fAfterUndoRedoMessage);
     end;
@@ -616,7 +621,7 @@ begin
       (Self[fPointer] is TBDSingleColorUndoItem) and
       (TBDSingleColorUndoItem(Self[fPointer]).Start=pStart)) then begin
     if Self.Count=Settings.UndoLimit then Self.Delete(0);
-    atm:=TBDSingleColorUndoItem.Create(pStart,Project.CurrentImage.Palette[pStart]);
+    atm:=TBDSingleColorUndoItem.Create(pStart,Project.CurrentPalette[pStart]);
     Self.Add(atm);
     fPointer:=Self.Count-1;
     MessageQueue.AddMessage(fAfterUndoRedoMessage);
@@ -627,7 +632,7 @@ procedure TBDPaletteUndoSystem.AddSingleColorRedoToLastUndo;
 begin
   if fPointer>-1 then begin
     with TBDSingleColorUndoItem(Self[fPointer]) do
-      AddAfter(Project.CurrentImage.Palette[Start]);
+      AddAfter(Project.CurrentPalette[Start]);
     MessageQueue.AddMessage(fAfterUndoRedoMessage);
   end;
 end;
@@ -680,7 +685,7 @@ begin
     end;
   end;
   pStream.Position:=curr+size;
-  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETPALETTEUNDOREDOBUTTON,0);
+  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETPALETTEUNDOREDOBUTTON,0,0);
 end;
 
 end.

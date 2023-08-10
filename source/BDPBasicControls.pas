@@ -84,11 +84,11 @@ type
   protected
     procedure ReDraw; override;
   private
-    fColorIndex:word;
+    fColor:uint32;
     fTLImage,fTRImage,fBLImage,fBRImage:TARGBImage;
-    procedure fSetColorIndex(value:word);
+    procedure fSetColor(value:uint32);
   public
-    property ColorIndex:word read fColorIndex write fSetColorIndex;
+    property Color:uint32 read fColor write fSetColor;
   end;
 
 implementation
@@ -116,7 +116,7 @@ begin
   fName:=fCaption;
   fHint:=iHint;
   fAssignedObject:=iAssignedobject;
-  fMessage:=TMessage.Init(MSG_NONE,0);
+  fMessage:=TMessage.Init(MSG_NONE,0,0);
   fTLImage:=MM.Images.ItemByName['ArchTopLeft'];
   fTRImage:=MM.Images.ItemByName['ArchTopRight'];
   fBLImage:=MM.Images.ItemByName['ArchBottomLeft'];
@@ -343,7 +343,7 @@ begin
   fTRImage:=MM.Images.ItemByName['ArchTopRight'];
   fBLImage:=MM.Images.ItemByName['ArchBottomLeft'];
   fBRImage:=MM.Images.ItemByName['ArchBottomRight'];
-  fColorIndex:=65535;
+  fColor:=65535;
   fVisible:=true;
 
   fNeedRedraw:=true;
@@ -358,8 +358,7 @@ procedure TBDColorBox.ReDraw;
 begin
   if Assigned(fTexture) then begin
     with fTexture.ARGBImage do begin
-      if (fColorIndex<Project.CurrentImage.Palette.Size) then
-        Bar(3,3,Width-6,Height-6,Project.CurrentImage.Palette[fColorIndex]);
+      Bar(3,3,Width-6,Height-6,fColor);
       Bar(8,0,Width-16,3,SystemPalette[2]);
       Bar(8,Height-3,fWidth-16,3,SystemPalette[2]);
       Bar(0,8,3,Height-16,SystemPalette[2]);
@@ -377,10 +376,9 @@ begin
   end;
 end;
 
-procedure TBDColorBox.fSetColorIndex(value:word);
+procedure TBDColorBox.fSetColor(value:uint32);
 begin
-  fColorIndex:=value;
-  fNeedRedraw:=true;
+  if (fColor<>value) then begin fColor:=value;fNeedRedraw:=true;end;
 end;
 
 end.

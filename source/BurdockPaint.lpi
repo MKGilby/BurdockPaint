@@ -19,7 +19,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="9"/>
-      <BuildNr Value="22"/>
+      <BuildNr Value="25"/>
       <Attributes pvaPreRelease="True"/>
       <StringTable CompanyName="MKSZTSZ" LegalCopyright="Freeware" ProductName="BurdockPaint"/>
     </VersionInfo>
@@ -164,15 +164,7 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPColorSelector.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
         <Filename Value="BDPUndo.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="BDPPaletteEditor.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
@@ -193,10 +185,6 @@
       </Unit>
       <Unit>
         <Filename Value="BDPInfoBar.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="units\FileBackup.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
     </Units>

@@ -24,17 +24,17 @@ unit BDPPalette;
 
 interface
 
-uses Classes, SysUtils, BDPColorCluster;
+uses Classes, SysUtils{, BDPColorCluster};
 
 type
 
   { TBDVibroColors }
 
   TBDVibroColors=class
-    constructor Create(iMinIndex,iMaxIndex:integer);
-    function GetColorIndex:integer;
+    constructor Create(iColor1,iColor2:uint32);
+    function GetColor:uint32;
   private
-    fMinIndex,fLength:integer;
+    R1,G1,B1,A1,R2,G2,B2,A2:integer;
   end;
 
   { TBDPalette }
@@ -82,8 +82,8 @@ type
     // Resize the palette to fit the colors
     procedure ResizeAndCopyColorsFrom(Source:TBDPalette;start:integer=0;count:integer=-1);
 
-    // Creates a color ramp from the start color to the end color.
-    procedure Ramp(pColorCluster:TColorCluster);
+{    // Creates a color ramp from the start color to the end color.
+    procedure Ramp(pColorCluster:TColorCluster);}
 
     // Returns the closest color to the specified r,g,b values.
     // Difference is calculated weighted: r*0.3, g*0.59 and b*0.11
@@ -134,19 +134,28 @@ const
 
 { TBDVibroColors }
 
-constructor TBDVibroColors.Create(iMinIndex, iMaxIndex: integer);
+constructor TBDVibroColors.Create(iColor1,iColor2:uint32);
 begin
-  fMinIndex:=iMinIndex;
-  fLength:=iMaxIndex-iMinIndex+1;
+  A1:=(iColor1 and $FF000000)>>24;
+  R1:=(iColor1 and $FF0000)>>16;
+  G1:=(iColor1 and $FF00)>>8;
+  B1:=(iColor1 and $FF);
+  A2:=(iColor2 and $FF000000)>>24;
+  R2:=(iColor2 and $FF0000)>>16;
+  G2:=(iColor2 and $FF00)>>8;
+  B2:=(iColor2 and $FF);
 end;
 
-function TBDVibroColors.GetColorIndex: integer;
+function TBDVibroColors.GetColor:uint32;
 var i:integer;
 begin
   i:=GetTickCount64 mod 1000;
   if i>500 then i:=1000-i;
-  if i=500 then i:=499;
-  Result:=fMinIndex+(fLength*i) div 500;
+  Result:=
+    ((A1+(A2-A1)*i div 500) and $FF)<<24+
+    ((R1+(R2-R1)*i div 500) and $FF)<<16+
+    ((G1+(G2-G1)*i div 500) and $FF)<<8+
+    ((B1+(B2-B1)*i div 500) and $FF);
 end;
 
 
@@ -442,7 +451,7 @@ begin
   end;  // Start is out of range so nothing to copy.
 end;
 
-procedure TBDPalette.Ramp(pColorCluster:TColorCluster);
+{procedure TBDPalette.Ramp(pColorCluster:TColorCluster);
 var i,pi1,pi2,count:integer;
 begin
   if pColorCluster.StartIndex>pColorCluster.EndIndex then begin
@@ -460,7 +469,7 @@ begin
     Self.ColorA[pi1+i]:=Self.ColorA[pi1]+(Self.ColorA[pi2]-Self.ColorA[pi1])*i div (count-1);
   end;
 end;
-
+}
 function TBDPalette.GetClosestColor(r, g, b: byte): word;
 var i,min,diff:integer;
 begin

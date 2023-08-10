@@ -25,8 +25,8 @@ unit BDPControls;
 interface
 
 uses
-  SysUtils, mk_sdl2, vcc2_Container, BDPBasicControls, BDPMessage, BDPColorSelector,
-  BDPColorCluster, BDPTools, BDPInks;
+  SysUtils, mk_sdl2, vcc2_Container, BDPBasicControls, BDPMessage,
+  BDPColorCluster, BDPTools, BDPInks{, BDPColorSelector};
 
 type
 
@@ -61,7 +61,7 @@ type
     fToolButtons:array[0..5] of TBDButton;
     fInkButtons:array[0..5] of TBDButton;
     fUndoButton,fRedoButton:TBDButton;
-    fColorSelector:TBDColorSelector;
+//    fColorSelector:TBDColorSelector;
     fColorCluster:TBDColorCluster;
     fImageCountSlider:TBDHorizontalSlider;
     fMouseX,fMouseY:integer;
@@ -117,8 +117,6 @@ begin
     atmi:=Inks[Inks.IndexOf(Settings.SelectedInks[i])];
     if atmT=nil then raise Exception.Create('Ink not found! ('+Settings.SelectedInks[i]+')');
     fInkButtons[i]:=TBDButton.Create(
-//      fLeft+InkButtonsLeft+i mod 2*130,
-//      fTop+InkButtonsTop+i div 2*30,
       fLeft+InkButtonsLeft+i mod 3*130,
       fTop+InkButtonsTop+i div 3*30,
       NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
@@ -179,10 +177,10 @@ begin
   AddChild(atmB);
 
   // Color selector
-  fColorSelector:=TBDColorSelector.Create(fLeft+CONTROLCOLORSELECTORLEFT, fTop+CONTROLCOLORSELECTORTOP);
+{  fColorSelector:=TBDColorSelector.Create(fLeft+CONTROLCOLORSELECTORLEFT, fTop+CONTROLCOLORSELECTORTOP);
   fColorSelector.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fColorSelector.Name:='ColorSelector';
-  AddChild(fColorSelector);
+  AddChild(fColorSelector);}
 
   // Imagecount slider
   fImageCountSlider:=TBDHorizontalSlider.Create(
@@ -192,11 +190,13 @@ begin
   fImageCountSlider.MinValue:=1;
   fImageCountSlider.MaxValue:=Project.Images.Count;
   fImageCountSlider.Position:=Project.CurrentImageIndex+1;
+  fImageCountSlider.MaxValue:=1;
+  fImageCountSlider.Position:=1;
   fImageCountSlider.OnChange:=ActiveImageChange;
   AddChild(fImageCountSlider);
 
   // Color cluster
-  fColorCluster:=TBDColorCluster.Create(fLeft+INKBUTTONSLEFT,fTop+6,Project.CurrentImage.ColorClusters.ActiveColorCluster,false);
+  fColorCluster:=TBDColorCluster.Create(fLeft+INKBUTTONSLEFT,fTop+6,Project.CurrentColorClusters.ActiveColorCluster,false);
   fColorCluster.Height:=NORMALBUTTONHEIGHT;
   fColorCluster.Width:=CONTROLCOLORCLUSTERWIDTH;
   fColorCluster.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
@@ -362,18 +362,18 @@ end;
 
 procedure TBDControls.UndoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
-  Project.CurrentImage.ImageUndo.Undo;
+  Project.CurrentExtImage.ImageUndo.Undo;
 end;
 
 procedure TBDControls.RedoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
-  Project.CurrentImage.ImageUndo.Redo;
+  Project.CurrentExtImage.ImageUndo.Redo;
 end;
 
 procedure TBDControls.ActiveImageChange(Sender:TObject; newvalue:integer);
 begin
   Project.CurrentImageIndex:=newvalue-1;
-  fColorCluster.ColorCluster:=Project.CurrentImage.ColorClusters.ActiveColorCluster;
+  fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveColorCluster;
   MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
 end;
 
@@ -388,12 +388,12 @@ begin
   Result:=false;
   case msg.TypeID of
     MSG_SETIMAGEUNDOREDOBUTTON:begin
-      fUndoButton.Enabled:=Project.CurrentImage.ImageUndo.CanUndo;
-      fRedoButton.Enabled:=Project.CurrentImage.ImageUndo.CanRedo;
+      fUndoButton.Enabled:=Project.CurrentExtImage.ImageUndo.CanUndo;
+      fRedoButton.Enabled:=Project.CurrentExtImage.ImageUndo.CanRedo;
       Result:=true;
     end;
     MSG_COLORSELECTORPICKEDCOLOR:begin
-      fColorSelector.SetSelectedSlotTo(msg.DataInt);
+//      fColorSelector.SetSelectedSlotTo(msg.DataInt);
       Self.ActivateToolButton(-1);  // Puts the already selected tool into ActiveTool
       InfoBar.ShowText('');
       Result:=true;
@@ -405,11 +405,11 @@ begin
       Result:=false;  // Not true, let the others also know about the count change!
     end;
     MSG_ACTIVECOLORINDEXCHANGED:begin
-      fColorSelector.Refresh;
+//      fColorSelector.Refresh;
       fColorCluster.Refresh;
     end;
     MSG_ACTIVECOLORCLUSTERCHANGED:begin
-      fColorCluster.ColorCluster:=Project.CurrentImage.ColorClusters.ActiveColorCluster;
+      fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveColorCluster;
     end;
     MSG_TOOLDRAW:ChangeActiveToolButtonTo(Tools.ItemByName['DRAW']);
     MSG_TOOLBOX:ChangeActiveToolButtonTo(Tools.ItemByName['BOX']);
@@ -435,7 +435,7 @@ procedure TBDControls.ControlsShow(Sender:TObject);
 begin
   ActivateToolButton(-1);
   InfoBar.ShowText('');
-  fColorCluster.ColorCluster:=Project.CurrentImage.ColorClusters.ActiveColorCluster;
+  fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveColorCluster;
 end;
 
 function TBDControls.ControlsKeyDown(Sender:TObject; key:integer):boolean;

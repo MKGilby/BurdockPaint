@@ -24,8 +24,9 @@ unit BDPShared;
 
 interface
 
-uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, BDPInfoBar, BDPImage, BDPSettings,
-  BDPMessage, BDPCursor, BDPTools, BDPInks, BDPPalette, PNGFont2Unit, BDPProject;
+uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, PNGFont2Unit,
+  BDPInfoBar, BDPPalette, BDPMessage, BDPCursor, BDPSettings,
+  BDPTools, BDPInks, BDPImage, BDPProject;
 
 const
   WINDOWWIDTH=1280;
@@ -84,8 +85,8 @@ const
   COLORCLUSTERWIDTH=320;
   COLORCLUSTERHEIGHT=36;
 
-  MAXPALETTEENTRIES=2048;  // Palette color count hard limit
-  POSTPROCESSCOLOR=$FFF0;
+  MAXPALETTEENTRIES=256;  // Palette color count hard limit
+  POSTPROCESSCOLOR=$FFFF00FF;
 
   // ZIndex of DrawArea
   DRAWAREA_ZINDEX=0;
@@ -168,21 +169,23 @@ var
   MM:TGFXManager;  // MediaManager to hold fonts and internal images
   InfoBar:TBDInfoBar;  // The information bar on the top of the screen
 
-  Project:TBDProject;  // The project we are working on
-
   SystemPalette:TBDPalette;  // The palette holding system colors
-
-  CELHelperImage:TBDImage;  // Helper image for PUTCel
-  Settings:TSettings;  // All settings in one place
+  VibroColors:TBDVibroColors; // The flashing color for helping the Tools
   MessageQueue:TMessageQueue;  // Messaging queue for classes who doesn't know each other
   Cursor:TBDCursor;  // The cursor on drawing area
-  VibroColors:TBDVibroColors; // The flashing color for helping the Tools
+  Settings:TSettings;  // All settings in one place
 
   Tools:TBDTools;  // All tools are loaded into this list
   ActiveTool:TBDTool;  // This is the selected tool
 
   Inks:TBDInks;  // All inks are loaded into this list
   ActiveInk:TBDInk;  // This is the selected ink
+
+  Project:TBDProject;  // The project we are working on
+
+  CELHelperImage:TBDImage;  // Helper image for PUTCel
+
+  GlobalV1Palette:TBDPalette; // A palette that is used for loading old version blocks.
 
   // Load assets and create shared objects
   procedure LoadAssets;
@@ -311,7 +314,7 @@ begin
   CreateArches;
   Log.LogStatus('  Creating cursor...');
   Cursor:=TBDCursor.Create;
-  VibroColors:=TBDVibroColors.Create(6,10);
+  VibroColors:=TBDVibroColors.Create($FF202020,$FFD0D0D0);
   Log.LogStatus('  Creating inks...');
   Inks:=TBDInks.Create;
   Log.LogStatus('  Creating tools...');
@@ -329,14 +332,15 @@ end;
 procedure FreeAssets;
 begin
   if Assigned(Project) then begin
-    Project.SaveToFile(TEMPPROJECTFILE);
+//    Project.SaveToFile(TEMPPROJECTFILE);
+    Project.SaveToFile('v2test.bpprj');
     FreeAndNil(Project);
   end;
-  if Assigned(CELHelperImage) then FreeAndNil(CELHelperImage);
   if Assigned(Tools) then FreeAndNil(Tools);
   if Assigned(Inks) then FreeAndNil(Inks);
   if Assigned(VibroColors) then FreeAndNil(VibroColors);
   if Assigned(Cursor) then FreeAndNil(Cursor);
+  if Assigned(CELHelperImage) then FreeAndNil(CELHelperImage);
   if Assigned(SystemPalette) then FreeAndNil(SystemPalette);
   if Assigned(MessageQueue) then FreeAndNil(MessageQueue);
   if Assigned(InfoBar) then FreeAndNil(InfoBar);

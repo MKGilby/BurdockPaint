@@ -2,19 +2,50 @@ Todo:
 - Add "Project"/"New" dialog.
 - Check and warn if current project is modified on opening project.
 - Check and warn if current project is modified on new project.
-- Ask for color fit when loading a CEL file.
 - Add setup dialogs to Tools:
   - Circle (center+radius vs. bounding box)
   - Sep. (boxed)
+- Add Inks:
+  - Darken
+  - Brighten
+  - Tint
 - Add setup dialogs to Inks:
-  - ...
+  - Darken
+  - Brighten
+  - Tint
 - Add picking color cluster range as undoable operation. (Needs new undo type.)
 - Add removing color cluster as undoable operation. (Needs new undo type.)
 - Create GUI for settings:
   - Autosave/backup:
     - Max folder size.
     - Max retention time.
+- BUG: Controls should show hexa values for color instead of non-existing
+  color index.
+- BUG: Backup retention by size not works?
 
+
+2023.08.10
+- It seems that drawing and menus work again but in full true-color mode.
+  The missing things are PaletteEditor and ColorSelector. Probably both should
+  be reworked to work better with true-color mode.
+
+2023.08.07
+- Loading V1 and saving as V2 works.
+
+2023.08.03
+- Stripped project down to an empty TMain. Adding items back one by one.
+- Menu is there, but clicking on anything is not working.
+- About/About works.
+- File/Quit (and pressing Q) works.
+
+2023.07.31
+- Decided to transition to true-color mode. Palette will only hold your favourite
+  colors.
+
+2023.07.18
+- CEL/Export is merged into CEL/Save.
+- CEL/Open now opens BDC, CEL, PNG and TGA.
+- The loaded CEL file is color fitted to the current image's palette.
 
 2023.07.15
 - Added EDGE tool. It draws the clicked color's edge with the current ink.

@@ -33,7 +33,8 @@ type
   TMessage=record
     TypeID:integer;
     DataInt:integer;
-    constructor Init(iTypeID,iDataInt:integer);
+    DataUInt32:uint32;
+    constructor Init(iTypeID,iDataInt:integer;iDataUInt32:uint32);
   end;
 
   { TMessageQueue }
@@ -41,7 +42,7 @@ type
   TMessageQueue=class
     constructor Create(iQueueSize:integer);
     destructor Destroy; override;
-    procedure AddMessage(pTypeID:integer;pDataInt:integer=-1); overload;
+    procedure AddMessage(pTypeID:integer;pDataInt:integer=-1;pDataUInt32:uint32=0); overload;
     procedure AddMessage(pMessage:TMessage); overload;
     function HasNewMessage:boolean;
     function GetNextMessage:TMessage;
@@ -57,10 +58,11 @@ uses Logger;
 
 { TMessage }
 
-constructor TMessage.Init(iTypeID,iDataInt:integer);
+constructor TMessage.Init(iTypeID,iDataInt:integer; iDataUInt32:uint32);
 begin
   TypeID:=iTypeID;
   DataInt:=iDataInt;
+  DataUInt32:=iDataUInt32;
 end;
 
 { TMessageQueue }
@@ -77,11 +79,12 @@ begin
   inherited Destroy;
 end;
 
-procedure TMessageQueue.AddMessage(pTypeID:integer; pDataInt:integer);
+procedure TMessageQueue.AddMessage(pTypeID:integer; pDataInt:integer;
+  pDataUInt32:uint32);
 begin
   if not((fInPTR=fOutPTR-1) or ((fInPtr=length(fMessages)-1) and (fOutPTR=0))) then begin
-    fMessages[fInPTR].TypeID:=pTypeID;
-    fMessages[fInPTR].DataInt:=pDataInt;
+    fMessages[fInPTR]:=TMessage.Init(pTypeID,pDataInt,pDataUInt32);
+
     inc(fInPTR);
     if fInPTR=length(fMessages) then fInPTR:=0;
   end else begin

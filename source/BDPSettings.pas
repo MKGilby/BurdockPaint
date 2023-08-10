@@ -47,8 +47,9 @@ type
     fFillShapes,
     fClearKeyColor,
     fShowGrid:boolean;
-    fColorSelectorColors:array of integer;
-    fActiveColorIndex:integer;
+    fColorSelectorColors:array of uint32;
+    fColorSelectorIndex:integer;
+    fActiveColor:uint32;
     fUndoLimit:integer;
     fDitherGradients:boolean;
     fDitherStrength:integer;
@@ -58,13 +59,13 @@ type
     fBackupIntervalTicks:uint64;  // in milliseconds
     fBackupFolderMaxSize:integer;  // in bytes, set 0 to disable size check
     fBackupFolderRetentionTime:integer; // in seconds, set 0 to disable file age check
-    function fGetSelectedColor(index:integer):integer;
+    function fGetSelectedColor(index:integer):uint32;
+    procedure fSetSelectedColor(index:integer;value:uint32);
     function fGetSelectedTool(index:integer):string;
-    procedure fSetSelectedColor(index:integer; AValue:integer);
     procedure fSetSelectedTool(index:integer;value:string);
     function fGetSelectedInk(index:integer):string;
     procedure fSetSelectedInk(index:integer;value:string);
-    procedure fSetActiveColorIndex(value:integer);
+    procedure fSetActiveColor(value:uint32);
   public
     property Zoom:integer read fZoom write fZoom;
     property ZoomLeft:integer read fZoomLeft write fZoomLeft;
@@ -76,8 +77,8 @@ type
     property FillShapes:boolean read fFillShapes write fFillShapes;
     property ClearKeyColor:boolean read fClearKeyColor write fClearKeyColor;
     property ShowSplash:Boolean read fShowSplash write fShowSplash;
-    property SelectedColors[index:integer]:integer read fGetSelectedColor write fSetSelectedColor;
-    property ActiveColorIndex:integer read fActiveColorIndex write fSetActiveColorIndex;
+    property SelectedColors[index:integer]:uint32 read fGetSelectedColor write fSetSelectedColor;
+    property ActiveColor:uint32 read fActiveColor write fSetActiveColor;
     property UndoLimit:integer read fUndoLimit write fUndoLimit;
     property DitherGradients:boolean read fDitherGradients write fDitherGradients;
     property DitherStrength:integer read fDitherStrength write fDitherStrength;
@@ -126,8 +127,10 @@ begin
   fFillShapes:=false;
   fClearKeyColor:=false;
   SetLength(fColorSelectorColors,COLORSELECTORCOLORS);
-  for i:=0 to COLORSELECTORCOLORS-1 do fColorSelectorColors[i]:=i;
-  fActiveColorIndex:=0;
+  fColorSelectorColors[0]:=uint32($FF000000);
+  for i:=1 to COLORSELECTORCOLORS-1 do fColorSelectorColors[i]:=uint32($FFFF0000);
+  fColorSelectorIndex:=1;
+  fActiveColor:=$FFFF0000;
   fUndoLimit:=16;
   fDitherGradients:=false;
   fDitherStrength:=10;
@@ -182,9 +185,11 @@ begin
   // Keymap
   LoadKeyMap(INI);
   // Colors selector state
-  for i:=0 to COLORSELECTORCOLORS-1 do
-    fColorSelectorColors[i]:=INI.ReadInteger('Colors',Format('Selected%d',[i]),i);
-  fActiveColorIndex:=INI.ReadInteger('Colors','ActiveColor',0);
+  fColorSelectorColors[0]:=INI.ReadUInt32('Colors',Format('Selected0',[i]),$FF000000);
+  for i:=1 to COLORSELECTORCOLORS-1 do
+    fColorSelectorColors[i]:=INI.ReadUInt32('Colors',Format('Selected%d',[i]),$FFFF0000);
+  fActiveColor:=INI.ReadUInt32('Colors','ActiveColor',$FFFF0000);
+  fColorSelectorIndex:=1;
   // Inks' settings
   fDitherGradients:=INI.ReadBool('Inks','DitherGradients',false);
   fDitherStrength:=INI.ReadInteger('Inks','DitherStrength',10);
@@ -226,8 +231,9 @@ begin
   SaveKeyMap(INI);
   // Color selector state
   for i:=0 to COLORSELECTORCOLORS-1 do
-    INI.WriteInteger('Colors',Format('Selected%d',[i]),fColorSelectorColors[i]);
-  INI.WriteInteger('Colors','ActiveColor',fActiveColorIndex);
+    INI.WriteUInt32('Colors',Format('Selected%d',[i]),fColorSelectorColors[i]);
+  INI.WriteUInt32('Colors','ActiveColor',fActiveColor);
+  INI.WriteInteger('Colors','ColorSelectorIndex',fColorSelectorIndex);
   // Inks' settings
   INI.WriteBool('Inks','DitherGradients',fDitherGradients);
   INI.WriteInteger('Inks','DitherStrength',fDitherStrength);
@@ -248,17 +254,17 @@ begin
   else raise Exception.Create(Format('fGetSelectedTool: Index out of range! (%d)',[index]));
 end;
 
-function TSettings.fGetSelectedColor(index:integer):integer;
+function TSettings.fGetSelectedColor(index:integer):uint32;
 begin
   if (index>=0) and (index<COLORSELECTORCOLORS) then
     Result:=fColorSelectorColors[index]
   else raise Exception.Create(Format('fGetSelectedTool: Index out of range! (%d)',[index]));
 end;
 
-procedure TSettings.fSetSelectedColor(index:integer; AValue:integer);
+procedure TSettings.fSetSelectedColor(index:integer;value:uint32);
 begin
   if (index>=0) and (index<COLORSELECTORCOLORS) then
-    fColorSelectorColors[index]:=AValue
+    fColorSelectorColors[index]:=value
   else raise Exception.Create(Format('fSetSelectedTool: Index out of range! (%d)',[index]));
 end;
 
@@ -283,12 +289,10 @@ begin
   else raise Exception.Create(Format('fSetSelectedInk: Index out of range! (%d)',[index]));
 end;
 
-procedure TSettings.fSetActiveColorIndex(value:integer);
+procedure TSettings.fSetActiveColor(value:uint32);
 begin
-  if (value>=0) and (value<>fActiveColorIndex) then begin
-    fActiveColorIndex:=value;
-    MessageQueue.AddMessage(MSG_ACTIVECOLORINDEXCHANGED,fActiveColorIndex);
-  end;
+  fActiveColor:=value;
+  MessageQueue.AddMessage(MSG_ACTIVECOLORINDEXCHANGED,0,fActiveColor);
 end;
 
 end.

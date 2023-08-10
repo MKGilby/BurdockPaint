@@ -89,12 +89,6 @@ CEL
     Save CEL to file. (BDC, PNG, TGA)
 
 ;------------------------------
-Cluster
-  Ramp
-    RAMPCLUSTER
-    Recalculate cluster colors ramping between the two ends.
-
-;------------------------------
 Tools
   Draw
     TOOLDRAW
@@ -137,7 +131,7 @@ Inks
     Select L grad ink instead of selected one.
   C Grad
     INKCGRAD
-    Select C grad ink instead of selected one.  
+    Select C grad ink instead of selected one.
   R Grad
     INKRGRAD
     Select R grad ink instead of selected one.
@@ -147,10 +141,6 @@ Inks
   Soften
     INKSOFTEN
     Select soften ink instead of selected one.
-  Add
-    INKADD
-    Select add ink instead of selected one.
-
 
 ;------------------------------
 About

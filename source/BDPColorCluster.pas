@@ -33,7 +33,7 @@ type
 
   TColorCluster=class
     // Create color cluster.
-    constructor Create(iStart,iEnd:integer);
+    constructor Create(iColor1,iColor2:uint32);
 
     // Create the color cluster from stream (fileformats.txt - T-block)
     constructor CreateFromStream(iStream:TStream);
@@ -42,11 +42,11 @@ type
     // Example: if you want to draw the color cluster on a control with a width
     //          of 240 pixels, you should use GetIndexAt(x,240) as each vertical
     //          line of the control.
-    function GetIndexAt(pValue,pInterval:integer):word;
+    function GetColorAt(pValue,pInterval:integer):uint32;
 
     // Gives back the colorindex in the cluster at pValue on a scale to 0..pInterval
     // randomly modifying it by max +/-(pInterval*pDitherStrength/256)
-    function GetIndexAtDithered(pValue,pInterval,pDitherStrength:integer):word;
+    function GetColorAtDithered(pValue,pInterval,pDitherStrength:integer):uint32;
 
     // Save color cluster to a standalone file. (fileformats.txt - T-block)
     procedure SaveToFile(pFilename:string);
@@ -60,20 +60,18 @@ type
     // Load color cluster from the specified stream. (fileformats.txt - T-block)
     procedure LoadFromStream(pStream:TStream);
   private
-    fStart,fEnd:integer;
+    fColor1,fColor2:uint32;
+    fR1,fG1,fB1,fA1,fR2,fG2,fB2,fA2:integer;
     fReversed,fPingpong:boolean;
-    fRealStart,fRealEnd,fDirection,fSize:integer;
-    procedure fSetStart(value:integer);
-    procedure fSetEnd(value:integer);
-    procedure fSetReversed(value:boolean);
-    procedure SetReal;
+    procedure fSetColor1(value:uint32);
+    procedure fSetColor2(value:uint32);
     procedure LoadFromStreamV1(pStream:TStream);
+    procedure LoadFromStreamV2(pStream:TStream);
   public
-    property StartIndex:integer read fStart write fSetStart;
-    property EndIndex:integer read fEnd write fSetEnd;
-    property Reversed:boolean read fReversed write fSetReversed;
+    property Color1:uint32 read fColor1 write fSetColor1;
+    property Color2:uint32 read fColor2 write fSetColor2;
+    property Reversed:boolean read fReversed write fReversed;
     property PingPong:boolean read fPingpong write fPingpong;
-    property Size:integer read fSize;
   end;
 
   { TColorClusters }
@@ -138,7 +136,7 @@ type
 
 implementation
 
-uses BDPShared, SDL2;
+uses BDPShared, SDL2, Logger;
 
 const
   COLORCLUSTERID=$54;
@@ -149,13 +147,12 @@ const
 
 { TColorCluster }
 
-constructor TColorCluster.Create(iStart,iEnd:integer);
+constructor TColorCluster.Create(iColor1,iColor2:uint32);
 begin
-  fStart:=iStart;
-  fEnd:=iEnd;
+  Color1:=iColor1;
+  Color2:=iColor2;
   fReversed:=false;
   fPingpong:=false;
-  SetReal;
 end;
 
 constructor TColorCluster.CreateFromStream(iStream:TStream);
@@ -163,28 +160,38 @@ begin
   LoadFromStream(iStream);
 end;
 
-function TColorCluster.GetIndexAt(pValue,pInterval:integer):word;
+function TColorCluster.GetColorAt(pValue, pInterval: integer): uint32;
 begin
+  if fPingpong then begin
+    pValue:=pValue*2;
+    if pValue>pInterval-1 then begin
+      pValue:=(pInterval*2)-pValue;
+    end;
+  end;
   if pValue<0 then pValue:=0
   else if pValue>=pInterval then pValue:=pInterval-1;
-  if not fPingpong then
-    Result:=fRealStart+(fRealEnd-fRealStart+fDirection)*pValue div pInterval
-  else begin
-    if pValue>pInterval div 2 then begin
-      pValue:=pInterval-pValue;
-    end;
-    if pValue<0 then pValue:=0
-    else if pValue>=pInterval div 2 then pValue:=pInterval div 2-1;
-    Result:=fRealStart+(fRealEnd-fRealStart+fDirection)*pValue*2 div pInterval;
+  if not fReversed then begin
+    Result:=
+      ((fA1+(fA2-fA1)*pValue div (pInterval-1)) and $ff) << 24+
+      ((fR1+(fR2-fR1)*pValue div (pInterval-1)) and $ff) << 16+
+      ((fG1+(fG2-fG1)*pValue div (pInterval-1)) and $ff) << 8+
+      ((fB1+(fB2-fB1)*pValue div (pInterval-1)) and $ff)
+  end else begin
+    Result:=
+      ((fA2+(fA1-fA2)*pValue div (pInterval-1)) and $ff) << 24+
+      ((fR2+(fR1-fR2)*pValue div (pInterval-1)) and $ff) << 16+
+      ((fG2+(fG1-fG2)*pValue div (pInterval-1)) and $ff) << 8+
+      ((fB2+(fB1-fB2)*pValue div (pInterval-1)) and $ff)
   end;
 end;
 
-function TColorCluster.GetIndexAtDithered(pValue,pInterval,pDitherStrength:integer):word;
+function TColorCluster.GetColorAtDithered(pValue, pInterval,
+  pDitherStrength: integer): uint32;
 var dith:integer;
 begin
   dith:=pInterval*pDitherStrength div 256;
   if dith>0 then pValue+=random(2*dith)-dith;
-  Result:=GetIndexAt(pValue,pInterval);
+  Result:=GetColorAt(pValue,pInterval);
 end;
 
 procedure TColorCluster.SaveToFile(pFilename:string);
@@ -203,10 +210,10 @@ begin
   curr:=pStream.Position;
   i:=0;
   pStream.Write(i,4);
-  i:=1;
+  i:=2;
   pStream.Write(i,1);  // Version
-  pStream.Write(fStart,2);
-  pStream.Write(fEnd,2);
+  pStream.Write(fColor1,4);
+  pStream.Write(fColor2,4);
   flags:=0;
   if fReversed then flags:=flags or 1;
   if fPingpong then flags:=flags or 2;
@@ -236,52 +243,62 @@ begin
   curr:=pStream.Position;
   pStream.Read(b,1);
   if b=1 then LoadFromStreamV1(pStream)
+  else if b=2 then LoadFromStreamV2(pStream)
   else raise Exception.Create(Format('Unknow color cluster data version! (%d)',[b]));
   pStream.Position:=curr+size;
-  SetReal;
 end;
 
-procedure TColorCluster.fSetStart(value:integer);
+procedure TColorCluster.fSetColor1(value:uint32);
 begin
-  if (value>=0) and (value<Project.CurrentImage.Palette.Size) then begin
-    fStart:=value;
-    SetReal;
+  if fColor1<>value then begin
+    fColor1:=value;
+    fA1:=(fColor1 and $FF000000)>>24;
+    fR1:=(fColor1 and $FF0000)>>16;
+    fG1:=(fColor1 and $FF00)>>8;
+    fB1:=(fColor1 and $FF);
   end;
 end;
 
-procedure TColorCluster.fSetEnd(value:integer);
+procedure TColorCluster.fSetColor2(value:uint32);
 begin
-  if (value>=0) and (value<Project.CurrentImage.Palette.Size) then begin
-    fEnd:=value;
-    SetReal;
+  if fColor2<>value then begin
+    fColor2:=value;
+    fA2:=(fColor2 and $FF000000)>>24;
+    fR2:=(fColor2 and $FF0000)>>16;
+    fG2:=(fColor2 and $FF00)>>8;
+    fB2:=(fColor2 and $FF);
   end;
-end;
-
-procedure TColorCluster.fSetReversed(value:boolean);
-begin
-  if value<>fReversed then begin
-    fReversed:=value;
-    SetReal;
-  end;
-end;
-
-procedure TColorCluster.SetReal;
-begin
-  if fReversed then begin
-    fRealStart:=fEnd;
-    fRealEnd:=fStart;
-  end else begin
-    fRealStart:=fStart;
-    fRealEnd:=fEnd;
-  end;
-  if fRealStart<fRealEnd then fDirection:=1 else fDirection:=-1;
 end;
 
 procedure TColorCluster.LoadFromStreamV1(pStream:TStream);
-var flags:byte;
+var flags:byte;st,en:word;
 begin
-  pStream.Read(fStart,2);
-  pStream.Read(fEnd,2);
+  if Assigned(GlobalV1Palette) then begin
+    st:=0;en:=0;
+    pStream.Read(st,2);
+    pStream.Read(en,2);
+    Color1:=GlobalV1Palette.Colors[st];
+    Color2:=GlobalV1Palette.Colors[en];
+  end else begin
+    // Skip color indices
+    Log.LogWarning('V1 color cluster to load. Colors will be reset to black to white!');
+    pStream.Position:=pStream.Position+4;
+    Color1:=$FF000000;
+    Color2:=$FFFFFFFF;
+  end;
+  flags:=0;
+  pStream.Read(flags,1);
+  fReversed:=(flags and 1)<>0;
+  fPingpong:=(flags and 2)<>0;
+end;
+
+procedure TColorCluster.LoadFromStreamV2(pStream:TStream);
+var tmp:uint32;flags:byte;
+begin
+  pStream.Read(tmp,4);
+  fSetColor1(tmp);
+  pStream.Read(tmp,4);
+  fSetColor2(tmp);
   flags:=0;
   pStream.Read(flags,1);
   fReversed:=(flags and 1)<>0;
@@ -442,7 +459,7 @@ begin
     end else
     if (x>=fColorsLeft+3) and (x<fArrowLeft) then begin
       if button=SDL_BUTTON_LEFT then
-        Settings.ActiveColorIndex:=fColorCluster.GetIndexAt(x-fColorsLeft-3,fColorsWidth-3)
+        Settings.ActiveColor:=fColorCluster.GetColorAt(x-fColorsLeft-3,fColorsWidth-3)
       else if (button=SDL_BUTTON_RIGHT) then begin
         if fRMBPicks then begin
           fPicking:=true;
@@ -465,7 +482,7 @@ begin
 end;
 
 procedure TBDColorCluster.ReDraw;
-var i,fonttop:integer;colorindex:word;
+var i,fonttop:integer;color32:uint32;
 begin
   if Assigned(fTexture) then begin
     with fTexture.ARGBImage do begin
@@ -503,13 +520,13 @@ begin
         fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,fTexture.ARGBImage,true);
       // Flashing if picking
       if fPicking then
-        Bar(fColorsLeft,0,fColorsWidth+3,Height,SystemPalette[VibroColors.GetColorIndex]);
+        Bar(fColorsLeft,0,fColorsWidth+3,Height,SystemPalette[VibroColors.GetColor]);
       // Color cluster bar
       if Assigned(fColorCluster) then begin
         for i:=0 to fColorsWidth-1-3 do begin
-          colorindex:=fColorCluster.GetIndexAt(i,fColorsWidth-3);
-          VLine(fColorsLeft+i+3,3,Height-6,Project.CurrentImage.Palette[colorindex]);
-          if colorindex=Settings.ActiveColorIndex then begin
+          color32:=fColorCluster.GetColorAt(i,fColorsWidth-3);
+          VLine(fColorsLeft+i+3,3,Height-6,color32);
+          if color32=Settings.ActiveColor then begin
             VLine(fColorsLeft+i+3,Height div 2-3,3,SystemPalette[4]);
             VLine(fColorsLeft+i+3,Height div 2,3,SystemPalette[1]);
           end;
@@ -583,7 +600,7 @@ begin
       // Color cluster bar
       if Assigned(fColorCluster) then begin
         for i:=0 to fColorsWidth-1 do
-          VLine(i+3,3,Height-6,Project.CurrentImage.Palette[fColorCluster.GetIndexAt(i,fColorsWidth-1)]);
+          VLine(i+3,3,Height-6,fColorCluster.GetColorAt(i,fColorsWidth-1));
       end;
       // X
       MM.Fonts['Black'].OutText(fTexture.ARGBImage,'X',XLeft+XWidth div 2,9,1);

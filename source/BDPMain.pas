@@ -25,8 +25,8 @@ unit BDPMain;
 
 interface
 
-uses SysUtils, mk_sdl2, Dialogs, BDPControls, BDPDrawArea, BDPModalDialogs,
-  BDPPaletteEditor, BDPMenu, BDPMessage, FileBackup;
+uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
+  BDPModalDialogs, BDPControls, BDPDrawArea{, BDPPaletteEditor};
 
 type
 
@@ -38,32 +38,29 @@ type
     procedure Run;
   private
     fMainWindow:TWindow;
+    fMainMenu:TMainMenu;
+    fSplashScreen:TBDAboutDialog;
     fControls:TBDControls;
     fDrawArea:TBDDrawArea;
-    fPaletteEditor:TBDPaletteEditor;
-    fSplashScreen:TBDAboutDialog;
-    fMainMenu:TMainMenu;
+    fSelectColorClusterDialog:TBDSelectColorClusterDialog;
+//    fPaletteEditor:TBDPaletteEditor;
     fMagnifyDialog:TBDMagnifyCELDialog;
     fRotateDialog:TBDRotateCELDialog;
     fDitherDialog:TBDDitherDialog;
-    fSelectColorClusterDialog:TBDSelectColorClusterDialog;
     fConfigureRGradDialog:TBDConfigureRGradDialog;
     fBackup:TFileBackup;
     fOpenCELDialog,
     fOpenProjectDialog:TOpenDialog;
     fSaveCELDialog,
-    fSaveProjectDialog,
-    fExportCELDialog:TSaveDialog;
+    fSaveProjectDialog:TSaveDialog;
     procedure HideMainControls;
     procedure ShowMainControls;
     function CreateOpenDialog(pName,pTitle,pFilter:string):TOpenDialog;
     function CreateSaveDialog(pName,pTitle,pFilter:string):TSaveDialog;
-    procedure ToggleControls;
-    procedure ActivatePaletteEditor;
-    procedure DeactivatePaletteEditor;
-    procedure ShowCEL;
-    procedure GetCELFinished;
-    procedure SelectColor;
+    procedure OpenColorClusterDialog(msg:TMessage);
+    procedure ColorClusterDialogResp(msg:TMessage);
+    procedure ConfigRGradCenter;
+    procedure ConfigRGradCenterFinished;
     procedure OpenProject;
     procedure SaveProject;
     procedure SaveClearProject;
@@ -72,23 +69,26 @@ type
     procedure RemoveImage;
     procedure ClearImage;
     procedure GetCEL;
+    procedure GetCELFinished;
     procedure PutCEL;
+    procedure ShowCEL;
+    procedure ToggleControls;
     procedure ReleaseCEL;
     procedure FlipCEL(msg:TMessage);
     procedure OpenCEL;
     procedure SaveCEL;
-    procedure RampCluster;
-    procedure OpenColorClusterDialog(msg:TMessage);
-    procedure ColorClusterDialogResp(msg:TMessage);
-    procedure ConfigRGradCenter;
-    procedure ConfigRGradCenterFinished;
+    {
+    procedure ActivatePaletteEditor;
+    procedure DeactivatePaletteEditor;
+    procedure SelectColor;
+    }
   end;
 
 implementation
 
 uses Classes, SDL2, BDPShared, MKToolbox, MKStream, MKMouse2, Logger,
-  BDPKeyMapping, BDPTools, MAD4MidLevelUnit, BDPImage, BDPSettings,
-  BDPProject, ParametersUnit;
+  MAD4MidLevelUnit, ParametersUnit, BDPKeyMapping, BDPSettings, BDPTools,
+  BDPImage, BDPProject;
 
 
 { TMain }
@@ -132,18 +132,18 @@ begin
 
   LoadAssets;
 
-  fDrawArea:=TBDDrawArea.Create;
-  fControls:=TBDControls.Create;
-  fPaletteEditor:=TBDPaletteEditor.Create;
-  fSplashScreen:=TBDAboutDialog.Create;
   fMainMenu:=TMainMenu.Create(MenuBin);
+  fSplashScreen:=TBDAboutDialog.Create;
+  fControls:=TBDControls.Create;
+  fDrawArea:=TBDDrawArea.Create;
+  fSelectColorClusterDialog:=TBDSelectColorClusterDialog.Create;
+{  fPaletteEditor:=TBDPaletteEditor.Create;}
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   // To enable/disable Image/Remove menuitem.
-  fMainMenu.ProcessMessage(TMessage.Init(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count));
+  fMainMenu.ProcessMessage(TMessage.Init(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count,0));
   fMagnifyDialog:=TBDMagnifyCELDialog.Create;
   fRotateDialog:=TBDRotateCELDialog.Create;
   fDitherDialog:=TBDDitherDialog.Create;
-  fSelectColorClusterDialog:=TBDSelectColorClusterDialog.Create;
   fConfigureRGradDialog:=TBDConfigureRGradDialog.Create;
   MouseObjects.List;
 
@@ -160,15 +160,15 @@ begin
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
   if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
   if Assigned(fConfigureRGradDialog) then fConfigureRGradDialog.Free;
-  if Assigned(fSelectColorClusterDialog) then fSelectColorClusterDialog.Free;
   if Assigned(fDitherDialog) then fDitherDialog.Free;
   if Assigned(fRotateDialog) then fRotateDialog.Free;
   if Assigned(fMagnifyDialog) then fMagnifyDialog.Free;
-  if Assigned(fMainMenu) then fMainMenu.Free;
-  if Assigned(fSplashScreen) then fSplashScreen.Free;
-  if Assigned(fPaletteEditor) then fPaletteEditor.Free;
-  if Assigned(fControls) then fControls.Free;
+//  if Assigned(fPaletteEditor) then fPaletteEditor.Free;
+  if Assigned(fSelectColorClusterDialog) then fSelectColorClusterDialog.Free;
   if Assigned(fDrawArea) then fDrawArea.Free;
+  if Assigned(fControls) then fControls.Free;
+  if Assigned(fSplashScreen) then fSplashScreen.Free;
+  if Assigned(fMainMenu) then fMainMenu.Free;
   FreeAssets;
   if Assigned(fBackup) then fBackup.Free;
   if Assigned(Settings) then begin
@@ -196,27 +196,23 @@ begin
     MouseObjects.Draw;
     InfoBar.Draw;
     MM.Fonts['Pinky'].OutText('FPS: '+st(fps,3,'0'),WINDOWWIDTH-141,3,0);
-//    MM.Fonts['Pinky'].OutText('LOI: '+st(MouseObjects.LastOverIndex,3,'0'),WINDOWWIDTH-282-16,3,0);
   {$ifndef LimitFPS} FlipNoLimit; {$else} Flip; {$endif}
     while MessageQueue.HasNewMessage do begin
       msg:=MessageQueue.GetNextMessage;
       mres:=false;
       if fControls.Visible then mres:=fControls.ProcessMessage(msg);
-      if not mres and fPaletteEditor.Visible then mres:=fPaletteEditor.ProcessMessage(msg);
+{      if not mres and fPaletteEditor.Visible then mres:=fPaletteEditor.ProcessMessage(msg);}
       if not mres and fMainMenu.Visible then mres:=fMainMenu.ProcessMessage(msg);
       if not mres then
         case msg.TypeID of
+          MSG_OPENABOUTDIALOG:           fSplashScreen.Show;
           MSG_QUIT:                      quit:=(msg.DataInt=1);
-          MSG_TOGGLECONTROLS:            ToggleControls;
-          MSG_ACTIVATEPALETTEEDITOR:     ActivatePaletteEditor;
-          MSG_DEACTIVATEPALETTEEDITOR:   DeactivatePaletteEditor;
+          MSG_OPENCOLORCLUSTERDIALOG:    OpenColorClusterDialog(msg);
+          MSG_COLORCLUSTERDIALOGRESP:    ColorClusterDialogResp(msg);
           MSG_OPENDITHERDIALOG:          fDitherDialog.Show;
-          MSG_SETTOOLSMENU:              fMainMenu.SetToolsMenuStates;
-          MSG_SETINKSMENU:               fMainMenu.SetInksMenuStates;
-          MSG_RESTORECONTROLS:           ShowMainControls;
-          MSG_SHOWCEL:                   ShowCEL;
-          MSG_GETCELFINISHED:            GetCELFinished;
-          MSG_SELECTCOLOR:               SelectColor;
+          MSG_OPENCONFIGURERGRADDIALOG:  fConfigureRGradDialog.Show;
+          MSG_CONFIGRGRADCENTER:         ConfigRGradCenter;
+          MSG_CONFIGRGRADCENTERFINISHED: ConfigRGradCenterFinished;
           MSG_OPENPROJECT:               OpenProject;
           MSG_SAVEPROJECT:               SaveProject;
           MSG_SAVECLEARPROJECT:          SaveClearProject;
@@ -224,21 +220,25 @@ begin
           MSG_DUPLICATEIMAGE:            DuplicateImage;
           MSG_REMOVEIMAGE:               RemoveImage;
           MSG_CLEARIMAGE:                ClearImage;
+          MSG_SETTOOLSMENU:              fMainMenu.SetToolsMenuStates;
+          MSG_SETINKSMENU:               fMainMenu.SetInksMenuStates;
           MSG_GETCEL:                    GetCEL;
+          MSG_GETCELFINISHED:            GetCELFinished;
           MSG_PUTCEL:                    PutCEL;
+          MSG_SHOWCEL:                   ShowCEL;
+          MSG_RESTORECONTROLS:           ShowMainControls;
+          MSG_TOGGLECONTROLS:            ToggleControls;
           MSG_RELEASECEL:                ReleaseCEL;
           MSG_OPENROTATECELDIALOG:       fRotateDialog.Show;
           MSG_FLIPCEL:                   FlipCEL(msg);
           MSG_OPENMAGNIFYCELDIALOG:      fMagnifyDialog.Show;
           MSG_OPENCEL:                   OpenCEL;
           MSG_SAVECEL:                   SaveCEL;
-          MSG_RAMPCLUSTER:               RampCluster;
-          MSG_OPENABOUTDIALOG:           fSplashScreen.Show;
-          MSG_OPENCOLORCLUSTERDIALOG:    OpenColorClusterDialog(msg);
-          MSG_COLORCLUSTERDIALOGRESP:    ColorClusterDialogResp(msg);
-          MSG_OPENCONFIGURERGRADDIALOG:  fConfigureRGradDialog.Show;
-          MSG_CONFIGRGRADCENTER:         ConfigRGradCenter;
-          MSG_CONFIGRGRADCENTERFINISHED: ConfigRGradCenterFinished;
+{
+          MSG_ACTIVATEPALETTEEDITOR:     ActivatePaletteEditor;
+          MSG_DEACTIVATEPALETTEEDITOR:   DeactivatePaletteEditor;
+          MSG_SELECTCOLOR:               SelectColor;
+          }
         end;
     end;  // while MessageQueue.HasNewMessage
     HandleMessages;
@@ -249,7 +249,7 @@ begin
       quit:=MessageBox('EXIT BURDOCK PAINT?','^YES;^NO')=0
     end;
     if GetTickCount64-PrevBackupTick>Settings.BackupIntervalTicks then begin
-      Project.SaveToFile(TEMPPROJECTFILE);
+//      Project.SaveToFile(TEMPPROJECTFILE);
       fBackup.BackupFile(TEMPPROJECTFILE);
       PrevBackupTick:=GetTickCount64;
     end;
@@ -294,62 +294,38 @@ begin
   end;
 end;
 
-procedure TMain.ToggleControls;
+procedure TMain.OpenColorClusterDialog(msg:TMessage);
 begin
-  if not fPaletteEditor.Visible then
-    if fControls.Visible then
-      HideMainControls
-    else
-      ShowMainControls;
+  fSelectColorClusterDialog.SetPositionAndWidth(msg.DataInt and $07ff,(msg.DataInt and $003ff800)>>11,(msg.DataInt and $ffc00000)>>22);
+  fSelectColorClusterDialog.Show;
 end;
 
-procedure TMain.ActivatePaletteEditor;
+procedure TMain.ColorClusterDialogResp(msg:TMessage);
 begin
-  fControls.Hide;
-  fPaletteEditor.Show;
-  fMainMenu.DisableItem('PROJECT');
-  fMainMenu.DisableItem('IMAGE');
-  fMainMenu.DisableItem('CEL');
-  fMainMenu.DisableItem('TOOLS');
-  fMainMenu.DisableItem('INKS');
-  fMainMenu.EnableItem('CLUSTER');
-  InfoBar.Top:=WINDOWHEIGHT-PALETTEEDITORHEIGHT-INFOBARHEIGHT;
+  if msg.DataInt=-2 then begin
+    fSelectColorClusterDialog.Refresh;
+  end else begin
+    if msg.DataInt>-1 then begin
+      Project.CurrentColorClusters.ActiveIndex:=msg.DataInt;
+      MessageQueue.AddMessage(MSG_ACTIVECOLORCLUSTERCHANGED);
+    end;
+    fSelectColorClusterDialog.Hide;
+  end;
 end;
 
-procedure TMain.DeactivatePaletteEditor;
-begin
-  fPaletteEditor.Hide;
-  fControls.Show;
-  fMainMenu.EnableItem('PROJECT');
-  fMainMenu.EnableItem('IMAGE');
-  fMainMenu.EnableItem('CEL');
-  fMainMenu.EnableItem('TOOLS');
-  fMainMenu.EnableItem('INKS');
-  fMainMenu.DisableItem('CLUSTER');
-  InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
-end;
-
-procedure TMain.ShowCEL;
+procedure TMain.ConfigRGradCenter;
 begin
   HideMainControls;
-  ActiveTool:=Tools.ItemByName['SHOWCEL'];
+  ActiveTool:=Tools.ItemByName['CONFRG'];
   ActiveTool.Initialize;
 end;
 
-procedure TMain.GetCELFinished;
+procedure TMain.ConfigRGradCenterFinished;
 begin
-  fMainMenu.EnableCELSubMenusWithActiveCEL;
-  MessageQueue.AddMessage(MSG_RESTORECONTROLS);
-end;
-
-procedure TMain.SelectColor;
-var mx,my:integer;
-begin
-  SDL_GetMouseState(@mx,@my);
-  mx:=fDrawArea.MouseXToFrame(mx);
-  my:=fDrawArea.MouseYToFrame(my);
-  if (mx>=0) and (mx<Project.CurrentImage.Width) and (my>=0) and (my<Project.CurrentImage.Height) then
-    Settings.ActiveColorIndex:=Project.CurrentImage.GetPixel(mx,my);
+  ShowMainControls;
+  Settings.RGradCenterX:=Settings.TempRGradCenterX;
+  Settings.RGradCenterY:=Settings.TempRGradCenterY;
+  fConfigureRGradDialog.Show;
 end;
 
 procedure TMain.OpenProject;
@@ -475,9 +451,9 @@ end;
 
 procedure TMain.ClearImage;
 begin
-  Project.CurrentImage.ImageUndo.AddImageUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);
+  Project.CurrentExtImage.ImageUndo.AddImageUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);
   Project.CurrentImage.Bar(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height,Settings.SelectedColors[0]);
-  Project.CurrentImage.ImageUndo.AddImageRedoToLastUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);
+  Project.CurrentExtImage.ImageUndo.AddImageRedoToLastUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);
 end;
 
 procedure TMain.GetCEL;
@@ -498,6 +474,28 @@ begin
   ActiveTool.Initialize;
   SDL_GetMouseState(@mx,@my);
   ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
+end;
+
+procedure TMain.GetCELFinished;
+begin
+  fMainMenu.EnableCELSubMenusWithActiveCEL;
+  MessageQueue.AddMessage(MSG_RESTORECONTROLS);
+end;
+
+procedure TMain.ShowCEL;
+begin
+  HideMainControls;
+  ActiveTool:=Tools.ItemByName['SHOWCEL'];
+  ActiveTool.Initialize;
+end;
+
+procedure TMain.ToggleControls;
+begin
+//  if not fPaletteEditor.Visible then
+    if fControls.Visible then
+      HideMainControls
+    else
+      ShowMainControls;
 end;
 
 procedure TMain.ReleaseCEL;
@@ -524,7 +522,7 @@ begin
     if UpperCase(ExtractFileExt(fOpenCELDialog.FileName))='.BDC' then
       Project.CELImage.LoadFromFile(fOpenCELDialog.FileName)
     else
-      Project.CELImage.ImportSupported(fOpenCELDialog.FileName,replace(ExtractFileExt(fOpenCELDialog.FileName),'.',''));
+      Project.CELImage.ReadFile(fOpenCELDialog.FileName);
     Project.CELImage.Left:=0;
     Project.CELImage.Top:=0;
     fMainMenu.EnableCELSubMenusWithActiveCEL;
@@ -539,7 +537,7 @@ begin
       if uppercase(ExtractFileExt(fSaveCELDialog.FileName))='.BDC' then
         Project.CELImage.SaveToFile(fSaveCELDialog.FileName)
       else
-        Project.CELImage.ExportTo(fExportCELDialog.FileName,copy(ExtractFileExt(fExportCELDialog.FileName),2));
+        Project.CELImage.WriteFile(fSaveCELDialog.FileName,copy(ExtractFileExt(fSaveCELDialog.FileName),2));
     except
       on e:Exception do
         Log.LogError(e.message);
@@ -548,53 +546,43 @@ begin
   end;
 end;
 
-procedure TMain.RampCluster;
+{
+procedure TMain.ActivatePaletteEditor;
 begin
-  with Project.CurrentImage do begin
-    with ColorClusters.ActiveColorCluster do
-      PaletteUndo.AddPaletteUndo(
-        min(StartIndex,EndIndex),
-        max(StartIndex,EndIndex)-min(StartIndex,EndIndex)+1
-      );
-    Project.CurrentImage.Palette.Ramp(Project.CurrentImage.ColorClusters.ActiveColorCluster);
-    PaletteUndo.AddPaletteRedoToLastUndo;
-  end;
-  MessageQueue.AddMessage(MSG_PALETTEPICKEDCOLOR);
+  fControls.Hide;
+  fPaletteEditor.Show;
+  fMainMenu.DisableItem('PROJECT');
+  fMainMenu.DisableItem('IMAGE');
+  fMainMenu.DisableItem('CEL');
+  fMainMenu.DisableItem('TOOLS');
+  fMainMenu.DisableItem('INKS');
+  fMainMenu.EnableItem('CLUSTER');
+  InfoBar.Top:=WINDOWHEIGHT-PALETTEEDITORHEIGHT-INFOBARHEIGHT;
 end;
 
-procedure TMain.OpenColorClusterDialog(msg:TMessage);
+procedure TMain.DeactivatePaletteEditor;
 begin
-  fSelectColorClusterDialog.SetPositionAndWidth(msg.DataInt and $07ff,(msg.DataInt and $003ff800)>>11,(msg.DataInt and $ffc00000)>>22);
-  fSelectColorClusterDialog.Show;
+  fPaletteEditor.Hide;
+  fControls.Show;
+  fMainMenu.EnableItem('PROJECT');
+  fMainMenu.EnableItem('IMAGE');
+  fMainMenu.EnableItem('CEL');
+  fMainMenu.EnableItem('TOOLS');
+  fMainMenu.EnableItem('INKS');
+  fMainMenu.DisableItem('CLUSTER');
+  InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
 end;
 
-procedure TMain.ColorClusterDialogResp(msg:TMessage);
+procedure TMain.SelectColor;
+var mx,my:integer;
 begin
-  if msg.DataInt=-2 then begin
-    fSelectColorClusterDialog.Refresh;
-  end else begin
-    if msg.DataInt>-1 then begin
-      Project.CurrentImage.ColorClusters.ActiveIndex:=msg.DataInt;
-      MessageQueue.AddMessage(MSG_ACTIVECOLORCLUSTERCHANGED);
-    end;
-    fSelectColorClusterDialog.Hide;
-  end;
+  SDL_GetMouseState(@mx,@my);
+  mx:=fDrawArea.MouseXToFrame(mx);
+  my:=fDrawArea.MouseYToFrame(my);
+  if (mx>=0) and (mx<Project.CurrentImage.Width) and (my>=0) and (my<Project.CurrentImage.Height) then
+    Settings.ActiveColor:=Project.CurrentImage.GetPixel(mx,my);
 end;
-
-procedure TMain.ConfigRGradCenter;
-begin
-  HideMainControls;
-  ActiveTool:=Tools.ItemByName['CONFRG'];
-  ActiveTool.Initialize;
-end;
-
-procedure TMain.ConfigRGradCenterFinished;
-begin
-  ShowMainControls;
-  Settings.RGradCenterX:=Settings.TempRGradCenterX;
-  Settings.RGradCenterY:=Settings.TempRGradCenterY;
-  fConfigureRGradDialog.Show;
-end;
+}
 
 end.
 
