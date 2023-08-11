@@ -52,7 +52,7 @@ type
     // Clears undo/redo data
     procedure ClearUndoData;
   private
-    fImage:TBDImage;
+    fImage:TBDRegion;
     fPalette:TBDPalette;
     fImageUndoSystem:TBDImageUndoSystem;
     fPaletteUndoSystem:TBDPaletteUndoSystem;
@@ -60,7 +60,7 @@ type
     procedure LoadFromStreamV1(pStream:TStream);
     procedure LoadFromStreamV2(pStream:TStream);
   public
-    property Image:TBDImage read fImage;
+    property Image:TBDRegion read fImage;
     property Palette:TBDPalette read fPalette;
     property ImageUndo:TBDImageUndoSystem read fImageUndoSystem;
     property PaletteUndo:TBDPaletteUndoSystem read fPaletteUndoSystem;
@@ -96,24 +96,24 @@ type
     fCurrentImageIndex:integer;
     fImages:TBDExtendedImages;
     // Only needed in-program, but must be the same size as the current image.
-    fOverlayImage:TBDImage;
-    fCELImage:TBDImage;
+    fOverlayImage:TBDRegion;
+    fCELImage:TBDRegion;
     procedure LoadFromStreamV1(pStream:TStream);
     procedure SetOverlayPalette;
     procedure fSetCurrentImageIndex(value:integer);
-    function fGetCurrentImage:TBDImage;
+    function fGetCurrentImage:TBDRegion;
     function fGetCurrentPalette:TBDPalette;
     function fGetCurrentColorClusters:TColorClusters;
     function fGetCurrentExtImage:TBDExtendedImage;
   public
     property Images:TBDExtendedImages read fImages;
     property CurrentImageIndex:integer read fCurrentImageIndex write fSetCurrentImageIndex;
-    property OverlayImage:TBDImage read fOverlayImage;
+    property OverlayImage:TBDRegion read fOverlayImage;
     property CurrentExtImage:TBDExtendedImage read fGetCurrentExtImage;
-    property CurrentImage:TBDImage read fGetCurrentImage;
+    property CurrentImage:TBDRegion read fGetCurrentImage;
     property CurrentPalette:TBDPalette read fGetCurrentPalette;
     property CurrentColorClusters:TColorClusters read fGetCurrentColorClusters;
-    property CELImage:TBDImage read fCELImage write fCELImage;
+    property CELImage:TBDRegion read fCELImage write fCELImage;
   end;
 
 implementation
@@ -133,7 +133,7 @@ end;
 
 constructor TBDExtendedImage.Create(iWidth,iHeight:integer);
 begin
-  fImage:=TBDImage.Create(iWidth,iHeight);
+  fImage:=TBDRegion.Create(iWidth,iHeight);
   fPalette:=TBDPalette.Create(256);
   fImageUndoSystem:=TBDImageUndoSystem.Create;
   fPaletteUndoSystem:=TBDPaletteUndoSystem.Create;
@@ -214,7 +214,7 @@ begin
   pStream.Read(flags,1);
   fPalette:=TBDPalette.CreateFromStream(pStream);
   GlobalV1Palette:=fPalette;
-  fImage:=TBDImage.Create(16,16);
+  fImage:=TBDRegion.Create(16,16);
   fImage.LoadRegionFromStream(pStream,fPalette);
   if flags and 2<>0 then fImageUndoSystem:=TBDImageUndoSystem.CreateFromStream(pStream);
   if flags and 4<>0 then fPaletteUndoSystem:=TBDPaletteUndoSystem.CreateFromStream(pStream);
@@ -227,7 +227,7 @@ begin
   flags:=0;
   pStream.Read(flags,1);
   fPalette:=TBDPalette.CreateFromStream(pStream);
-  fImage:=TBDImage.CreateFromStream(pStream);
+  fImage:=TBDRegion.CreateFromStream(pStream);
   if flags and 2<>0 then fImageUndoSystem:=TBDImageUndoSystem.CreateFromStream(pStream);
   if flags and 4<>0 then fPaletteUndoSystem:=TBDPaletteUndoSystem.CreateFromStream(pStream);
   if flags and 8<>0 then fColorClusters:=TColorClusters.CreateFromStream(pStream);
@@ -241,7 +241,7 @@ begin
   fImages:=TBDExtendedImages.Create;
   fImages.Add(TBDExtendedImage.Create);
   fCurrentImageIndex:=0;
-  fOverlayImage:=TBDImage.Create(fImages[0].Image.Width,fImages[0].Image.Height);
+  fOverlayImage:=TBDRegion.Create(fImages[0].Image.Width,fImages[0].Image.Height);
   SetOverlayPalette;
   fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
   fCELImage:=nil;
@@ -274,7 +274,7 @@ begin
 
   if (fCurrentImageIndex<0) or (fCurrentImageIndex>=fImages.Count) then
     fCurrentImageIndex:=0;
-  fOverlayImage:=TBDImage.Create(fImages[fCurrentImageIndex].Image.Width,fImages[fCurrentImageIndex].Image.Height);
+  fOverlayImage:=TBDRegion.Create(fImages[fCurrentImageIndex].Image.Width,fImages[fCurrentImageIndex].Image.Height);
 //  SetOverlayPalette;
 //  fOverlayImage.Palette.ResizeAndCopyColorsFrom(SystemPalette);
   fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
@@ -342,7 +342,7 @@ begin
     fImages.Add(TBDExtendedImage.CreateFromStream(pStream));
     dec(count);
   end;
-  if flags and 1<>0 then fCELImage:=TBDImage.CreateFromStream(pStream);
+  if flags and 1<>0 then fCELImage:=TBDRegion.CreateFromStream(pStream);
 end;
 
 procedure TBDProject.SetOverlayPalette;
@@ -371,7 +371,7 @@ begin
   end;
 end;
 
-function TBDProject.fGetCurrentImage:TBDImage;
+function TBDProject.fGetCurrentImage:TBDRegion;
 begin
   Result:=fImages[fCurrentImageIndex].Image;
 end;

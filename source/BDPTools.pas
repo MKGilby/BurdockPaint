@@ -100,7 +100,7 @@ type
     function MouseUp(x,y,button:integer):boolean; override;
     function MouseMove(x,y,button:integer):boolean; override;
   private
-    fTempImage:TBDImage;
+    fTempImage:TBDRegion;
     fLeft,fTop,fRight,fBottom:integer;
     fDown:boolean;
   end;
@@ -623,7 +623,7 @@ end;
 function TBDToolDraw.MouseDown(x,y,button:integer):boolean;
 begin
   if button=SDL_BUTTON_LEFT then begin
-    fTempImage:=TBDImage.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
+    fTempImage:=TBDRegion.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
     fTempImage.PutImage(0,0,Project.CurrentImage);
     Project.CurrentImage.PutPixel(x,y,ActiveInk.GetColorAt(x,y));
     Result:=true;
@@ -673,7 +673,7 @@ end;
 
 function TBDToolFill.Click(x,y,button:integer):boolean;
 var
-  fTempImage:TBDImage;
+  fTempImage:TBDRegion;
   i,j:integer;
   fLeft,fTop,fRight,fBottom:integer;
 begin
@@ -683,7 +683,7 @@ begin
     fRight:=x;
     fBottom:=y;
     // Create temporary image.
-    fTempImage:=TBDImage.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
+    fTempImage:=TBDRegion.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
     // Copy current image to temporary image.
     fTempImage.PutImage(0,0,Project.CurrentImage);
     // Process Fill on temporary image.
@@ -724,7 +724,7 @@ begin
 end;
 
 function TBDToolFillTo.Click(x,y,button:integer):boolean;
-var fTempImage:TBDImage;
+var fTempImage:TBDRegion;
 begin
   if button=SDL_BUTTON_LEFT then
     case fstate of
@@ -739,7 +739,7 @@ begin
           fRight:=x;
           fBottom:=y;
 
-          fTempImage:=TBDImage.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
+          fTempImage:=TBDRegion.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
           fTempImage.PutImage(0,0,Project.CurrentImage);
 
           FillToWithPostProcessColor(x,y);
@@ -1035,10 +1035,10 @@ end;
 function TBDToolSep.Click(x,y,button:integer):boolean;
 var i,j:integer;sc:uint32;
   fLeft,fRight,fTop,fBottom:integer;
-  fTempImage:TBDImage;
+  fTempImage:TBDRegion;
 begin
   if button=SDL_BUTTON_LEFT then begin
-    fTempImage:=TBDImage.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
+    fTempImage:=TBDRegion.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
     fTempImage.PutImage(0,0,Project.CurrentImage);
     fLeft:=Project.CurrentImage.Width;
     fRight:=-1;
@@ -1076,10 +1076,10 @@ end;
 function TBDToolEdge.Click(x, y, button: integer): boolean;
 var i,j,cnt:integer;sc:uint32;
   fLeft,fRight,fTop,fBottom:integer;
-  fTempImage:TBDImage;
+  fTempImage:TBDRegion;
 begin
   if button=SDL_BUTTON_LEFT then begin
-    fTempImage:=TBDImage.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
+    fTempImage:=TBDRegion.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
     fTempImage.PutImage(0,0,Project.CurrentImage);
     fLeft:=Project.CurrentImage.Width;
     fRight:=-1;
@@ -1145,7 +1145,7 @@ begin
           if x<fSX then begin i:=x;x:=fSX;fSX:=i;end;
           if y<fSY then begin i:=y;y:=fSY;fSY:=i;end;
           if Assigned(Project.CELImage) then Project.CELImage.Free;
-          Project.CELImage:=TBDImage.Create(x-fSX+1,y-fSY+1);
+          Project.CELImage:=TBDRegion.Create(x-fSX+1,y-fSY+1);
           Project.CELImage.PutImagePart(0,0,fSX,fSY,x-fSX+1,y-fSY+1,Project.CurrentImage);
           Project.CELImage.Left:=fSX;
           Project.CELImage.Top:=fSY;
@@ -1256,14 +1256,14 @@ begin
     0:begin
         Project.OverlayImage.Rectangle(Project.CelImage.Left,Project.CelImage.Top,Project.CELImage.Width,Project.CELImage.Height,VibroColors.GetColor);
         if Settings.ClearKeyColor then
-          CELHelperImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,Settings.SelectedColors[0])
+          CELHelperImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,$FF000000)
         else
           CELHelperImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage);
         InfoBar.ShowText(inttostr(fX)+','+inttostr(fY));
       end;
     1:begin
         if Settings.ClearKeyColor then
-          CELHelperImage.PutImage(Project.CELImage.Left+fX-fSX,Project.CELImage.Top+fY-fSY,Project.CELImage,Settings.SelectedColors[0])
+          CELHelperImage.PutImage(Project.CELImage.Left+fX-fSX,Project.CELImage.Top+fY-fSY,Project.CELImage,$FF000000)
         else
           CELHelperImage.PutImage(Project.CELImage.Left+fX-fSX,Project.CELImage.Top+fY-fSY,Project.CELImage);
         InfoBar.ShowText(Format('%d,%d (%d,%d)',[Project.CELImage.Left+fX-fSX,Project.CELImage.Top+fY-fSY,fX-fSX,fY-fSY]));
@@ -1454,7 +1454,7 @@ procedure TBDToolShowCEL.Draw;
 begin
   Project.OverlayImage.Rectangle(Project.CelImage.Left,Project.CelImage.Top,Project.CELImage.Width,Project.CELImage.Height,VibroColors.GetColor);
   if Settings.ClearKeyColor then
-    CELHelperImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,Settings.SelectedColors[0])
+    CELHelperImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,$FF000000)
   else
     CELHelperImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage);
   if GetTickCount64-fStartTime>1000 then begin

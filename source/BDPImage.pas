@@ -29,12 +29,12 @@ uses
 
 type
 
-  { TBDImage }
+  { TBDRegion }
 
-  TBDImage=class(TARGBImage)
-    // Creates an empty image with default palette
+  TBDRegion=class(TARGBImage)
+    // Creates an empty region
     constructor Create(iWidth,iHeight:integer);
-    // Creates image from stream (fileformats.txt - I-block)
+    // Creates region from stream (fileformats.txt - R-block)
     constructor CreateFromStream(iStream:TStream);
     // Free up entities
     destructor Destroy; override;
@@ -48,7 +48,7 @@ type
 
     // -------------- Transforming operations --------------------
     // *** Move these to ARGBImage!
-    // Recreates the image with the new dimensions but keeps the palette intact.
+    // Recreates the image with the new dimensions.
     procedure Recreate(pWidth,pHeight:integer);
 
     // -------------- Rendering operations --------------------
@@ -92,8 +92,6 @@ type
     procedure LoadFromFile(pFilename:string);
     // Loads image from stream, including palette data.
     procedure LoadFromStream(Source:TStream);
-    // Write whole image as a region to stream.
-    procedure SaveRegionToStream(Target:TStream);
     // Read a region as whole image from stream.
     procedure LoadRegionFromStream(Source:TStream;Palette:TBDPalette=nil);
   protected
@@ -101,16 +99,10 @@ type
     fLeft,fTop:integer;
     // Is the pixel data changed?
     fChanged:boolean;
-  private
-    procedure LoadFromStreamV1(pStream:TStream);
-    procedure LoadFromStreamV2(pStream:TStream);
   public
     property Left:integer read fLeft write fLeft;
     property Top:integer read fTop write fTop;
-//    property Width:integer read fWidth;
-//    property Height:integer read fHeight;
     property Changed:boolean read fChanged write fChanged;
-//    property RawData:pointer read fData;
   end;
 
 implementation
@@ -124,33 +116,28 @@ const
   REGIONDATAID=$52;
 
 
-{ TBDImage }
+{ TBDRegion }
 
-constructor TBDImage.Create(iWidth,iHeight:integer);
-var Xs:TStream;
+constructor TBDRegion.Create(iWidth,iHeight:integer);
 begin
   inherited Create(iWidth,iHeight);
   fLeft:=0;
   fTop:=0;
-//  Xs:=TStringStream.Create(NTSCCOL);
-//  fPalette:=TBDPalette.CreateFromStream(Xs);
-//  FreeAndNil(Xs);
   fChanged:=false;
 end;
 
-constructor TBDImage.CreateFromStream(iStream:TStream);
+constructor TBDRegion.CreateFromStream(iStream:TStream);
 begin
   LoadFromStream(iStream);
   fChanged:=false;
 end;
 
-destructor TBDImage.Destroy;
+destructor TBDRegion.Destroy;
 begin
-//  if Assigned(fPalette) then fPalette.Free;
   inherited Destroy;
 end;
 
-procedure TBDImage.PutImage(x,y:integer; source:TARGBImage; colorkey:uint32);
+procedure TBDRegion.PutImage(x,y:integer; source:TARGBImage; colorkey:uint32);
 var clipbox:TClipBox;i,j:integer;c:uint32;
 begin
   if Assigned(source) then begin
@@ -166,7 +153,7 @@ begin
     raise Exception.Create('TBDImage.PutImage: Source is not assigned!');
 end;
 
-procedure TBDImage.RectangleXY(x1,y1,x2,y2:integer; color32:uint32);
+procedure TBDRegion.RectangleXY(x1,y1,x2,y2:integer; color32:uint32);
 var i:integer;
 begin
   if x1>x2 then begin i:=x1;x1:=x2;x2:=i;end;
@@ -174,7 +161,7 @@ begin
   Rectangle(x1,y1,x2-x1+1,y2-y1+1,color32);
 end;
 
-procedure TBDImage.Recreate(pWidth,pHeight:integer);
+procedure TBDRegion.Recreate(pWidth,pHeight:integer);
 begin
   if Assigned(fRawdata) then Freemem(fRawdata);
   fWidth:=pWidth;
@@ -182,7 +169,7 @@ begin
   fRawdata:=Getmem(fWidth*fHeight*4);
 end;
 
-procedure TBDImage.RenderToTexture(Target:TStreamingTexture;
+procedure TBDRegion.RenderToTexture(Target:TStreamingTexture;
   TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
 var x,y,zPixel,zRenderWidth,zRenderHeight:integer;
 begin
@@ -218,7 +205,7 @@ begin
   end;
 end;
 
-procedure TBDImage.RenderToTextureAsOverlay(Target:TStreamingTexture;
+procedure TBDRegion.RenderToTextureAsOverlay(Target:TStreamingTexture;
   TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
 var x,y,zPixel,zRenderWidth,zRenderHeight:integer;p:uint32;
 begin
@@ -258,7 +245,7 @@ begin
   end;
 end;
 
-procedure TBDImage.SaveToFile(pFilename:string);
+procedure TBDRegion.SaveToFile(pFilename:string);
 var Xs:TStream;
 begin
   Xs:=TFileStream.Create(pFilename,fmCreate);
@@ -266,50 +253,8 @@ begin
   FreeAndNil(Xs);
 end;
 
-procedure TBDImage.SaveToStream(Target:TStream);
-var i,curr:integer;
-begin
-  i:=IMAGEDATAID;
-  Target.Write(i,1);
-  curr:=Target.Position;
-  i:=0;
-  Target.Write(i,4);
-  i:=2;
-  Target.Write(i,1);
-  SaveRegionToStream(Target);
-  i:=Target.Position-curr-4;
-  Target.Position:=curr;
-  Target.write(i,4);
-  Target.Position:=Target.Position+i;
-end;
-
-procedure TBDImage.LoadFromFile(pFilename:string);
-var Xs:TStream;
-begin
-  Xs:=TFileStream.Create(pFilename,fmOpenRead or fmShareDenyNone);
-  LoadFromStream(Xs);
-  FreeAndNil(Xs);
-end;
-
-procedure TBDImage.LoadFromStream(Source:TStream);
-var curr,size:int64;b:byte;
-begin
-  b:=0;
-  Source.Read(b,1);
-  if b<>IMAGEDATAID then raise Exception.Create(Format('ID is not for image data! (%.2x)',[b]));
-  size:=0;
-  Source.Read(size,4);
-  curr:=Source.Position;
-  Source.Read(b,1);
-  if b=1 then LoadFromStreamV1(Source)
-  else if b=2 then LoadFromStreamV2(Source)
-  else raise Exception.Create(Format('Invalid image version! (%d)',[b]));
-  Source.Position:=curr+size;
-  fChanged:=false;
-end;
-
-procedure TBDImage.SaveRegionToStream(Target:TStream);
-var i,curr:integer;Xs:TStream;
+procedure TBDRegion.SaveToStream(Target:TStream);
+var i:integer;curr:int64;Xs:TStream;
 begin
   i:=REGIONDATAID;
   Target.Write(i,1);
@@ -333,7 +278,44 @@ begin
   Target.Position:=Target.Position+i;
 end;
 
-procedure TBDImage.LoadRegionFromStream(Source:TStream; Palette:TBDPalette);
+procedure TBDRegion.LoadFromFile(pFilename:string);
+var Xs:TStream;
+begin
+  Xs:=TFileStream.Create(pFilename,fmOpenRead or fmShareDenyNone);
+  LoadFromStream(Xs);
+  FreeAndNil(Xs);
+end;
+
+procedure TBDRegion.LoadFromStream(Source:TStream);
+var curr,size:int64;b:byte;
+    fPalette:TBDPalette;
+begin
+  b:=0;
+  Source.Read(b,1);
+  if b=IMAGEDATAID then begin  // It is a legacy I-block.
+    size:=0;
+    Source.Read(size,4);
+    curr:=Source.Position;
+    Source.Read(b,1);
+    if b=1 then begin  // version 1, C-block and R-block
+      fPalette:=TBDPalette.CreateFromStream(Source);
+      LoadRegionFromStream(Source,fPalette);
+      fPalette.Free;
+    end
+    else if b=2 then begin  // version 2, only region
+      LoadRegionFromStream(Source,nil);
+    end
+    else raise Exception.Create(Format('Invalid image version! (%d)',[b]));
+    Source.Position:=curr+size;
+  end else
+  if b=REGIONDATAID then begin  // It is an R-block
+    Source.Position:=Source.Position-1;  // Step back
+    LoadRegionFromStream(Source,nil);  // and load as region
+  end;
+  fChanged:=false;
+end;
+
+procedure TBDRegion.LoadRegionFromStream(Source:TStream; Palette:TBDPalette);
 var curr,size:int64;b:byte;Xs:TStream;i,j:integer;
 begin
   b:=0;
@@ -350,6 +332,7 @@ begin
   Xs.Read(b,1);  // Version
   fLeft:=0;fTop:=0;fWidth:=0;fHeight:=0;
   if b=1 then begin
+    if not Assigned(Palette) then raise Exception.Create('Loading v1 region without palette!');
     Xs.Read(fLeft,2);
     Xs.Read(fTop,2);
     Xs.Read(fWidth,2);
@@ -374,19 +357,6 @@ begin
   end else
     Exception.Create(Format('Unknown PixelData version! (%d)',[b]));
 
-end;
-
-procedure TBDImage.LoadFromStreamV1(pStream:TStream);
-var fPalette:TBDPalette;
-begin
-  fPalette:=TBDPalette.CreateFromStream(pStream);
-  LoadRegionFromStream(pStream,fPalette);
-  fPalette.Free;
-end;
-
-procedure TBDImage.LoadFromStreamV2(pStream:TStream);
-begin
-  LoadRegionFromStream(pStream,nil);
 end;
 
 end.

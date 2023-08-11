@@ -47,16 +47,16 @@ type
   { TBDRegionUndoItem }
 
   TBDRegionUndoItem=class(TBDUndoItem)
-    constructor Create(iBefore:TBDImage);
+    constructor Create(iBefore:TBDRegion);
     constructor CreateFromStream(iStream:TStream);
     destructor Destroy; override;
-    procedure AddAfter(iAfter:TBDImage);
+    procedure AddAfter(iAfter:TBDRegion);
     procedure Undo; override;
     procedure Redo; override;
     procedure SaveToStream(pStream:TStream); override;
     procedure LoadFromStream(pStream:TStream); override;
   private
-    fBefore,fAfter:TBDImage;
+    fBefore,fAfter:TBDRegion;
     procedure LoadFromStreamV1(pStream:TStream);
   end;
 
@@ -125,7 +125,7 @@ type
 
   TBDImageUndoSystem=class(TBDUndoSystem)
     constructor Create;
-    procedure AddImageUndo(Left,Top,Width,Height:integer;Image:TBDImage=nil);
+    procedure AddImageUndo(Left,Top,Width,Height:integer;Image:TBDRegion=nil);
     procedure AddImageRedoToLastUndo(Left,Top,Width,Height:integer);
     procedure SaveToStream(pStream:TStream); override;
     procedure LoadFromStream(pStream:TStream);  override;
@@ -181,7 +181,7 @@ end;
 
 { TBDRegionUndoItem }
 
-constructor TBDRegionUndoItem.Create(iBefore:TBDImage);
+constructor TBDRegionUndoItem.Create(iBefore:TBDRegion);
 begin
   inherited Create;
   fBefore:=iBefore;
@@ -201,7 +201,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TBDRegionUndoItem.AddAfter(iAfter:TBDImage);
+procedure TBDRegionUndoItem.AddAfter(iAfter:TBDRegion);
 begin
   fAfter:=iAfter;
   fRedoable:=true;
@@ -229,8 +229,8 @@ begin
     pStream.Write(i,4);
     i:=1;                // Version
     pStream.Write(i,1);
-    fBefore.SaveRegionToStream(pStream);
-    fAfter.SaveRegionToStream(pStream);
+    fBefore.SaveToStream(pStream);
+    fAfter.SaveToStream(pStream);
     i:=pStream.Position-curr-4;
     pStream.Position:=curr;
     pStream.write(i,4);
@@ -257,10 +257,10 @@ end;
 
 procedure TBDRegionUndoItem.LoadFromStreamV1(pStream:TStream);
 begin
-  fBefore:=TBDImage.Create(16,16);
+  fBefore:=TBDRegion.Create(16,16);
   fBefore.LoadRegionFromStream(pStream,GlobalV1Palette);
 //  fBefore.WriteFile(st(SaveCount,4,'0')+'_0.png','PNG');
-  fAfter:=TBDImage.Create(16,16);
+  fAfter:=TBDRegion.Create(16,16);
   fAfter.LoadRegionFromStream(pStream,GlobalV1Palette);
 //  fAfter.WriteFile(st(SaveCount,4,'0')+'_1.png','PNG');
 //  inc(SaveCount);
@@ -498,13 +498,13 @@ begin
   fAfterUndoRedoMessage:=TMessage.Init(MSG_SETIMAGEUNDOREDOBUTTON,0,0);
 end;
 
-procedure TBDImageUndoSystem.AddImageUndo(Left,Top,Width,Height:integer;Image:TBDImage);
-var atm:TBDRegionUndoItem;atmi:TBDImage;
+procedure TBDImageUndoSystem.AddImageUndo(Left,Top,Width,Height:integer;Image:TBDRegion);
+var atm:TBDRegionUndoItem;atmi:TBDRegion;
 begin
   if (fPointer<>Self.Count-1) then   // If not the last item, delete items after it.
     Self.DeleteRange(fPointer+1,Self.Count-1);
   if Self.Count=Settings.UndoLimit then Self.Delete(0);
-  atmi:=TBDImage.Create(Width,Height);
+  atmi:=TBDRegion.Create(Width,Height);
   atmi.Left:=Left;
   atmi.Top:=Top;
   if Image=nil then
@@ -518,11 +518,11 @@ begin
 end;
 
 procedure TBDImageUndoSystem.AddImageRedoToLastUndo(Left,Top,Width,Height:integer);
-var atmi:TBDImage;
+var atmi:TBDRegion;
 begin
   if fPointer>-1 then begin
     if not Self[fPointer].Redoable then begin
-      atmi:=TBDImage.Create(Width,Height);
+      atmi:=TBDRegion.Create(Width,Height);
       atmi.Left:=Left;
       atmi.Top:=Top;
       atmi.PutImagePart(0,0,Left,Top,Width,Height,Project.CurrentImage);

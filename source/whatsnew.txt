@@ -21,8 +21,12 @@ Todo:
     - Max retention time.
 - BUG: Controls should show hexa values for color instead of non-existing
   color index.
-- BUG: Backup retention by size not works?
 
+
+2023.08.11
+- BUGFIX: Backup retention by size now works. Simply the settings was not passed
+  to the FileBackup class.
+- Added the new color selector, but cannot click it yet.
 
 2023.08.10
 - It seems that drawing and menus work again but in full true-color mode.

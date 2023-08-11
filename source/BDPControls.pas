@@ -26,7 +26,7 @@ interface
 
 uses
   SysUtils, mk_sdl2, vcc2_Container, BDPBasicControls, BDPMessage,
-  BDPColorCluster, BDPTools, BDPInks{, BDPColorSelector};
+  BDPColorCluster, BDPTools, BDPInks, BDPColorSelector;
 
 type
 
@@ -61,7 +61,7 @@ type
     fToolButtons:array[0..5] of TBDButton;
     fInkButtons:array[0..5] of TBDButton;
     fUndoButton,fRedoButton:TBDButton;
-//    fColorSelector:TBDColorSelector;
+    fColorSelector:TBDColorSelector;
     fColorCluster:TBDColorCluster;
     fImageCountSlider:TBDHorizontalSlider;
     fMouseX,fMouseY:integer;
@@ -177,10 +177,11 @@ begin
   AddChild(atmB);
 
   // Color selector
-{  fColorSelector:=TBDColorSelector.Create(fLeft+CONTROLCOLORSELECTORLEFT, fTop+CONTROLCOLORSELECTORTOP);
+  fColorSelector:=TBDColorSelector.Create(fLeft+CONTROLCOLORSELECTORLEFT, fTop+CONTROLCOLORSELECTORTOP,
+    279,36);
   fColorSelector.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fColorSelector.Name:='ColorSelector';
-  AddChild(fColorSelector);}
+  AddChild(fColorSelector);
 
   // Imagecount slider
   fImageCountSlider:=TBDHorizontalSlider.Create(

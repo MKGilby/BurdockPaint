@@ -112,7 +112,7 @@ type
     function GetColorAt(pX,pY:integer):uint32; override;
     procedure PostProcess; override;
   private
-    fTempImage:TBDImage;
+    fTempImage:TBDRegion;
   end;
 
   { TBDInkRGrad }
@@ -206,7 +206,7 @@ begin
     for j:=0 to Project.CELImage.Height-1 do
       for i:=0 to Project.CELImage.Width-1 do
         if not Settings.ClearKeyColor or
-           (Settings.ClearKeyColor and (Project.CELImage.GetPixel(i,j)<>Settings.SelectedColors[0])) then
+           (Settings.ClearKeyColor and (Project.CELImage.GetPixel(i,j)<>$FF000000)) then
         Project.CurrentImage.PutPixel(px+i,py+j,POSTPROCESSCOLOR);
     PostProcess;
   end;
@@ -315,7 +315,7 @@ end;
 procedure TBDInkOpaque.ProcessWithCEL(pX,pY:integer);
 begin
   if Settings.ClearKeyColor then
-    Project.CurrentImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,Settings.SelectedColors[0])
+    Project.CurrentImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,$FF000000)
   else
     Project.CurrentImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage);
 end;
@@ -401,14 +401,14 @@ end;
 procedure TBDInkSoften.InitializeAreaWH(pLeft,pTop,pWidth,pHeight:integer);
 begin
   inherited ;
-  fTempImage:=TBDImage.Create(fWidth,fHeight);
+  fTempImage:=TBDRegion.Create(fWidth,fHeight);
   fTempImage.PutImagePart(0,0,fLeft,fTop,fWidth,fHeight,Project.CurrentImage);
 end;
 
 procedure TBDInkSoften.InitializeArea(pX1,pY1,pX2,pY2:integer);
 begin
   inherited ;
-  fTempImage:=TBDImage.Create(fWidth,fHeight);
+  fTempImage:=TBDRegion.Create(fWidth,fHeight);
   fTempImage.PutImagePart(0,0,fLeft,fTop,fWidth,fHeight,Project.CurrentImage);
 end;
 

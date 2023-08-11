@@ -183,7 +183,7 @@ var
 
   Project:TBDProject;  // The project we are working on
 
-  CELHelperImage:TBDImage;  // Helper image for PUTCel
+  CELHelperImage:TBDRegion;  // Helper image for PUTCel
 
   GlobalV1Palette:TBDPalette; // A palette that is used for loading old version blocks.
 
@@ -287,8 +287,6 @@ begin
   LoadImage(LogoFont,'LogoFont');
   MM.Fonts['LogoFont'].SetColorkey(0,0,0);
   LoadImage(BurdockPNG,'Burdock');
-//  MM.Load('logofont.png','LogoFont');
-//  MM.LoadImage('burdock.png','Burdock');
   MM.Images.ItemByName['Burdock'].Resize2x;
   Log.LogStatus('  Creating message queue...');
   MessageQueue:=TMessageQueue.Create(32);
@@ -306,7 +304,7 @@ begin
   SystemPalette.Colors[9]:=$ffb0b0b0;
   SystemPalette.Colors[10]:=$ffe0e0e0;
   Log.LogStatus('  Creating CEL helper image...');
-  CELHelperImage:=TBDImage.Create(320,200);
+  CELHelperImage:=TBDRegion.Create(320,200);
   CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,0);
   Log.LogStatus('  Creating information bar...');
   InfoBar:=TBDInfoBar.Create;
@@ -332,8 +330,7 @@ end;
 procedure FreeAssets;
 begin
   if Assigned(Project) then begin
-//    Project.SaveToFile(TEMPPROJECTFILE);
-    Project.SaveToFile('v2test.bpprj');
+    Project.SaveToFile(TEMPPROJECTFILE);
     FreeAndNil(Project);
   end;
   if Assigned(Tools) then FreeAndNil(Tools);

@@ -111,8 +111,8 @@
 2.1.2. Region data (R-block)
 ----------------------------
 
-  Region data is the pixel data of a region of the full image. It is not used
-  in standalone files. Region data is an R-block, and always has compressed data.
+  Region data is the pixel data of a region of the full image. Region data is
+  an R-block, and always has compressed data.
   The uncompressed region data has two versions.
 
   Version 1 uncompressed region data structure (paletted images, deprecated, read-only)
@@ -219,10 +219,11 @@
 2.2.1. Image data (I-block)
 ---------------------------
 
-  Image data consisted of two parts, color data and region data containing the
-  full image. Now it only contains the R-block with the full image. The block
-  itself has uncommpressed data, but the one or two inside blocks have compressed
-  data. Will be dropped soon, an R-block itself is the same without the overhead.
+  Read-only block only kept for compatibility. Using a version 2 R-block instead.
+
+  Image data consists one or two parts, optional color data (depending on version)
+  and region data containing the full image. The block itself has uncommpressed
+  data, but the one or two inside blocks have compressed data.
 
   Image data format version 1 (paletted image, deprecated, read-only)
   -----------------
@@ -231,7 +232,7 @@
     6       ???         Color data in a C-block
     .       ???         Region data in an R-block
 
-  Image data format version 2 (true-color image)
+  Image data format version 2 (true-color image, deprecated, read-only)
   -----------------
     Start   Size        Description (content)
     5       1           Version (0x02)
@@ -381,9 +382,9 @@ current image, palette, undo states and color clusters.
 3.2. CEL file format (.bdc), deprecated, can use PNG instead.
 ---------------------------
 
-It is an Image data block (I-block). The difference between an Image and a CEL is
-that loading a CEL won't replace the current image (it will replace the current
-CEL if there is one).
+It is an Image data block (I-block) or a v2 region block (R-block).
+The difference between an Image and a CEL is that loading a CEL won't replace
+the current image (it will replace the current CEL if there is one).
 
 
 3.3. Project file format (.bpprj)

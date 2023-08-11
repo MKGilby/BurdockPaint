@@ -456,7 +456,7 @@ end;
 procedure TMain.ClearImage;
 begin
   Project.CurrentExtImage.ImageUndo.AddImageUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);
-  Project.CurrentImage.Bar(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height,Settings.SelectedColors[0]);
+  Project.CurrentImage.Bar(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height,$FF000000);
   Project.CurrentExtImage.ImageUndo.AddImageRedoToLastUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);
 end;
 
@@ -522,7 +522,7 @@ end;
 procedure TMain.OpenCEL;
 begin
   if fOpenCELDialog.Execute then begin
-    if not assigned(Project.CELImage) then Project.CELImage:=TBDImage.Create(16,16);
+    if not assigned(Project.CELImage) then Project.CELImage:=TBDRegion.Create(16,16);
     if UpperCase(ExtractFileExt(fOpenCELDialog.FileName))='.BDC' then
       Project.CELImage.LoadFromFile(fOpenCELDialog.FileName)
     else
