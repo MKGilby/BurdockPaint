@@ -83,7 +83,30 @@ end;
 
 procedure TBDColorSelector.Click(Sender:TObject; x,y,buttons:integer);
 begin
+  x-=fLeft;
   if buttons=SDL_BUTTON_LEFT then begin
+    if (x>=0) and (x<fLeftClusterLeft) then begin
+      Settings.ActiveColor:=Settings.ColorSelectorLeftColor;
+      Refresh;
+    end else
+    if (x>=fLeftClusterLeft) and (x<fMainColorLeft) then begin
+      Settings.ActiveColor:=
+        fLeftColorCluster.GetColorAt(x-fLeftClusterLeft,fLeftClusterWidth);
+      Refresh;
+    end else
+    if (x>=fMainColorLeft) and (x<fRightClusterLeft) then begin
+      Settings.ActiveColor:=Settings.ColorSelectorMainColor;
+      Refresh;
+    end else
+    if (x>=fRightClusterLeft) and (x<fRightColorLeft) then begin
+      Settings.ActiveColor:=
+        fRightColorCluster.GetColorAt(x-fRightClusterLeft,fRightClusterWidth);
+      Refresh;
+    end else
+    if (x>=fRightColorLeft) then begin
+      Settings.ActiveColor:=Settings.ColorSelectorRightColor;
+      Refresh;
+    end;
   end else if buttons=SDL_BUTTON_MIDDLE then begin
   end else if buttons=SDL_BUTTON_RIGHT then begin
   end;
@@ -99,17 +122,35 @@ begin
 end;
 
 procedure TBDColorSelector.ReDraw;
-var i:integer;
+var i:integer;c:uint32;
 begin
   with fTexture.ARGBImage do begin
     Bar(0,0,fTexture.Width,fTexture.Height,SystemPalette[2]);
+    if Settings.ActiveColor=Settings.ColorSelectorLeftColor then
+      Bar(0,0,Height,Height,SystemPalette[5]);
+    if Settings.ActiveColor=Settings.ColorSelectorMainColor then
+      Bar(fMainColorLeft,0,Height,Height,SystemPalette[5]);
+    if Settings.ActiveColor=Settings.ColorSelectorRightColor then
+      Bar(fRightColorLeft,0,Height,Height,SystemPalette[5]);
     Bar(3,3,Height-6,Height-6,Settings.ColorSelectorLeftColor);
     Bar(fMainColorLeft+3,3,Height-6,Height-6,Settings.ColorSelectorMainColor);
     Bar(fRightColorLeft+3,3,Height-6,Height-6,Settings.ColorSelectorRightColor);
-    for i:=0 to fLeftClusterWidth-1 do
-      VLine(fLeftClusterLeft+i,3,Height-6,fLeftColorCluster.GetColorAt(i,fLeftClusterWidth));
-    for i:=0 to fRightClusterWidth-1 do
-      VLine(fRightClusterLeft+i,3,Height-6,fRightColorCluster.GetColorAt(i,fRightClusterWidth));
+    for i:=0 to fLeftClusterWidth-1 do begin
+      c:=fLeftColorCluster.GetColorAt(i,fLeftClusterWidth);
+      VLine(fLeftClusterLeft+i,3,Height-6,c);
+      if Settings.ActiveColor=c then begin
+        VLine(fLeftClusterLeft+i,Height div 2-3,3,SystemPalette[4]);
+        VLine(fLeftClusterLeft+i,Height div 2,3,SystemPalette[1]);
+      end;
+    end;
+    for i:=0 to fRightClusterWidth-1 do begin
+      c:=fRightColorCluster.GetColorAt(i,fRightClusterWidth);
+      VLine(fRightClusterLeft+i,3,Height-6,c);
+      if Settings.ActiveColor=c then begin
+        VLine(fRightClusterLeft+i,Height div 2-3,3,SystemPalette[4]);
+        VLine(fRightClusterLeft+i,Height div 2,3,SystemPalette[1]);
+      end;
+    end;
   end;
   fTexture.Update;
 end;
