@@ -124,7 +124,7 @@ const
   // GETCEL or PUTCEL finished, reactivate selected tool.
   MSG_RESTORECONTROLS=7;
   // ActiveColorIndex changed. Data is the active color index.
-  MSG_ACTIVECOLORINDEXCHANGED=8;
+  MSG_ACTIVECOLORCHANGED=8;
   // PICKCOLCS finished, Data is the selected color index or -1 if no color selected.
   MSG_COLORSELECTORPICKEDCOLOR=9;
   // Response from MessageBox. Data is the pressed button number.

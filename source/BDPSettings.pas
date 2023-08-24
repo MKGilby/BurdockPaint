@@ -265,7 +265,7 @@ end;
 procedure TSettings.fSetActiveColor(value:uint32);
 begin
   fActiveColor:=value;
-  MessageQueue.AddMessage(MSG_ACTIVECOLORINDEXCHANGED,0,fActiveColor);
+  MessageQueue.AddMessage(MSG_ACTIVECOLORCHANGED,0,fActiveColor);
 end;
 
 end.

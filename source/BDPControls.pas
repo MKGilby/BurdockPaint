@@ -405,7 +405,7 @@ begin
       MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
       Result:=false;  // Not true, let the others also know about the count change!
     end;
-    MSG_ACTIVECOLORINDEXCHANGED:begin
+    MSG_ACTIVECOLORCHANGED:begin
 //      fColorSelector.Refresh;
       fColorCluster.Refresh;
     end;
