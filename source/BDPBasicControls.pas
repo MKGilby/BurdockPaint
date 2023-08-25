@@ -79,7 +79,7 @@ type
   { TBDColorBox }
 
   TBDColorBox=class(TVisibleControl)
-    constructor Create(iLeft,iTop:integer);
+    constructor Create(iLeft,iTop,iWidth,iHeight:integer);
     procedure ColorChanged;
   protected
     procedure ReDraw; override;
@@ -89,6 +89,36 @@ type
     procedure fSetColor(value:uint32);
   public
     property Color:uint32 read fColor write fSetColor;
+  end;
+
+  { TBDHSBox }
+
+  TBDHSBox=class(TVisibleControl)
+    constructor Create(iLeft,iTop,iWidth,iHeight:integer);
+    procedure SetColor(pH,pS:byte);
+  protected
+    procedure ReDraw; override;
+  private
+    fColor:uint32;
+    fX,fY:integer;   // current crosshair center position
+  public
+    property Color:uint32 read fColor;
+  end;
+
+  { TBDLightSlider }
+
+  TBDLightSlider=class(TVisibleControl)
+    constructor Create(iLeft,iTop,iWidth,iHeight:integer);
+  protected
+    procedure ReDraw; override;
+  private
+    fBaseColor:uint32;
+    fSelectedL:byte;
+    procedure fSetBaseColor(pValue:uint32);
+    procedure fSetSelectedL(pValue:byte);
+  public
+    property BaseColor:uint32 write fSetBaseColor;
+    property SelectedL:byte read fSelectedL write fSetSelectedL;
   end;
 
 implementation
@@ -332,13 +362,13 @@ end;
 
 { TBDColorBox }
 
-constructor TBDColorBox.Create(iLeft,iTop:integer);
+constructor TBDColorBox.Create(iLeft,iTop,iWidth,iHeight:integer);
 begin
   inherited Create;
   fLeft:=iLeft;
   fTop:=iTop;
-  Width:=COLORBOXWIDTH;
-  Height:=COLORBOXHEIGHT;
+  Width:=iWidth;
+  Height:=iHeight;
   fTLImage:=MM.Images.ItemByName['ArchTopLeft'];
   fTRImage:=MM.Images.ItemByName['ArchTopRight'];
   fBLImage:=MM.Images.ItemByName['ArchBottomLeft'];
@@ -379,6 +409,131 @@ end;
 procedure TBDColorBox.fSetColor(value:uint32);
 begin
   if (fColor<>value) then begin fColor:=value;fNeedRedraw:=true;end;
+end;
+
+{ TBDHSBox }
+
+constructor TBDHSBox.Create(iLeft,iTop,iWidth,iHeight:integer);
+begin
+  inherited Create;
+  fLeft:=iLeft;
+  fTop:=iTop;
+  Width:=iWidth;
+  Height:=iHeight;
+  fX:=0;
+  fY:=0;
+  fVisible:=true;
+  fNeedRedraw:=true;
+end;
+
+procedure TBDHSBox.SetColor(pH,pS:byte);
+begin
+  fX:=(pH*(fWidth-6) div 255);
+  fY:=(pS*(fHeight-6) div 255);
+end;
+
+procedure TBDHSBox.ReDraw;
+var i,j,w,h:integer;r,g,b:integer;
+
+  function Interpolate(value,lo,hi,newlo,newhi:integer):integer;
+  begin
+    if newlo<newhi then
+      Result:=(value-lo)*(newhi-newlo) div (hi-lo)
+    else
+      Result:=(value-lo)*(newlo-newhi) div (hi-lo);
+  end;
+
+begin
+  if Assigned(fTexture) then begin
+    with fTexture.ARGBImage do begin
+      Bar(0,0,Width,3,SystemPalette[2]);
+      Bar(0,Height-3,fWidth,3,SystemPalette[2]);
+      Bar(0,3,3,Height-6,SystemPalette[2]);
+      Bar(Width-3,3,3,Height-6,SystemPalette[2]);
+      w:=fWidth-6;
+      h:=fHeight-6;
+      for i:=0 to w-1 do begin
+        if (i>=0) and (i<w div 6) then begin
+          r:=255;
+          g:=interpolate(i,0,w div 6-1,0,255);
+          b:=0;
+        end else
+        if (i>=w div 6) and (i<w div 3) then begin
+          r:=255-interpolate(i,w div 6,w div 3-1,0,255);
+          g:=255;
+          b:=0;
+        end else
+        if (i>=w div 3) and (i<w div 2) then begin
+          r:=0;
+          g:=255;
+          b:=interpolate(i,w div 3,w div 2-1,0,255);
+        end else
+        if (i>=w div 2) and (i<w*2 div 3) then begin
+          r:=0;
+          g:=255-interpolate(i,w div 2,w*2 div 3-1,0,255);
+          b:=255;
+        end else
+        if (i>=w*2 div 3) and (i<w*5 div 6) then begin
+          r:=interpolate(i,w*2 div 3,w*5 div 6-1,0,255);
+          g:=0;
+          b:=255;
+        end;
+        if (i>=w*5 div 6) and (i<w) then begin
+          r:=255;
+          g:=0;
+          b:=255-interpolate(i,w*5 div 6,w-1,0,255);
+        end;
+        for j:=0 to h-1 do begin
+          PutPixel(i+3,j+3,
+            interpolate(j,0,h-1,r,128),
+            interpolate(j,0,h-1,g,128),
+            interpolate(j,0,h-1,b,128),
+            255);
+        end;
+      end;
+      Bar(3+fX+3,3+fY,4,2,0,0,0);
+      Bar(3+fX,3+fY+3,2,4,0,0,0);
+      Bar(3+fX-5,3+fY,4,2,0,0,0);
+      Bar(3+fX,3+fY-5,2,4,0,0,0);
+    end;
+    fTexture.Update;
+  end;
+end;
+
+{ TBDLightSlider }
+
+constructor TBDLightSlider.Create(iLeft,iTop,iWidth,iHeight:integer);
+begin
+  inherited Create;
+  fLeft:=iLeft;
+  fTop:=iTop;
+  Width:=iWidth;
+  Height:=iHeight;
+  fBaseColor:=$ff0000ff;  // The redest! :)
+  fSelectedL:=128;
+  fVisible:=true;
+  fNeedRedraw:=true;
+end;
+
+procedure TBDLightSlider.ReDraw;
+begin
+  inherited ReDraw;
+end;
+
+procedure TBDLightSlider.fSetBaseColor(pValue:uint32);
+begin
+  if fBaseColor<>pValue then begin
+    fBaseColor:=pValue;
+    Refresh;
+  end;
+end;
+
+procedure TBDLightSlider.fSetSelectedL(pValue:byte);
+begin
+  if fSelectedL<>pValue then begin;
+    fSelectedL:=pValue;
+    Refresh;
+  end;
 end;
 
 end.
