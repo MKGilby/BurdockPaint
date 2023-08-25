@@ -23,6 +23,11 @@ Todo:
   color index.
 
 
+2023.08.25
+- Added new PaletteEditor.
+- You can click the big colorful area to move the crosshair.
+  (No values are changing yet.)
+
 2023.08.11
 - BUGFIX: Backup retention by size now works. Simply the settings was not passed
   to the FileBackup class.
