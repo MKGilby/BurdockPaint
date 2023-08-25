@@ -26,7 +26,7 @@ unit BDPMain;
 interface
 
 uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
-  BDPModalDialogs, BDPControls, BDPDrawArea{, BDPPaletteEditor};
+  BDPModalDialogs, BDPControls, BDPDrawArea, BDPPaletteEditor;
 
 type
 
@@ -43,7 +43,7 @@ type
     fControls:TBDControls;
     fDrawArea:TBDDrawArea;
     fSelectColorClusterDialog:TBDSelectColorClusterDialog;
-//    fPaletteEditor:TBDPaletteEditor;
+    fPaletteEditor:TBDPaletteEditor;
     fMagnifyDialog:TBDMagnifyCELDialog;
     fRotateDialog:TBDRotateCELDialog;
     fDitherDialog:TBDDitherDialog;
@@ -77,11 +77,11 @@ type
     procedure FlipCEL(msg:TMessage);
     procedure OpenCEL;
     procedure SaveCEL;
-    {
+
     procedure ActivatePaletteEditor;
     procedure DeactivatePaletteEditor;
     procedure SelectColor;
-    }
+
   end;
 
 implementation
@@ -141,7 +141,7 @@ begin
   fControls:=TBDControls.Create;
   fDrawArea:=TBDDrawArea.Create;
   fSelectColorClusterDialog:=TBDSelectColorClusterDialog.Create;
-{  fPaletteEditor:=TBDPaletteEditor.Create;}
+  fPaletteEditor:=TBDPaletteEditor.Create;
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   // To enable/disable Image/Remove menuitem.
   fMainMenu.ProcessMessage(TMessage.Init(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count,0));
@@ -167,7 +167,7 @@ begin
   if Assigned(fDitherDialog) then fDitherDialog.Free;
   if Assigned(fRotateDialog) then fRotateDialog.Free;
   if Assigned(fMagnifyDialog) then fMagnifyDialog.Free;
-//  if Assigned(fPaletteEditor) then fPaletteEditor.Free;
+  if Assigned(fPaletteEditor) then fPaletteEditor.Free;
   if Assigned(fSelectColorClusterDialog) then fSelectColorClusterDialog.Free;
   if Assigned(fDrawArea) then fDrawArea.Free;
   if Assigned(fControls) then fControls.Free;
@@ -205,7 +205,7 @@ begin
       msg:=MessageQueue.GetNextMessage;
       mres:=false;
       if fControls.Visible then mres:=fControls.ProcessMessage(msg);
-{      if not mres and fPaletteEditor.Visible then mres:=fPaletteEditor.ProcessMessage(msg);}
+      if not mres and fPaletteEditor.Visible then mres:=fPaletteEditor.ProcessMessage(msg);
       if not mres and fMainMenu.Visible then mres:=fMainMenu.ProcessMessage(msg);
       if not mres then
         case msg.TypeID of
@@ -238,11 +238,11 @@ begin
           MSG_OPENMAGNIFYCELDIALOG:      fMagnifyDialog.Show;
           MSG_OPENCEL:                   OpenCEL;
           MSG_SAVECEL:                   SaveCEL;
-{
+
           MSG_ACTIVATEPALETTEEDITOR:     ActivatePaletteEditor;
           MSG_DEACTIVATEPALETTEEDITOR:   DeactivatePaletteEditor;
           MSG_SELECTCOLOR:               SelectColor;
-          }
+
         end;
     end;  // while MessageQueue.HasNewMessage
     HandleMessages;
@@ -550,7 +550,7 @@ begin
   end;
 end;
 
-{
+
 procedure TMain.ActivatePaletteEditor;
 begin
   fControls.Hide;
@@ -561,7 +561,6 @@ begin
   fMainMenu.DisableItem('TOOLS');
   fMainMenu.DisableItem('INKS');
   fMainMenu.EnableItem('CLUSTER');
-  InfoBar.Top:=WINDOWHEIGHT-PALETTEEDITORHEIGHT-INFOBARHEIGHT;
 end;
 
 procedure TMain.DeactivatePaletteEditor;
@@ -586,7 +585,7 @@ begin
   if (mx>=0) and (mx<Project.CurrentImage.Width) and (my>=0) and (my<Project.CurrentImage.Height) then
     Settings.ActiveColor:=Project.CurrentImage.GetPixel(mx,my);
 end;
-}
+
 
 end.
 

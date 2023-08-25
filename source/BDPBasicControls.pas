@@ -435,12 +435,14 @@ end;
 procedure TBDHSBox.ReDraw;
 var i,j,w,h:integer;r,g,b:integer;
 
-  function Interpolate(value,lo,hi,newlo,newhi:integer):integer;
+  function lerp1(value,lo,hi:integer):integer;
   begin
-    if newlo<newhi then
-      Result:=(value-lo)*(newhi-newlo) div (hi-lo)
-    else
-      Result:=(value-lo)*(newlo-newhi) div (hi-lo);
+    Result:=(value-lo)*255 div (hi-lo);
+  end;
+
+  function lerp2(value,max,start:integer):integer;
+  begin
+    Result:=start+value*(128-start) div max;
   end;
 
 begin
@@ -455,39 +457,39 @@ begin
       for i:=0 to w-1 do begin
         if (i>=0) and (i<w div 6) then begin
           r:=255;
-          g:=interpolate(i,0,w div 6-1,0,255);
+          g:=lerp1(i,0,w div 6-1);
           b:=0;
         end else
         if (i>=w div 6) and (i<w div 3) then begin
-          r:=255-interpolate(i,w div 6,w div 3-1,0,255);
+          r:=255-lerp1(i,w div 6,w div 3-1);
           g:=255;
           b:=0;
         end else
         if (i>=w div 3) and (i<w div 2) then begin
           r:=0;
           g:=255;
-          b:=interpolate(i,w div 3,w div 2-1,0,255);
+          b:=lerp1(i,w div 3,w div 2-1);
         end else
         if (i>=w div 2) and (i<w*2 div 3) then begin
           r:=0;
-          g:=255-interpolate(i,w div 2,w*2 div 3-1,0,255);
+          g:=255-lerp1(i,w div 2,w*2 div 3-1);
           b:=255;
         end else
         if (i>=w*2 div 3) and (i<w*5 div 6) then begin
-          r:=interpolate(i,w*2 div 3,w*5 div 6-1,0,255);
+          r:=lerp1(i,w*2 div 3,w*5 div 6-1);
           g:=0;
           b:=255;
         end;
         if (i>=w*5 div 6) and (i<w) then begin
           r:=255;
           g:=0;
-          b:=255-interpolate(i,w*5 div 6,w-1,0,255);
+          b:=255-lerp1(i,w*5 div 6,w-1);
         end;
         for j:=0 to h-1 do begin
           PutPixel(i+3,j+3,
-            interpolate(j,0,h-1,r,128),
-            interpolate(j,0,h-1,g,128),
-            interpolate(j,0,h-1,b,128),
+            lerp2(j,h-1,r),
+            lerp2(j,h-1,g),
+            lerp2(j,h-1,b),
             255);
         end;
       end;
