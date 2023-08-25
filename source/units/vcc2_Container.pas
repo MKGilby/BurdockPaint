@@ -48,6 +48,8 @@
 //    * BugFix in Destroy. Child objects weren't removed from MouseObjects.
 //  V1.02: Gilby - 2023.05.25
 //    * BugFix in ClearChildren. Child objects weren't removed from MouseObjects.
+//  V1.03: Gilby - 2023.08.25
+//    * TContainer is now a descendant of TVisibleControl.
 
 {$mode delphi}{$H+}
 
@@ -55,12 +57,12 @@ unit vcc2_Container;
 
 interface
 
-uses Classes, MKMouse2, MKINIFile, Lists;
+uses Classes, MKMouse2, MKINIFile, Lists, vcc2_VisibleControl;
 
 type
   TMouseObjectList=TNamedList<TMouseObject>;
 
-  TContainer=class(TMouseObject)
+  TContainer=class(TVisibleControl)
     constructor Create; overload;
     constructor Create(iINI:TINIFile;iSection:string); overload;
     destructor Destroy; override;
@@ -81,7 +83,7 @@ uses SysUtils, Logger;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.02';
+  Version='1.03';
 
 constructor TContainer.Create;
 begin
