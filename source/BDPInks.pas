@@ -25,7 +25,7 @@ unit BDPInks;
 interface
 
 uses
-  Classes, SysUtils, Lists, BDPModalDialogs, BDPImage;
+  Classes, SysUtils, Lists, BDPModalDialog, BDPImage;
 
 type
 

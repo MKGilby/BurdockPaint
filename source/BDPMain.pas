@@ -26,7 +26,10 @@ unit BDPMain;
 interface
 
 uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
-  BDPModalDialogs, BDPControls, BDPDrawArea, BDPPaletteEditor;
+  BDPControls, BDPDrawArea, BDPPaletteEditor,
+  BDPMagnifyCELDialog, BDPRotateCELDialog, BDPAboutDialog,
+  BDPMessageBox, BDPDitherDialog, BDPSelectColorClusterDialog,
+  ConfigureRGradDialog;
 
 type
 
