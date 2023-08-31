@@ -41,7 +41,7 @@ implementation
 
 uses BDPShared;
 
-// -------------------------------------------------------- [ TBDInkCGrad ] ---
+{ TBDInkCGrad }
 
 constructor TBDInkCGrad.Create;
 begin

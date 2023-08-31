@@ -63,7 +63,7 @@ uses
   BDPShared, BDPInkOpaque, BDPInkHGrad, BDPInkLGrad, BDPInkVGrad, BDPInkCGrad,
   BDPInkRandom, BDPInkSoften, BDPInkRGrad;
 
-// ------------------------------------------------------------- [ TBDInk ] ---
+{ TBDInk }
 
 constructor TBDInk.Create;
 begin
@@ -147,7 +147,7 @@ begin
   end;
 end;
 
-// ------------------------------------------------------------ [ TBDInks ] ---
+{ TBDInks }
 
 constructor TBDInks.Create;
 begin
