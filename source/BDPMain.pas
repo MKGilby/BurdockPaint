@@ -29,7 +29,7 @@ uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
   BDPControls, BDPDrawArea, BDPPaletteEditor,
   BDPMagnifyCELDialog, BDPRotateCELDialog, BDPAboutDialog,
   BDPMessageBox, BDPDitherDialog, BDPSelectColorClusterDialog,
-  ConfigureRGradDialog;
+  BDPConfigureRGradDialog;
 
 type
 
