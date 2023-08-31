@@ -18,7 +18,7 @@
   BurdockPaint. If not, see <https://www.gnu.org/licenses/>.
 }
 
-unit ConfigureRGradDialog;
+unit BDPConfigureRGradDialog;
 
 {$mode Delphi}
 
