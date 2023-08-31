@@ -26,7 +26,7 @@ interface
 
 uses
   SysUtils, mk_sdl2, vcc2_Container, BDPMessage,
-  BDPColorCluster, BDPTools, BDPInks, BDPColorSelector, BDPButton, BDPSliders;
+  BDPColorCluster, BDPToolBase, BDPInks, BDPColorSelector, BDPButton, BDPSliders;
 
 type
 

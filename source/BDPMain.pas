@@ -90,8 +90,8 @@ type
 implementation
 
 uses Classes, SDL2, BDPShared, MKToolbox, MKStream, MKMouse2, Logger,
-  MAD4MidLevelUnit, ParametersUnit, BDPKeyMapping, BDPSettings, BDPTools,
-  BDPImage, BDPProject;
+  MAD4MidLevelUnit, ParametersUnit, BDPKeyMapping, BDPSettings, BDPImage,
+  BDPProject;
 
 
 { TMain }

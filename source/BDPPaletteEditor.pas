@@ -65,7 +65,7 @@ type
 
 implementation
 
-uses BDPShared, MKMouse2, BDPTools;
+uses BDPShared, MKMouse2;
 
 const
   PALETTEEDITORHEIGHT=(NORMALSLIDERHEIGHT+3)*7+3+3;
