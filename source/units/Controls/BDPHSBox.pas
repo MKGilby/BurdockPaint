@@ -24,7 +24,7 @@ unit BDPHSBox;
 
 interface
 
-uses SysUtils, vcc2_VisibleControl;
+uses SysUtils, vcc2_VisibleControl, MKMouse2;
 
 type
 
@@ -33,16 +33,26 @@ type
   TBDHSBox=class(TVisibleControl)
     constructor Create(iLeft,iTop,iWidth,iHeight:integer);
     procedure SetColor(pH,pS:byte);
-    procedure Click(Sender:TObject;x,y,button:integer);
   protected
     procedure ReDraw; override;
   private
     fColor:uint32;
     fX,fY:integer;   // current crosshair center position
+    fIsMouseDown:boolean;
+    fOnChange:TSimpleEvent;
+    procedure MouseDown(Sender:TObject;x,y,button:integer);
+    procedure MouseMove(Sender:TObject;x,y:integer);
+    procedure MouseUp(Sender:TObject;x,y,button:integer);
+    procedure MouseLeave(Sender:TObject);
     function GetColorByH(pX:integer):uint32;
     function ModifyColorByS(pColor:uint32;pY:integer):uint32;
+    function fGetH:byte;
+    function fGetS:byte;
   public
     property Color:uint32 read fColor;
+    property H:byte read fGetH;
+    property S:byte read fGetS;
+    property OnChange:TSimpleEvent read fOnChange write fOnChange;
   end;
 
 implementation
@@ -58,31 +68,23 @@ begin
   fTop:=iTop;
   Width:=iWidth;
   Height:=iHeight;
-  fX:=0;
-  fY:=0;
+  fX:=3;
+  fY:=3;
   fColor:=$ffff0000;
   fVisible:=true;
   fNeedRedraw:=true;
-  OnClick:=Click;
+  OnMouseDown:=MouseDown;
+  OnMouseUp:=MouseUp;
+  OnMouseMove:=MouseMove;
+  OnMouseLeave:=MouseLeave;
+  fIsMouseDown:=false;
+
 end;
 
 procedure TBDHSBox.SetColor(pH,pS:byte);
 begin
-  fX:=(pH*(fWidth-6) div 255);
-  fY:=(pS*(fHeight-6) div 255);
-end;
-
-procedure TBDHSBox.Click(Sender:TObject; x,y,button:integer);
-begin
-  x-=fLeft;y-=fTop;
-  if x<3 then x:=3
-  else if x>fWidth-3-1 then x:=fWidth-3-1;
-  if y<3 then y:=3
-  else if y>fHeight-3-1 then y:=fHeight-3-1;
-  fX:=x-3;
-  fY:=y-3;
-  fColor:=ModifyColorByS(GetColorByH(fX+5),fY+5);
-  Refresh;
+  fX:=3+(pH*(fWidth-6) div 255);
+  fY:=3+(pS*(fHeight-6) div 255);
 end;
 
 procedure TBDHSBox.ReDraw;
@@ -99,13 +101,52 @@ begin
         for j:=3 to fHeight-3-1 do
           PutPixel(i,j,ModifyColorByS(c,j));
       end;
-      Bar(3+fX+3,3+fY,4,2,0,0,0);
-      Bar(3+fX,3+fY+3,2,4,0,0,0);
-      Bar(3+fX-5,3+fY,4,2,0,0,0);
-      Bar(3+fX,3+fY-5,2,4,0,0,0);
+      Bar(fX+3,fY,4,2,0,0,0);
+      Bar(fX,fY+3,2,4,0,0,0);
+      Bar(fX-5,fY,4,2,0,0,0);
+      Bar(fX,fY-5,2,4,0,0,0);
     end;
     fTexture.Update;
   end;
+end;
+
+procedure TBDHSBox.MouseDown(Sender:TObject; x,y,button:integer);
+begin
+  x-=fLeft;y-=fTop;
+  if x<3 then x:=3
+  else if x>fWidth-3-1 then x:=fWidth-3-1;
+  if y<3 then y:=3
+  else if y>fHeight-3-1 then y:=fHeight-3-1;
+  fX:=x;fY:=y;
+  fColor:=ModifyColorByS(GetColorByH(fX),fY);
+  fIsMouseDown:=true;
+  Refresh;
+  if Assigned(fOnChange) then fOnChange(Sender);
+end;
+
+procedure TBDHSBox.MouseMove(Sender:TObject; x,y:integer);
+begin
+  if fIsMouseDown then begin
+    x-=fLeft;y-=fTop;
+    if x<3 then x:=3
+    else if x>fWidth-3-1 then x:=fWidth-3-1;
+    if y<3 then y:=3
+    else if y>fHeight-3-1 then y:=fHeight-3-1;
+    fX:=x;fY:=y;
+    fColor:=ModifyColorByS(GetColorByH(fX),fY);
+    Refresh;
+    if Assigned(fOnChange) then fOnChange(Sender);
+  end;
+end;
+
+procedure TBDHSBox.MouseUp(Sender:TObject; x,y,button:integer);
+begin
+  fIsMouseDown:=false;
+end;
+
+procedure TBDHSBox.MouseLeave(Sender:TObject);
+begin
+  fIsMouseDown:=false;
 end;
 
 function TBDHSBox.GetColorByH(pX:integer):uint32;
@@ -171,6 +212,16 @@ begin
   g:=lerp2(pY,h-1,(pColor and $FF00)>>8);
   b:=lerp2(pY,h-1,pColor and $FF);
   Result:=pColor and $FF000000+(r<<16)+(g<<8)+b;
+end;
+
+function TBDHSBox.fGetH:byte;
+begin
+  Result:=(fX-3)*255 div (fWidth-7);
+end;
+
+function TBDHSBox.fGetS:byte;
+begin
+  Result:=(fY-3)*255 div (fHeight-7);
 end;
 
 end.

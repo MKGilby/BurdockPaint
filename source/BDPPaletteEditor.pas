@@ -47,6 +47,8 @@ type
 //    procedure OnSliderBankChange(Sender:TObject;newValue:integer);
 //    procedure UndoButtonClick(Sender:TObject;x,y,buttons:integer);
 //    procedure RedoButtonClick(Sender:TObject;x,y,buttons:integer);
+    procedure HSBoxChange(Sender:TObject);
+    procedure AlternateLSliderChange(Sender:TObject);
     procedure PaletteEditorShow(Sender:TObject);
     procedure PaletteEditorHide(Sender:TObject);
     procedure RefreshSliders;
@@ -72,7 +74,7 @@ const
   HSBOXLEFT=3;
   HSBOXTOP=6;
   HSBOXWIDTH=512+6;
-  HSBOXHEIGHT=PALETTEEDITORHEIGHT-(NORMALSLIDERHEIGHT+3)-6-3;
+  HSBOXHEIGHT=PALETTEEDITORHEIGHT-(NORMALSLIDERHEIGHT+3)-6-3-3;
   SLIDERSLEFT=HSBOXLEFT+HSBOXWIDTH+3+36;
   SLIDERSTOP=6;
   SLIDERSWIDTH=320;
@@ -113,6 +115,7 @@ begin
   fHSBox:=TBDHSBox.Create(fLeft+HSBOXLEFT,fTop+HSBOXTOP,HSBOXWIDTH,HSBOXHEIGHT);
   fHSBox.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fHSBox.Name:='HSBox';
+  fHSBox.OnChange:=HSBoxChange;
   AddChild(fHSBox);
 
   for i:=0 to 6 do begin
@@ -129,6 +132,7 @@ begin
   fAlternateLSlider:=TBDLightSlider.Create(fLeft+LIGHTSLIDERLEFT,fTop+LIGHTSLIDERTOP,LIGHTSLIDERWIDTH,LIGHTSLIDERHEIGHT);
   fAlternateLSlider.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fAlternateLSlider.Name:='Alternate L-slider';
+  fAlternateLSlider.OnChange:=AlternateLSliderChange;
   AddChild(fAlternateLSlider);
 
 {  fUndoButton:=TBDButton.Create(
@@ -185,6 +189,26 @@ end;
 
 procedure TBDPaletteEditor.MouseLeave(Sender:TObject);
 begin
+end;
+
+procedure TBDPaletteEditor.HSBoxChange(Sender:TObject);
+begin
+  fSliders[0].Position:=fHSBox.H;
+  fSliders[1].Position:=fHSBox.S;
+  fAlternateLSlider.BaseColor:=fHSBox.Color;
+  fSliders[3].Position:=(fAlternateLSlider.Color and $ff0000)>>16;
+  fSliders[4].Position:=(fAlternateLSlider.Color and $ff00)>>8;
+  fSliders[5].Position:=fAlternateLSlider.Color and $ff;
+  fColorBox.Color:=fAlternateLSlider.Color;
+end;
+
+procedure TBDPaletteEditor.AlternateLSliderChange(Sender:TObject);
+begin
+  fSliders[2].Position:=fAlternateLSlider.L;
+  fSliders[3].Position:=(fAlternateLSlider.Color and $ff0000)>>16;
+  fSliders[4].Position:=(fAlternateLSlider.Color and $ff00)>>8;
+  fSliders[5].Position:=fAlternateLSlider.Color and $ff;
+  fColorBox.Color:=fAlternateLSlider.Color;
 end;
 
 {procedure TBDPaletteEditor.MouseMove(Sender:TObject; x,y:integer);

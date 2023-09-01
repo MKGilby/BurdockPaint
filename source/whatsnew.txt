@@ -21,7 +21,14 @@ Todo:
     - Max retention time.
 - BUG: Controls should show hexa values for color instead of non-existing
   color index.
+- Change color when moving the H, L, S, R, G, B, A sliders.
+- Change HSBox and Light slider as you change other sliders.
 
+
+2023.09.01
+- Values change as you click and move mouse over the HSBox (big colorful area).
+- Added Light slider below the HSBox.
+- Values change as you click and move mouse over the Light slider.
 
 2023.08.25
 - Added new PaletteEditor.

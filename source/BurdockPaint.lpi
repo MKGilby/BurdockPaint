@@ -148,10 +148,6 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPInks.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
         <Filename Value="BDPKeyMapping.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
