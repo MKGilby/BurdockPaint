@@ -93,7 +93,7 @@ begin
       Bar(Width-3,6,3,Height-9,SystemPalette[2]);
       // Color area
       for i:=3 to fWidth-3-1 do begin
-        c:=GetColorByL((i-3)*256 div (fWidth-6));
+        c:=GetColorByL((i-3)*100 div (fWidth-6));
         VLine(i,6,Height-9,c);
       end;
     end;
@@ -141,17 +141,17 @@ begin
   r:=(fBaseColor and $ff0000)>>16;
   g:=(fBaseColor and $ff00)>>8;
   b:=fBaseColor and $ff;
-  if value<=128 then begin
+  if value<=50 then begin
     Result+=
-      ((r*value div 128) and $ff)<<16+
-      ((g*value div 128) and $ff)<<8+
-      ((b*value div 128) and $ff);
+      ((r*value div 50) and $ff)<<16+
+      ((g*value div 50) and $ff)<<8+
+      ((b*value div 50) and $ff);
   end else begin
-    value:=value-128;
+    value:=value-50;
     Result+=
-      ((r+(255-r)*value div 127) and $ff)<<16+
-      ((g+(255-g)*value div 127) and $ff)<<8+
-      ((b+(255-b)*value div 127) and $ff);
+      ((r+(255-r)*value div 50) and $ff)<<16+
+      ((g+(255-g)*value div 50) and $ff)<<8+
+      ((b+(255-b)*value div 50) and $ff);
   end;
 end;
 
@@ -165,21 +165,22 @@ end;
 
 function TBDLightSlider.fGetL:byte;
 begin
-  Result:=(fX-3)*255 div (fWidth-6);
+  Result:=(fX-3)*100 div (fWidth-6);
 end;
 
 procedure TBDLightSlider.fSetL(pValue:byte);
+var newValue:integer;
 begin
-  pValue:=3+pValue*(fWidth-6) div 255;
-  if fX<>pValue then begin;
-    fX:=pValue;
+  newValue:=3+pValue*(fWidth-6) div 100;
+  if fX<>newValue then begin;
+    fX:=newValue;
     Refresh;
   end;
 end;
 
 function TBDLightSlider.GetColor:uint32;
 begin
-  Result:=GetColorByL((fX-3)*256 div (fWidth-6));
+  Result:=GetColorByL((fX-3)*100 div (fWidth-6));
 end;
 
 end.

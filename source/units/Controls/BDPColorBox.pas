@@ -60,7 +60,7 @@ begin
   fTRImage:=MM.Images.ItemByName['ArchTopRight'];
   fBLImage:=MM.Images.ItemByName['ArchBottomLeft'];
   fBRImage:=MM.Images.ItemByName['ArchBottomRight'];
-  fColor:=65535;
+  fColor:=$FF000000;
   fVisible:=true;
 
   fNeedRedraw:=true;

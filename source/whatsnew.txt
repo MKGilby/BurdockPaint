@@ -21,9 +21,26 @@ Todo:
     - Max retention time.
 - BUG: Controls should show hexa values for color instead of non-existing
   color index.
-- Change color when moving the H, L, S, R, G, B, A sliders.
-- Change HSBox and Light slider as you change other sliders.
+- Sliders should move with the mouse, not proportionally.
+- PaletteEditor should come up by right clicking on any place where a color
+  could be picked. (The two ends and the center of the color selector.)
+- PaletteEditor should set sliders according to the color it was invoked from.
+  (RGB must be exact, HSL calculated from RGB)
+- Add "Select", "Cancel", "Undo", "Redo" buttons to PaletteEditor.
+  - "Select" should select the color set by RGBA sliders and close PaletteEditor.
+  - "Cancel" should close PaletteEditor without changing anything.
+  - "Undo" and "Redo" should undo/redo any changes made on the PaletteEditor.
+    (Probably need another undo type)
+- Add a big colorbox to PaletteEditor.
+- Add palette section to the PaletteEditor.
+- Right clicking on colorbox should allow to put color on palette by left clicking.
+- Right clicking on palette should enable picking color from DrawArea (or colorbox).
+- Clicking on DrawArea should set sliders according to clicked color.
+- Add an option to make the palette always visible. (Needs a palette control.)
 
+
+2023.09.04
+- Values and color change as you move the sliders on the PaletteEditor.
 
 2023.09.01
 - Values change as you click and move mouse over the HSBox (big colorful area).

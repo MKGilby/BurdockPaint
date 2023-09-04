@@ -37,21 +37,20 @@ type
     procedure Redraw; override;
     procedure MouseEnter(Sender:TObject);
     procedure MouseLeave(Sender:TObject);
-//    procedure MouseMove(Sender:TObject;x,y:integer);
-//    procedure MouseDown(Sender:TObject;x,y,buttons:integer);
-//    procedure MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer);
-//    procedure OnSliderRChange(Sender:TObject;newValue:integer);
-//    procedure OnSliderGChange(Sender:TObject;newValue:integer);
-//    procedure OnSliderBChange(Sender:TObject;newValue:integer);
+    procedure OnSliderRGBChange(Sender:TObject;newValue:integer);
+    procedure OnSliderAChange(Sender:TObject;newValue:integer);
+    procedure OnSliderHSChange(Sender:TObject;newValue:integer);
+    procedure OnSliderLChange(Sender:TObject;newValue:integer);
 //    procedure OnSliderAChange(Sender:TObject;newValue:integer);
-//    procedure OnSliderBankChange(Sender:TObject;newValue:integer);
 //    procedure UndoButtonClick(Sender:TObject;x,y,buttons:integer);
 //    procedure RedoButtonClick(Sender:TObject;x,y,buttons:integer);
     procedure HSBoxChange(Sender:TObject);
     procedure AlternateLSliderChange(Sender:TObject);
     procedure PaletteEditorShow(Sender:TObject);
     procedure PaletteEditorHide(Sender:TObject);
-    procedure RefreshSliders;
+    procedure RefreshHSLbyRGB;
+    procedure RefreshRGBbyHSL;
+    procedure RefreshColorBox;
     function ProcessMessage(msg:TMessage):boolean;
   private
     fSliders:array[0..6] of TBDHorizontalSlider; // H S L R G B A
@@ -67,7 +66,7 @@ type
 
 implementation
 
-uses BDPShared, MKMouse2;
+uses BDPShared, MKMouse2, MKToolbox, vcc2_SliderLogic;
 
 const
   PALETTEEDITORHEIGHT=(NORMALSLIDERHEIGHT+3)*7+3+3;
@@ -94,8 +93,22 @@ const
 { TBDPaletteEditor }
 
 constructor TBDPaletteEditor.Create;
-const SliderLetters='HSLRGBA';
-var i:integer;
+
+  function CreateSlider(pLeft,pTop,pMaxValue:integer;pName:string;
+    pOnChange:TOnSliderPositionChangeEvent):TBDHorizontalSlider;
+  begin
+    Result:=TBDHorizontalSlider.Create(pLeft,pTop,SLIDERSWIDTH,NORMALSLIDERHEIGHT);
+    with Result do begin
+      MinValue:=0;
+      MaxValue:=pMaxValue;
+      Position:=32;
+      ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+      Name:=pName;
+      OnChange:=pOnChange;
+    end;
+    AddChild(Result);
+  end;
+
 begin
   inherited Create;
   fLeft:=0;
@@ -118,16 +131,20 @@ begin
   fHSBox.OnChange:=HSBoxChange;
   AddChild(fHSBox);
 
-  for i:=0 to 6 do begin
-    fSliders[i]:=TBDHorizontalSlider.Create(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+i*(NORMALSLIDERHEIGHT+3),SLIDERSWIDTH,NORMALSLIDERHEIGHT);
-    with fSliders[i] do begin
-      MinValue:=0;MaxValue:=255;Position:=32;
-      ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-      Name:=SliderLetters[i+1]+'-slider';
-//      OnChange:=OnSliderRChange;
-    end;
-    AddChild(fSliders[i]);
-  end;
+  fSliders[0]:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP,
+    360,'H-Slider',OnSliderHSChange);
+  fSliders[1]:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+NORMALSLIDERHEIGHT+3,
+    100,'S-Slider',OnSliderHSChange);
+  fSliders[2]:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+2*(NORMALSLIDERHEIGHT+3),
+    100,'L-Slider',OnSliderLChange);
+  fSliders[3]:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+3*(NORMALSLIDERHEIGHT+3),
+    255,'R-Slider',OnSliderRGBChange);
+  fSliders[4]:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+4*(NORMALSLIDERHEIGHT+3),
+    255,'G-Slider',OnSliderRGBChange);
+  fSliders[5]:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+5*(NORMALSLIDERHEIGHT+3),
+    255,'B-Slider',OnSliderRGBChange);
+  fSliders[6]:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+6*(NORMALSLIDERHEIGHT+3),
+    255,'A-Slider',OnSliderAChange);
 
   fAlternateLSlider:=TBDLightSlider.Create(fLeft+LIGHTSLIDERLEFT,fTop+LIGHTSLIDERTOP,LIGHTSLIDERWIDTH,LIGHTSLIDERHEIGHT);
   fAlternateLSlider.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
@@ -191,6 +208,31 @@ procedure TBDPaletteEditor.MouseLeave(Sender:TObject);
 begin
 end;
 
+procedure TBDPaletteEditor.OnSliderRGBChange(Sender:TObject; newValue:integer);
+begin
+  RefreshHSLbyRGB;
+end;
+
+procedure TBDPaletteEditor.OnSliderAChange(Sender:TObject; newValue:integer);
+begin
+  RefreshColorBox;
+end;
+
+procedure TBDPaletteEditor.OnSliderHSChange(Sender:TObject; newValue:integer);
+begin
+  fHSBox.SetColor(fSliders[0].Position,fSliders[1].Position);
+  fAlternateLSlider.BaseColor:=fHSBox.Color;
+  RefreshColorBox;
+  RefreshRGBbyHSL;
+end;
+
+procedure TBDPaletteEditor.OnSliderLChange(Sender:TObject; newValue:integer);
+begin
+  fAlternateLSlider.L:=fSliders[2].Position;
+  RefreshColorBox;
+  RefreshRGBbyHSL;
+end;
+
 procedure TBDPaletteEditor.HSBoxChange(Sender:TObject);
 begin
   fSliders[0].Position:=fHSBox.H;
@@ -199,7 +241,7 @@ begin
   fSliders[3].Position:=(fAlternateLSlider.Color and $ff0000)>>16;
   fSliders[4].Position:=(fAlternateLSlider.Color and $ff00)>>8;
   fSliders[5].Position:=fAlternateLSlider.Color and $ff;
-  fColorBox.Color:=fAlternateLSlider.Color;
+  RefreshColorBox;
 end;
 
 procedure TBDPaletteEditor.AlternateLSliderChange(Sender:TObject);
@@ -208,129 +250,8 @@ begin
   fSliders[3].Position:=(fAlternateLSlider.Color and $ff0000)>>16;
   fSliders[4].Position:=(fAlternateLSlider.Color and $ff00)>>8;
   fSliders[5].Position:=fAlternateLSlider.Color and $ff;
-  fColorBox.Color:=fAlternateLSlider.Color;
+  RefreshColorBox;
 end;
-
-{procedure TBDPaletteEditor.MouseMove(Sender:TObject; x,y:integer);
-begin
-  x-=Left;
-  y-=Top;
-  if ActiveTool.Name='SELCOL' then begin
-    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
-       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
-      x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
-      y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
-      TBDToolSelectColor(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256,'PICK COLOR');
-    end else
-      TBDToolSelectColor(ActiveTool).SetColor(-1);
-  end else
-  if ActiveTool.Name='PICKCOLCS' then begin
-    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
-       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
-      x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
-      y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
-      TBDToolPickColorCOLSEL(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256);
-    end else
-      TBDToolPickColorCOLSEL(ActiveTool).SetColor(-1);
-  end else
-  if ActiveTool.Name='PICKCOLP' then begin
-    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
-       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
-      x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
-      y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
-      TBDToolPickColorPAL(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256);
-    end else
-      TBDToolPickColorPAL(ActiveTool).SetColor(-1);
-  end else
-  if ActiveTool.Name='PICKCOLCLS' then begin
-    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
-       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
-      x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
-      y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
-      TBDToolPickColorCluster(ActiveTool).SetColor(x+y*32+(fSliderBank.Position-1)*256);
-    end else
-      TBDToolPickColorCluster(ActiveTool).SetColor(-1);
-  end;
-end;
-
-procedure TBDPaletteEditor.MouseDown(Sender:TObject; x,y,buttons:integer);
-begin
-  x-=Left;
-  y-=Top;
-  if ActiveTool.Name='SELCOL' then begin
-    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
-       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
-      x:=(x-PALETTESOCKETSLEFT) div PALETTESOCKETWIDTH;
-      y:=(y-PALETTESOCKETSTOP) div PALETTESOCKETHEIGHT;
-      if buttons=SDL_BUTTON_LEFT then begin
-        Settings.ActiveColor:=Project.CurrentPalette.Colors[x+y*32+(fSliderBank.Position-1)*256];
-        fColorBox.Color:=Settings.ActiveColor;
-        fColorCluster.Refresh;
-        RefreshSliders;
-      end else
-      if buttons=SDL_BUTTON_RIGHT then begin
-        ActiveTool:=Tools.ItemByName['PICKCOLP'];
-        fPickingColor:=y*32+x;
-      end;
-    end;
-  end else
-  if ActiveTool.Name='PICKCOLCS' then begin
-    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
-       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
-      TBDToolPickColorCOLSEL(ActiveTool).Click(x,y,buttons);
-    end;
-  end else
-  if ActiveTool.Name='PICKCOLP' then begin
-    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
-       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
-      TBDToolPickColorPAL(ActiveTool).Click(x,y,buttons);
-    end;
-  end else
-  if ActiveTool.Name='PICKCOLCLS' then begin
-    if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
-       (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
-      TBDToolPickColorCluster(ActiveTool).Click(x,y,buttons);
-    end;
-  end;
-end;
-
-procedure TBDPaletteEditor.MouseWheel(Sender:TObject; x,y,wheelx,wheely:integer);
-begin
-  x-=Left;
-  y-=Top;
-  if (x>=PALETTESOCKETSLEFT) and (x<PALETTESOCKETSLEFT+PALETTESOCKETWIDTH*32+3) and
-     (y>=PALETTESOCKETSTOP) and (y<PALETTESOCKETSTOP+PALETTESOCKETHEIGHT*8+3) then begin
-    fSliderBank.MouseWheel(fSliderBank,x,y,wheelx,wheely);
-  end;
-end;}
-
-{procedure TBDPaletteEditor.OnSliderRChange(Sender:TObject; newValue:integer);
-begin
-  Project.CurrentPalette.ColorR[Settings.ActiveColorIndex]:=newValue;
-  fColorBox.ColorChanged;
-  fColorCluster.Refresh;
-end;
-
-procedure TBDPaletteEditor.OnSliderGChange(Sender:TObject; newValue:integer);
-begin
-  Project.CurrentPalette.ColorG[Settings.ActiveColorIndex]:=newValue;
-  fColorBox.ColorChanged;
-  fColorCluster.Refresh;
-end;
-
-procedure TBDPaletteEditor.OnSliderBChange(Sender:TObject; newValue:integer);
-begin
-  Project.CurrentPalette.ColorB[Settings.ActiveColorIndex]:=newValue;
-  fColorBox.ColorChanged;
-  fColorCluster.Refresh;
-end;
-
-procedure TBDPaletteEditor.OnSliderAChange(Sender:TObject; newValue:integer);
-begin
-  Project.CurrentPalette.ColorA[Settings.ActiveColorIndex]:=newValue;
-  fColorBox.ColorChanged;
-  fColorCluster.Refresh;
-end;}
 
 {procedure TBDPaletteEditor.OnColorSliderMouseDown(Sender:TObject;x,y,buttons:integer);
 begin
@@ -370,7 +291,6 @@ procedure TBDPaletteEditor.PaletteEditorShow(Sender:TObject);
 begin
   inherited Show;
   InfoBar.Top:=WINDOWHEIGHT-PALETTEEDITORHEIGHT-INFOBARHEIGHT;
-  RefreshSliders;
   ActiveTool:=Tools.ItemByName['SELCOL'];
 //  fUndoButton.Enabled:=Project.CurrentExtImage.PaletteUndo.CanUndo;
 //  fRedoButton.Enabled:=Project.CurrentExtImage.PaletteUndo.CanRedo;
@@ -381,12 +301,31 @@ begin
   inherited Hide;
 end;
 
-procedure TBDPaletteEditor.RefreshSliders;
+procedure TBDPaletteEditor.RefreshHSLbyRGB;
+var h:word;s,l:integer;
 begin
-{  fSliderR.Position:=Project.CurrentImage.Palette.ColorR[Settings.ActiveColorIndex];
-  fSliderG.Position:=Project.CurrentImage.Palette.ColorG[Settings.ActiveColorIndex];
-  fSliderB.Position:=Project.CurrentImage.Palette.ColorB[Settings.ActiveColorIndex];
-  fSliderA.Position:=Project.CurrentImage.Palette.ColorA[Settings.ActiveColorIndex];}
+  RGBtoHSL(fSliders[3].Position,fSliders[4].Position,fSliders[5].Position,h,s,l);
+  fHSBox.SetColor(h,s);
+  fAlternateLSlider.BaseColor:=fHSBox.Color;
+  fAlternateLSlider.L:=l;
+  fSliders[0].Position:=h;
+  fSliders[1].Position:=s;
+  fSliders[2].Position:=l;
+  RefreshColorBox;
+end;
+
+procedure TBDPaletteEditor.RefreshRGBbyHSL;
+var r,g,b:byte;
+begin
+  HSLtoRGB(fSliders[0].Position,fSliders[1].Position,fSliders[2].Position,r,g,b);
+  fSliders[3].Position:=r;
+  fSliders[4].Position:=g;
+  fSliders[5].Position:=b;
+end;
+
+procedure TBDPaletteEditor.RefreshColorBox;
+begin
+  fColorBox.Color:=uint32(fSliders[6].Position)<<24+fAlternateLSlider.Color and $FFFFFF;
 end;
 
 function TBDPaletteEditor.ProcessMessage(msg:TMessage):boolean;

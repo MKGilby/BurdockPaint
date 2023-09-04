@@ -32,7 +32,7 @@ type
 
   TBDHSBox=class(TVisibleControl)
     constructor Create(iLeft,iTop,iWidth,iHeight:integer);
-    procedure SetColor(pH,pS:byte);
+    procedure SetColor(pH:word;pS:byte);
   protected
     procedure ReDraw; override;
   private
@@ -46,11 +46,11 @@ type
     procedure MouseLeave(Sender:TObject);
     function GetColorByH(pX:integer):uint32;
     function ModifyColorByS(pColor:uint32;pY:integer):uint32;
-    function fGetH:byte;
+    function fGetH:word;
     function fGetS:byte;
   public
     property Color:uint32 read fColor;
-    property H:byte read fGetH;
+    property H:word read fGetH;
     property S:byte read fGetS;
     property OnChange:TSimpleEvent read fOnChange write fOnChange;
   end;
@@ -78,13 +78,15 @@ begin
   OnMouseMove:=MouseMove;
   OnMouseLeave:=MouseLeave;
   fIsMouseDown:=false;
-
 end;
 
-procedure TBDHSBox.SetColor(pH,pS:byte);
+procedure TBDHSBox.SetColor(pH:word;pS:byte);
 begin
-  fX:=3+(pH*(fWidth-6) div 255);
-  fY:=3+(pS*(fHeight-6) div 255);
+  fX:=3+((pH mod 360)*(fWidth-6) div 360);
+  if ps>100 then ps:=100;
+  fY:=3+((100-pS)*(fHeight-6) div 100);
+  Refresh;
+  fColor:=ModifyColorByS(GetColorByH(fX),fY);
 end;
 
 procedure TBDHSBox.ReDraw;
@@ -214,14 +216,14 @@ begin
   Result:=pColor and $FF000000+(r<<16)+(g<<8)+b;
 end;
 
-function TBDHSBox.fGetH:byte;
+function TBDHSBox.fGetH:word;
 begin
-  Result:=(fX-3)*255 div (fWidth-7);
+  Result:=(fX-3)*360 div (fWidth-7);
 end;
 
 function TBDHSBox.fGetS:byte;
 begin
-  Result:=(fY-3)*255 div (fHeight-7);
+  Result:=100-((fY-3)*100 div (fHeight-7));
 end;
 
 end.
