@@ -147,6 +147,8 @@
 //   - Removed RGB16, RGB15, c16i, c15i, c16c and c16to15.
 //   - Removed RecCount.
 //   + Added HSLtoRGB and RGBtoHSL
+// V3.48a - 2023.09.05
+//   - Fix in HSLtoRGB
 
 unit MKToolbox;
 
@@ -247,7 +249,7 @@ uses Logger;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='3.48';
+  Version='3.48a';
 
   HexChars='0123456789ABCDEF';
   DOSChars=#$a0#$b5#$82#$90#$a1#$d6#$a2#$e0#$94#$99#$8b#$8a#$a3#$e9#$81#$9a#$fb#$eb#$8e;
@@ -888,12 +890,12 @@ begin
   c:=(1-abs(2*ll-1))*ss;
   x:=c*(1-abs(RealMod(h/60,2)-1));
   m:=ll-c/2;
-  if (h<60) then begin r:=trunc((c+m)*255);g:=trunc((x+m)*255);b:=0;end
-  else if (h<120) then begin r:=trunc((x+m)*255);g:=trunc((c+m)*255);b:=0;end
-  else if (h<180) then begin r:=0;g:=trunc((c+m)*255);b:=trunc((x+m)*255);end
-  else if (h<240) then begin r:=0;g:=trunc((x+m)*255);b:=trunc((c+m)*255);end
-  else if (h<300) then begin r:=trunc((x+m)*255);g:=0;b:=trunc((c+m)*255);end
-  else begin r:=trunc((c+m)*255);g:=0;b:=trunc((x+m)*255);end;
+  if (h<60) then begin r:=trunc((c+m)*255);g:=trunc((x+m)*255);b:=trunc(m*255);end
+  else if (h<120) then begin r:=trunc((x+m)*255);g:=trunc((c+m)*255);b:=trunc(m*255);end
+  else if (h<180) then begin r:=trunc(m*255);g:=trunc((c+m)*255);b:=trunc((x+m)*255);end
+  else if (h<240) then begin r:=trunc(m*255);g:=trunc((x+m)*255);b:=trunc((c+m)*255);end
+  else if (h<300) then begin r:=trunc((x+m)*255);g:=trunc(m*255);b:=trunc((c+m)*255);end
+  else begin r:=trunc((c+m)*255);g:=trunc(m*255);b:=trunc((x+m)*255);end;
 end;
 
 function HSLtoRGB(h:word; s,l:integer):uint32;
