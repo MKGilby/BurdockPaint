@@ -41,7 +41,6 @@ type
     procedure OnSliderAChange(Sender:TObject;newValue:integer);
     procedure OnSliderHSChange(Sender:TObject;newValue:integer);
     procedure OnSliderLChange(Sender:TObject;newValue:integer);
-//    procedure OnSliderAChange(Sender:TObject;newValue:integer);
 //    procedure UndoButtonClick(Sender:TObject;x,y,buttons:integer);
 //    procedure RedoButtonClick(Sender:TObject;x,y,buttons:integer);
     procedure HSBoxChange(Sender:TObject);
@@ -53,12 +52,10 @@ type
     procedure RefreshColorBox;
     function ProcessMessage(msg:TMessage):boolean;
   private
-    fSliders:array[0..6] of TBDHorizontalSlider; // H S L R G B A
-//    fSliderH,fSliderS,fSliderG
-//    fSliderR,fSliderG,fSliderB,fSliderA:TBDHorizontalSlider;
+    fSliderH,fSliderS,fSliderL,
+    fSliderR,fSliderG,fSliderB,fSliderA:TBDHorizontalSlider;
     fAlternateLSlider:TBDLightSlider;
     fHSBox:TBDHSBox;
-//    fUndoButton,fRedoButton:TBDButton;
     fColorBox:TBDColorBox;
     fSavedColor:uint32;
     fPickingColor:integer;
@@ -66,7 +63,7 @@ type
 
 implementation
 
-uses BDPShared, MKMouse2, MKToolbox, vcc2_SliderLogic;
+uses BDPShared, MKMouse2, MKToolbox, vcc2_SliderLogic, BDPButton;
 
 const
   PALETTEEDITORHEIGHT=(NORMALSLIDERHEIGHT+3)*7+3+3;
@@ -79,12 +76,22 @@ const
   SLIDERSWIDTH=320;
   LIGHTSLIDERLEFT=HSBOXLEFT;
   LIGHTSLIDERTOP=HSBOXTOP+HSBOXHEIGHT+3;
-  LIGHTSLIDERWIDTH=HSBOXWIDTH-(NORMALSLIDERHEIGHT+3);
+  LIGHTSLIDERWIDTH=HSBOXWIDTH;
   LIGHTSLIDERHEIGHT=NORMALSLIDERHEIGHT;
-  COLORBOXLEFT=LIGHTSLIDERLEFT+LIGHTSLIDERWIDTH+3;
-  COLORBOXTOP=LIGHTSLIDERTOP;
-  COLORBOXWIDTH=NORMALSLIDERHEIGHT;
-  COLORBOXHEIGHT=NORMALSLIDERHEIGHT;
+//  COLORBOXLEFT=LIGHTSLIDERLEFT+LIGHTSLIDERWIDTH+3;
+//  COLORBOXTOP=LIGHTSLIDERTOP;
+//  COLORBOXWIDTH=NORMALSLIDERHEIGHT;
+//  COLORBOXHEIGHT=NORMALSLIDERHEIGHT;
+  BUTTONS2WIDTH=NORMALBUTTONWIDTH-2*18;
+  BUTTONSLEFT=SLIDERSLEFT+SLIDERSWIDTH+3;
+  BUTTONS2LEFT=WINDOWWIDTH-BUTTONS2WIDTH-3;
+//  BUTTONSLEFT=BUTTONS2LEFT-NORMALBUTTONWIDTH-3;
+  BUTTONSTOP=6;
+  BUTTONS2TOP=BUTTONSTOP+NORMALBUTTONHEIGHT+3;
+  COLORBOXLEFT=BUTTONSLEFT+NORMALBUTTONWIDTH+3;
+  COLORBOXTOP=BUTTONSTOP;
+  COLORBOXWIDTH=BUTTONS2LEFT-COLORBOXLEFT-3;
+  COLORBOXHEIGHT=2*NORMALBUTTONHEIGHT+3;
 //  PALETTESOCKETWIDTH=38;
 //  PALETTESOCKETHEIGHT=26;
 //  PALETTESOCKETSTOP=PALETTEEDITORHEIGHT-213;
@@ -93,6 +100,7 @@ const
 { TBDPaletteEditor }
 
 constructor TBDPaletteEditor.Create;
+var atmB:TBDButton;
 
   function CreateSlider(pLeft,pTop,pMaxValue:integer;pName:string;
     pOnChange:TOnSliderPositionChangeEvent):TBDHorizontalSlider;
@@ -117,9 +125,6 @@ begin
   Height:=PALETTEEDITORHEIGHT;
   OnMouseEnter:=MouseEnter;
   OnMouseLeave:=MouseLeave;
-//  OnMouseMove:=MouseMove;
-//  OnMouseDown:=MouseDown;
-//  OnMouseWheel:=MouseWheel;
   OnShow:=PaletteEditorShow;
   OnHide:=PaletteEditorHide;
   fName:='PaletteEditor';
@@ -131,19 +136,19 @@ begin
   fHSBox.OnChange:=HSBoxChange;
   AddChild(fHSBox);
 
-  fSliders[0]:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP,
+  fSliderH:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP,
     360,'H-Slider',OnSliderHSChange);
-  fSliders[1]:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+NORMALSLIDERHEIGHT+3,
+  fSliderS:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+NORMALSLIDERHEIGHT+3,
     100,'S-Slider',OnSliderHSChange);
-  fSliders[2]:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+2*(NORMALSLIDERHEIGHT+3),
+  fSliderL:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+2*(NORMALSLIDERHEIGHT+3),
     100,'L-Slider',OnSliderLChange);
-  fSliders[3]:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+3*(NORMALSLIDERHEIGHT+3),
+  fSliderR:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+3*(NORMALSLIDERHEIGHT+3),
     255,'R-Slider',OnSliderRGBChange);
-  fSliders[4]:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+4*(NORMALSLIDERHEIGHT+3),
+  fSliderG:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+4*(NORMALSLIDERHEIGHT+3),
     255,'G-Slider',OnSliderRGBChange);
-  fSliders[5]:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+5*(NORMALSLIDERHEIGHT+3),
+  fSliderB:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+5*(NORMALSLIDERHEIGHT+3),
     255,'B-Slider',OnSliderRGBChange);
-  fSliders[6]:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+6*(NORMALSLIDERHEIGHT+3),
+  fSliderA:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+6*(NORMALSLIDERHEIGHT+3),
     255,'A-Slider',OnSliderAChange);
 
   fAlternateLSlider:=TBDLightSlider.Create(fLeft+LIGHTSLIDERLEFT,fTop+LIGHTSLIDERTOP,LIGHTSLIDERWIDTH,LIGHTSLIDERHEIGHT);
@@ -152,23 +157,37 @@ begin
   fAlternateLSlider.OnChange:=AlternateLSliderChange;
   AddChild(fAlternateLSlider);
 
-{  fUndoButton:=TBDButton.Create(
-    PALETTEUNDOBUTTONSLEFT, fTop+PALETTEUNDOBUTTONSTOP,
-    NORMALBUTTONWIDTH, PALETTEUNDOBUTTONHEIGHT,
-    'UNDO','UNDO LAST PALETTE OPERATION');
-  fUndoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-  fUndoButton.Name:='Palette Undo';
-  fUndoButton.OnClick:=UndoButtonClick;
-  AddChild(fUndoButton);
+  atmB:=TBDButton.Create(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP,NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
+    'SELECT','SELECT THE COLOR SHOWN IN THE BOX.');
+  with atmB do begin
+    Name:='Select Color';
+    ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  end;
+  AddChild(atmB);
 
-  fRedoButton:=TBDButton.Create(
-    PALETTEUNDOBUTTONSLEFT,fTop+PALETTEUNDOBUTTONSTOP+PALETTEUNDOBUTTONHEIGHT+3,
-    NORMALBUTTONWIDTH,PALETTEREDOBUTTONHEIGHT,
-    'REDO','REDO LAST UNDOED PALETTE OPERATION');
-  fRedoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-  fRedoButton.Name:='Palette Redo';
-  fRedoButton.OnClick:=RedoButtonClick;
-  AddChild(fRedoButton);}
+  atmB:=TBDButton.Create(fLeft+BUTTONSLEFT,fTop+BUTTONS2TOP,NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
+    'CANCEL','CLOSE PALETTE EDITOR WITHOUT SELECTING COLOR.');
+  with atmB do begin
+    Name:='Cancel Color';
+    ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  end;
+  AddChild(atmB);
+
+  atmB:=TBDButton.Create(fLeft+BUTTONS2LEFT,fTop+BUTTONSTOP,BUTTONS2WIDTH,NORMALBUTTONHEIGHT,
+    'UNDO','UNDO LAST COLOR OPERATION.');
+  with atmB do begin
+    Name:='Undo Color';
+    ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  end;
+  AddChild(atmB);
+
+  atmB:=TBDButton.Create(fLeft+BUTTONS2LEFT,fTop+BUTTONS2TOP,BUTTONS2WIDTH,NORMALBUTTONHEIGHT,
+    'REDO','REDO LAST COLOR OPERATION.');
+  with atmB do begin
+    Name:='Redo Color';
+    ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  end;
+  AddChild(atmB);
 
   fColorBox:=TBDColorBox.Create(fLeft+COLORBOXLEFT,fTop+COLORBOXTOP,COLORBOXWIDTH,COLORBOXHEIGHT);
   fColorBox.Color:=Settings.ActiveColor;
@@ -220,7 +239,7 @@ end;
 
 procedure TBDPaletteEditor.OnSliderHSChange(Sender:TObject; newValue:integer);
 begin
-  fHSBox.SetColor(fSliders[0].Position,fSliders[1].Position);
+  fHSBox.SetColor(fSliderH.Position,fSliderS.Position);
   fAlternateLSlider.BaseColor:=fHSBox.Color;
   RefreshColorBox;
   RefreshRGBbyHSL;
@@ -228,28 +247,28 @@ end;
 
 procedure TBDPaletteEditor.OnSliderLChange(Sender:TObject; newValue:integer);
 begin
-  fAlternateLSlider.L:=fSliders[2].Position;
+  fAlternateLSlider.L:=fSliderL.Position;
   RefreshColorBox;
   RefreshRGBbyHSL;
 end;
 
 procedure TBDPaletteEditor.HSBoxChange(Sender:TObject);
 begin
-  fSliders[0].Position:=fHSBox.H;
-  fSliders[1].Position:=fHSBox.S;
+  fSliderH.Position:=fHSBox.H;
+  fSliderS.Position:=fHSBox.S;
   fAlternateLSlider.BaseColor:=fHSBox.Color;
-  fSliders[3].Position:=(fAlternateLSlider.Color and $ff0000)>>16;
-  fSliders[4].Position:=(fAlternateLSlider.Color and $ff00)>>8;
-  fSliders[5].Position:=fAlternateLSlider.Color and $ff;
+  fSliderR.Position:=(fAlternateLSlider.Color and $ff0000)>>16;
+  fSliderG.Position:=(fAlternateLSlider.Color and $ff00)>>8;
+  fSliderB.Position:=fAlternateLSlider.Color and $ff;
   RefreshColorBox;
 end;
 
 procedure TBDPaletteEditor.AlternateLSliderChange(Sender:TObject);
 begin
-  fSliders[2].Position:=fAlternateLSlider.L;
-  fSliders[3].Position:=(fAlternateLSlider.Color and $ff0000)>>16;
-  fSliders[4].Position:=(fAlternateLSlider.Color and $ff00)>>8;
-  fSliders[5].Position:=fAlternateLSlider.Color and $ff;
+  fSliderL.Position:=fAlternateLSlider.L;
+  fSliderR.Position:=(fAlternateLSlider.Color and $ff0000)>>16;
+  fSliderG.Position:=(fAlternateLSlider.Color and $ff00)>>8;
+  fSliderB.Position:=fAlternateLSlider.Color and $ff;
   RefreshColorBox;
 end;
 
@@ -304,28 +323,32 @@ end;
 procedure TBDPaletteEditor.RefreshHSLbyRGB;
 var h:word;s,l:integer;
 begin
-  RGBtoHSL(fSliders[3].Position,fSliders[4].Position,fSliders[5].Position,h,s,l);
+  RGBtoHSL(fSliderR.Position,fSliderG.Position,fSliderB.Position,h,s,l);
   fHSBox.SetColor(h,s);
   fAlternateLSlider.BaseColor:=fHSBox.Color;
   fAlternateLSlider.L:=l;
-  fSliders[0].Position:=h;
-  fSliders[1].Position:=s;
-  fSliders[2].Position:=l;
+  fSliderH.Position:=h;
+  fSliderS.Position:=s;
+  fSliderL.Position:=l;
   RefreshColorBox;
 end;
 
 procedure TBDPaletteEditor.RefreshRGBbyHSL;
 var r,g,b:byte;
 begin
-  HSLtoRGB(fSliders[0].Position,fSliders[1].Position,fSliders[2].Position,r,g,b);
-  fSliders[3].Position:=r;
-  fSliders[4].Position:=g;
-  fSliders[5].Position:=b;
+  HSLtoRGB(fSliderH.Position,fSliderS.Position,fSliderL.Position,r,g,b);
+  fSliderR.Position:=r;
+  fSliderG.Position:=g;
+  fSliderB.Position:=b;
 end;
 
 procedure TBDPaletteEditor.RefreshColorBox;
 begin
-  fColorBox.Color:=uint32(fSliders[6].Position)<<24+fAlternateLSlider.Color and $FFFFFF;
+  fColorBox.Color:=
+    uint32(fSliderA.Position)<<24+
+    uint32(fSliderR.Position and $FF)<<16+
+    uint32(fSliderG.Position and $FF)<<8+
+    uint32(fSliderB.Position and $FF);
 end;
 
 function TBDPaletteEditor.ProcessMessage(msg:TMessage):boolean;
