@@ -21,7 +21,7 @@
       <MinorVersionNr Value="9"/>
       <BuildNr Value="26"/>
       <Attributes pvaPreRelease="True"/>
-      <StringTable CompanyName="MKSZTSZ" LegalCopyright="Freeware" ProductName="BurdockPaint"/>
+      <StringTable CompanyName="MKSZTSZ" LegalCopyright="GPL3" ProductName="BurdockPaint"/>
     </VersionInfo>
     <BuildModes>
       <Item Name="Default" Default="True"/>
