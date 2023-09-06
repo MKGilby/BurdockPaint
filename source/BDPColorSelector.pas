@@ -33,8 +33,6 @@ type
   TBDColorSelector=class(TVisibleControl)
     constructor Create(iLeft,iTop,fWidth,fHeight:integer);
     destructor Destroy; override;
-    procedure Click(Sender:TObject;x, y, buttons: integer);
-    function KeyDown(Sender:TObject;key:integer):boolean;
   protected
     procedure ReDraw; override;
     procedure fSetWidth(value:integer); override;
@@ -45,6 +43,8 @@ type
     fRightClusterLeft,fRightClusterWidth:integer;
     fRightColorLeft:integer;
     fLeftColorCluster,fRightColorCluster:TColorCluster;
+    procedure Click(Sender:TObject;x, y, buttons: integer);
+    function KeyDown(Sender:TObject;key:integer):boolean;
     procedure RecalculatePositions;
   public
     property Width:integer read fWidth write fSetWidth;
@@ -109,6 +109,24 @@ begin
     end;
   end else if buttons=SDL_BUTTON_MIDDLE then begin
   end else if buttons=SDL_BUTTON_RIGHT then begin
+    if (x>=0) and (x<fLeftClusterLeft) then begin
+      MessageQueue.AddMessage(
+        MSG_ACTIVATEPALETTEEDITOR,
+        PARM_COL_SELECTOR_LEFT,
+        Settings.ColorSelectorLeftColor);
+    end else
+    if (x>=fMainColorLeft) and (x<fRightClusterLeft) then begin
+      MessageQueue.AddMessage(
+        MSG_ACTIVATEPALETTEEDITOR,
+        PARM_COL_SELECTOR_MAIN,
+        Settings.ColorSelectorMainColor);
+    end else
+    if (x>=fRightColorLeft) then begin
+      MessageQueue.AddMessage(
+        MSG_ACTIVATEPALETTEEDITOR,
+        PARM_COL_SELECTOR_RIGHT,
+        Settings.ColorSelectorRightColor);
+    end;
   end;
 end;
 
@@ -135,6 +153,10 @@ begin
     Bar(3,3,Height-6,Height-6,Settings.ColorSelectorLeftColor);
     Bar(fMainColorLeft+3,3,Height-6,Height-6,Settings.ColorSelectorMainColor);
     Bar(fRightColorLeft+3,3,Height-6,Height-6,Settings.ColorSelectorRightColor);
+    fLeftColorCluster.Color1:=Settings.ColorSelectorLeftColor;
+    fLeftColorCluster.Color2:=Settings.ColorSelectorMainColor;
+    fRightColorCluster.Color1:=Settings.ColorSelectorMainColor;
+    fRightColorCluster.Color2:=Settings.ColorSelectorRightColor;
     for i:=0 to fLeftClusterWidth-1 do begin
       c:=fLeftColorCluster.GetColorAt(i,fLeftClusterWidth);
       VLine(fLeftClusterLeft+i,3,Height-6,c);
