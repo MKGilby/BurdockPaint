@@ -58,6 +58,7 @@ type
     procedure HSBoxChange(Sender:TObject);
     procedure AlternateLSliderChange(Sender:TObject);
     procedure SelectClick(Sender:TObject;x,y,buttons:integer);
+    procedure CancelClick(Sender:TObject;x,y,buttons:integer);
     procedure PaletteEditorShow(Sender:TObject);
     procedure PaletteEditorHide(Sender:TObject);
     procedure RefreshHSLbyRGB;
@@ -175,6 +176,7 @@ begin
   with atmB do begin
     Name:='Cancel Color';
     ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+    OnClick:=CancelClick;
   end;
   AddChild(atmB);
 
@@ -288,6 +290,11 @@ end;
 procedure TBDPaletteEditor.SelectClick(Sender:TObject; x,y,buttons:integer);
 begin
   MessageQueue.AddMessage(MSG_DEACTIVATEPALETTEEDITOR,fCalledFrom,fColorBox.Color);
+end;
+
+procedure TBDPaletteEditor.CancelClick(Sender:TObject; x,y,buttons:integer);
+begin
+  MessageQueue.AddMessage(MSG_DEACTIVATEPALETTEEDITOR,0,0);
 end;
 
 {procedure TBDPaletteEditor.OnColorSliderMouseDown(Sender:TObject;x,y,buttons:integer);
