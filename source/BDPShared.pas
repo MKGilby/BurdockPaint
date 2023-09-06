@@ -110,61 +110,100 @@ const
   // ------- System Messages ------- Range: 0-199 -------
   // Don't want to send message but buttons need one? Give them this.
   MSG_NONE=0;
-  // ConfirmQUIT dialog finished, IntValue is 1 if really quit, 0 if not.
+
+  // ConfirmQUIT dialog finished.
+  //   IntValue is 1 if really quit, 0 if not.
   MSG_QUIT=1;
+
   // Toggle visibility of main Controls panel and MainMenu.
   MSG_TOGGLECONTROLS=2;
-  // Hide Controls, show PaletteEditor
+
+  // Hide Controls, show PaletteEditor.
+  //   IntValue is one of the PARM_COL constants.
+  //   UInt32 value is the color to set the sliders to.
   MSG_ACTIVATEPALETTEEDITOR=3;
-  // Hide PaletteEditor, show Controls and MainMenu
+
+  // Hide PaletteEditor, show Controls.
+  //   IntValue is one of the PARM_COL constants if color is selected, otherwise 0.
+  //   UInt32 value is the selected color.
   MSG_DEACTIVATEPALETTEEDITOR=4;
+
   // Set Undo/Redo buttons' state depending on ImageUndosystem state.
   MSG_SETIMAGEUNDOREDOBUTTON=5;
+
   // Set Undo/Redo buttons' state depending on PaletteUndosystem state.
   MSG_SETPALETTEUNDOREDOBUTTON=6;
+
   // GETCEL or PUTCEL finished, reactivate selected tool.
   MSG_RESTORECONTROLS=7;
-  // ActiveColorIndex changed. Data is the active color index.
+
+  // ActiveColor changed.
+  //   UInt32 value is the new color.
   MSG_ACTIVECOLORCHANGED=8;
+
   // PICKCOLCS finished, Data is the selected color index or -1 if no color selected.
   MSG_COLORSELECTORPICKEDCOLOR=9;
-  // Response from MessageBox. Data is the pressed button number.
+
+  // Response from MessageBox.
+  //   IntValue is the pressed button number.
   MSG_MESSAGEBOXRESP=10;
+
   // Open DitherDialog.
   MSG_OPENDITHERDIALOG=11;
+
   // Show CEL image. Hides Controls and MainMenu then activates SHOWCEL tool.
   MSG_SHOWCEL=12;
+
   // Set TOOLS menu item states based on Settings.SelectedTools
   MSG_SETTOOLSMENU=13;
+
   // Set INKS menu item states based on Settings.SelectedInks
   MSG_SETINKSMENU=14;
+
   // Open select color cluster dialog. Data is left of the dialog.
   MSG_OPENCOLORCLUSTERDIALOG=15;
+
   // Response from SelectColorClusterDialog. Data is new color cluster index or -1 if not changed.
   MSG_COLORCLUSTERDIALOGRESP=16;
+
   // Open ConfigureRGradDialog.
   MSG_OPENCONFIGURERGRADDIALOG=17;
+
   // GetCEL tool finished *successfully*. We should enable menus associated with CEL.
   MSG_GETCELFINISHED=18;
+
   // KEY_GETCOLOR pressed, select color value under the cursor (if over drawarea).
   MSG_SELECTCOLOR=19;
+
   // Project image count changed. Used to refresh Controls' slider.
   MSG_PROJECTIMAGECOUNTCHANGED=20;
+
   // PICKCOLP finished, Data is the selected color index or -1 of no color selected.
   MSG_PALETTEPICKEDCOLOR=21;
+
   // Activate PickColorCluster tool.
   MSG_ACTIVATEPICKCOLORCLUSTER=22;
+
   // PICKCOLCLS finished, Data is the start in upper word and end in lower word.
   MSG_COLORCLUSTERPICKED=23;
+
   // Active color cluster changed, refresh color clusters.
   MSG_ACTIVECOLORCLUSTERCHANGED=24;
+
   // Hide controls and select RGradCenter tool.
   MSG_CONFIGRGRADCENTER=25;
+
   // RGrad configuration "Center" finished. (Data is stored in Settings.TempRGradCenter<X|Y>
   MSG_CONFIGRGRADCENTERFINISHED=26;
 
   // ------- Menu Messages ------- Range: 200-299 -------
   {$i includes\menu.inc}
+
+
+  // PARM_COL constants. They mark places where the PaletteEditor was invoked from.
+  PARM_COL_SELECTOR_MAIN=1;
+  PARM_COL_SELECTOR_LEFT=2;
+  PARM_COL_SELECTOR_RIGHT=3;
 
 var
   MM:TGFXManager;  // MediaManager to hold fonts and internal images
