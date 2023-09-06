@@ -40,6 +40,10 @@ Todo:
 
 2023.09.06
 - Added ColorPalette to PaletteEditor.
+- Right-clicking on ColorSelector invokes PaletteEditor with the clicked color
+  (only the two ends and the main color).
+- Clicking Select button on PaletteEditor sets the color of the right clicked part
+  of the color selector.
 
 2023.09.05
 - Added buttons to PaletteEditor.
