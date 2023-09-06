@@ -26,18 +26,24 @@ Todo:
   could be picked. (The two ends and the center of the color selector.)
 - PaletteEditor should set sliders according to the color it was invoked from.
   (RGB must be exact, HSL calculated from RGB)
-- Add "Select", "Cancel", "Undo", "Redo" buttons to PaletteEditor.
-  - "Select" should select the color set by RGBA sliders and close PaletteEditor.
+- PaletteEditor buttons:
+  - "Select" should select the color set by RGB and A sliders and close PaletteEditor.
   - "Cancel" should close PaletteEditor without changing anything.
   - "Undo" and "Redo" should undo/redo any changes made on the PaletteEditor.
     (Probably need another undo type)
-- Add a big colorbox to PaletteEditor.
-- Add palette section to the PaletteEditor.
 - Right clicking on colorbox should allow to put color on palette by left clicking.
-- Right clicking on palette should enable picking color from DrawArea (or colorbox).
+- Right clicking on ColorPalette should enable picking color from DrawArea (or colorbox).
+- Left clicking on ColorPalette should set sliders according to clicked color.
 - Clicking on DrawArea should set sliders according to clicked color.
 - Add an option to make the palette always visible. (Needs a palette control.)
 
+
+2023.09.06
+- Added ColorPalette to PaletteEditor.
+
+2023.09.05
+- Added buttons to PaletteEditor.
+- Moved and enlarged ColorBox on PaletteEditor.
 
 2023.09.04
 - Values and color change as you move the sliders on the PaletteEditor.

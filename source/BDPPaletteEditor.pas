@@ -26,7 +26,7 @@ interface
 
 uses
   SysUtils, mk_sdl2, vcc2_Container, BDPMessage, BDPSliders,
-  BDPColorBox, BDPHSBox, BDPLightSlider;
+  BDPColorBox, BDPHSBox, BDPLightSlider, BDPColorPalette;
 
 type
 
@@ -55,6 +55,7 @@ type
     fSliderH,fSliderS,fSliderL,
     fSliderR,fSliderG,fSliderB,fSliderA:TBDHorizontalSlider;
     fAlternateLSlider:TBDLightSlider;
+    fColorPalette:TBDColorPalette;
     fHSBox:TBDHSBox;
     fColorBox:TBDColorBox;
     fSavedColor:uint32;
@@ -87,7 +88,10 @@ const
   COLORBOXTOP=BUTTONSTOP;
   COLORBOXWIDTH=BUTTONS2LEFT-COLORBOXLEFT-3;
   COLORBOXHEIGHT=2*NORMALBUTTONHEIGHT+3;
-  PALETTESOCKETSWIDTH=WINDOWWIDTH-BUTTONSLEFT-3;
+  COLORPALETTELEFT=SLIDERSLEFT+SLIDERSWIDTH+3;
+  COLORPALETTETOP=BUTTONS2TOP+NORMALBUTTONHEIGHT+3;
+  COLORPALETTEWIDTH=WINDOWWIDTH-BUTTONSLEFT-3;
+  COLORPALETTEHEIGHT=PALETTEEDITORHEIGHT-COLORBOXHEIGHT-12-2;
 //  PALETTESOCKETWIDTH=(PALETTESOCKETSWIDTH-3) div 8;
 //  PALETTESOCKETHEIGHT=26;
 //  PALETTESOCKETSTOP=PALETTEEDITORHEIGHT-213;
@@ -190,6 +194,13 @@ begin
   fColorBox.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
   fColorBox.Name:='ColorBox';
   AddChild(fColorBox);
+
+  fColorPalette:=TBDColorPalette.Create(fLeft+COLORPALETTELEFT,fTop+COLORPALETTETOP,
+    COLORPALETTEWIDTH,COLORPALETTEHEIGHT);
+  fColorPalette.Palette:=Project.CurrentPalette;
+  fColorPalette.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fColorPalette.Name:='ColorPalette';
+  AddChild(fColorPalette);
 
   fPickingColor:=-1;
 

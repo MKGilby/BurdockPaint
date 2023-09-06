@@ -327,6 +327,10 @@
         <Filename Value="units\Inks\BDPInkRGrad.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
+      <Unit>
+        <Filename Value="units\Controls\BDPColorPalette.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

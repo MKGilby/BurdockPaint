@@ -91,14 +91,19 @@ const
   // ZIndex of popup dialogs (ConfirmQuit, etc.)
   MODALDIALOG_ZINDEX=9999;
 
-  MAXZOOMLEVEL=5;
+  SYSTEMCOLORTRANSPARENT=0;
+  SYSTEMCOLORBLACK=1;
+  SYSTEMCOLORDARK=2;
+  SYSTEMCOLORMID=3;
+  SYSTEMCOLORLIGHT=4;
+  SYSTEMCOLORHIGHLIGHT=5;
 
+  MAXZOOMLEVEL=5;
 
   DATAFILE='BurdockPaint.data';
   TEMPPROJECTFILE:string='temp.bpprj';
   PROJECTBASEPATH:string='.\';
   SETTINGSFILE='BurdockPaint.ini';
-  STATEDATAID=$53;
 
   // Message typeID constants
 
@@ -288,17 +293,17 @@ begin
   MessageQueue:=TMessageQueue.Create(32);
   Log.LogStatus('  Creating overlay palette...');
   SystemPalette:=TBDPalette.Create(16);
-  SystemPalette.Colors[0]:=$00000000;
-  SystemPalette.Colors[1]:=$ff040404;
-  SystemPalette.Colors[2]:=$ff5d5d5d;
-  SystemPalette.Colors[3]:=$ff9a9a9a;
-  SystemPalette.Colors[4]:=$ffc7c7c7;
-  SystemPalette.Colors[5]:=$ffc70404;
-  SystemPalette.Colors[6]:=$ff202020;
+  SystemPalette.Colors[SYSTEMCOLORTRANSPARENT]:=$00000000;
+  SystemPalette.Colors[SYSTEMCOLORBLACK]:=$ff040404;
+  SystemPalette.Colors[SYSTEMCOLORDARK]:=$ff5d5d5d;
+  SystemPalette.Colors[SYSTEMCOLORMID]:=$ff9a9a9a;
+  SystemPalette.Colors[SYSTEMCOLORLIGHT]:=$ffc7c7c7;
+  SystemPalette.Colors[SYSTEMCOLORHIGHLIGHT]:=$ffc70404;
+{  SystemPalette.Colors[6]:=$ff202020;
   SystemPalette.Colors[7]:=$ff505050;
   SystemPalette.Colors[8]:=$ff808080;
   SystemPalette.Colors[9]:=$ffb0b0b0;
-  SystemPalette.Colors[10]:=$ffe0e0e0;
+  SystemPalette.Colors[10]:=$ffe0e0e0;}
   Log.LogStatus('  Creating CEL helper image...');
   CELHelperImage:=TBDRegion.Create(320,200);
   CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,0);
