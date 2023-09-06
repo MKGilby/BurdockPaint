@@ -94,10 +94,10 @@ var i,j:integer;c:uint32;
 begin
   if Assigned(fTexture) then begin
     with fTexture.ARGBImage do begin
-      Bar(0,0,Width,3,SystemPalette[2]);
-      Bar(0,Height-3,fWidth,3,SystemPalette[2]);
-      Bar(0,3,3,Height-6,SystemPalette[2]);
-      Bar(Width-3,3,3,Height-6,SystemPalette[2]);
+      Bar(0,0,Width,3,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(0,Height-3,fWidth,3,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(0,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(Width-3,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
       for i:=3 to fWidth-3-1 do begin
         c:=GetColorByH(i);
         for j:=3 to fHeight-3-1 do

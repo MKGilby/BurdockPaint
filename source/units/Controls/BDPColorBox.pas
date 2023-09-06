@@ -76,10 +76,10 @@ begin
   if Assigned(fTexture) then begin
     with fTexture.ARGBImage do begin
       Bar(3,3,Width-6,Height-6,fColor);
-      Bar(8,0,Width-16,3,SystemPalette[2]);
-      Bar(8,Height-3,fWidth-16,3,SystemPalette[2]);
-      Bar(0,8,3,Height-16,SystemPalette[2]);
-      Bar(Width-3,8,3,Height-16,SystemPalette[2]);
+      Bar(8,0,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(8,Height-3,fWidth-16,3,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(0,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(Width-3,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
     end;
     if Assigned(fTLImage) then
       fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fTexture.ARGBImage,true);

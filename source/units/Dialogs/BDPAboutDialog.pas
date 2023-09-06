@@ -68,8 +68,8 @@ end;
 procedure TBDAboutDialog.ReDraw;
 begin
   if Assigned(fTexture) then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[2]);
-    fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[3]);
+    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[SYSTEMCOLORDARK]);
+    fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[SYSTEMCOLORMID]);
     MM.Fonts['LogoFont'].OutText(fTexture.ARGBImage,'BURDoCK PAINT',80,24,0);
     MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'CODE: GILBY/MKSZTSZ',80,56,0);
     MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'LICENSED UNDER GNU GPL 3',80,88,0);

@@ -85,15 +85,15 @@ var p:integer;
 begin
   if Assigned(fTexture) then begin
     with fTexture.ARGBImage do begin
-      Bar(3,3,Width-6,Height-6,SystemPalette[3]);
-      Bar(8,0,Width-16,3,SystemPalette[2]);
-      Bar(8,Height-3,fWidth-16,3,SystemPalette[2]);
-      Bar(0,8,3,Height-16,SystemPalette[2]);
-      Bar(Width-3,8,3,Height-16,SystemPalette[2]);
-      Bar(3,fDecClickAreaSize-3,Width-6,3,SystemPalette[2]);
-      Bar(3,fDecClickAreaSize+fSlideAreaSize,Width-6,3,SystemPalette[2]);
+      Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORMID]);
+      Bar(8,0,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(8,Height-3,fWidth-16,3,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(0,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(Width-3,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(3,fDecClickAreaSize-3,Width-6,3,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(3,fDecClickAreaSize+fSlideAreaSize,Width-6,3,SystemPalette[SYSTEMCOLORDARK]);
       p:=fDecClickAreaSize+3+((fSlideAreaSize-SLIDERKNOBWIDTH-6)*(Position-MinValue) div (MaxValue-MinValue));
-      Bar(6,p,Width-12,SLIDERKNOBWIDTH,SystemPalette[1]);
+      Bar(6,p,Width-12,SLIDERKNOBWIDTH,SystemPalette[SYSTEMCOLORBLACK]);
     end;
     if Assigned(fTLImage) then
       fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fTexture.ARGBImage,true);
@@ -162,18 +162,18 @@ var p,fonttop:integer;
 begin
   if Assigned(fTexture) then begin
     with fTexture.ARGBImage do begin
-      Bar(3,3,Width-6,Height-6,SystemPalette[3]);
-      Bar(8,0,Width-16,3,SystemPalette[2]);
-      Bar(8,Height-3,fWidth-16,3,SystemPalette[2]);
-      Bar(0,8,3,Height-16,SystemPalette[2]);
-      Bar(Width-3,8,3,Height-16,SystemPalette[2]);
-      Bar(fDecClickAreaSize-3,3,3,Height-6,SystemPalette[2]);
-      Bar(fDecClickAreaSize+fSlideAreaSize,3,3,Height-6,SystemPalette[2]);
+      Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORMID]);
+      Bar(8,0,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(8,Height-3,fWidth-16,3,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(0,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(Width-3,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(fDecClickAreaSize-3,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(fDecClickAreaSize+fSlideAreaSize,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
       if (MaxValue<>MinValue) then
         p:=fDecClickAreaSize+3+((fSlideAreaSize-SLIDERKNOBWIDTH-6)*(Position-MinValue) div (MaxValue-MinValue))
       else
         p:=fDecClickAreaSize+3+((fSlideAreaSize-SLIDERKNOBWIDTH-6) div 2);
-      Bar(p,6,SLIDERKNOBWIDTH,Height-12,SystemPalette[1]);
+      Bar(p,6,SLIDERKNOBWIDTH,Height-12,SystemPalette[SYSTEMCOLORBLACK]);
     end;
     if Assigned(fTLImage) then
       fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fTexture.ARGBImage,true);

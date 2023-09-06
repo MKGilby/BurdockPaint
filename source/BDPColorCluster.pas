@@ -487,28 +487,28 @@ begin
   if Assigned(fTexture) then begin
     with fTexture.ARGBImage do begin
       // Background
-      Bar(0,0,fPingpongSwitchLeft,Height,SystemPalette[3]);
+      Bar(0,0,fPingpongSwitchLeft,Height,SystemPalette[SYSTEMCOLORMID]);
       if Assigned(fColorCluster) then begin
         if fColorCluster.PingPong then
-          Bar(fPingpongSwitchLeft+3,3,PINGPONGSWITCHWIDTH,Height-6,SystemPalette[4])
+          Bar(fPingpongSwitchLeft+3,3,PINGPONGSWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
         else
-          Bar(fPingpongSwitchLeft+3,3,PINGPONGSWITCHWIDTH,Height-6,SystemPalette[3]);
+          Bar(fPingpongSwitchLeft+3,3,PINGPONGSWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORMID]);
         if fColorCluster.Reversed then
-          Bar(fReverseSwitchLeft+3,3,REVERSESWITCHWIDTH,Height-6,SystemPalette[4])
+          Bar(fReverseSwitchLeft+3,3,REVERSESWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
         else
-          Bar(fReverseSwitchLeft+3,3,REVERSESWITCHWIDTH,Height-6,SystemPalette[3]);
+          Bar(fReverseSwitchLeft+3,3,REVERSESWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORMID]);
       end;
-      Bar(fArrowLeft,0,ARROWWIDTH,Height,SystemPalette[3]);
+      Bar(fArrowLeft,0,ARROWWIDTH,Height,SystemPalette[SYSTEMCOLORMID]);
       // Outer border
-      Bar(8,0,Width-16,3,SystemPalette[2]);
-      Bar(8,Height-3,Width-16,3,SystemPalette[2]);
-      Bar(0,8,3,Height-16,SystemPalette[2]);
-      Bar(Width-3,8,3,Height-16,SystemPalette[2]);
+      Bar(8,0,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(8,Height-3,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(0,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(Width-3,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
       // Vertical separator lines
-      Bar(fPingpongSwitchLeft,3,3,Height-6,SystemPalette[2]);
-      Bar(fReverseSwitchLeft,3,3,Height-6,SystemPalette[2]);
-      Bar(fColorsLeft,3,3,Height-6,SystemPalette[2]);
-      Bar(fArrowLeft,3,3,Height-6,SystemPalette[2]);
+      Bar(fPingpongSwitchLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(fReverseSwitchLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(fColorsLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(fArrowLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
       // Corners
       if Assigned(fTLImage) then
         fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fTexture.ARGBImage,true);
@@ -520,15 +520,15 @@ begin
         fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,fTexture.ARGBImage,true);
       // Flashing if picking
       if fPicking then
-        Bar(fColorsLeft,0,fColorsWidth+3,Height,SystemPalette[VibroColors.GetColor]);
+        Bar(fColorsLeft,0,fColorsWidth+3,Height,VibroColors.GetColor);
       // Color cluster bar
       if Assigned(fColorCluster) then begin
         for i:=0 to fColorsWidth-1-3 do begin
           color32:=fColorCluster.GetColorAt(i,fColorsWidth-3);
           VLine(fColorsLeft+i+3,3,Height-6,color32);
           if color32=Settings.ActiveColor then begin
-            VLine(fColorsLeft+i+3,Height div 2-3,3,SystemPalette[4]);
-            VLine(fColorsLeft+i+3,Height div 2,3,SystemPalette[1]);
+            VLine(fColorsLeft+i+3,Height div 2-3,3,SystemPalette[SYSTEMCOLORLIGHT]);
+            VLine(fColorsLeft+i+3,Height div 2,3,SystemPalette[SYSTEMCOLORBLACK]);
           end;
         end;
       end;
@@ -586,17 +586,17 @@ begin
     XLeft:=Width-XWidth;
     with fTexture.ARGBImage do begin
       // Outer border
-      if Selected then i:=5 else i:=2;
+      if Selected then i:=SYSTEMCOLORHIGHLIGHT else i:=SYSTEMCOLORDARK;
       Bar(0,0,Width,3,SystemPalette[i]);
       Bar(0,Height-3,Width,3,SystemPalette[i]);
       Bar(0,3,3,Height-6,SystemPalette[i]);
       Bar(Width-3,3,3,Height-6,SystemPalette[i]);
       // X left border and background
-      Bar(XLeft,3,3,Height-6,SystemPalette[2]);
+      Bar(XLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
       if not Selected then
-        Bar(XLeft+3,3,XWidth-6,Height-6,SystemPalette[3])
+        Bar(XLeft+3,3,XWidth-6,Height-6,SystemPalette[SYSTEMCOLORMID])
       else
-        Bar(XLeft+3,3,XWidth-6,Height-6,SystemPalette[2]);
+        Bar(XLeft+3,3,XWidth-6,Height-6,SystemPalette[SYSTEMCOLORDARK]);
       // Color cluster bar
       if Assigned(fColorCluster) then begin
         for i:=0 to fColorsWidth-1 do

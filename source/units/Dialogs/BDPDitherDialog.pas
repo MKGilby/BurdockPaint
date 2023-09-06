@@ -93,8 +93,8 @@ end;
 procedure TBDDitherDialog.ReDraw;
 begin
   if Assigned(fTexture) then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[2]);
-    fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[3]);
+    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[SYSTEMCOLORDARK]);
+    fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[SYSTEMCOLORMID]);
     MM.Fonts['Black'].OutText(fTexture.ARGBImage,'DITHER STRENGTH',DITHERDIALOGWIDTH div 2,16,1);
     fTexture.Update;
   end;

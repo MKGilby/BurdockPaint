@@ -213,10 +213,10 @@ procedure TBDPaletteEditor.Redraw;
 var i:integer;
 begin
   if Assigned(fTexture) then begin
-    // Panel background
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,SystemPalette[2]);
     // Panel top line
-    fTexture.ARGBImage.Bar(0,3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,SystemPalette[3]);
+    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
+    // Panel background
+    fTexture.ARGBImage.Bar(0,3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,SystemPalette[SYSTEMCOLORMID]);
     // Letters for sliders
     for i:=0 to 6 do
       MM.Fonts['Black'].OutText(fTexture.ARGBImage,'HSLRGBA'[i+1],SLIDERSLEFT-20,SLIDERSTOP+9+(NORMALSLIDERHEIGHT+3)*i,1);

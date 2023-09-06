@@ -125,13 +125,13 @@ procedure TBDColorSelector.ReDraw;
 var i:integer;c:uint32;
 begin
   with fTexture.ARGBImage do begin
-    Bar(0,0,fTexture.Width,fTexture.Height,SystemPalette[2]);
+    Bar(0,0,fTexture.Width,fTexture.Height,SystemPalette[SYSTEMCOLORDARK]);
     if Settings.ActiveColor=Settings.ColorSelectorLeftColor then
-      Bar(0,0,Height,Height,SystemPalette[5]);
+      Bar(0,0,Height,Height,SystemPalette[SYSTEMCOLORHIGHLIGHT]);
     if Settings.ActiveColor=Settings.ColorSelectorMainColor then
-      Bar(fMainColorLeft,0,Height,Height,SystemPalette[5]);
+      Bar(fMainColorLeft,0,Height,Height,SystemPalette[SYSTEMCOLORHIGHLIGHT]);
     if Settings.ActiveColor=Settings.ColorSelectorRightColor then
-      Bar(fRightColorLeft,0,Height,Height,SystemPalette[5]);
+      Bar(fRightColorLeft,0,Height,Height,SystemPalette[SYSTEMCOLORHIGHLIGHT]);
     Bar(3,3,Height-6,Height-6,Settings.ColorSelectorLeftColor);
     Bar(fMainColorLeft+3,3,Height-6,Height-6,Settings.ColorSelectorMainColor);
     Bar(fRightColorLeft+3,3,Height-6,Height-6,Settings.ColorSelectorRightColor);
@@ -139,16 +139,16 @@ begin
       c:=fLeftColorCluster.GetColorAt(i,fLeftClusterWidth);
       VLine(fLeftClusterLeft+i,3,Height-6,c);
       if Settings.ActiveColor=c then begin
-        VLine(fLeftClusterLeft+i,Height div 2-3,3,SystemPalette[4]);
-        VLine(fLeftClusterLeft+i,Height div 2,3,SystemPalette[1]);
+        VLine(fLeftClusterLeft+i,Height div 2-3,3,SystemPalette[SYSTEMCOLORLIGHT]);
+        VLine(fLeftClusterLeft+i,Height div 2,3,SystemPalette[SYSTEMCOLORBLACK]);
       end;
     end;
     for i:=0 to fRightClusterWidth-1 do begin
       c:=fRightColorCluster.GetColorAt(i,fRightClusterWidth);
       VLine(fRightClusterLeft+i,3,Height-6,c);
       if Settings.ActiveColor=c then begin
-        VLine(fRightClusterLeft+i,Height div 2-3,3,SystemPalette[4]);
-        VLine(fRightClusterLeft+i,Height div 2,3,SystemPalette[1]);
+        VLine(fRightClusterLeft+i,Height div 2-3,3,SystemPalette[SYSTEMCOLORLIGHT]);
+        VLine(fRightClusterLeft+i,Height div 2,3,SystemPalette[SYSTEMCOLORBLACK]);
       end;
     end;
   end;

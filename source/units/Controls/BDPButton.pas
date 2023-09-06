@@ -115,17 +115,17 @@ end;
 procedure TBDButton.ReDraw;
 begin
   with fTexture.ARGBImage do begin
-    Bar(8,0,Width-16,3,SystemPalette[2]);
-    Bar(8,Height-3,fWidth-16,3,SystemPalette[2]);
-    Bar(0,8,3,Height-16,SystemPalette[2]);
-    Bar(Width-3,8,3,Height-16,SystemPalette[2]);
+    Bar(8,0,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(8,Height-3,fWidth-16,3,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(0,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(Width-3,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
     if fSelected then
-      Bar(3,3,Width-6,Height-6,SystemPalette[4])
+      Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
     else begin
       if fEnabled then
-        Bar(3,3,Width-6,Height-6,SystemPalette[3])
+        Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORMID])
       else
-        Bar(3,3,Width-6,Height-6,SystemPalette[2]);
+        Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORDARK]);
     end;
   end;
   if Assigned(fTLImage) then

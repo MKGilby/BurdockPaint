@@ -84,8 +84,8 @@ begin
     y:=6;
   end;
   fTop:=fBottom-fTexture.Height;
-  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[2]);
-  fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[3]);
+  fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[SYSTEMCOLORDARK]);
+  fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[SYSTEMCOLORMID]);
   fTexture.Update;
   if fNeedAddButton then begin
     atmB:=TBDButton.Create(fLeft+(fTexture.Width-NORMALBUTTONWIDTH) div 2,fTop+6,
