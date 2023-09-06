@@ -130,7 +130,7 @@ uses SysUtils, MKToolBox, Logger;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.03';
+  Version='1.04';
 
 
 { THorizontalSliderLogic }
