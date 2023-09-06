@@ -34,23 +34,9 @@ type
 
   TBDPaletteEditor=class(TContainer)
     constructor Create;
-    procedure Redraw; override;
-    procedure MouseEnter(Sender:TObject);
-    procedure MouseLeave(Sender:TObject);
-    procedure OnSliderRGBChange(Sender:TObject;newValue:integer);
-    procedure OnSliderAChange(Sender:TObject;newValue:integer);
-    procedure OnSliderHSChange(Sender:TObject;newValue:integer);
-    procedure OnSliderLChange(Sender:TObject;newValue:integer);
-//    procedure UndoButtonClick(Sender:TObject;x,y,buttons:integer);
-//    procedure RedoButtonClick(Sender:TObject;x,y,buttons:integer);
-    procedure HSBoxChange(Sender:TObject);
-    procedure AlternateLSliderChange(Sender:TObject);
-    procedure PaletteEditorShow(Sender:TObject);
-    procedure PaletteEditorHide(Sender:TObject);
-    procedure RefreshHSLbyRGB;
-    procedure RefreshRGBbyHSL;
-    procedure RefreshColorBox;
     function ProcessMessage(msg:TMessage):boolean;
+  protected
+    procedure Redraw; override;
   private
     fSliderH,fSliderS,fSliderL,
     fSliderR,fSliderG,fSliderB,fSliderA:TBDHorizontalSlider;
@@ -58,8 +44,26 @@ type
     fColorPalette:TBDColorPalette;
     fHSBox:TBDHSBox;
     fColorBox:TBDColorBox;
-    fSavedColor:uint32;
-    fPickingColor:integer;
+    fCalledFrom:integer;
+//    fSavedColor:uint32;
+//    fPickingColor:integer;
+    procedure MouseEnter(Sender:TObject);
+    procedure MouseLeave(Sender:TObject);
+    procedure SliderRGBChange(Sender:TObject;newValue:integer);
+    procedure SliderAChange(Sender:TObject;newValue:integer);
+    procedure SliderHSChange(Sender:TObject;newValue:integer);
+    procedure SliderLChange(Sender:TObject;newValue:integer);
+//    procedure UndoButtonClick(Sender:TObject;x,y,buttons:integer);
+//    procedure RedoButtonClick(Sender:TObject;x,y,buttons:integer);
+    procedure HSBoxChange(Sender:TObject);
+    procedure AlternateLSliderChange(Sender:TObject);
+    procedure SelectClick(Sender:TObject;x,y,buttons:integer);
+    procedure PaletteEditorShow(Sender:TObject);
+    procedure PaletteEditorHide(Sender:TObject);
+    procedure RefreshHSLbyRGB;
+    procedure RefreshRGBbyHSL;
+    procedure RefreshColorBox;
+  private
   end;
 
 implementation
@@ -137,19 +141,19 @@ begin
   AddChild(fHSBox);
 
   fSliderH:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP,
-    360,'H-Slider',OnSliderHSChange);
+    360,'H-Slider',SliderHSChange);
   fSliderS:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+NORMALSLIDERHEIGHT+3,
-    100,'S-Slider',OnSliderHSChange);
+    100,'S-Slider',SliderHSChange);
   fSliderL:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+2*(NORMALSLIDERHEIGHT+3),
-    100,'L-Slider',OnSliderLChange);
+    100,'L-Slider',SliderLChange);
   fSliderR:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+3*(NORMALSLIDERHEIGHT+3),
-    255,'R-Slider',OnSliderRGBChange);
+    255,'R-Slider',SliderRGBChange);
   fSliderG:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+4*(NORMALSLIDERHEIGHT+3),
-    255,'G-Slider',OnSliderRGBChange);
+    255,'G-Slider',SliderRGBChange);
   fSliderB:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+5*(NORMALSLIDERHEIGHT+3),
-    255,'B-Slider',OnSliderRGBChange);
+    255,'B-Slider',SliderRGBChange);
   fSliderA:=CreateSlider(fLeft+SLIDERSLEFT,fTop+SLIDERSTOP+6*(NORMALSLIDERHEIGHT+3),
-    255,'A-Slider',OnSliderAChange);
+    255,'A-Slider',SliderAChange);
 
   fAlternateLSlider:=TBDLightSlider.Create(fLeft+LIGHTSLIDERLEFT,fTop+LIGHTSLIDERTOP,LIGHTSLIDERWIDTH,LIGHTSLIDERHEIGHT);
   fAlternateLSlider.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
@@ -162,6 +166,7 @@ begin
   with atmB do begin
     Name:='Select Color';
     ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+    OnClick:=SelectClick;
   end;
   AddChild(atmB);
 
@@ -202,11 +207,12 @@ begin
   fColorPalette.Name:='ColorPalette';
   AddChild(fColorPalette);
 
-  fPickingColor:=-1;
+//  fPickingColor:=-1;
 
   Visible:=false;
   MouseObjects.Add(Self);
   Refresh;
+  fCalledFrom:=0;
 end;
 
 procedure TBDPaletteEditor.Redraw;
@@ -234,17 +240,17 @@ procedure TBDPaletteEditor.MouseLeave(Sender:TObject);
 begin
 end;
 
-procedure TBDPaletteEditor.OnSliderRGBChange(Sender:TObject; newValue:integer);
+procedure TBDPaletteEditor.SliderRGBChange(Sender:TObject; newValue:integer);
 begin
   RefreshHSLbyRGB;
 end;
 
-procedure TBDPaletteEditor.OnSliderAChange(Sender:TObject; newValue:integer);
+procedure TBDPaletteEditor.SliderAChange(Sender:TObject; newValue:integer);
 begin
   RefreshColorBox;
 end;
 
-procedure TBDPaletteEditor.OnSliderHSChange(Sender:TObject; newValue:integer);
+procedure TBDPaletteEditor.SliderHSChange(Sender:TObject; newValue:integer);
 begin
   fHSBox.SetColor(fSliderH.Position,fSliderS.Position);
   fAlternateLSlider.BaseColor:=fHSBox.Color;
@@ -252,7 +258,7 @@ begin
   RefreshRGBbyHSL;
 end;
 
-procedure TBDPaletteEditor.OnSliderLChange(Sender:TObject; newValue:integer);
+procedure TBDPaletteEditor.SliderLChange(Sender:TObject; newValue:integer);
 begin
   fAlternateLSlider.L:=fSliderL.Position;
   RefreshColorBox;
@@ -277,6 +283,11 @@ begin
   fSliderG.Position:=(fAlternateLSlider.Color and $ff00)>>8;
   fSliderB.Position:=fAlternateLSlider.Color and $ff;
   RefreshColorBox;
+end;
+
+procedure TBDPaletteEditor.SelectClick(Sender:TObject; x,y,buttons:integer);
+begin
+  MessageQueue.AddMessage(MSG_DEACTIVATEPALETTEEDITOR,fCalledFrom,fColorBox.Color);
 end;
 
 {procedure TBDPaletteEditor.OnColorSliderMouseDown(Sender:TObject;x,y,buttons:integer);
@@ -362,50 +373,20 @@ function TBDPaletteEditor.ProcessMessage(msg:TMessage):boolean;
 begin
   Result:=false;
   if Enabled then begin
-{    case msg.TypeID of
-      MSG_ACTIVECOLORINDEXCHANGED:begin
-        fColorBox.Color:=Settings.ActiveColorIndex;
-        RefreshSliders;
-        fColorCluster.Refresh;
-        Result:=true;
+    case msg.TypeID of
+      MSG_ACTIVATEPALETTEEDITOR:begin
+        fSliderA.Position:=(msg.DataUInt32 and $FF000000)>>24;
+        fSliderR.Position:=(msg.DataUInt32 and $FF0000)>>16;
+        fSliderG.Position:=(msg.DataUInt32 and $FF00)>>8;
+        fSliderB.Position:=msg.DataUInt32 and $FF;
+        RefreshHSLbyRGB;
+        fCalledFrom:=msg.DataInt;
       end;
-      MSG_SETPALETTEUNDOREDOBUTTON:begin
+{      MSG_SETPALETTEUNDOREDOBUTTON:begin
         fUndoButton.Enabled:=Project.CurrentExtImage.PaletteUndo.CanUndo;
         fRedoButton.Enabled:=Project.CurrentExtImage.PaletteUndo.CanRedo;
-      end;
-      MSG_COLORSELECTORPICKEDCOLOR:begin
-        fColorSelector.SetSelectedSlotTo(msg.DataInt);
-        ActiveTool:=Tools.ItemByName['SELCOL'];
-        InfoBar.ShowText('');
-        Result:=true;
-      end;
-      MSG_PALETTEPICKEDCOLOR:begin
-        if msg.DataInt>-1 then
-          Project.CurrentPalette[fPickingColor]:=msg.DataInt;
-        fPickingColor:=-1;
-        fColorCluster.Refresh;
-        ActiveTool:=Tools.ItemByName['SELCOL'];
-        InfoBar.ShowText('');
-        Result:=true;
-      end;
-      MSG_ACTIVATEPICKCOLORCLUSTER:begin
-        ActiveTool:=Tools.ItemByName['PICKCOLCLS'];
-        Result:=true;
-      end;
-      MSG_COLORCLUSTERPICKED:begin
-        if msg.DataInt>-1 then begin
-          fColorCluster.ColorCluster.StartIndex:=(msg.DataInt and $7FFF0000)>>16;
-          fColorCluster.ColorCluster.EndIndex:=msg.DataInt and $7FFF;
-        end;
-        fColorCluster.Refresh;
-        ActiveTool:=Tools.ItemByName['SELCOL'];
-        InfoBar.ShowText('');
-        Result:=true;
-      end;
-      MSG_ACTIVECOLORCLUSTERCHANGED:begin
-        fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveColorCluster;
-      end;
-    end;}
+      end;}
+    end;
   end;
 end;
 
