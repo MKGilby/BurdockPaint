@@ -80,7 +80,6 @@ type
     procedure FlipCEL(msg:TMessage);
     procedure OpenCEL;
     procedure SaveCEL;
-
     procedure ActivatePaletteEditor;
     procedure DeactivatePaletteEditor;
     procedure SelectColor;
@@ -206,9 +205,11 @@ begin
   {$ifndef LimitFPS} FlipNoLimit; {$else} Flip; {$endif}
     while MessageQueue.HasNewMessage do begin
       msg:=MessageQueue.GetNextMessage;
-      mres:=false;
-      if fControls.Visible then mres:=fControls.ProcessMessage(msg);
-      if not mres and fPaletteEditor.Visible then mres:=fPaletteEditor.ProcessMessage(msg);
+//      mres:=false;
+//      if fControls.Visible then mres:=fControls.ProcessMessage(msg);
+      mres:=fControls.ProcessMessage(msg);
+//      if not mres and fPaletteEditor.Visible then mres:=fPaletteEditor.ProcessMessage(msg);
+      if not mres then mres:=fPaletteEditor.ProcessMessage(msg);
       if not mres and fMainMenu.Visible then mres:=fMainMenu.ProcessMessage(msg);
       if not mres then
         case msg.TypeID of
@@ -241,11 +242,9 @@ begin
           MSG_OPENMAGNIFYCELDIALOG:      fMagnifyDialog.Show;
           MSG_OPENCEL:                   OpenCEL;
           MSG_SAVECEL:                   SaveCEL;
-
           MSG_ACTIVATEPALETTEEDITOR:     ActivatePaletteEditor;
           MSG_DEACTIVATEPALETTEEDITOR:   DeactivatePaletteEditor;
           MSG_SELECTCOLOR:               SelectColor;
-
         end;
     end;  // while MessageQueue.HasNewMessage
     HandleMessages;
@@ -563,7 +562,6 @@ begin
   fMainMenu.DisableItem('CEL');
   fMainMenu.DisableItem('TOOLS');
   fMainMenu.DisableItem('INKS');
-  fMainMenu.EnableItem('CLUSTER');
 end;
 
 procedure TMain.DeactivatePaletteEditor;
@@ -575,7 +573,6 @@ begin
   fMainMenu.EnableItem('CEL');
   fMainMenu.EnableItem('TOOLS');
   fMainMenu.EnableItem('INKS');
-  fMainMenu.DisableItem('CLUSTER');
   InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
 end;
 
