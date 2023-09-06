@@ -22,13 +22,7 @@ Todo:
 - BUG: Controls should show hexa values for color instead of non-existing
   color index.
 - Sliders should move with the mouse, not proportionally.
-- PaletteEditor should come up by right clicking on any place where a color
-  could be picked. (The two ends and the center of the color selector.)
-- PaletteEditor should set sliders according to the color it was invoked from.
-  (RGB must be exact, HSL calculated from RGB)
 - PaletteEditor buttons:
-  - "Select" should select the color set by RGB and A sliders and close PaletteEditor.
-  - "Cancel" should close PaletteEditor without changing anything.
   - "Undo" and "Redo" should undo/redo any changes made on the PaletteEditor.
     (Probably need another undo type)
 - Right clicking on colorbox should allow to put color on palette by left clicking.
@@ -44,6 +38,7 @@ Todo:
   (only the two ends and the main color).
 - Clicking Select button on PaletteEditor sets the color of the right clicked part
   of the color selector.
+- Clicking Cancel button closes the PaletteEditor without changing any color.
 
 2023.09.05
 - Added buttons to PaletteEditor.
