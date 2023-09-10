@@ -25,12 +25,15 @@ Todo:
 - PaletteEditor buttons:
   - "Undo" and "Redo" should undo/redo any changes made on the PaletteEditor.
     (Probably need another undo type)
-- Right clicking on colorbox should allow to put color on palette by left clicking.
-- Right clicking on ColorPalette should enable picking color from DrawArea (or colorbox).
-- Left clicking on ColorPalette should set sliders according to clicked color.
-- Clicking on DrawArea should set sliders according to clicked color.
 - Add an option to make the palette always visible. (Needs a palette control.)
 
+
+2023.09.10
+- Left clicking on palette color set sliders to that color.
+- Right clicking on palette color stores the color into the palette.
+
+2023.09.07
+- Clicking on DrawArea when PaletteEditor is open sets sliders according to clicked color.
 
 2023.09.06
 - Added ColorPalette to PaletteEditor.

@@ -396,6 +396,9 @@ begin
         fSliderB.Position:=msg.DataUInt32 and $FF;
         RefreshHSLbyRGB;
       end;
+      MSG_PALETTEREQUESTCOLOR:begin
+        fColorPalette.SetColor(msg.DataInt,fColorBox.Color);
+      end;
 {      MSG_SETPALETTEUNDOREDOBUTTON:begin
         fUndoButton.Enabled:=Project.CurrentExtImage.PaletteUndo.CanUndo;
         fRedoButton.Enabled:=Project.CurrentExtImage.PaletteUndo.CanRedo;

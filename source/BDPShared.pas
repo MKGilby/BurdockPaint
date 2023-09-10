@@ -178,8 +178,10 @@ const
   // Project image count changed. Used to refresh Controls' slider.
   MSG_PROJECTIMAGECOUNTCHANGED=20;
 
-  // PICKCOLP finished, Data is the selected color index or -1 of no color selected.
-  MSG_PALETTEPICKEDCOLOR=21;
+  // User right clicked on palette entry, request PaletteEditor to store selected
+  // color into palette.
+  //   IntValue is the palette entry
+  MSG_PALETTEREQUESTCOLOR=21;
 
   // Activate PickColorCluster tool.
   MSG_ACTIVATEPICKCOLORCLUSTER=22;
