@@ -40,7 +40,8 @@ var P:TBDProject;fn:String;
 begin
   writeln('BurdockPaint Project File Updater 1 - (C) 2023 MKSZTSZ');
   writeln;
-  writeln('Updates project file from version 1 (paletted) to version 2 (true color).');
+  writeln('Updates project file from version 1 (paletted) or version 2 (true color)');
+  writeln('to the version where blocks are identified by 3+1 char IDs.');
   writeln;
 
   if Parameters.Count>1 then begin
@@ -56,6 +57,7 @@ begin
           RenameFile(fn,ChangeFileExt(fn,'.bak'));
           writeln('Writing project...');
           P.SaveToFile(fn);
+          writeln('Completed.');
         end else writeln('*** Cannot create backup (.bak) file!');
       finally
         P.Free;

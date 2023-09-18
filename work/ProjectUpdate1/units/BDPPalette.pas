@@ -45,6 +45,9 @@ type
     // Save palette to a stream.
     procedure SaveToStream(Target:TStream); overload;
 
+    // Save palette to a stream. 3+1 byte id format.
+    procedure SaveToStream2(Target:TStream); overload;
+
     // Load palette from a file.
     procedure LoadFromFile(pFilename:string);
 
@@ -61,6 +64,12 @@ type
     function CreateDataV2:TStream;
     // Creates a compressed stream that contains the data in V3 format.
     function CreateDataV3:TStream;
+    // Creates a compressed stream that contains the data in V1 format.
+    function CreateDataV1_2:TStream;
+    // Creates a compressed stream that contains the data in V2 format.
+    function CreateDataV2_2:TStream;
+    // Creates a compressed stream that contains the data in V3 format.
+    function CreateDataV3_2:TStream;
     // Load palette from stream format V1 (see below).
     procedure LoadFromStreamV1(Source:TStream);
     // Load palette from stream format V2 (see below).
@@ -68,6 +77,7 @@ type
     // Load palette from stream format V3 (see below).
     procedure LoadFromStreamV3(Source:TStream);
 
+    function CopySmallerStream(pTarget,pSource1,pSource2:TStream):integer;
   public
     property Colors[index:integer]:uint32 read fGetColor; default;
     property Size:integer read fMaxEntries;
@@ -80,6 +90,8 @@ uses MKStream, Logger, MyZStreamUnit, CodingUnit;
 const
   PALETTEDATAID=$43;
   MAXPALETTEENTRIES=256;
+
+  COLORBLOCKID='CLR';
 
   { TBDPalette }
 
@@ -131,6 +143,27 @@ begin
   Target.Position:=curr;
   Target.write(i,4);
   Target.Position:=Target.Position+i;
+end;
+
+procedure TBDPalette.SaveToStream2(Target: TStream);
+var Xs,Ys:TStream;
+begin
+  Xs:=CreateDataV1_2;
+  Ys:=CreateDataV2_2;
+  if Xs.Size<=Ys.Size then begin
+    FreeAndNil(Ys);
+  end else begin
+    FreeAndNil(Xs);
+    Xs:=Ys;
+  end;
+  Ys:=CreateDataV3_2;
+  if Xs.Size<=Ys.Size then begin
+    Target.CopyFrom(Xs,Xs.Size);
+  end else begin
+    Target.CopyFrom(Ys,Ys.Size);
+  end;
+  FreeAndNil(Xs);
+  FreeAndNil(Ys);
 end;
 
 function TBDPalette.CreateDataV1:TStream;
@@ -187,6 +220,90 @@ begin
   Xs.Position:=0;
   CompressStream(Xs,Result,Xs.Size);
   FreeAndNil(Xs);
+  Result.Position:=0;
+end;
+
+function TBDPalette.CreateDataV1_2:TStream;
+var Xs,Ys:TMemoryStream;i:integer;s:string;
+begin
+  Result:=TMemoryStream.Create;
+  s:=COLORBLOCKID+#1;
+  Result.Write(s[1],4);
+
+  Xs:=TMemoryStream.Create;
+  i:=fMaxEntries;
+  Xs.Write(i,2);
+  Xs.Write(fEntries^,i*4);
+  Xs.Position:=0;
+  Ys:=TMemoryStream.Create;
+  CompressStream(Xs,Ys,Xs.Size);
+  i:=CopySmallerStream(Result,Xs,Ys);
+  FreeAndNil(Ys);
+  FreeAndNil(Xs);
+  if i=2 then begin
+    s[1]:=chr(ord(s[1]) or $20);
+    Result.Position:=0;
+    Result.Write(s[1],4);
+  end;
+  Result.Position:=0;
+end;
+
+function TBDPalette.CreateDataV2_2:TStream;
+var Xs,Ys:TMemoryStream;i,j:integer;s:string;
+begin
+  Result:=TMemoryStream.Create;
+  s:=COLORBLOCKID+#2;
+  Result.Write(s[1],4);
+
+  Xs:=TMemoryStream.Create;
+  i:=fMaxEntries;
+  Xs.Write(i,2);
+  for j:=0 to 3 do
+    for i:=0 to fMaxEntries-1 do
+      Xs.Write((fEntries+i*4+j)^,1);
+  Xs.Position:=0;
+  Ys:=TMemoryStream.Create;
+  CompressStream(Xs,Ys,Xs.Size);
+  i:=CopySmallerStream(Result,Xs,Ys);
+  FreeAndNil(Ys);
+  FreeAndNil(Xs);
+  if i=2 then begin
+    s[1]:=chr(ord(s[1]) or $20);
+    Result.Position:=0;
+    Result.Write(s[1],4);
+  end;
+  Result.Position:=0;
+end;
+
+function TBDPalette.CreateDataV3_2:TStream;
+var Xs,Ys:TMemoryStream;i,j,b:integer;s:string;
+begin
+  Result:=TMemoryStream.Create;
+  s:=COLORBLOCKID+#3;
+  Result.Write(s[1],4);
+
+  Xs:=TMemoryStream.Create;
+  i:=fMaxEntries;
+  Xs.Write(i,2);
+  for j:=0 to 3 do begin
+    b:=0;
+    for i:=0 to fMaxEntries-1 do begin
+      b:=byte((fEntries+i*4+j)^)-b;
+      Xs.Write(b,1);
+      b:=byte((fEntries+i*4+j)^);
+    end;
+  end;
+  Xs.Position:=0;
+  Ys:=TMemoryStream.Create;
+  CompressStream(Xs,Ys,Xs.Size);
+  i:=CopySmallerStream(Result,Xs,Ys);
+  FreeAndNil(Ys);
+  FreeAndNil(Xs);
+  if i=2 then begin
+    s[1]:=chr(ord(s[1]) or $20);
+    Result.Position:=0;
+    Result.Write(s[1],4);
+  end;
   Result.Position:=0;
 end;
 
@@ -278,6 +395,24 @@ begin
       b:=(b+b2) and $ff;
       byte((fEntries+i*4+j)^):=b;
     end;
+  end;
+end;
+
+function TBDPalette.CopySmallerStream(pTarget, pSource1, pSource2: TStream): integer;
+var i:integer;
+begin
+  if pSource1.Size<=pSource2.Size then begin
+    Result:=1;
+    pSource1.Position:=0;
+    i:=pSource1.Size;
+    pTarget.Write(i,4);
+    pTarget.CopyFrom(pSource1,pSource1.Size);
+  end else begin
+    Result:=2;
+    pSource2.Position:=0;
+    i:=pSource2.Size;
+    pTarget.Write(i,4);
+    pTarget.CopyFrom(pSource2,pSource2.Size);
   end;
 end;
 

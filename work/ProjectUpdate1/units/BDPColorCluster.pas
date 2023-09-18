@@ -43,6 +43,9 @@ type
     // Save color cluster to the specified stream. (fileformats.txt - T-block)
     procedure SaveToStream(pStream:TStream);
 
+    // Save color cluster to the specified stream. (fileformats.txt - CLC-block)
+    procedure SaveToStream2(pStream:TStream);
+
     // Load color cluster from a standalone file. (fileformats.txt - T-block)
     procedure LoadFromFile(pFilename:string);
 
@@ -70,6 +73,7 @@ type
     constructor CreateFromStream(iStream:TStream);
     procedure SaveToFile(pFilename:string);
     procedure SaveToStream(pStream:TStream);
+    procedure SaveToStream2(pStream:TStream);
     procedure LoadFromFile(pFilename:string);
     procedure LoadFromStream(pStream:TStream);
   private
@@ -85,6 +89,8 @@ uses BDPShared, Logger;
 const
   COLORCLUSTERID=$54;
   COLORCLUSTERSID=$4C;
+
+  COLORCLUSTERSBLOCKID='CCS';
 
 { TColorCluster }
 
@@ -121,6 +127,17 @@ begin
   pStream.Position:=curr;
   pStream.write(i,4);
   pStream.Position:=pStream.Position+i;
+end;
+
+procedure TColorCluster.SaveToStream2(pStream:TStream);
+var flags:byte;
+begin
+  pStream.Write(fColor1,4);
+  pStream.Write(fColor2,4);
+  flags:=0;
+  if fReversed then flags:=flags or 1;
+  if fPingpong then flags:=flags or 2;
+  pStream.Write(flags,1);
 end;
 
 procedure TColorCluster.LoadFromFile(pFilename:string);
@@ -234,6 +251,24 @@ begin
   pStream.Write(i,1);
   pStream.Write(fActiveIndex,1);
   for i:=0 to Count-1 do Items[i].SaveToStream(pStream);
+  i:=pStream.Position-curr-4;
+  pStream.Position:=curr;
+  pStream.write(i,4);
+  pStream.Position:=pStream.Position+i;
+end;
+
+procedure TColorClusters.SaveToStream2(pStream:TStream);
+var i:integer;curr:int64;s:string;
+begin
+  s:=COLORCLUSTERSBLOCKID+#1;
+  pStream.Write(s[1],4);
+  curr:=pStream.Position;
+  i:=0;
+  pStream.Write(i,4);
+  i:=Self.Count;
+  pStream.Write(i,1);
+  pStream.Write(fActiveIndex,1);
+  for i:=0 to Count-1 do Items[i].SaveToStream2(pStream);
   i:=pStream.Position-curr-4;
   pStream.Position:=curr;
   pStream.write(i,4);

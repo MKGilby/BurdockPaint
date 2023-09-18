@@ -20,7 +20,7 @@
 
 // This is a stripped version of the original BDPImage!
 
-unit BDPImage;
+unit BDPRegion;
 
 {$mode Delphi}
 
@@ -38,13 +38,15 @@ type
     constructor CreateFromStream(iStream:TStream);
 
     // ------------- File/Stream operations ----------------
-    // Saves image to file, including palette data.
+    // Saves region to file.
     procedure SaveToFile(pFilename:string);
-    // Saves image to stream, including palette data.
+    // Saves region to stream.
     procedure SaveToStream(Target:TStream);
-    // Loads image from file, including palette data.
+    // Saves region to stream. 3+1 ID version.
+    procedure SaveToStream2(Target:TStream);
+    // Loads region from file.
     procedure LoadFromFile(pFilename:string);
-    // Loads image from stream, including palette data.
+    // Loads region from stream, including palette data.
     procedure LoadFromStream(Source:TStream);
     // Read a region as whole image from stream.
     procedure LoadRegionFromStream(Source:TStream;Palette:TBDPalette=nil);
@@ -66,7 +68,7 @@ uses MyZStreamUnit, Logger, MKToolbox, FastPaletteUnit;
 const
   IMAGEDATAID=$49;
   REGIONDATAID=$52;
-
+  REGIONBLOCKID='RGN';
 
 { TBDRegion }
 
@@ -105,6 +107,41 @@ begin
   FreeAndNil(Xs);
   i:=Target.Position-curr-4;
   Target.Position:=curr;
+  Target.write(i,4);
+  Target.Position:=Target.Position+i;
+end;
+
+procedure TBDRegion.SaveToStream2(Target:TStream);
+var i:integer;curr:int64;Ys,Xs:TStream;s:String;
+begin
+  s:=REGIONBLOCKID+#1;
+  curr:=Target.Position;
+  i:=0;
+  Target.Write(i,4);
+  Target.Write(i,4);
+  Xs:=TMemoryStream.Create;
+  Xs.Write(fLeft,2);
+  Xs.Write(fTop,2);
+  Xs.Write(Width,2);
+  Xs.Write(Height,2);
+  Xs.Write(Rawdata^,Width*Height*4);
+  Xs.Position:=0;
+  Ys:=TMemoryStream.Create;
+  CompressStream(Xs,Ys,Xs.Size);
+  if Xs.Size<=Ys.Size then begin
+    Xs.Position:=0;
+    Target.CopyFrom(Xs,Xs.Size);
+  end else begin
+    Ys.Position:=0;
+    Target.CopyFrom(Ys,Ys.Size);
+    s[1]:=chr(ord(s[1]) or $20);
+  end;
+  FreeAndNil(Xs);
+  FreeAndNil(Ys);
+
+  i:=Target.Position-curr-8;
+  Target.Position:=curr;
+  Target.Write(s[1],4);
   Target.write(i,4);
   Target.Position:=Target.Position+i;
 end;

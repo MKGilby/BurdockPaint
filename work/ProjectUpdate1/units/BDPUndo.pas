@@ -26,7 +26,7 @@ unit BDPUndo;
 
 interface
 
-uses Classes, Sysutils, fgl, BDPImage, BDPPalette;
+uses Classes, Sysutils, fgl, BDPRegion, BDPPalette;
 
 type
 
