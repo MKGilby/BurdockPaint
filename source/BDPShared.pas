@@ -141,8 +141,9 @@ const
   //   UInt32 value is the new color.
   MSG_ACTIVECOLORCHANGED=8;
 
-  // PICKCOLCS finished, Data is the selected color index or -1 if no color selected.
-  MSG_COLORSELECTORPICKEDCOLOR=9;
+  // PaletteEditor should set color box color and set sliders accordingly.
+  //   UInt32 value is the new color.
+  MSG_SETCOLORBOXCOLOR=9;
 
   // Response from MessageBox.
   //   IntValue is the pressed button number.
@@ -198,6 +199,11 @@ const
   // RGrad configuration "Center" finished. (Data is stored in Settings.TempRGradCenter<X|Y>
   MSG_CONFIGRGRADCENTERFINISHED=26;
 
+  // PaletteEditor should set a palette color to the specified color.
+  //   Intvalue is the palette entry index.
+  //   UInt32 value is the new color.
+  MSG_SETPALETTECOLOR=27;
+
   // ------- Menu Messages ------- Range: 200-299 -------
   {$i includes\menu.inc}
 
@@ -226,8 +232,6 @@ var
   Project:TBDProject;  // The project we are working on
 
   CELHelperImage:TBDRegion;  // Helper image for PUTCel
-
-  GlobalV1Palette:TBDPalette; // A palette that is used for loading old version blocks.
 
   // Load assets and create shared objects
   procedure LoadAssets;

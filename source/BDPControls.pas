@@ -393,12 +393,6 @@ begin
       fRedoButton.Enabled:=Project.CurrentExtImage.ImageUndo.CanRedo;
       Result:=true;
     end;
-    MSG_COLORSELECTORPICKEDCOLOR:begin
-//      fColorSelector.SetSelectedSlotTo(msg.DataInt);
-      Self.ActivateToolButton(-1);  // Puts the already selected tool into ActiveTool
-      InfoBar.ShowText('');
-      Result:=true;
-    end;
     MSG_PROJECTIMAGECOUNTCHANGED:begin
       fImageCountSlider.MaxValue:=Project.Images.Count;
       fImageCountSlider.Position:=Project.CurrentImageIndex+1;
