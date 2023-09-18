@@ -56,13 +56,13 @@ type
     procedure SaveToFile(pFilename:string);
 
     // Save palette to a stream.
-    procedure SaveToStream(Target:TStream); overload;
+    procedure SaveToStream(pStream:TStream); overload;
 
     // Load palette from a file.
     procedure LoadFromFile(pFilename:string);
 
     // Identify palette file and call appropiate loader method.
-    procedure LoadFromStream(Source:TStream);
+    procedure LoadFromStream(pStream:TStream);
 
     // Load an entire .COL format palette (256 colors) from file.
     // Loading entry 0 to startindex, entry 1 to startindex+1 and so on.
@@ -70,7 +70,7 @@ type
 
     // Load an entire .COL format palette (256 colors) from stream.
     // Loading entry 0 to startindex, entry 1 to startindex+1 and so on.
-    procedure LoadCOL(Source:TStream;startindex:integer); overload;
+    procedure LoadCOL(pStream:TStream;startindex:integer); overload;
 
     // Copies colors from the specified palette. Omit count to copy all
     // colors from SourceStart.
@@ -114,7 +114,8 @@ type
     procedure LoadFromStreamV2(Source:TStream);
     // Load palette from stream format V3 (see below).
     procedure LoadFromStreamV3(Source:TStream);
-
+    //
+    function CopySmallerStream(pTarget,pSource1,pSource2:TStream):integer;
   public
     property Colors[index:integer]:uint32 read fGetColor write fSetColor; default;
     property ColorR[index:integer]:uint8 read fGetColorR write fSetColorR;
@@ -130,7 +131,7 @@ implementation
 uses BDPShared, MKStream, Logger, MyZStreamUnit, CodingUnit;
 
 const
-  PALETTEDATAID=$43;
+  COLORBLOCKID='CLR';
 
 { TBDVibroColors }
 
@@ -196,14 +197,9 @@ begin
   FreeAndNil(Xs);
 end;
 
-procedure TBDPalette.SaveToStream(Target:TStream);
-var i,curr:integer;Xs,Ys:TStream;
+procedure TBDPalette.SaveToStream(pStream:TStream);
+var Xs,Ys:TStream;
 begin
-  i:=PALETTEDATAID;
-  Target.Write(i,1);
-  curr:=Target.Position;
-  i:=0;
-  Target.Write(i,4);
   Xs:=CreateDataV1;
   Ys:=CreateDataV2;
   if Xs.Size<=Ys.Size then begin
@@ -214,59 +210,74 @@ begin
   end;
   Ys:=CreateDataV3;
   if Xs.Size<=Ys.Size then begin
-    Target.CopyFrom(Xs,Xs.Size);
+    pStream.CopyFrom(Xs,Xs.Size);
   end else begin
-    Target.CopyFrom(Ys,Ys.Size);
+    pStream.CopyFrom(Ys,Ys.Size);
   end;
   FreeAndNil(Xs);
   FreeAndNil(Ys);
-  i:=Target.Position-curr-4;
-  Target.Position:=curr;
-  Target.write(i,4);
-  Target.Position:=Target.Position+i;
 end;
 
 function TBDPalette.CreateDataV1:TStream;
-var Xs:TMemoryStream;i:integer;
+var Xs,Ys:TMemoryStream;i:integer;s:string;
 begin
   Result:=TMemoryStream.Create;
+  s:=COLORBLOCKID+#1;
+  Result.Write(s[1],4);
+
   Xs:=TMemoryStream.Create;
-  i:=1;
-  Xs.Write(i,1);
   i:=fMaxEntries;
   Xs.Write(i,2);
   Xs.Write(fEntries^,i*4);
   Xs.Position:=0;
-  CompressStream(Xs,Result,Xs.Size);
+  Ys:=TMemoryStream.Create;
+  CompressStream(Xs,Ys,Xs.Size);
+  i:=CopySmallerStream(Result,Xs,Ys);
+  FreeAndNil(Ys);
   FreeAndNil(Xs);
+  if i=2 then begin
+    s[1]:=chr(ord(s[1]) or $20);
+    Result.Position:=0;
+    Result.Write(s[1],4);
+  end;
   Result.Position:=0;
 end;
 
 function TBDPalette.CreateDataV2:TStream;
-var Xs:TMemoryStream;i,j:integer;
+var Xs,Ys:TMemoryStream;i,j:integer;s:string;
 begin
   Result:=TMemoryStream.Create;
+  s:=COLORBLOCKID+#2;
+  Result.Write(s[1],4);
+
   Xs:=TMemoryStream.Create;
-  i:=2;
-  Xs.Write(i,1);
   i:=fMaxEntries;
   Xs.Write(i,2);
   for j:=0 to 3 do
     for i:=0 to fMaxEntries-1 do
       Xs.Write((fEntries+i*4+j)^,1);
   Xs.Position:=0;
-  CompressStream(Xs,Result,Xs.Size);
+  Ys:=TMemoryStream.Create;
+  CompressStream(Xs,Ys,Xs.Size);
+  i:=CopySmallerStream(Result,Xs,Ys);
+  FreeAndNil(Ys);
   FreeAndNil(Xs);
+  if i=2 then begin
+    s[1]:=chr(ord(s[1]) or $20);
+    Result.Position:=0;
+    Result.Write(s[1],4);
+  end;
   Result.Position:=0;
 end;
 
 function TBDPalette.CreateDataV3:TStream;
-var Xs:TMemoryStream;i,j,b:integer;
+var Xs,Ys:TMemoryStream;i,j,b:integer;s:string;
 begin
   Result:=TMemoryStream.Create;
+  s:=COLORBLOCKID+#3;
+  Result.Write(s[1],4);
+
   Xs:=TMemoryStream.Create;
-  i:=3;
-  Xs.Write(i,1);
   i:=fMaxEntries;
   Xs.Write(i,2);
   for j:=0 to 3 do begin
@@ -278,8 +289,16 @@ begin
     end;
   end;
   Xs.Position:=0;
-  CompressStream(Xs,Result,Xs.Size);
+  Ys:=TMemoryStream.Create;
+  CompressStream(Xs,Ys,Xs.Size);
+  i:=CopySmallerStream(Result,Xs,Ys);
+  FreeAndNil(Ys);
   FreeAndNil(Xs);
+  if i=2 then begin
+    s[1]:=chr(ord(s[1]) or $20);
+    Result.Position:=0;
+    Result.Write(s[1],4);
+  end;
   Result.Position:=0;
 end;
 
@@ -291,26 +310,32 @@ begin
   FreeAndNil(Xs);
 end;
 
-procedure TBDPalette.LoadFromStream(Source:TStream);
-var size,curr:int64;b:byte;Xs:TMemoryStream;
+procedure TBDPalette.LoadFromStream(pStream:TStream);
+var size,curr:int64;b:byte;Xs:TMemoryStream;s:string;
 begin
-  b:=0;
-  Source.Read(b,1);
-  if b<>PALETTEDATAID then raise Exception.Create(Format('ID is not for palette data! (%.2x)',[b]));
+  s:=#0#0#0#0;
+  pStream.Read(s[1],4);
+  if uppercase(copy(s,1,3))<>COLORBLOCKID then
+    raise Exception.Create(Format('Color block id expected, got %s.',[copy(s,1,3)]));
+
   size:=0;
-  Source.Read(Size,4);
-  curr:=Source.Position;
+  pStream.Read(Size,4);
+  curr:=pStream.Position;
+
   Xs:=TMemoryStream.Create;
-  UnCompressStream(Source,Xs);
+  if ord(s[1]) and $20<>0 then
+    UnCompressStream(pStream,Xs)
+  else
+    Xs.CopyFrom(pStream,Size);
   Xs.Position:=0;
-  b:=0;
-  Xs.Read(b,1);
+
+  b:=ord(s[4]);
   if b=1 then LoadFromStreamV1(Xs)
   else if b=2 then LoadFromStreamV2(Xs)
   else if b=3 then LoadFromStreamV3(Xs)
-  else raise Exception.Create(Format('Unknown palette data version! (%d)',[b]));
+  else raise Exception.Create(Format('Unknown color block version! (%d)',[b]));
   FreeAndNil(Xs);
-  Source.Position:=curr+size;
+  pStream.Position:=curr+size;
 end;
 
 procedure TBDPalette.LoadFromStreamV1(Source:TStream);
@@ -382,12 +407,12 @@ begin
   FreeAndNil(Xs);
 end;
 
-procedure TBDPalette.LoadCOL(Source:TStream; startindex:integer);
+procedure TBDPalette.LoadCOL(pStream:TStream; startindex:integer);
 var buf:array[0..767] of byte;i:integer;p:pointer;
 begin
   if (startindex+256<=fMaxEntries) then begin
     buf[0]:=0;
-    Source.Read(buf[0],768);
+    pStream.Read(buf[0],768);
     for i:=0 to 767 do buf[i]:=buf[i]<<2;
     p:=fEntries+startindex*4;
     for i:=0 to 255 do begin
@@ -451,25 +476,6 @@ begin
   end;  // Start is out of range so nothing to copy.
 end;
 
-{procedure TBDPalette.Ramp(pColorCluster:TColorCluster);
-var i,pi1,pi2,count:integer;
-begin
-  if pColorCluster.StartIndex>pColorCluster.EndIndex then begin
-    pi1:=pColorCluster.EndIndex;
-    pi2:=pColorCluster.StartIndex;
-  end else begin
-    pi1:=pColorCluster.StartIndex;
-    pi2:=pColorCluster.EndIndex;
-  end;
-  count:=pi2-pi1+1;
-  for i:=1 to Count-2 do begin
-    Self.ColorR[pi1+i]:=Self.ColorR[pi1]+(Self.ColorR[pi2]-Self.ColorR[pi1])*i div (count-1);
-    Self.ColorG[pi1+i]:=Self.ColorG[pi1]+(Self.ColorG[pi2]-Self.ColorG[pi1])*i div (count-1);
-    Self.ColorB[pi1+i]:=Self.ColorB[pi1]+(Self.ColorB[pi2]-Self.ColorB[pi1])*i div (count-1);
-    Self.ColorA[pi1+i]:=Self.ColorA[pi1]+(Self.ColorA[pi2]-Self.ColorA[pi1])*i div (count-1);
-  end;
-end;
-}
 function TBDPalette.GetClosestColor(r, g, b: byte): word;
 var i,min,diff:integer;
 begin
@@ -560,6 +566,24 @@ begin
   if (index>=0) and (index<fMaxEntries) then begin
     uint8((fEntries+index*4)^):=value;
     fChanged:=true;
+  end;
+end;
+
+function TBDPalette.CopySmallerStream(pTarget, pSource1, pSource2: TStream): integer;
+var i:integer;
+begin
+  if pSource1.Size<=pSource2.Size then begin
+    Result:=1;
+    pSource1.Position:=0;
+    i:=pSource1.Size;
+    pTarget.Write(i,4);
+    pTarget.CopyFrom(pSource1,pSource1.Size);
+  end else begin
+    Result:=2;
+    pSource2.Position:=0;
+    i:=pSource2.Size;
+    pTarget.Write(i,4);
+    pTarget.CopyFrom(pSource2,pSource2.Size);
   end;
 end;
 

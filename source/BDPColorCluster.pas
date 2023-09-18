@@ -65,8 +65,6 @@ type
     fReversed,fPingpong:boolean;
     procedure fSetColor1(value:uint32);
     procedure fSetColor2(value:uint32);
-    procedure LoadFromStreamV1(pStream:TStream);
-    procedure LoadFromStreamV2(pStream:TStream);
   public
     property Color1:uint32 read fColor1 write fSetColor1;
     property Color2:uint32 read fColor2 write fSetColor2;
@@ -87,8 +85,6 @@ type
     procedure LoadFromStream(pStream:TStream);
   private
     fActiveIndex:integer;
-    procedure LoadFromStreamV1(pStream:TStream);
-    procedure LoadFromStreamV2(pStream:TStream);
     function fGetActiveColorCluster:TColorCluster;
     procedure fSetActiveIndex(value:integer);
   public
@@ -139,8 +135,8 @@ implementation
 uses BDPShared, SDL2, Logger;
 
 const
-  COLORCLUSTERID=$54;
-  COLORCLUSTERSID=$4C;
+  COLORCLUSTERSBLOCKID='CCS';
+
   PINGPONGSWITCHWIDTH=27;
   REVERSESWITCHWIDTH=27;
   ARROWWIDTH=30;
@@ -203,25 +199,14 @@ begin
 end;
 
 procedure TColorCluster.SaveToStream(pStream:TStream);
-var i:integer;curr:int64;flags:byte;
+var flags:byte;
 begin
-  i:=COLORCLUSTERID;
-  pStream.Write(i,1);
-  curr:=pStream.Position;
-  i:=0;
-  pStream.Write(i,4);
-  i:=2;
-  pStream.Write(i,1);  // Version
   pStream.Write(fColor1,4);
   pStream.Write(fColor2,4);
   flags:=0;
   if fReversed then flags:=flags or 1;
   if fPingpong then flags:=flags or 2;
   pStream.Write(flags,1);
-  i:=pStream.Position-curr-4;
-  pStream.Position:=curr;
-  pStream.write(i,4);
-  pStream.Position:=pStream.Position+i;
 end;
 
 procedure TColorCluster.LoadFromFile(pFilename:string);
@@ -233,19 +218,17 @@ begin
 end;
 
 procedure TColorCluster.LoadFromStream(pStream:TStream);
-var size,curr:int64;b:byte;
+var tmp:uint32;flags:byte;
 begin
-  b:=0;
-  pStream.Read(b,1);
-  if b<>COLORCLUSTERID then raise Exception.Create(Format('ID is not for color cluster data! (%.2x)',[b]));
-  size:=0;
-  pStream.Read(Size,4);
-  curr:=pStream.Position;
-  pStream.Read(b,1);
-  if b=1 then LoadFromStreamV1(pStream)
-  else if b=2 then LoadFromStreamV2(pStream)
-  else raise Exception.Create(Format('Unknow color cluster data version! (%d)',[b]));
-  pStream.Position:=curr+size;
+  tmp:=0;
+  pStream.Read(tmp,4);
+  fSetColor1(tmp);
+  pStream.Read(tmp,4);
+  fSetColor2(tmp);
+  flags:=0;
+  pStream.Read(flags,1);
+  fReversed:=(flags and 1)<>0;
+  fPingpong:=(flags and 2)<>0;
 end;
 
 procedure TColorCluster.fSetColor1(value:uint32);
@@ -270,40 +253,6 @@ begin
   end;
 end;
 
-procedure TColorCluster.LoadFromStreamV1(pStream:TStream);
-var flags:byte;st,en:word;
-begin
-  if Assigned(GlobalV1Palette) then begin
-    st:=0;en:=0;
-    pStream.Read(st,2);
-    pStream.Read(en,2);
-    Color1:=GlobalV1Palette.Colors[st];
-    Color2:=GlobalV1Palette.Colors[en];
-  end else begin
-    // Skip color indices
-    Log.LogWarning('V1 color cluster to load. Colors will be reset to black to white!');
-    pStream.Position:=pStream.Position+4;
-    Color1:=$FF000000;
-    Color2:=$FFFFFFFF;
-  end;
-  flags:=0;
-  pStream.Read(flags,1);
-  fReversed:=(flags and 1)<>0;
-  fPingpong:=(flags and 2)<>0;
-end;
-
-procedure TColorCluster.LoadFromStreamV2(pStream:TStream);
-var tmp:uint32;flags:byte;
-begin
-  pStream.Read(tmp,4);
-  fSetColor1(tmp);
-  pStream.Read(tmp,4);
-  fSetColor2(tmp);
-  flags:=0;
-  pStream.Read(flags,1);
-  fReversed:=(flags and 1)<>0;
-  fPingpong:=(flags and 2)<>0;
-end;
 
 { TColorClusters }
 
@@ -328,15 +277,13 @@ begin
 end;
 
 procedure TColorClusters.SaveToStream(pStream:TStream);
-var i:integer;curr:int64;
+var i:integer;curr:int64;s:String;
 begin
-  i:=COLORCLUSTERSID;
-  pStream.Write(i,1);
+  s:=COLORCLUSTERSBLOCKID+#1;
+  pStream.Write(s[1],4);
   curr:=pStream.Position;
   i:=0;
   pStream.Write(i,4);
-  i:=2;
-  pStream.Write(i,1);  // Version
   i:=Self.Count;
   pStream.Write(i,1);
   pStream.Write(fActiveIndex,1);
@@ -356,49 +303,30 @@ begin
 end;
 
 procedure TColorClusters.LoadFromStream(pStream:TStream);
-var size,curr:int64;b:byte;
+var size,curr:int64;count:integer;s:string;
+    tmp:TColorCluster;
 begin
-  b:=0;
-  pStream.Read(b,1);
-  if b<>COLORCLUSTERSID then raise Exception.Create(Format('ID is not for color clusters data! (%.2x)',[b]));
+  s:=#0#0#0#0;
+  pStream.Read(s[1],4);
+  if uppercase(copy(s,1,3))<>COLORCLUSTERSBLOCKID then raise
+    Exception.Create(Format('ColorClusters block ID expected, got %s)',[copy(s,1,3)]));
+  if ord(s[1]) and $20<>0 then Exception.Create('ColorClusters block cannot be compressed!');
+
   size:=0;
   pStream.Read(Size,4);
   curr:=pStream.Position;
-  pStream.Read(b,1);
-  if b=1 then LoadFromStreamV1(pStream)
-  else if b=2 then LoadFromStreamV2(pStream)
-  else raise Exception.Create(Format('Unknow color clusters data version! (%d)',[b]));
-  pStream.Position:=curr+size;
-end;
 
-procedure TColorClusters.LoadFromStreamV1(pStream:TStream);
-var count:integer;tmp:TColorCluster;
-begin
-  count:=0;
-  pStream.Read(count,1);
-  Clear;
-  while count>0 do begin
-    tmp:=TColorCluster.Create(0,16);
-    tmp.LoadFromStream(pStream);
-    Add(tmp);
-    dec(count);
-  end;
-end;
-
-procedure TColorClusters.LoadFromStreamV2(pStream:TStream);
-var count:integer;tmp:TColorCluster;
-begin
   count:=0;
   pStream.Read(count,1);
   fActiveIndex:=0;
   pStream.Read(fActiveIndex,1);
   Clear;
   while count>0 do begin
-    tmp:=TColorCluster.Create(0,16);
-    tmp.LoadFromStream(pStream);
+    tmp:=TColorCluster.CreateFromStream(pStream);
     Add(tmp);
     dec(count);
   end;
+  pStream.Position:=curr+size;
 end;
 
 function TColorClusters.fGetActiveColorCluster:TColorCluster;

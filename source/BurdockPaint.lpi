@@ -19,7 +19,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="9"/>
-      <BuildNr Value="26"/>
+      <BuildNr Value="28"/>
       <Attributes pvaPreRelease="True"/>
       <StringTable CompanyName="MKSZTSZ" LegalCopyright="GPL3" ProductName="BurdockPaint"/>
     </VersionInfo>
@@ -34,7 +34,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="units;units\SDL2;units\Controls;units\Dialogs;units\Tools;units\Inks"/>
+            <OtherUnitFiles Value="units;units\SDL2;units\Controls;units\Dialogs;units\Tools;units\Inks;units\Undo"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -76,7 +76,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="units;units\SDL2;units\Controls;units\Dialogs;units\Tools;units\Inks"/>
+            <OtherUnitFiles Value="units;units\SDL2;units\Controls;units\Dialogs;units\Tools;units\Inks;units\Undo"/>
             <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -149,10 +149,6 @@
       </Unit>
       <Unit>
         <Filename Value="BDPKeyMapping.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
-        <Filename Value="BDPUndo.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
@@ -331,6 +327,18 @@
         <Filename Value="units\Controls\BDPColorPalette.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
+      <Unit>
+        <Filename Value="units\Undo\BDPColorPaletteUndo.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="units\Undo\BDPUndoBase.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="units\Undo\BDPRegionUndo.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -341,7 +349,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="units;units\SDL2;units\Controls;units\Dialogs;units\Tools;units\Inks"/>
+      <OtherUnitFiles Value="units;units\SDL2;units\Controls;units\Dialogs;units\Tools;units\Inks;units\Undo"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
   </CompilerOptions>
