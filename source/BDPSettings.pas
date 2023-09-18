@@ -98,7 +98,6 @@ uses MKINIFile, BDPKeyMapping, BDPShared;
 { TSettings }
 
 constructor TSettings.Create;
-var i:integer;
 begin
   fZoom:=2;
   fZoomLeft:=0;
@@ -136,7 +135,7 @@ begin
 end;
 
 procedure TSettings.LoadFromFile(pFilename:String);
-var INI:TIniFile;i:integer;
+var INI:TIniFile;
 begin
   if not FileExists(pFilename) then exit;
   INI:=TIniFile.Create(pFilename);
