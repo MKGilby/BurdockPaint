@@ -363,11 +363,13 @@ begin
   Inks:=TBDInks.Create;
   Log.LogStatus('  Creating tools...');
   Tools:=TBDTools.Create;
-  Log.LogStatus('Loading previous session data...');
-  if FileExists(TEMPPROJECTFILE) then
+  if FileExists(TEMPPROJECTFILE) then begin
+    Log.LogStatus(Format('Loading previous project (%s)...',[TEMPPROJECTFILE]));
     Project:=TBDProject.CreateFromFile(TEMPPROJECTFILE)
-  else
+  end else begin
+    Log.LogStatus('Creating new project...');
     Project:=TBDProject.Create;
+  end;
   MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
   MessageQueue.AddMessage(MSG_SETPALETTEUNDOREDOBUTTON);
 
