@@ -145,8 +145,8 @@ begin
   fSelectColorClusterDialog:=TBDSelectColorClusterDialog.Create;
   fPaletteEditor:=TBDPaletteEditor.Create;
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
-  // To enable/disable Image/Remove menuitem.
-  fMainMenu.ProcessMessage(TMessage.Init(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count,0));
+  // To enable/disable Image/Remove menuitem and set Controls image slider
+  MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
   fMagnifyDialog:=TBDMagnifyCELDialog.Create;
   fRotateDialog:=TBDRotateCELDialog.Create;
   fDitherDialog:=TBDDitherDialog.Create;
