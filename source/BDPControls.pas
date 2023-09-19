@@ -50,7 +50,6 @@ type
     procedure UndoButtonClick(Sender:TObject;x,y,buttons: integer);
     procedure RedoButtonClick(Sender:TObject;x,y,buttons: integer);
     procedure ActiveImageChange(Sender:TObject;newvalue:integer);
-    procedure SetMouseCoords(x,y:integer);
     function ProcessMessage(msg:TMessage):boolean;
     procedure ControlsShow(Sender:TObject);
     function ControlsKeyDown(Sender:TObject;key:integer):boolean;
@@ -64,7 +63,6 @@ type
     fColorSelector:TBDColorSelector;
     fColorCluster:TBDColorCluster;
     fImageCountSlider:TBDHorizontalSlider;
-    fMouseX,fMouseY:integer;
   end;
 
 implementation
@@ -219,17 +217,17 @@ begin
     fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
     fTexture.ARGBImage.Bar(COORDSLEFT,0,COORDSWIDTH,CONTROLSHEIGHT,SystemPalette[SYSTEMCOLORDARK]);
     fTexture.ARGBImage.Bar(0,3,COORDSLEFT,fTexture.ARGBImage.Height-3,SystemPalette[SYSTEMCOLORMID]);
-    if (fMouseX>=0) and (fMouseX<Project.CurrentImage.Width) and (fMouseY>=0) and (fMouseY<Project.CurrentImage.Height) then begin
-      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'X='+inttostr(fMouseX),COORDSCENTER,CONTROLSHEIGHT-84,1);
-      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'Y='+inttostr(fMouseY),COORDSCENTER,CONTROLSHEIGHT-54,1);
-      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'C='+inttostr(Project.CurrentImage.GetPixel(fMouseX,fMouseY)),COORDSCENTER,CONTROLSHEIGHT-24,1);
+    if (DrawAreaX>=0) and (DrawAreaY>=0) then begin
+      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'X='+inttostr(DrawAreaX),COORDSCENTER,CONTROLSHEIGHT-84,1);
+      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'Y='+inttostr(DrawAreaY),COORDSCENTER,CONTROLSHEIGHT-54,1);
+      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'C='+inttostr(Project.CurrentImage.GetPixel(DrawAreaX,DrawAreaY)),COORDSCENTER,CONTROLSHEIGHT-24,1);
     end else begin
-      if (fMouseX>-1000) and (fMouseX<1000) then
-        MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'X='+inttostr(fMouseX),COORDSCENTER,CONTROLSHEIGHT-84,1)
+      if (DrawAreaX>=0) then
+        MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'X='+inttostr(DrawAreaX),COORDSCENTER,CONTROLSHEIGHT-84,1)
       else
         MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'X=OUT',COORDSCENTER,CONTROLSHEIGHT-84,1);
-      if (fMouseY>=-1000) and (fMouseY<=1000) then
-        MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'Y='+inttostr(fMouseY),COORDSCENTER,CONTROLSHEIGHT-54,1)
+      if (DrawAreaY>=0) then
+        MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'Y='+inttostr(DrawAreaY),COORDSCENTER,CONTROLSHEIGHT-54,1)
       else
         MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'Y=OUT',COORDSCENTER,CONTROLSHEIGHT-54,1);
       MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'C=?',COORDSCENTER,CONTROLSHEIGHT-24,1);
@@ -348,7 +346,7 @@ procedure TBDControls.ToolButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   if Sender is TBDButton then
     ActivateToolButton((Sender as TBDButton).Tag);
-  ActiveTool.Move(fMouseX,fMouseY);
+  ActiveTool.Move(DrawAreaX,DrawAreaY);
 end;
 
 procedure TBDControls.InkButtonClick(Sender:TObject; x,y,buttons:integer);
@@ -376,12 +374,6 @@ begin
   Project.CurrentImageIndex:=newvalue-1;
   fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveColorCluster;
   MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
-end;
-
-procedure TBDControls.SetMouseCoords(x,y:integer);
-begin
-  if x and $7000<>$7000 then fMouseX:=x else fMouseX:=x-32768;
-  if y and $7000<>$7000 then fMouseY:=y else fMouseY:=y-32768;
 end;
 
 function TBDControls.ProcessMessage(msg: TMessage): boolean;

@@ -233,6 +233,9 @@ var
 
   CELHelperImage:TBDRegion;  // Helper image for PUTCel
 
+  DrawAreaX,DrawAreaY:integer;  // The coordinates when mouse over drawarea, or -1 when not.
+  ColorUnderMouse:uint32;  // Color under mouse. Primarily when over drawarea.
+
   // Load assets and create shared objects
   procedure LoadAssets;
 
@@ -344,11 +347,6 @@ begin
   SystemPalette.Colors[SYSTEMCOLORMID]:=$ff9a9a9a;
   SystemPalette.Colors[SYSTEMCOLORLIGHT]:=$ffc7c7c7;
   SystemPalette.Colors[SYSTEMCOLORHIGHLIGHT]:=$ffc70404;
-{  SystemPalette.Colors[6]:=$ff202020;
-  SystemPalette.Colors[7]:=$ff505050;
-  SystemPalette.Colors[8]:=$ff808080;
-  SystemPalette.Colors[9]:=$ffb0b0b0;
-  SystemPalette.Colors[10]:=$ffe0e0e0;}
   Log.LogStatus('  Creating CEL helper image...');
   CELHelperImage:=TBDRegion.Create(320,200);
   CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,0);

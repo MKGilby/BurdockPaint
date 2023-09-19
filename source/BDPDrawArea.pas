@@ -188,6 +188,15 @@ begin
   fCursorY:=y;
   fFrameX:=MouseXToFrame(x);
   fFrameY:=MouseYToFrame(y);
+  if (fFrameX>=0) and (fFrameX<Project.CurrentImage.Width) then
+    DrawAreaX:=fFrameX
+  else
+    DrawAreaX:=-1;
+  if (fFrameY>=0) and (fFrameY<Project.CurrentImage.Height) then
+    DrawAreaY:=fFrameY
+  else
+    DrawAreaY:=-1;
+  if (DrawAreaX>=0) and (DrawAreaY>=0) then ColorUnderMouse:=Project.CurrentImage.GetPixel(DrawAreaX,DrawAreaY);
   ActiveTool.Move(fFrameX,fFrameY);
   if not ActiveTool.MouseMove(fFrameX,fFrameY,buttons) then begin
     if fMousePanning=mpWaitMove then fMousePanning:=mpPanning;
@@ -227,6 +236,7 @@ end;
 procedure TBDDrawArea.MouseLeave(Sender:TObject);
 begin
   SDL_ShowCursor(SDL_ENABLE);
+  DrawAreaX:=-1;DrawAreaY:=-1;
 //  if ActiveTool.Name='SELCOL' then TBDToolSelectColor(ActiveTool).SetColor(0);
   InfoBar.ShowText('');
 end;

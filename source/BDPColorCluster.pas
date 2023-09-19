@@ -391,7 +391,7 @@ begin
       else if (button=SDL_BUTTON_RIGHT) then begin
         if fRMBPicks then begin
           fPicking:=true;
-          MessageQueue.AddMessage(MSG_ACTIVATEPICKCOLORCLUSTER);
+//          MessageQueue.AddMessage(MSG_ACTIVATEPICKCOLORCLUSTER);
         end else begin
           MessageQueue.AddMessage(MSG_ACTIVATEPALETTEEDITOR);
         end;

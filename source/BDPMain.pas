@@ -249,7 +249,7 @@ begin
     end;  // while MessageQueue.HasNewMessage
     HandleMessages;
     quit:=quit or Terminate;
-    fControls.SetMouseCoords(fDrawArea.FrameX,fDrawArea.FrameY);
+//    fControls.SetMouseCoords(fDrawArea.FrameX,fDrawArea.FrameY);
     if keys[KeyMap[KEY_QUIT]] then begin
       keys[KeyMap[KEY_QUIT]]:=false;
       quit:=MessageBox('EXIT BURDOCK PAINT?','^YES;^NO')=0
