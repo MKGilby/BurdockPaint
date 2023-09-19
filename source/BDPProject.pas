@@ -234,7 +234,7 @@ var Xs:TStream;
 begin
   Xs:=TFileStream.Create(iFilename,fmOpenRead or fmShareDenyWrite);
   CreateFromStream(Xs);
-  FreeAndNil(Xs);
+  Xs.Free;
 end;
 
 constructor TBDProject.CreateFromStream(iStream:TStream);
@@ -274,7 +274,7 @@ var Xs:TStream;
 begin
   Xs:=TFileStream.Create(pFilename,fmCreate);
   SaveToStream(Xs);
-  FreeAndNil(Xs);
+  Xs.Free;
 end;
 
 procedure TBDProject.SaveToStream(pStream:TStream);
@@ -306,7 +306,7 @@ end;
 procedure TBDProject.Clean;
 var i:integer;
 begin
-  if Assigned(fCELImage) then FreeAndNil(fCELImage);
+  if Assigned(fCELImage) then fCELImage.Free;
   for i:=0 to fImages.Count-1 do fImages[i].ClearUndoData;
 end;
 
