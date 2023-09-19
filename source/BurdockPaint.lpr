@@ -24,7 +24,9 @@ program BurdockPaint;
 
 uses
   Interfaces,
+  SysUtils,
   BDPMain,
+  Logger,
   ARGBImageBMPReaderUnit,
   ARGBImageCELReaderUnit,
   ARGBImagePNGReaderUnit,
@@ -39,12 +41,16 @@ const
 {$R *.res}
 
 begin
-  with TMain.Create(VERSION,BDATE) do
-    try
+  try
+    with TMain.Create(VERSION,BDATE) do try
       Run;
     finally
       Free;
     end;
+  except
+    on e:exception do
+      Log.LogError(e.Message);
+  end;
 end.
 
 
