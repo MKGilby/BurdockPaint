@@ -96,7 +96,7 @@ begin
 
   // Tool buttons
   for i:=0 to 5 do begin
-    atmT:=Tools[Tools.IndexOf(Settings.SelectedTools[i])];
+    atmT:=Tools.ItemByName[Settings.SelectedTools[i]];
     if atmT=nil then raise Exception.Create('Tool not found! ('+Settings.SelectedTools[i]+')');
     fToolButtons[i]:=TBDButton.Create(
       fLeft+TOOLBUTTONSLEFT+i mod 2*130,
@@ -114,8 +114,8 @@ begin
 
   // Ink buttons
   for i:=0 to 5 do begin
-    atmi:=Inks[Inks.IndexOf(Settings.SelectedInks[i])];
-    if atmT=nil then raise Exception.Create('Ink not found! ('+Settings.SelectedInks[i]+')');
+    atmi:=Inks.ItemByName[Settings.SelectedInks[i]];
+    if atmi=nil then raise Exception.Create('Ink not found! ('+Settings.SelectedInks[i]+')');
     fInkButtons[i]:=TBDButton.Create(
       fLeft+InkButtonsLeft+i mod 3*130,
       fTop+InkButtonsTop+i div 3*30,
