@@ -21,12 +21,30 @@ Todo:
     - Max retention time.
 - BUG: Controls should show hexa values for color instead of non-existing
   color index.
-- Sliders should move with the mouse, not proportionally.
 - PaletteEditor buttons:
   - "Undo" and "Redo" should undo/redo any changes made on the PaletteEditor.
-    (Probably need another undo type)
 - Add an option to make the palette always visible. (Needs a palette control.)
+- Add an option to make the current inks/tools property adjustable on the fly.
+  (Should show a small dialog somewhere at the side of the window).
+- New color cluster selector and editor dialog. Or entire screen.
+- Colorpalette should be scrollable up and down, so all 256 colors would be accessible.
+- Colorpalette should update the infobar with color index and color value.
+- Create Controls and PaletteEditor as fixed width dialogs.
+- Add a few other window sizes and layout:
+  - Current (1280x720 windowed)
+  - 1920x1080 fullscreen borderless
 
+
+2023.09.19
+- Fix in creating ink buttons.
+- Any exceptions raised in TMain now are logged.
+- Image count slider now displays proper value after starting with a project
+  with more than one images.
+
+2023.09.18
+- New file format introduced. See fileformats.txt.
+- Use ProjectUpdate1 to convert old bpprj files to new format.
+  (Open in hex editor, if first 3 chars is not PRJ then it's old format)
 
 2023.09.10
 - Left clicking on palette color set sliders to that color.
