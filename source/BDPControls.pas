@@ -34,8 +34,6 @@ type
 
   TBDControls=class(TContainer)
     constructor Create;
-    destructor Destroy; override;
-    procedure Draw; override;
     procedure ActivateToolButton(index:integer);
     procedure ActivateInkButton(index:integer);
     procedure MouseEnter(Sender:TObject);
@@ -55,8 +53,9 @@ type
     function ControlsKeyDown(Sender:TObject;key:integer):boolean;
     procedure ChangeActiveToolButtonTo(pTool:TBDTool);
     procedure ChangeActiveInkButtonTo(pInk:TBDInk);
+  protected
+    procedure ReDraw; override;
   private
-    fTexture:TStreamingTexture;
     fToolButtons:array[0..5] of TBDButton;
     fInkButtons:array[0..5] of TBDButton;
     fUndoButton,fRedoButton:TBDButton;
@@ -81,10 +80,8 @@ begin
   inherited Create;
   fLeft:=0;
   fTop:=WINDOWHEIGHT-CONTROLSHEIGHT;
-  fWidth:=WINDOWWIDTH;
-  fHeight:=CONTROLSHEIGHT;
-  fTexture:=TStreamingTexture.Create(WINDOWWIDTH,CONTROLSHEIGHT);
-  fTexture.ARGBImage.Clear;
+  Width:=WINDOWWIDTH;
+  Height:=CONTROLSHEIGHT;
   fVisible:=true;
   OnMouseEnter:=MouseEnter;
   OnShow:=ControlsShow;
@@ -203,38 +200,7 @@ begin
   AddChild(fColorCluster);
 
   MouseObjects.Add(Self);
-end;
-
-destructor TBDControls.Destroy;
-begin
-  if Assigned(fTexture) then FreeAndNil(fTexture);
-  inherited Destroy;
-end;
-
-procedure TBDControls.Draw;
-begin
-  if fVisible then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(COORDSLEFT,0,COORDSWIDTH,CONTROLSHEIGHT,SystemPalette[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(0,3,COORDSLEFT,fTexture.ARGBImage.Height-3,SystemPalette[SYSTEMCOLORMID]);
-    if (DrawAreaX>=0) and (DrawAreaY>=0) then begin
-      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'X='+inttostr(DrawAreaX),COORDSCENTER,CONTROLSHEIGHT-84,1);
-      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'Y='+inttostr(DrawAreaY),COORDSCENTER,CONTROLSHEIGHT-54,1);
-      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'C='+inttostr(Project.CurrentImage.GetPixel(DrawAreaX,DrawAreaY)),COORDSCENTER,CONTROLSHEIGHT-24,1);
-    end else begin
-      if (DrawAreaX>=0) then
-        MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'X='+inttostr(DrawAreaX),COORDSCENTER,CONTROLSHEIGHT-84,1)
-      else
-        MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'X=OUT',COORDSCENTER,CONTROLSHEIGHT-84,1);
-      if (DrawAreaY>=0) then
-        MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'Y='+inttostr(DrawAreaY),COORDSCENTER,CONTROLSHEIGHT-54,1)
-      else
-        MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'Y=OUT',COORDSCENTER,CONTROLSHEIGHT-54,1);
-      MM.Fonts['DarkRed'].OutText(fTexture.ARGBImage,'C=?',COORDSCENTER,CONTROLSHEIGHT-24,1);
-    end;
-    fTexture.Update;
-    PutTexture(fLeft,fTop,fTexture);
-  end;
+  fNeedRedraw:=true;
 end;
 
 procedure TBDControls.ActivateToolButton(index:integer);
@@ -473,6 +439,15 @@ begin
   Settings.SelectedInks[Settings.ActiveInk]:=pInk.Name;
   ActiveInk:=pInk;
   MessageQueue.AddMessage(MSG_SETINKSMENU);
+end;
+
+procedure TBDControls.ReDraw;
+begin
+  if Assigned(fTexture) then begin
+    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
+    fTexture.ARGBImage.Bar(0,3,COORDSLEFT,fTexture.ARGBImage.Height-3,SystemPalette[SYSTEMCOLORMID]);
+    fTexture.Update;
+  end;
 end;
 
 end.

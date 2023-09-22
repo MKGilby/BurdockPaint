@@ -29,7 +29,7 @@ uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
   BDPControls, BDPDrawArea, BDPPaletteEditor,
   BDPMagnifyCELDialog, BDPRotateCELDialog, BDPAboutDialog,
   BDPMessageBox, BDPDitherDialog, BDPSelectColorClusterDialog,
-  BDPConfigureRGradDialog;
+  BDPConfigureRGradDialog, BDPCoordinateBox;
 
 type
 
@@ -51,6 +51,7 @@ type
     fRotateDialog:TBDRotateCELDialog;
     fDitherDialog:TBDDitherDialog;
     fConfigureRGradDialog:TBDConfigureRGradDialog;
+    fCoordinateBox:TBDCoordinateBox;
     fBackup:TFileBackup;
     fOpenCELDialog,
     fOpenProjectDialog:TOpenDialog;
@@ -151,6 +152,8 @@ begin
   fRotateDialog:=TBDRotateCELDialog.Create;
   fDitherDialog:=TBDDitherDialog.Create;
   fConfigureRGradDialog:=TBDConfigureRGradDialog.Create;
+  fCoordinateBox:=TBDCoordinateBox.Create(
+    WINDOWWIDTH-COORDINATEBOXWIDTH-24,WINDOWHEIGHT-COORDINATEBOXHEIGHT,COORDINATEBOXWIDTH+24,COORDINATEBOXHEIGHT);
   MouseObjects.List;
 
   fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','All supported file|*.bdc;*.cel;*.png;*.tga|CEL files|*.bdc|Legacy CEL files|*.cel|PNG files|*.png|TGA files|*.tga');
@@ -165,6 +168,7 @@ begin
   if Assigned(fSaveProjectDialog) then fSaveProjectDialog.Free;
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
   if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
+  if Assigned(fCoordinateBox) then fCoordinateBox.Free;
   if Assigned(fConfigureRGradDialog) then fConfigureRGradDialog.Free;
   if Assigned(fDitherDialog) then fDitherDialog.Free;
   if Assigned(fRotateDialog) then fRotateDialog.Free;
