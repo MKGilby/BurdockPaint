@@ -259,7 +259,7 @@ end;
 constructor TColorClusters.Create;
 begin
   inherited Create;
-  Add(TColorCluster.Create(16,31));
+  Add(TColorCluster.Create($FF000000,$FFFFFFFF));
 end;
 
 constructor TColorClusters.CreateFromStream(iStream:TStream);
