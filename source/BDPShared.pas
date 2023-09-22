@@ -308,6 +308,21 @@ begin
   end;
 end;
 
+procedure LoadSmallFont(pR,pG,pB:integer;pName:string);
+var Xs:TStream;
+begin
+  Xs:=TStringStream.Create(SmallFont);
+  try
+    MM.Fonts.Add(TPNGFont.Create(Xs),pName);
+    MM.Fonts[pName].LetterSpace:=2;
+    MM.Fonts[pName].SpaceSpace:=12;
+    MM.Fonts[pName].SetColorKey(0,0,0);
+    MM.Fonts[pName].SetColor(pR,pG,pB);
+  finally
+    Xs.Free;
+  end;
+end;
+
 procedure LoadImage(incstring,name:string);
 var Xs:TStream;atm:TARGBImage;
 begin
@@ -327,8 +342,10 @@ begin
   MM:=TGFXManager.Create;
   Log.LogStatus('  Loading fonts...');
   LoadSystemFont(4,4,4,'Black');
+  LoadSmallFont(4,4,4,'SmallBlack');
   LoadSystemFont($c7,4,4,'Red');
   LoadSystemFont($40,4,4,'DarkRed');
+  LoadSmallFont($40,4,4,'SmallDarkRed');
   LoadSystemFont($ee,$ee,$ee,'White');
   LoadSystemFont($ee,$aa,$cc,'Pinky');
   LoadSystemFont($9a,$9a,$9a,'LightGray');
