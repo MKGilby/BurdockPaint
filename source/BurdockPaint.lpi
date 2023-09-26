@@ -152,7 +152,7 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPMenu.pas"/>
+        <Filename Value="units\Controls\BDPMenu.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
