@@ -19,8 +19,6 @@ Todo:
   - Autosave/backup:
     - Max folder size.
     - Max retention time.
-- BUG: Controls should show hexa values for color instead of non-existing
-  color index.
 - PaletteEditor buttons:
   - "Undo" and "Redo" should undo/redo any changes made on the PaletteEditor.
 - Add an option to make the palette always visible. (Needs a palette control.)
@@ -35,11 +33,15 @@ Todo:
   - 1920x1080 fullscreen borderless
 
 
+2023.09.22
+- CoordinateBox updated. It shows color components of color under the mouse.
+- BUGFIX: New image added an invisible colorcluster, now it adds a black-white.
+
 2023.09.19
 - Fix in creating ink buttons.
 - Any exceptions raised in TMain now are logged.
 - Image count slider now displays proper value after starting with a project
-  with more than one images.
+  with more than one images.  
 
 2023.09.18
 - New file format introduced. See fileformats.txt.
