@@ -25,7 +25,7 @@ unit BDPControls;
 interface
 
 uses
-  SysUtils, mk_sdl2, vcc2_Container, BDPMessage, BDPColorCluster, BDPToolBase,
+  SysUtils, mk_sdl2, vcc2_Container, BDPMessage, BDPColorClusterControl, BDPToolBase,
   BDPInkBase, BDPColorSelector, BDPButton, BDPSliders;
 
 type

@@ -343,6 +343,10 @@
         <Filename Value="units\Controls\BDPCoordinateBox.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
+      <Unit>
+        <Filename Value="units\Controls\BDPColorClusterControl.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
