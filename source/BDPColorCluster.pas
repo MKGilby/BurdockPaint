@@ -35,7 +35,7 @@ type
     // Create color cluster.
     constructor Create(iColor1,iColor2:uint32);
 
-    // Create the color cluster from stream (fileformats.txt - T-block)
+    // Create the color cluster from stream (see fileformats.txt - CCS-block)
     constructor CreateFromStream(iStream:TStream);
 
     // Gives back the colorindex in the cluster at pValue on a scale to 0..pInterval
@@ -48,16 +48,10 @@ type
     // randomly modifying it by max +/-(pInterval*pDitherStrength/256)
     function GetColorAtDithered(pValue,pInterval,pDitherStrength:integer):uint32;
 
-    // Save color cluster to a standalone file. (fileformats.txt - T-block)
-    procedure SaveToFile(pFilename:string);
-
-    // Save color cluster to the specified stream. (fileformats.txt - T-block)
+    // Save color cluster to the specified stream. (see fileformats.txt - CCS-block)
     procedure SaveToStream(pStream:TStream);
 
-    // Load color cluster from a standalone file. (fileformats.txt - T-block)
-    procedure LoadFromFile(pFilename:string);
-
-    // Load color cluster from the specified stream. (fileformats.txt - T-block)
+    // Load color cluster from the specified stream. (see fileformats.txt - CCS-block)
     procedure LoadFromStream(pStream:TStream);
   private
     fColor1,fColor2:uint32;
@@ -75,13 +69,22 @@ type
   { TColorClusters }
 
   TColorClusters=class(TFPGObjectList<TColorCluster>)
-    // Creates the list with one default color cluster element.
+    // Create the list with one default color cluster element.
     constructor Create;
-    // Creates the list from stream. (fileformats.txt - L-block)
+
+    // Create the list from stream. (see fileformats.txt - CCS-block)
     constructor CreateFromStream(iStream:TStream);
+
+    // Save the list to file. (see fileformats.txt - CCS-block)
     procedure SaveToFile(pFilename:string);
+
+    // Save the list to stream. (see fileformats.txt - CCS-block)
     procedure SaveToStream(pStream:TStream);
+
+    // Load the list from file. (see fileformats.txt - CCS-block)
     procedure LoadFromFile(pFilename:string);
+
+    // Load the list from stream. (see fileformats.txt - CCS-block)
     procedure LoadFromStream(pStream:TStream);
   private
     fActiveIndex:integer;
@@ -108,7 +111,7 @@ type
 
 implementation
 
-uses BDPShared, SDL2, Logger;
+uses BDPShared, Logger;
 
 const
   COLORCLUSTERSBLOCKID='CCS';
@@ -162,14 +165,6 @@ begin
   Result:=GetColorAt(pValue,pInterval);
 end;
 
-procedure TColorCluster.SaveToFile(pFilename:string);
-var Xs:TStream;
-begin
-  Xs:=TFileStream.Create(pFilename,fmCreate);
-  SaveToStream(Xs);
-  FreeAndNil(Xs);
-end;
-
 procedure TColorCluster.SaveToStream(pStream:TStream);
 var flags:byte;
 begin
@@ -179,14 +174,6 @@ begin
   if fReversed then flags:=flags or 1;
   if fPingpong then flags:=flags or 2;
   pStream.Write(flags,1);
-end;
-
-procedure TColorCluster.LoadFromFile(pFilename:string);
-var Xs:TStream;
-begin
-  Xs:=TFileStream.Create(pFilename,fmOpenRead or fmShareDenyNone);
-  SaveToStream(Xs);
-  FreeAndNil(Xs);
 end;
 
 procedure TColorCluster.LoadFromStream(pStream:TStream);
@@ -245,7 +232,7 @@ var Xs:TStream;
 begin
   Xs:=TFileStream.Create(pFilename,fmCreate);
   SaveToStream(Xs);
-  FreeAndNil(Xs);
+  Xs.Free;
 end;
 
 procedure TColorClusters.SaveToStream(pStream:TStream);
@@ -271,7 +258,7 @@ var Xs:TStream;
 begin
   Xs:=TFileStream.Create(pFilename,fmOpenRead or fmShareDenyNone);
   SaveToStream(Xs);
-  FreeAndNil(Xs);
+  Xs.Free;
 end;
 
 procedure TColorClusters.LoadFromStream(pStream:TStream);
