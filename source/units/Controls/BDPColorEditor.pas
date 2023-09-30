@@ -57,8 +57,7 @@ type
     procedure AlternateLSliderChange(Sender:TObject);
     procedure SelectClick(Sender:TObject;x,y,buttons:integer);
     procedure CancelClick(Sender:TObject;x,y,buttons:integer);
-    procedure PaletteEditorShow(Sender:TObject);
-    procedure PaletteEditorHide(Sender:TObject);
+    procedure ColorEditorShow(Sender:TObject);
     procedure RefreshHSLbyRGB;
     procedure RefreshRGBbyHSL;
     procedure RefreshColorBox;
@@ -125,8 +124,7 @@ begin
   Height:=PALETTEEDITORHEIGHT;
   OnMouseEnter:=MouseEnter;
   OnMouseLeave:=MouseLeave;
-  OnShow:=PaletteEditorShow;
-  OnHide:=PaletteEditorHide;
+  OnShow:=ColorEditorShow;
   fName:='PaletteEditor';
   ZIndex:=LEVEL1CONTROLS_ZINDEX;
 
@@ -292,26 +290,6 @@ begin
   MessageQueue.AddMessage(MSG_DEACTIVATEPALETTEEDITOR,0,0);
 end;
 
-{procedure TBDColorEditor.OnColorSliderMouseDown(Sender:TObject;x,y,buttons:integer);
-begin
-  fSavedColor:=Project.CurrentPalette.Colors[Settings.ActiveColorIndex];
-  TBDHorizontalSlider(Sender).MouseDown(Sender,x,y,buttons);
-end;
-
-procedure TBDColorEditor.OnColorSliderMouseUp(Sender:TObject;x,y,buttons:integer);
-var tmp:uint32;
-begin
-  TBDHorizontalSlider(Sender).MouseUp(Sender,x,y,buttons);
-  if fSavedColor<>Project.CurrentPalette.Colors[Settings.ActiveColorIndex] then begin
-    tmp:=Project.CurrentImage.Palette.Colors[Settings.ActiveColorIndex];
-    Project.CurrentImage.Palette.Colors[Settings.ActiveColorIndex]:=fSavedColor;
-    Project.CurrentExtImage.PaletteUndo.AddSingleColorUndo(Settings.ActiveColorIndex);
-    Project.CurrentImage.Palette.Colors[Settings.ActiveColorIndex]:=tmp;
-    Project.CurrentExtImage.PaletteUndo.AddSingleColorRedoToLastUndo;
-    fColorBox.ColorChanged;
-  end;
-end;}
-
 {procedure TBDColorEditor.UndoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   Project.CurrentExtImage.PaletteUndo.Undo;
@@ -326,18 +304,13 @@ begin
   RefreshSliders;
 end;}
 
-procedure TBDColorEditor.PaletteEditorShow(Sender:TObject);
+procedure TBDColorEditor.ColorEditorShow(Sender:TObject);
 begin
   inherited Show;
   InfoBar.Top:=WINDOWHEIGHT-PALETTEEDITORHEIGHT-INFOBARHEIGHT;
   ActiveTool:=Tools.ItemByName['SELCOL'];
 //  fUndoButton.Enabled:=Project.CurrentExtImage.PaletteUndo.CanUndo;
 //  fRedoButton.Enabled:=Project.CurrentExtImage.PaletteUndo.CanRedo;
-end;
-
-procedure TBDColorEditor.PaletteEditorHide(Sender:TObject);
-begin
-  inherited Hide;
 end;
 
 procedure TBDColorEditor.RefreshHSLbyRGB;
