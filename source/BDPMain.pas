@@ -26,7 +26,7 @@ unit BDPMain;
 interface
 
 uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
-  BDPControls, BDPDrawArea, BDPPaletteEditor,
+  BDPControls, BDPDrawArea, BDPColorEditor,
   BDPMagnifyCELDialog, BDPRotateCELDialog, BDPAboutDialog,
   BDPMessageBox, BDPDitherDialog, BDPSelectColorClusterDialog,
   BDPConfigureRGradDialog, BDPCoordinateBox;
@@ -46,7 +46,7 @@ type
     fControls:TBDControls;
     fDrawArea:TBDDrawArea;
     fSelectColorClusterDialog:TBDSelectColorClusterDialog;
-    fPaletteEditor:TBDPaletteEditor;
+    fPaletteEditor:TBDColorEditor;
     fMagnifyDialog:TBDMagnifyCELDialog;
     fRotateDialog:TBDRotateCELDialog;
     fDitherDialog:TBDDitherDialog;
@@ -144,7 +144,7 @@ begin
   fControls:=TBDControls.Create;
   fDrawArea:=TBDDrawArea.Create;
   fSelectColorClusterDialog:=TBDSelectColorClusterDialog.Create;
-  fPaletteEditor:=TBDPaletteEditor.Create;
+  fPaletteEditor:=TBDColorEditor.Create;
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   // To enable/disable Image/Remove menuitem and set Controls image slider
   MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);

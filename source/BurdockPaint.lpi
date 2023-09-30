@@ -172,7 +172,7 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPPaletteEditor.pas"/>
+        <Filename Value="units\Controls\BDPColorEditor.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>

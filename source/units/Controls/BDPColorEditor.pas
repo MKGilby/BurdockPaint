@@ -18,7 +18,7 @@
   BurdockPaint. If not, see <https://www.gnu.org/licenses/>.
 }
 
-unit BDPPaletteEditor;
+unit BDPColorEditor;
 
 {$mode Delphi}
 
@@ -30,9 +30,9 @@ uses
 
 type
 
-  { TBDPaletteEditor }
+  { TBDColorEditor }
 
-  TBDPaletteEditor=class(TContainer)
+  TBDColorEditor=class(TContainer)
     constructor Create;
     function ProcessMessage(msg:TMessage):boolean;
   protected
@@ -45,8 +45,6 @@ type
     fHSBox:TBDHSBox;
     fColorBox:TBDColorBox;
     fCalledFrom:integer;
-//    fSavedColor:uint32;
-//    fPickingColor:integer;
     procedure MouseEnter(Sender:TObject);
     procedure MouseLeave(Sender:TObject);
     procedure SliderRGBChange(Sender:TObject;newValue:integer);
@@ -97,14 +95,11 @@ const
   COLORPALETTETOP=BUTTONS2TOP+NORMALBUTTONHEIGHT+3;
   COLORPALETTEWIDTH=WINDOWWIDTH-BUTTONSLEFT-3;
   COLORPALETTEHEIGHT=PALETTEEDITORHEIGHT-COLORBOXHEIGHT-12-2;
-//  PALETTESOCKETWIDTH=(PALETTESOCKETSWIDTH-3) div 8;
-//  PALETTESOCKETHEIGHT=26;
-//  PALETTESOCKETSTOP=PALETTEEDITORHEIGHT-213;
-//  PALETTESOCKETSLEFT=3;
 
-{ TBDPaletteEditor }
 
-constructor TBDPaletteEditor.Create;
+{ TBDColorEditor }
+
+constructor TBDColorEditor.Create;
 var atmB:TBDButton;
 
   function CreateSlider(pLeft,pTop,pMaxValue:integer;pName:string;
@@ -217,7 +212,7 @@ begin
   fCalledFrom:=0;
 end;
 
-procedure TBDPaletteEditor.Redraw;
+procedure TBDColorEditor.Redraw;
 var i:integer;
 begin
   if Assigned(fTexture) then begin
@@ -233,26 +228,26 @@ begin
   end;
 end;
 
-procedure TBDPaletteEditor.MouseEnter(Sender:TObject);
+procedure TBDColorEditor.MouseEnter(Sender:TObject);
 begin
   InfoBar.ShowText('');
 end;
 
-procedure TBDPaletteEditor.MouseLeave(Sender:TObject);
+procedure TBDColorEditor.MouseLeave(Sender:TObject);
 begin
 end;
 
-procedure TBDPaletteEditor.SliderRGBChange(Sender:TObject; newValue:integer);
+procedure TBDColorEditor.SliderRGBChange(Sender:TObject; newValue:integer);
 begin
   RefreshHSLbyRGB;
 end;
 
-procedure TBDPaletteEditor.SliderAChange(Sender:TObject; newValue:integer);
+procedure TBDColorEditor.SliderAChange(Sender:TObject; newValue:integer);
 begin
   RefreshColorBox;
 end;
 
-procedure TBDPaletteEditor.SliderHSChange(Sender:TObject; newValue:integer);
+procedure TBDColorEditor.SliderHSChange(Sender:TObject; newValue:integer);
 begin
   fHSBox.SetColor(fSliderH.Position,fSliderS.Position);
   fAlternateLSlider.BaseColor:=fHSBox.Color;
@@ -260,14 +255,14 @@ begin
   RefreshRGBbyHSL;
 end;
 
-procedure TBDPaletteEditor.SliderLChange(Sender:TObject; newValue:integer);
+procedure TBDColorEditor.SliderLChange(Sender:TObject; newValue:integer);
 begin
   fAlternateLSlider.L:=fSliderL.Position;
   RefreshColorBox;
   RefreshRGBbyHSL;
 end;
 
-procedure TBDPaletteEditor.HSBoxChange(Sender:TObject);
+procedure TBDColorEditor.HSBoxChange(Sender:TObject);
 begin
   fSliderH.Position:=fHSBox.H;
   fSliderS.Position:=fHSBox.S;
@@ -278,7 +273,7 @@ begin
   RefreshColorBox;
 end;
 
-procedure TBDPaletteEditor.AlternateLSliderChange(Sender:TObject);
+procedure TBDColorEditor.AlternateLSliderChange(Sender:TObject);
 begin
   fSliderL.Position:=fAlternateLSlider.L;
   fSliderR.Position:=(fAlternateLSlider.Color and $ff0000)>>16;
@@ -287,23 +282,23 @@ begin
   RefreshColorBox;
 end;
 
-procedure TBDPaletteEditor.SelectClick(Sender:TObject; x,y,buttons:integer);
+procedure TBDColorEditor.SelectClick(Sender:TObject; x,y,buttons:integer);
 begin
   MessageQueue.AddMessage(MSG_DEACTIVATEPALETTEEDITOR,fCalledFrom,fColorBox.Color);
 end;
 
-procedure TBDPaletteEditor.CancelClick(Sender:TObject; x,y,buttons:integer);
+procedure TBDColorEditor.CancelClick(Sender:TObject; x,y,buttons:integer);
 begin
   MessageQueue.AddMessage(MSG_DEACTIVATEPALETTEEDITOR,0,0);
 end;
 
-{procedure TBDPaletteEditor.OnColorSliderMouseDown(Sender:TObject;x,y,buttons:integer);
+{procedure TBDColorEditor.OnColorSliderMouseDown(Sender:TObject;x,y,buttons:integer);
 begin
   fSavedColor:=Project.CurrentPalette.Colors[Settings.ActiveColorIndex];
   TBDHorizontalSlider(Sender).MouseDown(Sender,x,y,buttons);
 end;
 
-procedure TBDPaletteEditor.OnColorSliderMouseUp(Sender:TObject;x,y,buttons:integer);
+procedure TBDColorEditor.OnColorSliderMouseUp(Sender:TObject;x,y,buttons:integer);
 var tmp:uint32;
 begin
   TBDHorizontalSlider(Sender).MouseUp(Sender,x,y,buttons);
@@ -317,21 +312,21 @@ begin
   end;
 end;}
 
-{procedure TBDPaletteEditor.UndoButtonClick(Sender:TObject; x,y,buttons:integer);
+{procedure TBDColorEditor.UndoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   Project.CurrentExtImage.PaletteUndo.Undo;
   fColorBox.ColorChanged;
   RefreshSliders;
 end;
 
-procedure TBDPaletteEditor.RedoButtonClick(Sender:TObject; x,y,buttons:integer);
+procedure TBDColorEditor.RedoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   Project.CurrentExtImage.PaletteUndo.Redo;
   fColorBox.ColorChanged;
   RefreshSliders;
 end;}
 
-procedure TBDPaletteEditor.PaletteEditorShow(Sender:TObject);
+procedure TBDColorEditor.PaletteEditorShow(Sender:TObject);
 begin
   inherited Show;
   InfoBar.Top:=WINDOWHEIGHT-PALETTEEDITORHEIGHT-INFOBARHEIGHT;
@@ -340,12 +335,12 @@ begin
 //  fRedoButton.Enabled:=Project.CurrentExtImage.PaletteUndo.CanRedo;
 end;
 
-procedure TBDPaletteEditor.PaletteEditorHide(Sender:TObject);
+procedure TBDColorEditor.PaletteEditorHide(Sender:TObject);
 begin
   inherited Hide;
 end;
 
-procedure TBDPaletteEditor.RefreshHSLbyRGB;
+procedure TBDColorEditor.RefreshHSLbyRGB;
 var h:word;s,l:integer;
 begin
   RGBtoHSL(fSliderR.Position,fSliderG.Position,fSliderB.Position,h,s,l);
@@ -358,7 +353,7 @@ begin
   RefreshColorBox;
 end;
 
-procedure TBDPaletteEditor.RefreshRGBbyHSL;
+procedure TBDColorEditor.RefreshRGBbyHSL;
 var r,g,b:byte;
 begin
   HSLtoRGB(fSliderH.Position,fSliderS.Position,fSliderL.Position,r,g,b);
@@ -367,7 +362,7 @@ begin
   fSliderB.Position:=b;
 end;
 
-procedure TBDPaletteEditor.RefreshColorBox;
+procedure TBDColorEditor.RefreshColorBox;
 begin
   fColorBox.Color:=
     uint32(fSliderA.Position)<<24+
@@ -376,7 +371,7 @@ begin
     uint32(fSliderB.Position and $FF);
 end;
 
-function TBDPaletteEditor.ProcessMessage(msg:TMessage):boolean;
+function TBDColorEditor.ProcessMessage(msg:TMessage):boolean;
 begin
   Result:=false;
   if Enabled then begin
