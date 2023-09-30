@@ -209,10 +209,7 @@ begin
   {$ifndef LimitFPS} FlipNoLimit; {$else} Flip; {$endif}
     while MessageQueue.HasNewMessage do begin
       msg:=MessageQueue.GetNextMessage;
-//      mres:=false;
-//      if fControls.Visible then mres:=fControls.ProcessMessage(msg);
       mres:=fControls.ProcessMessage(msg);
-//      if not mres and fPaletteEditor.Visible then mres:=fPaletteEditor.ProcessMessage(msg);
       if not mres then mres:=fPaletteEditor.ProcessMessage(msg);
       if not mres and fMainMenu.Visible then mres:=fMainMenu.ProcessMessage(msg);
       if not mres then
@@ -560,6 +557,7 @@ end;
 procedure TMain.ActivatePaletteEditor;
 begin
   fControls.Hide;
+  fCoordinateBox.Hide;
   fPaletteEditor.Show;
   fMainMenu.DisableItem('PROJECT');
   fMainMenu.DisableItem('IMAGE');
@@ -572,6 +570,7 @@ procedure TMain.DeactivatePaletteEditor;
 begin
   fPaletteEditor.Hide;
   fControls.Show;
+  fCoordinateBox.Show;
   fMainMenu.EnableItem('PROJECT');
   fMainMenu.EnableItem('IMAGE');
   fMainMenu.EnableItem('CEL');
