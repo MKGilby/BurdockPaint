@@ -48,7 +48,7 @@ uses BDPShared, MKMouse2, SDL2;
 
 const
   MAGNIFYDIALOGWIDTH=480;
-  MAGNIFYDIALOGHEIGHT=128;
+  MAGNIFYDIALOGHEIGHT=MODALDIALOGCAPTIONHEIGHT+3+3*9+2*NORMALBUTTONHEIGHT;
   XBUTTONWIDTH=63;
 
 { TBDMagnifyCELDialog }
@@ -58,11 +58,11 @@ const MAGNIFIES:array[0..2] of integer=(2,3,5);
 var atmb:TBDButton;i:integer;
 begin
   inherited Create(MAGNIFYDIALOGWIDTH,MAGNIFYDIALOGHEIGHT);
-  Refresh;
+  Caption:='MAGNIFY CEL';
   for i:=0 to 2 do begin
     fMagnifyButtons[i]:=TBDButton.Create(
-      fLeft+(MAGNIFYDIALOGWIDTH div 4)*(i+1)-XBUTTONWIDTH div 2,
-      fTop+48,
+      fLeft+((MAGNIFYDIALOGWIDTH div 4)*(i+1)-XBUTTONWIDTH div 2),
+      fTop+((MODALDIALOGCAPTIONHEIGHT+9)),
       XBUTTONWIDTH, NORMALBUTTONHEIGHT,
       inttostr(MAGNIFIES[i])+'X','');
     fMagnifyButtons[i].ZIndex:=MODALDIALOG_ZINDEX+1;
@@ -72,16 +72,16 @@ begin
     AddChild(fMagnifyButtons[i]);
   end;
   atmB:=TBDButton.Create(
-    fLeft+MAGNIFYDIALOGWIDTH div 3-NORMALBUTTONWIDTH div 2,
-    fTop+84,
+    fLeft+(MAGNIFYDIALOGWIDTH div 3-NORMALBUTTONWIDTH div 2),
+    fTop+(MODALDIALOGCAPTIONHEIGHT+2*9+NORMALBUTTONHEIGHT),
     NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT,
     'OK','MAGNIFY CEL');
   atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
   atmB.OnClick:=OKButtonClick;
   AddChild(atmB);
   atmB:=TBDButton.Create(
-    fLeft+(MAGNIFYDIALOGWIDTH div 3*2)-NORMALBUTTONWIDTH div 2,
-    fTop+84,
+    fLeft+((MAGNIFYDIALOGWIDTH div 3*2)-NORMALBUTTONWIDTH div 2),
+    fTop+(MODALDIALOGCAPTIONHEIGHT+2*9+NORMALBUTTONHEIGHT),
     NORMALBUTTONWIDTH, NORMALBUTTONHEIGHT,
     'CANCEL','DON''T MAGNIFY CEL');
   atmB.OnClick:=CancelButtonClick;
@@ -93,15 +93,11 @@ end;
 
 procedure TBDMagnifyCELDialog.ReDraw;
 begin
-  if Assigned(fTexture) then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(0,0,3,fTexture.ARGBImage.Height,SystemPalette[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(fTexture.ARGBImage.Width-3,0,3,fTexture.ARGBImage.Height,SystemPalette[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(0,fTexture.ARGBImage.Height-3,fTexture.ARGBImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[SYSTEMCOLORMID]);
+  inherited ReDraw;
+{  if Assigned(fTexture) then begin
     MM.Fonts['Black'].OutText(fTexture.ARGBImage,'MAGNIFY CEL',MAGNIFYDIALOGWIDTH div 2,16,1);
     fTexture.Update;
-  end;
+  end;}
 end;
 
 function TBDMagnifyCELDialog.KeyDown(Sender:TObject; key:integer):boolean;
