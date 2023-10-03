@@ -42,40 +42,40 @@ implementation
 uses BDPShared, BDPButton, MKMouse2;
 
 const
-  SPLASHSCREENWIDTH=640;
-  SPLASHSCREENHEIGHT=160;
+  ABOUTDIALOGWIDTH=640;
+  ABOUTDIALOGHEIGHT=160+MODALDIALOGCAPTIONHEIGHT-3;
 
 { TBDAboutDialog }
 
 constructor TBDAboutDialog.Create;
 var atmB:TBDButton;
 begin
-  inherited Create(SPLASHSCREENWIDTH,SPLASHSCREENHEIGHT);
+  inherited Create(ABOUTDIALOGWIDTH,ABOUTDIALOGHEIGHT);
   fName:='SplashScreen';
-  Refresh;
+  Visible:=false;
+  fNeedRedraw:=true;
+  Caption:='ABOUT';
   atmB:=TBDButton.Create(
-    fLeft+SPLASHSCREENWIDTH-NORMALBUTTONWIDTH-6-16,
-    fTop+SPLASHSCREENHEIGHT-44,
+    fLeft+ABOUTDIALOGWIDTH-NORMALBUTTONWIDTH-6-16,
+    fTop+ABOUTDIALOGHEIGHT-44,
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'OK','CLOSE DIALOG');
   atmB.OnClick:=OKButtonClick;
   atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(atmB);
-  Visible:=false;
   MouseObjects.Add(Self);
 end;
 
 procedure TBDAboutDialog.ReDraw;
 begin
-  if Assigned(fTexture) then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[SYSTEMCOLORMID]);
-    MM.Fonts['LogoFont'].OutText(fTexture.ARGBImage,'BURDoCK PAINT',80,24,0);
-    MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'CODE: GILBY/MKSZTSZ',80,56,0);
-    MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'LICENSED UNDER GNU GPL 3',80,88,0);
-    MM.Fonts['DarkGray'].OutText(fTexture.ARGBImage,'COPYRIGHT 2023 MKSZTSZ',80,120,0);
-    MM.Images.ItemByName['Burdock'].CopyTo(0,0,46,52,16,(SPLASHSCREENHEIGHT-52) div 2,fTexture.ARGBImage,true);
-    fTexture.Update;
+  inherited ReDraw;
+  if Assigned(fTexture) then with fTexture do begin
+    MM.Fonts['LogoFont'].OutText(ARGBImage,'BURDoCK PAINT',80,42,0);
+    MM.Fonts['DarkGray'].OutText(ARGBImage,'CODE: GILBY/MKSZTSZ',80,74,0);
+    MM.Fonts['DarkGray'].OutText(ARGBImage,'LICENSED UNDER GNU GPL 3',80,106,0);
+    MM.Fonts['DarkGray'].OutText(ARGBImage,'COPYRIGHT 2023 MKSZTSZ',80,138,0);
+    MM.Images.ItemByName['Burdock'].CopyTo(0,0,46,52,16,(ABOUTDIALOGHEIGHT-52) div 2,ARGBImage,true);
+    Update;
   end;
 end;
 
