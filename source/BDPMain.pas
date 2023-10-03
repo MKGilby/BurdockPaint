@@ -253,7 +253,7 @@ begin
 //    fControls.SetMouseCoords(fDrawArea.FrameX,fDrawArea.FrameY);
     if keys[KeyMap[KEY_QUIT]] then begin
       keys[KeyMap[KEY_QUIT]]:=false;
-      quit:=MessageBox('EXIT BURDOCK PAINT?','^YES;^NO')=0
+      quit:=MessageBox('CONFIRM','EXIT BURDOCK PAINT?','^YES;^NO')=0
     end;
     if GetTickCount64-PrevBackupTick>Settings.BackupIntervalTicks then begin
 //      Project.SaveToFile(TEMPPROJECTFILE);
@@ -345,7 +345,7 @@ begin
     except
       on e:Exception do begin
         Log.LogError(e.message);
-        MessageBox(e.Message);
+        MessageBox('ERROR',e.Message);
       end;
     end;
   end;
@@ -356,11 +356,11 @@ begin
   if fSaveProjectDialog.Execute then begin
     try
       Project.SaveToFile(fSaveProjectDialog.FileName);
-      MessageBox('Project saved successfully.');
+      MessageBox('INFORMATION','Project saved successfully.');
     except
       on e:Exception do begin
         Log.LogError(e.message);
-        MessageBox(e.Message);
+        MessageBox('ERROR',e.Message);
       end;
     end;
   end;
@@ -372,11 +372,11 @@ begin
     try
       Project.Clean;
       Project.SaveToFile(fSaveProjectDialog.FileName);
-      MessageBox('Project saved successfully.');
+      MessageBox('INFORMATION','Project saved successfully.');
     except
       on e:Exception do begin
         Log.LogError(e.message);
-        MessageBox(e.Message);
+        MessageBox('ERROR',e.Message);
       end;
     end;
   end;
@@ -384,7 +384,7 @@ end;
 
 procedure TMain.NewImage;
 begin
-  case MessageBox('Where to place new image?','First;Last;Insert;Cancel') of
+  case MessageBox('NEW IMAGE','Where to place new image?','First;Last;Insert;Cancel') of
     0:begin
         Project.Images.Insert(0,TBDExtendedImage.Create);
         Project.CurrentImageIndex:=0;
@@ -405,7 +405,7 @@ end;
 procedure TMain.DuplicateImage;
 var Xs:TMemoryStream;
 begin
-  case MessageBox('Where to place duplicated image?','First;Last;Insert;Cancel') of
+  case MessageBox('DUPLICATE IMAGE','Where to place duplicated image?','First;Last;Insert;Cancel') of
     0:begin
         Xs:=TMemoryStream.Create;
         try
@@ -447,7 +447,7 @@ end;
 procedure TMain.RemoveImage;
 begin
   if (Project.Images.Count>1) then begin
-    if MessageBox('Really remove image from project?','^Yes;^No')=0 then begin
+    if MessageBox('REMOVE IMAGE','Really remove image from project?','^Yes;^No')=0 then begin
       Project.Images.Delete(Project.CurrentImageIndex);
       if Project.CurrentImageIndex>=Project.Images.Count then
         Project.CurrentImageIndex:=Project.Images.Count-1;

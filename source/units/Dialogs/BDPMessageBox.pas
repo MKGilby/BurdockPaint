@@ -32,7 +32,7 @@ type
   { TBDMessageBox }
 
   TBDMessageBox=class(TBDModalDialog)
-    constructor Create(iMessage:string;iButtons:string='OK');
+    constructor Create(iCaption,iMessage:string;iButtons:string='OK');
     procedure ReDraw; override;
     function Run:integer;
     function KeyDown(Sender:TObject;key:integer):boolean;
@@ -40,19 +40,19 @@ type
     fMessage:string;
   end;
 
-  function MessageBox(iMessage:string;iButtons:string='OK'):integer;
+  function MessageBox(iCaption,iMessage:string;iButtons:string='OK'):integer;
 
 implementation
 
 uses MKMouse2, BDPButton, BDPShared, MKToolbox, sdl2, BDPMessage, mk_sdl2;
 
 const
-  MESSAGEBOXHEIGHT=96;
+  MESSAGEBOXHEIGHT=96+MODALDIALOGCAPTIONHEIGHT-3;
 
-function MessageBox(iMessage:string; iButtons:string):integer;
+function MessageBox(iCaption,iMessage:string; iButtons:string):integer;
 var MessageBox:TBDMessageBox;j:integer;
 begin
-  MessageBox:=TBDMessageBox.Create(uppercase(iMessage),uppercase(iButtons));
+  MessageBox:=TBDMessageBox.Create(uppercase(iCaption), uppercase(iMessage),uppercase(iButtons));
   try
     Result:=MessageBox.Run;
     j:=MouseObjects.IndexOf(MessageBox);
@@ -64,7 +64,7 @@ end;
 
 { TBDMessageBox }
 
-constructor TBDMessageBox.Create(iMessage:string; iButtons:string);
+constructor TBDMessageBox.Create(iCaption,iMessage:string; iButtons:string);
 var atmB:TBDButton;i,x,buttoncount,key:integer;s:string;
 begin
   if length(iButtons)=0 then iButtons:='OK';
@@ -74,6 +74,7 @@ begin
   inherited Create(max((length(iMessage)+2)*18,buttoncount*(NORMALBUTTONWIDTH+18)),MESSAGEBOXHEIGHT);
   fName:='MessageBox';
   ZIndex:=MODALDIALOG_ZINDEX;
+  Caption:=iCaption;
   MouseObjects.Add(Self);
   x:=(fTexture.Width-(buttoncount*(NORMALBUTTONWIDTH+18))+18) div 2;
   i:=0;
@@ -103,10 +104,9 @@ end;
 
 procedure TBDMessageBox.ReDraw;
 begin
+  inherited ReDraw;
   if Assigned(fTexture) then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[SYSTEMCOLORMID]);
-    MM.Fonts['Black'].OutText(fTexture.ARGBImage,fMessage,fTexture.Width div 2,24,1);
+    MM.Fonts['Black'].OutText(fTexture.ARGBImage,fMessage,fTexture.Width div 2,42,1);
     fTexture.Update;
   end;
 end;
