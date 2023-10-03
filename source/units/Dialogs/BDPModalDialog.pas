@@ -46,6 +46,11 @@ type
     function KeyUp(Sender:TObject;key:integer):boolean;
   protected
     fModalOverlay:TBDModalOverlay;
+    fCaption:string;
+  private
+    procedure fSetCaption(value:string);
+  public
+    property Caption:string read fCaption write fSetCaption;
   end;
 
 implementation
@@ -91,9 +96,18 @@ end;
 
 procedure TBDModalDialog.ReDraw;
 begin
-  if Assigned(fTexture.ARGBImage) then begin
-    with fTexture.ARGBImage do Bar(0,0,Width,Height,0,0,0,0);
-    fTexture.Update;
+  if Assigned(fTexture) then with fTexture do begin
+    // Panel border
+    ARGBImage.Bar(0,0,Width,MODALDIALOGCAPTIONHEIGHT,SystemPalette[SYSTEMCOLORDARK]);
+    ARGBImage.Bar(0,Height-3,fTexture.ARGBImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
+    ARGBImage.Bar(0,MODALDIALOGCAPTIONHEIGHT,3,Height-3-MODALDIALOGCAPTIONHEIGHT,SystemPalette[SYSTEMCOLORDARK]);
+    ARGBImage.Bar(Width-3,MODALDIALOGCAPTIONHEIGHT,3,ARGBImage.Height-3-MODALDIALOGCAPTIONHEIGHT,SystemPalette[SYSTEMCOLORDARK]);
+    // Panel caption
+    MM.Fonts['Black'].OutText(ARGBImage,fCaption,Width div 2,3,1);
+    // Panel background
+    ARGBImage.Bar(3,MODALDIALOGCAPTIONHEIGHT,Width-6,Height-3-MODALDIALOGCAPTIONHEIGHT,SystemPalette[SYSTEMCOLORMID]);
+    // Update texture
+    Update;
   end;
 end;
 
@@ -105,6 +119,14 @@ end;
 function TBDModalDialog.KeyUp(Sender:TObject; key:integer):boolean;
 begin
   Result:=true;
+end;
+
+procedure TBDModalDialog.fSetCaption(value:string);
+begin
+  if fCaption<>value then begin
+    fCaption:=value;
+    fNeedRedraw:=true;
+  end;
 end;
 
 end.
