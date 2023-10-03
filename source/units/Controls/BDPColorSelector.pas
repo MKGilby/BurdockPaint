@@ -111,19 +111,19 @@ begin
   end else if buttons=SDL_BUTTON_RIGHT then begin
     if (x>=0) and (x<fLeftClusterLeft) then begin
       MessageQueue.AddMessage(
-        MSG_ACTIVATEPALETTEEDITOR,
+        MSG_ACTIVATECOLOREDITOR,
         PARM_COL_SELECTOR_LEFT,
         Settings.ColorSelectorLeftColor);
     end else
     if (x>=fMainColorLeft) and (x<fRightClusterLeft) then begin
       MessageQueue.AddMessage(
-        MSG_ACTIVATEPALETTEEDITOR,
+        MSG_ACTIVATECOLOREDITOR,
         PARM_COL_SELECTOR_MAIN,
         Settings.ColorSelectorMainColor);
     end else
     if (x>=fRightColorLeft) then begin
       MessageQueue.AddMessage(
-        MSG_ACTIVATEPALETTEEDITOR,
+        MSG_ACTIVATECOLOREDITOR,
         PARM_COL_SELECTOR_RIGHT,
         Settings.ColorSelectorRightColor);
     end;

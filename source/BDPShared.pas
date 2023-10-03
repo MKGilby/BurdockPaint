@@ -86,7 +86,7 @@ const
 
   // ZIndex of DrawArea
   DRAWAREA_ZINDEX=0;
-  // ZIndex on Controls, PaletteEditor, Menu
+  // ZIndex on Controls, ColorEditor, Menu
   LEVEL1CONTROLS_ZINDEX=100;
   // ZIndex of popup dialogs (ConfirmQuit, etc.)
   MODALDIALOG_ZINDEX=9999;
@@ -118,15 +118,15 @@ const
   // Toggle visibility of main Controls panel and MainMenu.
   MSG_TOGGLECONTROLS=2;
 
-  // Hide Controls, show PaletteEditor.
+  // Hide Controls, show ColorEditor.
   //   IntValue is one of the PARM_COL constants.
   //   UInt32 value is the color to set the sliders to.
-  MSG_ACTIVATEPALETTEEDITOR=3;
+  MSG_ACTIVATECOLOREDITOR=3;
 
-  // Hide PaletteEditor, show Controls.
+  // Hide ColorEditor, show Controls.
   //   IntValue is one of the PARM_COL constants if color is selected, otherwise 0.
   //   UInt32 value is the selected color.
-  MSG_DEACTIVATEPALETTEEDITOR=4;
+  MSG_DEACTIVATECOLOREDITOR=4;
 
   // Set Undo/Redo buttons' state depending on ImageUndosystem state.
   MSG_SETIMAGEUNDOREDOBUTTON=5;
@@ -141,7 +141,7 @@ const
   //   UInt32 value is the new color.
   MSG_ACTIVECOLORCHANGED=8;
 
-  // PaletteEditor should set color box color and set sliders accordingly.
+  // ColorEditor should set color box color and set sliders accordingly.
   //   UInt32 value is the new color.
   MSG_SETCOLORBOXCOLOR=9;
 
@@ -179,7 +179,7 @@ const
   // Project image count changed. Used to refresh Controls' slider.
   MSG_PROJECTIMAGECOUNTCHANGED=20;
 
-  // User right clicked on palette entry, request PaletteEditor to store selected
+  // User right clicked on palette entry, request ColorEditor to store selected
   // color into palette.
   //   IntValue is the palette entry
   MSG_PALETTEREQUESTCOLOR=21;
@@ -199,7 +199,7 @@ const
   // RGrad configuration "Center" finished. (Data is stored in Settings.TempRGradCenter<X|Y>
   MSG_CONFIGRGRADCENTERFINISHED=26;
 
-  // PaletteEditor should set a palette color to the specified color.
+  // ColorEditor should set a palette color to the specified color.
   //   Intvalue is the palette entry index.
   //   UInt32 value is the new color.
   MSG_SETPALETTECOLOR=27;
@@ -208,7 +208,7 @@ const
   {$i includes\menu.inc}
 
 
-  // PARM_COL constants. They mark places where the PaletteEditor was invoked from.
+  // PARM_COL constants. They mark places where the ColorEditor was invoked from.
   PARM_COL_SELECTOR_MAIN=1;
   PARM_COL_SELECTOR_LEFT=2;
   PARM_COL_SELECTOR_RIGHT=3;

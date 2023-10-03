@@ -46,7 +46,7 @@ type
     fControls:TBDControls;
     fDrawArea:TBDDrawArea;
     fSelectColorClusterDialog:TBDSelectColorClusterDialog;
-    fPaletteEditor:TBDColorEditor;
+    fColorEditor:TBDColorEditor;
     fMagnifyDialog:TBDMagnifyCELDialog;
     fRotateDialog:TBDRotateCELDialog;
     fDitherDialog:TBDDitherDialog;
@@ -243,7 +243,7 @@ begin
           MSG_OPENMAGNIFYCELDIALOG:      fMagnifyDialog.Show;
           MSG_OPENCEL:                   OpenCEL;
           MSG_SAVECEL:                   SaveCEL;
-          MSG_ACTIVATEPALETTEEDITOR:     ActivatePaletteEditor;
+          MSG_ACTIVATECOLOREDITOR:     ActivatePaletteEditor;
           MSG_DEACTIVATEPALETTEEDITOR:   DeactivatePaletteEditor;
           MSG_SELECTCOLOR:               SelectColor;
         end;

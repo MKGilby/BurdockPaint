@@ -349,7 +349,7 @@ begin
   Result:=false;
   if Enabled then begin
     case msg.TypeID of
-      MSG_ACTIVATEPALETTEEDITOR:begin
+      MSG_ACTIVATECOLOREDITOR:begin
         fSliderA.Position:=(msg.DataUInt32 and $FF000000)>>24;
         fSliderR.Position:=(msg.DataUInt32 and $FF0000)>>16;
         fSliderG.Position:=(msg.DataUInt32 and $FF00)>>8;
