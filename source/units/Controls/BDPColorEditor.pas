@@ -282,12 +282,12 @@ end;
 
 procedure TBDColorEditor.SelectClick(Sender:TObject; x,y,buttons:integer);
 begin
-  MessageQueue.AddMessage(MSG_DEACTIVATEPALETTEEDITOR,fCalledFrom,fColorBox.Color);
+  MessageQueue.AddMessage(MSG_DEACTIVATECOLOREDITOR,fCalledFrom,fColorBox.Color);
 end;
 
 procedure TBDColorEditor.CancelClick(Sender:TObject; x,y,buttons:integer);
 begin
-  MessageQueue.AddMessage(MSG_DEACTIVATEPALETTEEDITOR,0,0);
+  MessageQueue.AddMessage(MSG_DEACTIVATECOLOREDITOR,0,0);
 end;
 
 {procedure TBDColorEditor.UndoButtonClick(Sender:TObject; x,y,buttons:integer);

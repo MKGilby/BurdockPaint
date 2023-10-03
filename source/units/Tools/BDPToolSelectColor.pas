@@ -73,7 +73,7 @@ begin
       Settings.ActiveColor:=Project.CurrentImage.GetPixel(x,y);
   end else
   if button=SDL_BUTTON_RIGHT then begin
-    MessageQueue.AddMessage(MSG_DEACTIVATEPALETTEEDITOR);
+    MessageQueue.AddMessage(MSG_DEACTIVATECOLOREDITOR);
   end;
   Result:=true;
 end;

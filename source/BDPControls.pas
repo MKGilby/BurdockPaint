@@ -364,7 +364,7 @@ begin
     MSG_ACTIVECOLORCLUSTERCHANGED:begin
       fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveColorCluster;
     end;
-    MSG_DEACTIVATEPALETTEEDITOR:begin
+    MSG_DEACTIVATECOLOREDITOR:begin
       case msg.DataInt of
         PARM_COL_SELECTOR_LEFT:Settings.ColorSelectorLeftColor:=msg.DataUInt32;
         PARM_COL_SELECTOR_MAIN:Settings.ColorSelectorMainColor:=msg.DataUInt32;

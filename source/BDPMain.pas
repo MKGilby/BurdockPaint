@@ -144,7 +144,7 @@ begin
   fControls:=TBDControls.Create;
   fDrawArea:=TBDDrawArea.Create;
   fSelectColorClusterDialog:=TBDSelectColorClusterDialog.Create;
-  fPaletteEditor:=TBDColorEditor.Create;
+  fColorEditor:=TBDColorEditor.Create;
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   // To enable/disable Image/Remove menuitem and set Controls image slider
   MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
@@ -173,7 +173,7 @@ begin
   if Assigned(fDitherDialog) then fDitherDialog.Free;
   if Assigned(fRotateDialog) then fRotateDialog.Free;
   if Assigned(fMagnifyDialog) then fMagnifyDialog.Free;
-  if Assigned(fPaletteEditor) then fPaletteEditor.Free;
+  if Assigned(fColorEditor) then fColorEditor.Free;
   if Assigned(fSelectColorClusterDialog) then fSelectColorClusterDialog.Free;
   if Assigned(fDrawArea) then fDrawArea.Free;
   if Assigned(fControls) then fControls.Free;
@@ -210,7 +210,7 @@ begin
     while MessageQueue.HasNewMessage do begin
       msg:=MessageQueue.GetNextMessage;
       mres:=fControls.ProcessMessage(msg);
-      if not mres then mres:=fPaletteEditor.ProcessMessage(msg);
+      if not mres then mres:=fColorEditor.ProcessMessage(msg);
       if not mres and fMainMenu.Visible then mres:=fMainMenu.ProcessMessage(msg);
       if not mres then
         case msg.TypeID of
@@ -243,8 +243,8 @@ begin
           MSG_OPENMAGNIFYCELDIALOG:      fMagnifyDialog.Show;
           MSG_OPENCEL:                   OpenCEL;
           MSG_SAVECEL:                   SaveCEL;
-          MSG_ACTIVATECOLOREDITOR:     ActivatePaletteEditor;
-          MSG_DEACTIVATEPALETTEEDITOR:   DeactivatePaletteEditor;
+          MSG_ACTIVATECOLOREDITOR:       ActivatePaletteEditor;
+          MSG_DEACTIVATECOLOREDITOR:     DeactivatePaletteEditor;
           MSG_SELECTCOLOR:               SelectColor;
         end;
     end;  // while MessageQueue.HasNewMessage
@@ -558,7 +558,7 @@ procedure TMain.ActivatePaletteEditor;
 begin
   fControls.Hide;
   fCoordinateBox.Hide;
-  fPaletteEditor.Show;
+  fColorEditor.Show;
   fMainMenu.DisableItem('PROJECT');
   fMainMenu.DisableItem('IMAGE');
   fMainMenu.DisableItem('CEL');
@@ -568,7 +568,7 @@ end;
 
 procedure TMain.DeactivatePaletteEditor;
 begin
-  fPaletteEditor.Hide;
+  fColorEditor.Hide;
   fControls.Show;
   fCoordinateBox.Show;
   fMainMenu.EnableItem('PROJECT');
