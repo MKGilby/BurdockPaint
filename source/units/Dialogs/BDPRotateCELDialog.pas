@@ -33,7 +33,6 @@ type
 
   TBDRotateCELDialog=class(TBDModalDialog)
     constructor Create;
-    procedure ReDraw; override;
     function KeyDown(Sender:TObject;key:integer):boolean;
     procedure RotateButtonClick(Sender:TObject;x,y,buttons:integer);
     procedure OKButtonClick(Sender:TObject;x,y,buttons:integer);
@@ -48,7 +47,7 @@ uses BDPShared, MKMouse2, sdl2;
 
 const
   ROTATEDIALOGWIDTH=512;
-  ROTATEDIALOGHEIGHT=128;
+  ROTATEDIALOGHEIGHT=MODALDIALOGCAPTIONHEIGHT+3+3*9+2*NORMALBUTTONHEIGHT;
 
 { TBDRotateCELDialog }
 
@@ -58,11 +57,12 @@ var atmb:TBDButton;i:integer;
 begin
   inherited Create(ROTATEDIALOGWIDTH,ROTATEDIALOGHEIGHT);
   fName:='Rotate CEL';
+  Caption:='ROTATE CEL';
   Refresh;
   for i:=0 to 2 do begin
     fRotateButtons[i]:=TBDButton.Create(
       fLeft+(ROTATEDIALOGWIDTH div 4)*(i+1)-NORMALBUTTONWIDTH div 2,
-      fTop+48,
+      fTop+((MODALDIALOGCAPTIONHEIGHT+9)),
       NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
       inttostr(ROTATES[i])+'°','');
     fRotateButtons[i].ZIndex:=MODALDIALOG_ZINDEX+1;
@@ -73,7 +73,7 @@ begin
   end;
   atmB:=TBDButton.Create(
     fLeft+ROTATEDIALOGWIDTH div 3-NORMALBUTTONWIDTH div 2,
-    fTop+84,
+    fTop+(MODALDIALOGCAPTIONHEIGHT+2*9+NORMALBUTTONHEIGHT),
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'OK','ROTATE CEL');
   atmB.ZIndex:=MODALDIALOG_ZINDEX+1;
@@ -81,7 +81,7 @@ begin
   AddChild(atmB);
   atmB:=TBDButton.Create(
     fLeft+(ROTATEDIALOGWIDTH div 3*2)-NORMALBUTTONWIDTH div 2,
-    fTop+84,
+    fTop+(MODALDIALOGCAPTIONHEIGHT+2*9+NORMALBUTTONHEIGHT),
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'CANCEL','DON''T ROTATE CEL');
   atmB.OnClick:=CancelButtonClick;
@@ -89,19 +89,6 @@ begin
   AddChild(atmB);
   OnKeyDown:=KeyDown;
   MouseObjects.Add(Self);
-end;
-
-procedure TBDRotateCELDialog.ReDraw;
-begin
-  if Assigned(fTexture) then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(0,0,3,fTexture.ARGBImage.Height,SystemPalette[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(fTexture.ARGBImage.Width-3,0,3,fTexture.ARGBImage.Height,SystemPalette[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(0,fTexture.ARGBImage.Height-3,fTexture.ARGBImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[SYSTEMCOLORMID]);
-    MM.Fonts['Black'].OutText(fTexture.ARGBImage,'ROTATE CEL',ROTATEDIALOGWIDTH div 2,16,1);
-    fTexture.Update;
-  end;
 end;
 
 function TBDRotateCELDialog.KeyDown(Sender:TObject; key:integer):boolean;
