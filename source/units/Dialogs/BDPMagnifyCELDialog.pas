@@ -33,7 +33,6 @@ type
 
   TBDMagnifyCELDialog=class(TBDModalDialog)
     constructor Create;
-    procedure ReDraw; override;
     function KeyDown(Sender:TObject;key:integer):boolean;
     procedure MagnifyButtonClick(Sender:TObject;x,y,buttons:integer);
     procedure OKButtonClick(Sender:TObject;x,y,buttons:integer);
@@ -89,15 +88,6 @@ begin
   AddChild(atmB);
   OnKeyDown:=KeyDown;
   MouseObjects.Add(Self);
-end;
-
-procedure TBDMagnifyCELDialog.ReDraw;
-begin
-  inherited ReDraw;
-{  if Assigned(fTexture) then begin
-    MM.Fonts['Black'].OutText(fTexture.ARGBImage,'MAGNIFY CEL',MAGNIFYDIALOGWIDTH div 2,16,1);
-    fTexture.Update;
-  end;}
 end;
 
 function TBDMagnifyCELDialog.KeyDown(Sender:TObject; key:integer):boolean;
