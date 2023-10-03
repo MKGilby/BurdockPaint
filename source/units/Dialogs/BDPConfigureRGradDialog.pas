@@ -49,7 +49,7 @@ uses BDPButton, BDPShared, MKMouse2;
 
 const
   CONFIGURERGRADDIALOGWIDTH=480;
-  CONFIGURERGRADDIALOGHEIGHT=256;
+  CONFIGURERGRADDIALOGHEIGHT=256+MODALDIALOGCAPTIONHEIGHT-3;
 
 { TBDConfigureRGradDialog }
 
@@ -60,9 +60,10 @@ var atmB:TBDButton;
 begin
   inherited Create(CONFIGURERGRADDIALOGWIDTH,CONFIGURERGRADDIALOGHEIGHT);
   fName:='ConfigureRGradDialog';
+  Caption:='CONFIGURE RGRAD PARAMETERS';
 
   fRepetitionSlider:=TBDHorizontalSlider.Create(
-    fLeft+(CONFIGURERGRADDIALOGWIDTH-SLIDERWIDTH) div 2, fTop+48, SLIDERWIDTH, SLIDERHEIGHT);
+    fLeft+(CONFIGURERGRADDIALOGWIDTH-SLIDERWIDTH) div 2, fTop+66, SLIDERWIDTH, SLIDERHEIGHT);
   fRepetitionSlider.ZIndex:=MODALDIALOG_ZINDEX+1;
   fRepetitionSlider.Name:='RGradRepSlider';
   fRepetitionSlider.MinValue:=1;
@@ -71,7 +72,7 @@ begin
   AddChild(fRepetitionSlider);
 
   fRotationSlider:=TBDHorizontalSlider.Create(
-    fLeft+(CONFIGURERGRADDIALOGWIDTH-SLIDERWIDTH) div 2, fTop+128, SLIDERWIDTH, SLIDERHEIGHT);
+    fLeft+(CONFIGURERGRADDIALOGWIDTH-SLIDERWIDTH) div 2, fTop+146, SLIDERWIDTH, SLIDERHEIGHT);
   fRotationSlider.ZIndex:=MODALDIALOG_ZINDEX+1;
   fRotationSlider.Name:='RGradRotSlider';
   fRotationSlider.MinValue:=0;
@@ -81,7 +82,7 @@ begin
 
   atmB:=TBDButton.Create(
     fLeft+(CONFIGURERGRADDIALOGWIDTH div 2-NORMALBUTTONWIDTH div 2),
-    fTop+176,
+    fTop+194,
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'CENTER','SET RADIAL GRADIENT CENTER POINT');
   atmb.OnClick:=CenterButtonClick;
@@ -90,7 +91,7 @@ begin
 
   atmB:=TBDButton.Create(
     fLeft+(CONFIGURERGRADDIALOGWIDTH div 3-NORMALBUTTONWIDTH div 2),
-    fTop+216,
+    fTop+234,
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'OK','APPLY VALUES');
   atmb.OnClick:=OKButtonClick;
@@ -99,7 +100,7 @@ begin
 
   atmB:=TBDButton.Create(
     fLeft+(CONFIGURERGRADDIALOGWIDTH div 3*2-NORMALBUTTONWIDTH div 2),
-    fTop+216,
+    fTop+234,
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'CANCEL','CLOSE DIALOG');
   atmb.OnClick:=CancelButtonClick;
@@ -113,12 +114,11 @@ end;
 
 procedure TBDConfigureRGradDialog.ReDraw;
 begin
-  if Assigned(fTexture) then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[SYSTEMCOLORMID]);
-    MM.Fonts['Black'].OutText(fTexture.ARGBImage,'REPETITIONS',CONFIGURERGRADDIALOGWIDTH div 2,16,1);
-    MM.Fonts['Black'].OutText(fTexture.ARGBImage,'ROTATION °',CONFIGURERGRADDIALOGWIDTH div 2,96,1);
-    fTexture.Update;
+  inherited ReDraw;
+  if Assigned(fTexture) then with fTexture do begin
+    MM.Fonts['Black'].OutText(ARGBImage,'REPETITIONS',CONFIGURERGRADDIALOGWIDTH div 2,34,1);
+    MM.Fonts['Black'].OutText(ARGBImage,'ROTATION °',CONFIGURERGRADDIALOGWIDTH div 2,114,1);
+    Update;
   end;
 end;
 
