@@ -45,21 +45,22 @@ implementation
 uses BDPButton, BDPShared, MKMouse2;
 
 const
-  DITHERDIALOGWIDTH=480;
-  DITHERDIALOGHEIGHT=144;
+  DITHERDIALOGWIDTH=512;
+  DITHERDIALOGHEIGHT=144+MODALDIALOGCAPTIONHEIGHT-3;
 
 { TBDDitherDialog }
 
 constructor TBDDitherDialog.Create;
-const SLIDERWIDTH=300;
+const SLIDERWIDTH=360;
       SLIDERHEIGHT=33;
 var atmB:TBDButton;
 begin
   inherited Create(DITHERDIALOGWIDTH,DITHERDIALOGHEIGHT);
   fName:='DitherDialog';
+  Caption:='CONFIGURE DITHER PARAMETERS';
 
   fSlider:=TBDHorizontalSlider.Create(
-    fLeft+(DITHERDIALOGWIDTH-SLIDERWIDTH) div 2, fTop+48, SLIDERWIDTH, SLIDERHEIGHT);
+    fLeft+(DITHERDIALOGWIDTH-SLIDERWIDTH) div 2, fTop+66, SLIDERWIDTH, SLIDERHEIGHT);
   fSlider.ZIndex:=MODALDIALOG_ZINDEX+1;
   fSlider.Name:='DitherSlider';
   fSlider.MinValue:=1;
@@ -69,7 +70,7 @@ begin
 
   atmB:=TBDButton.Create(
     fLeft+(DITHERDIALOGWIDTH div 3-NORMALBUTTONWIDTH div 2),
-    fTop+96,
+    fTop+114,
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'OK','APPLY DITHER STRENGTH');
   atmb.OnClick:=OKButtonClick;
@@ -78,7 +79,7 @@ begin
 
   atmB:=TBDButton.Create(
     fLeft+(DITHERDIALOGWIDTH div 3*2-NORMALBUTTONWIDTH div 2),
-    fTop+96,
+    fTop+114,
     NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'CANCEL','CLOSE DIALOG');
   atmb.OnClick:=CancelButtonClick;
@@ -92,10 +93,9 @@ end;
 
 procedure TBDDitherDialog.ReDraw;
 begin
+  inherited ReDraw;
   if Assigned(fTexture) then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height,SystemPalette[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(3,3,fTexture.ARGBImage.Width-6,fTexture.ARGBImage.Height-6,SystemPalette[SYSTEMCOLORMID]);
-    MM.Fonts['Black'].OutText(fTexture.ARGBImage,'DITHER STRENGTH',DITHERDIALOGWIDTH div 2,16,1);
+    MM.Fonts['Black'].OutText(fTexture.ARGBImage,'DITHER STRENGTH',DITHERDIALOGWIDTH div 2,34,1);
     fTexture.Update;
   end;
 end;
