@@ -58,7 +58,6 @@ begin
   inherited Create(ROTATEDIALOGWIDTH,ROTATEDIALOGHEIGHT);
   fName:='Rotate CEL';
   Caption:='ROTATE CEL';
-  Refresh;
   for i:=0 to 2 do begin
     fRotateButtons[i]:=TBDButton.Create(
       fLeft+(ROTATEDIALOGWIDTH div 4)*(i+1)-NORMALBUTTONWIDTH div 2,
