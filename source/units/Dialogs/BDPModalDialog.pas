@@ -34,6 +34,8 @@ type
   TBDModalOverlay=class(TMouseObject)
     constructor Create;
     procedure Draw; override;
+  private
+    DarkBar:TTexture;
   end;
 
   { TBDModalDialog }
@@ -41,12 +43,12 @@ type
   TBDModalDialog=class(TContainer)
     constructor Create(iWidth,iHeight:integer);
     destructor Destroy; override;
-    procedure ReDraw; override;
     function KeyDown(Sender:TObject;key:integer):boolean;
     function KeyUp(Sender:TObject;key:integer):boolean;
   protected
     fModalOverlay:TBDModalOverlay;
     fCaption:string;
+    procedure ReDraw; override;
   private
     procedure fSetCaption(value:string);
   public
@@ -65,10 +67,12 @@ begin
   SetBounds(0,0,WINDOWWIDTH,WINDOWHEIGHT);
   ZIndex:=MODALDIALOG_ZINDEX-1;
   fName:='ModalOverlay';
+  DarkBar:=MM.Textures.ItemByName['DarkBar'];
 end;
 
 procedure TBDModalOverlay.Draw;
 begin
+  PutTexture(0,0,DarkBar);
   ; // Just override the abstract method in TMouseObject
 end;
 
