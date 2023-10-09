@@ -298,8 +298,12 @@ begin
       Result.Seek(0,soFromBeginning);
     end;
   end else begin
-    Log.LogError('Openstream failed: '+aFilename,Istr);
-    raise Exception.Create('OpenStream failed: '+aFileName);
+    if SysUtils.FileExists(aFilename) then
+      Result:=TFileStream.Create(aFilename,fmOpenRead or fmShareDenyNone)
+    else begin
+      Log.LogError('Openstream failed: '+aFilename,Istr);
+      raise Exception.Create('OpenStream failed: '+aFileName);
+    end;
   end;
 end;
 
