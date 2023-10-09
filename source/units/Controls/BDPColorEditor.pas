@@ -26,13 +26,14 @@ interface
 
 uses
   SysUtils, mk_sdl2, vcc2_Container, BDPMessage, BDPSliders,
-  BDPColorBox, BDPHSBox, BDPLightSlider, BDPColorPalette, BDPColorPaletteUndo;
+  BDPColorBox, BDPHSBox, BDPLightSlider, BDPColorPalette, BDPColorPaletteUndo,
+  BDPModalDialog;
 
 type
 
   { TBDColorEditor }
 
-  TBDColorEditor=class(TContainer)
+  TBDColorEditor=class(TBDModalDialog)
     constructor Create;
     function ProcessMessage(msg:TMessage):boolean;
   protected
@@ -58,6 +59,7 @@ type
     procedure SelectClick(Sender:TObject;x,y,buttons:integer);
     procedure CancelClick(Sender:TObject;x,y,buttons:integer);
     procedure ColorEditorShow(Sender:TObject);
+    function KeyDown(Sender:TObject;key:integer):boolean;
     procedure RefreshHSLbyRGB;
     procedure RefreshRGBbyHSL;
     procedure RefreshColorBox;
@@ -66,34 +68,39 @@ type
 
 implementation
 
-uses BDPShared, MKMouse2, MKToolbox, vcc2_SliderLogic, BDPButton;
+uses BDPShared, MKMouse2, MKToolbox, vcc2_SliderLogic, BDPButton, sdl2;
 
 const
-  PALETTEEDITORHEIGHT=(NORMALSLIDERHEIGHT+3)*7+3+3;
-  HSBOXLEFT=3;
-  HSBOXTOP=6;
-  HSBOXWIDTH=512+6-1;
-  HSBOXHEIGHT=PALETTEEDITORHEIGHT-(NORMALSLIDERHEIGHT+3)-6-3-3;
-  SLIDERSLEFT=HSBOXLEFT+HSBOXWIDTH+3+36;
-  SLIDERSTOP=6;
+  HSBOXLEFT=3+9;
+  HSBOXTOP=MODALDIALOGCAPTIONHEIGHT+9;
+  HSBOXWIDTH=512+6;
+  SLIDERSLEFT=HSBOXLEFT+HSBOXWIDTH+36;
+  SLIDERSTOP=MODALDIALOGCAPTIONHEIGHT+9;
   SLIDERSWIDTH=320;
+  SLIDERSHEIGHT=7*(NORMALSLIDERHEIGHT+3)-3;
+  HSBOXHEIGHT=SLIDERSHEIGHT-(NORMALSLIDERHEIGHT+3);
   LIGHTSLIDERLEFT=HSBOXLEFT;
   LIGHTSLIDERTOP=HSBOXTOP+HSBOXHEIGHT+3;
   LIGHTSLIDERWIDTH=HSBOXWIDTH;
   LIGHTSLIDERHEIGHT=NORMALSLIDERHEIGHT;
-  BUTTONS2WIDTH=NORMALBUTTONWIDTH-2*18;
-  BUTTONSLEFT=SLIDERSLEFT+SLIDERSWIDTH+3;
-  BUTTONS2LEFT=WINDOWWIDTH-BUTTONS2WIDTH-3;
-  BUTTONSTOP=6;
-  BUTTONS2TOP=BUTTONSTOP+NORMALBUTTONHEIGHT+3;
-  COLORBOXLEFT=BUTTONSLEFT+NORMALBUTTONWIDTH+3;
-  COLORBOXTOP=BUTTONSTOP;
-  COLORBOXWIDTH=BUTTONS2LEFT-COLORBOXLEFT-3;
-  COLORBOXHEIGHT=2*NORMALBUTTONHEIGHT+3;
-  COLORPALETTELEFT=SLIDERSLEFT+SLIDERSWIDTH+3;
-  COLORPALETTETOP=BUTTONS2TOP+NORMALBUTTONHEIGHT+3;
-  COLORPALETTEWIDTH=WINDOWWIDTH-BUTTONSLEFT-3;
-  COLORPALETTEHEIGHT=PALETTEEDITORHEIGHT-COLORBOXHEIGHT-12-2;
+
+  COLOREDITORWIDTH=3+9+HSBOXWIDTH+36+SLIDERSWIDTH+9+3;
+
+  COLORPALETTELEFT=3+9;
+  COLORPALETTETOP=MODALDIALOGCAPTIONHEIGHT+SLIDERSHEIGHT+9+9;
+  COLORPALETTEWIDTH=COLOREDITORWIDTH-NORMALBUTTONWIDTH-9-9-3-3 -8;
+  COLORPALETTEHEIGHT=340;
+
+  COLOREDITORHEIGHT=MODALDIALOGCAPTIONHEIGHT+9+(NORMALSLIDERHEIGHT+3)*7-3+9+COLORPALETTEHEIGHT+9+3;
+
+  BUTTONSLEFT=COLOREDITORWIDTH-3-9-NORMALBUTTONWIDTH;
+  BUTTONSTOP=COLOREDITORHEIGHT-6*(NORMALBUTTONHEIGHT+3)-6;
+  COLORBOXLEFT=BUTTONSLEFT;
+  COLORBOXTOP=COLORPALETTETOP;
+  COLORBOXWIDTH=NORMALBUTTONWIDTH;
+  COLORBOXHEIGHT=BUTTONSTOP-COLORPALETTETOP-3;
+
+
 
 
 { TBDColorEditor }
@@ -109,7 +116,7 @@ var atmB:TBDButton;
       MinValue:=0;
       MaxValue:=pMaxValue;
       Position:=32;
-      ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+      ZIndex:=MODALDIALOG_ZINDEX+1;
       Name:=pName;
       OnChange:=pOnChange;
     end;
@@ -117,19 +124,17 @@ var atmB:TBDButton;
   end;
 
 begin
-  inherited Create;
-  fLeft:=0;
-  fTop:=WINDOWHEIGHT-PALETTEEDITORHEIGHT;
-  Width:=WINDOWWIDTH;
-  Height:=PALETTEEDITORHEIGHT;
+  inherited Create(COLOREDITORWIDTH,COLOREDITORHEIGHT);
   OnMouseEnter:=MouseEnter;
   OnMouseLeave:=MouseLeave;
   OnShow:=ColorEditorShow;
-  fName:='PaletteEditor';
-  ZIndex:=LEVEL1CONTROLS_ZINDEX;
+  OnKeyDown:=KeyDown;
+  fName:='ColorEditor';
+  Caption:='COLOR EDITOR';
+  ZIndex:=MODALDIALOG_ZINDEX;
 
   fHSBox:=TBDHSBox.Create(fLeft+HSBOXLEFT,fTop+HSBOXTOP,HSBOXWIDTH,HSBOXHEIGHT);
-  fHSBox.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fHSBox.ZIndex:=MODALDIALOG_ZINDEX+1;
   fHSBox.Name:='HSBox';
   fHSBox.OnChange:=HSBoxChange;
   AddChild(fHSBox);
@@ -150,7 +155,7 @@ begin
     255,'A-Slider',SliderAChange);
 
   fAlternateLSlider:=TBDLightSlider.Create(fLeft+LIGHTSLIDERLEFT,fTop+LIGHTSLIDERTOP,LIGHTSLIDERWIDTH,LIGHTSLIDERHEIGHT);
-  fAlternateLSlider.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fAlternateLSlider.ZIndex:=MODALDIALOG_ZINDEX+1;
   fAlternateLSlider.Name:='Alternate L-slider';
   fAlternateLSlider.OnChange:=AlternateLSliderChange;
   AddChild(fAlternateLSlider);
@@ -159,46 +164,62 @@ begin
     'SELECT','SELECT THE COLOR SHOWN IN THE BOX.');
   with atmB do begin
     Name:='Select Color';
-    ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+    ZIndex:=MODALDIALOG_ZINDEX+1;
     OnClick:=SelectClick;
   end;
   AddChild(atmB);
 
-  atmB:=TBDButton.Create(fLeft+BUTTONSLEFT,fTop+BUTTONS2TOP,NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
+  atmB:=TBDButton.Create(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+NORMALBUTTONHEIGHT+3,NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'CANCEL','CLOSE PALETTE EDITOR WITHOUT SELECTING COLOR.');
   with atmB do begin
     Name:='Cancel Color';
-    ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+    ZIndex:=MODALDIALOG_ZINDEX+1;
     OnClick:=CancelClick;
   end;
   AddChild(atmB);
 
-  atmB:=TBDButton.Create(fLeft+BUTTONS2LEFT,fTop+BUTTONSTOP,BUTTONS2WIDTH,NORMALBUTTONHEIGHT,
+  atmB:=TBDButton.Create(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+2*(NORMALBUTTONHEIGHT+3),NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'UNDO','UNDO LAST COLOR OPERATION.');
   with atmB do begin
     Name:='Undo Color';
-    ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+    ZIndex:=MODALDIALOG_ZINDEX+1;
   end;
   AddChild(atmB);
 
-  atmB:=TBDButton.Create(fLeft+BUTTONS2LEFT,fTop+BUTTONS2TOP,BUTTONS2WIDTH,NORMALBUTTONHEIGHT,
+  atmB:=TBDButton.Create(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+3*(NORMALBUTTONHEIGHT+3),NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
     'REDO','REDO LAST COLOR OPERATION.');
   with atmB do begin
     Name:='Redo Color';
-    ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+    ZIndex:=MODALDIALOG_ZINDEX+1;
+  end;
+  AddChild(atmB);
+
+  atmB:=TBDButton.Create(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+4*(NORMALBUTTONHEIGHT+3),NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
+    'SAVE','SAVE COLOR PALETTE TO FILE.');
+  with atmB do begin
+    Name:='Save Palette';
+    ZIndex:=MODALDIALOG_ZINDEX+1;
+  end;
+  AddChild(atmB);
+
+  atmB:=TBDButton.Create(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+5*(NORMALBUTTONHEIGHT+3),NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
+    'LOAD','LOAD COLOR PALETTE FROM FILE.');
+  with atmB do begin
+    Name:='Load Palette';
+    ZIndex:=MODALDIALOG_ZINDEX+1;
   end;
   AddChild(atmB);
 
   fColorBox:=TBDColorBox.Create(fLeft+COLORBOXLEFT,fTop+COLORBOXTOP,COLORBOXWIDTH,COLORBOXHEIGHT);
   fColorBox.Color:=Settings.ActiveColor;
-  fColorBox.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fColorBox.ZIndex:=MODALDIALOG_ZINDEX+1;
   fColorBox.Name:='ColorBox';
   AddChild(fColorBox);
 
   fColorPalette:=TBDColorPalette.Create(fLeft+COLORPALETTELEFT,fTop+COLORPALETTETOP,
     COLORPALETTEWIDTH,COLORPALETTEHEIGHT);
   fColorPalette.Palette:=Project.CurrentPalette;
-  fColorPalette.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fColorPalette.ZIndex:=MODALDIALOG_ZINDEX+1;
   fColorPalette.Name:='ColorPalette';
   AddChild(fColorPalette);
 
@@ -213,11 +234,8 @@ end;
 procedure TBDColorEditor.Redraw;
 var i:integer;
 begin
+  inherited ReDraw;
   if Assigned(fTexture) then begin
-    // Panel top line
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
-    // Panel background
-    fTexture.ARGBImage.Bar(0,3,fTexture.ARGBImage.Width,fTexture.ARGBImage.Height-3,SystemPalette[SYSTEMCOLORMID]);
     // Letters for sliders
     for i:=0 to 6 do
       MM.Fonts['Black'].OutText(fTexture.ARGBImage,'HSLRGBA'[i+1],SLIDERSLEFT-20,SLIDERSTOP+9+(NORMALSLIDERHEIGHT+3)*i,1);
@@ -307,10 +325,16 @@ end;}
 procedure TBDColorEditor.ColorEditorShow(Sender:TObject);
 begin
   inherited Show;
-  InfoBar.Top:=WINDOWHEIGHT-PALETTEEDITORHEIGHT-INFOBARHEIGHT;
-  ActiveTool:=Tools.ItemByName['SELCOL'];
+//  InfoBar.Top:=WINDOWHEIGHT-COLOREDITORHEIGHT-INFOBARHEIGHT;
+  InfoBar.Top:=0;
 //  fUndoButton.Enabled:=Project.CurrentExtImage.PaletteUndo.CanUndo;
 //  fRedoButton.Enabled:=Project.CurrentExtImage.PaletteUndo.CanRedo;
+end;
+
+function TBDColorEditor.KeyDown(Sender: TObject; key: integer): boolean;
+begin
+  if key=SDL_SCANCODE_ESCAPE then MessageQueue.AddMessage(MSG_DEACTIVATECOLOREDITOR,0,0);
+  Result:=true;
 end;
 
 procedure TBDColorEditor.RefreshHSLbyRGB;
