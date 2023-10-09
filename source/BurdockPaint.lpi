@@ -19,7 +19,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="9"/>
-      <BuildNr Value="28"/>
+      <BuildNr Value="29"/>
       <Attributes pvaPreRelease="True"/>
       <StringTable CompanyName="MKSZTSZ" LegalCopyright="GPL3" ProductName="BurdockPaint"/>
     </VersionInfo>
@@ -345,6 +345,18 @@
       </Unit>
       <Unit>
         <Filename Value="units\Controls\BDPColorClusterControl.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="units\Dialogs\BDPColorClusterEditor.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="units\Controls\BDPSimpleColorCluster.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="units\Controls\BDPCheckBox.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
     </Units>
