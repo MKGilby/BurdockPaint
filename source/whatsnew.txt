@@ -1,4 +1,8 @@
 Todo:
+  Azon gondolkozzál, hogy a Modal ColorClusterEditor hogyan tudja úgy meghívni
+  a Modal ColorEditor-t, hogy mûködjön is!
+
+
 - Add "Project"/"New" dialog.
 - Check and warn if current project is modified on opening project.
 - Check and warn if current project is modified on new project.
@@ -25,13 +29,20 @@ Todo:
 - Add an option to make the current inks/tools property adjustable on the fly.
   (Should show a small dialog somewhere at the side of the window).
 - New color cluster selector and editor dialog. Or entire screen.
-- Colorpalette should be scrollable up and down, so all 256 colors would be accessible.
 - Colorpalette should update the infobar with color index and color value.
-- Create Controls and PaletteEditor as fixed width dialogs.
+- Create Controls as fixed width dialog.
 - Add a few other window sizes and layout:
   - Current (1280x720 windowed)
   - 1920x1080 fullscreen borderless
 
+
+2023.10.09
+- ColorEditor is now a ModalDialog.
+- ColorEditor is rearranged, now showing entire palette (256 colors).
+- Modal dialogs now darken the main window.
+
+2023.10.03
+- Modal dialogs now have titles.
 
 2023.09.22
 - CoordinateBox updated. It shows color components of color under the mouse.
