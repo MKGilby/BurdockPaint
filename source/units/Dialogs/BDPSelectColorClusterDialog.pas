@@ -52,7 +52,7 @@ type
 
 implementation
 
-uses BDPShared, MKMouse2, BDPButton, mk_sdl2, BDPColorCluster;
+uses BDPShared, MKMouse2, BDPButton, mk_sdl2, BDPColorCluster, BDPSimpleColorCluster;
 
 const
   COLORCLUSTERDIALOGWIDTH=COLORCLUSTERWIDTH;
@@ -96,7 +96,7 @@ begin
     AddChild(atmB);
   end;
   for i:=Project.CurrentColorClusters.Count-1 downto 0 do begin
-    atmC:=TBDSimpleColorCluster.Create(fLeft+6,fTop+y+(Project.CurrentColorClusters.Count-1-i)*36,Project.CurrentColorClusters[i]);
+    atmC:=TBDSimpleColorCluster.Create(fLeft+6,fTop+y+(Project.CurrentColorClusters.Count-1-i)*36,COLORCLUSTERWIDTH,COLORCLUSTERHEIGHT,Project.CurrentColorClusters[i]);
     atmC.Width:=fTexture.Width-12;
     atmC.Height:=COLORCLUSTERHEIGHT-3;
     atmC.ZIndex:=MODALDIALOG_ZINDEX+1;
