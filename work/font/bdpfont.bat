@@ -1,4 +1,4 @@
-fontbuild2 newfont_org.png bdpfont.png -charset "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.-?:_;>*<}{@&#][|\'#22+!%%/=()$#80#81#82#83#B0#84#85" -fixed
+fontbuild2 newfont_org.png bdpfont.png -charset "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.-?:_;>*<}{@&#][|\'#22+!%%/=()$#80#81#82#83#B0#84#85#86" -fixed
 fontbuild2 logofont.cel logofont.png -charset "BURDOCKPAINTo"
 fontbuild2 smallerfont.png smallfont.png -charset "0123456789ABCDEF-" -fixed
 copy ..\base_copyright_notice.txt ..\..\source\includes\fonts.inc
