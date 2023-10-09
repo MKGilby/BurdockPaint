@@ -95,19 +95,6 @@ type
     property ActiveIndex:integer read fActiveIndex write fSetActiveIndex;
   end;
 
-  { TBDSimpleColorCluster }
-
-  TBDSimpleColorCluster=class(TVisibleControl)
-    constructor Create(iLeft,iTop:integer;iColorCluster:TColorCluster);
-  protected
-    procedure ReDraw; override;
-  private
-    fColorCluster:TColorCluster;
-    fColorsWidth:integer;
-    function fGetColorsWidth:integer;
-  public
-    property ColorsWidth:integer read fGetColorsWidth;
-  end;
 
 implementation
 
@@ -296,58 +283,6 @@ end;
 procedure TColorClusters.fSetActiveIndex(value:integer);
 begin
   if (value>=0) and (value<Count) then fActiveIndex:=value;
-end;
-
-
-{ TBDSimpleColorCluster }
-
-constructor TBDSimpleColorCluster.Create(iLeft,iTop:integer;iColorCluster:TColorCluster);
-begin
-  inherited Create;
-  fLeft:=iLeft;
-  fTop:=iTop;
-  fColorCluster:=iColorCluster;
-  Width:=COLORCLUSTERWIDTH;
-  Height:=COLORCLUSTERHEIGHT;
-  fNeedRedraw:=true;
-//  OnClick:=Click;
-end;
-
-procedure TBDSimpleColorCluster.ReDraw;
-const XWidth=27;
-var i:integer;XLeft:integer;
-begin
-  if Assigned(fTexture) then begin
-    fColorsWidth:=Width-3-XWidth;
-    XLeft:=Width-XWidth;
-    with fTexture.ARGBImage do begin
-      // Outer border
-      if Selected then i:=SYSTEMCOLORHIGHLIGHT else i:=SYSTEMCOLORDARK;
-      Bar(0,0,Width,3,SystemPalette[i]);
-      Bar(0,Height-3,Width,3,SystemPalette[i]);
-      Bar(0,3,3,Height-6,SystemPalette[i]);
-      Bar(Width-3,3,3,Height-6,SystemPalette[i]);
-      // X left border and background
-      Bar(XLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
-      if not Selected then
-        Bar(XLeft+3,3,XWidth-6,Height-6,SystemPalette[SYSTEMCOLORMID])
-      else
-        Bar(XLeft+3,3,XWidth-6,Height-6,SystemPalette[SYSTEMCOLORDARK]);
-      // Color cluster bar
-      if Assigned(fColorCluster) then begin
-        for i:=0 to fColorsWidth-1 do
-          VLine(i+3,3,Height-6,fColorCluster.GetColorAt(i,fColorsWidth-1));
-      end;
-      // X
-      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'X',XLeft+XWidth div 2,9,1);
-    end;
-    fTexture.Update;
-  end;
-end;
-
-function TBDSimpleColorCluster.fGetColorsWidth: integer;
-begin
-  Result:=fColorsWidth+6;
 end;
 
 end.
