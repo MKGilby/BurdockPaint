@@ -115,7 +115,7 @@ begin
           fPicking:=true;
 //          MessageQueue.AddMessage(MSG_ACTIVATEPICKCOLORCLUSTER);
         end else begin
-          MessageQueue.AddMessage(MSG_ACTIVATECOLOREDITOR);
+          MessageQueue.AddMessage(MSG_ACTIVATECOLORCLUSTEREDITOR);
         end;
       end;
     end else
