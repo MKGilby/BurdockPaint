@@ -29,7 +29,7 @@ uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
   BDPControls, BDPDrawArea, BDPColorEditor,
   BDPMagnifyCELDialog, BDPRotateCELDialog, BDPAboutDialog,
   BDPMessageBox, BDPDitherDialog, BDPSelectColorClusterDialog,
-  BDPConfigureRGradDialog, BDPCoordinateBox;
+  BDPConfigureRGradDialog, BDPCoordinateBox, BDPColorClusterEditor;
 
 type
 
@@ -46,12 +46,13 @@ type
     fControls:TBDControls;
     fDrawArea:TBDDrawArea;
     fSelectColorClusterDialog:TBDSelectColorClusterDialog;
-    fColorEditor:TBDColorEditor;
     fMagnifyDialog:TBDMagnifyCELDialog;
     fRotateDialog:TBDRotateCELDialog;
     fDitherDialog:TBDDitherDialog;
     fConfigureRGradDialog:TBDConfigureRGradDialog;
     fCoordinateBox:TBDCoordinateBox;
+    fColorClusterEditor:TBDColorClusterEditor;
+
     fBackup:TFileBackup;
     fOpenCELDialog,
     fOpenProjectDialog:TOpenDialog;
@@ -144,7 +145,7 @@ begin
   fControls:=TBDControls.Create;
   fDrawArea:=TBDDrawArea.Create;
   fSelectColorClusterDialog:=TBDSelectColorClusterDialog.Create;
-  fColorEditor:=TBDColorEditor.Create;
+  ColorEditor:=TBDColorEditor.Create;
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   // To enable/disable Image/Remove menuitem and set Controls image slider
   MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
@@ -154,6 +155,7 @@ begin
   fConfigureRGradDialog:=TBDConfigureRGradDialog.Create;
   fCoordinateBox:=TBDCoordinateBox.Create(
     WINDOWWIDTH-COORDINATEBOXWIDTH-24,WINDOWHEIGHT-COORDINATEBOXHEIGHT,COORDINATEBOXWIDTH+24,COORDINATEBOXHEIGHT);
+  fColorClusterEditor:=TBDColorClusterEditor.Create;
   MouseObjects.List;
 
   fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','All supported file|*.bdc;*.cel;*.png;*.tga|CEL files|*.bdc|Legacy CEL files|*.cel|PNG files|*.png|TGA files|*.tga');
@@ -168,12 +170,13 @@ begin
   if Assigned(fSaveProjectDialog) then fSaveProjectDialog.Free;
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
   if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
+  if Assigned(fColorClusterEditor) then fColorClusterEditor.Free;
   if Assigned(fCoordinateBox) then fCoordinateBox.Free;
   if Assigned(fConfigureRGradDialog) then fConfigureRGradDialog.Free;
   if Assigned(fDitherDialog) then fDitherDialog.Free;
   if Assigned(fRotateDialog) then fRotateDialog.Free;
   if Assigned(fMagnifyDialog) then fMagnifyDialog.Free;
-  if Assigned(fColorEditor) then fColorEditor.Free;
+  if Assigned(ColorEditor) then ColorEditor.Free;
   if Assigned(fSelectColorClusterDialog) then fSelectColorClusterDialog.Free;
   if Assigned(fDrawArea) then fDrawArea.Free;
   if Assigned(fControls) then fControls.Free;
@@ -210,7 +213,7 @@ begin
     while MessageQueue.HasNewMessage do begin
       msg:=MessageQueue.GetNextMessage;
       mres:=fControls.ProcessMessage(msg);
-      if not mres then mres:=fColorEditor.ProcessMessage(msg);
+      if not mres then mres:=ColorEditor.ProcessMessage(msg);
       if not mres and fMainMenu.Visible then mres:=fMainMenu.ProcessMessage(msg);
       if not mres then
         case msg.TypeID of
@@ -246,6 +249,8 @@ begin
           MSG_ACTIVATECOLOREDITOR:       ActivatePaletteEditor;
           MSG_DEACTIVATECOLOREDITOR:     DeactivatePaletteEditor;
           MSG_SELECTCOLOR:               SelectColor;
+          MSG_ACTIVATECOLORCLUSTEREDITOR:fColorClusterEditor.Show;
+          MSG_COLORCLUSTEREDITORRESPONSE:fColorClusterEditor.Hide;
         end;
     end;  // while MessageQueue.HasNewMessage
     HandleMessages;
@@ -553,29 +558,28 @@ begin
   end;
 end;
 
-
 procedure TMain.ActivatePaletteEditor;
 begin
-  fControls.Hide;
-  fCoordinateBox.Hide;
-  fColorEditor.Show;
-  fMainMenu.DisableItem('PROJECT');
-  fMainMenu.DisableItem('IMAGE');
-  fMainMenu.DisableItem('CEL');
-  fMainMenu.DisableItem('TOOLS');
-  fMainMenu.DisableItem('INKS');
+//  fControls.Hide;
+//  fCoordinateBox.Hide;
+  ColorEditor.Show;
+//  fMainMenu.DisableItem('PROJECT');
+//  fMainMenu.DisableItem('IMAGE');
+//  fMainMenu.DisableItem('CEL');
+//  fMainMenu.DisableItem('TOOLS');
+//  fMainMenu.DisableItem('INKS');
 end;
 
 procedure TMain.DeactivatePaletteEditor;
 begin
-  fColorEditor.Hide;
-  fControls.Show;
-  fCoordinateBox.Show;
-  fMainMenu.EnableItem('PROJECT');
-  fMainMenu.EnableItem('IMAGE');
-  fMainMenu.EnableItem('CEL');
-  fMainMenu.EnableItem('TOOLS');
-  fMainMenu.EnableItem('INKS');
+  ColorEditor.Hide;
+//  fControls.Show;
+//  fCoordinateBox.Show;
+//  fMainMenu.EnableItem('PROJECT');
+//  fMainMenu.EnableItem('IMAGE');
+//  fMainMenu.EnableItem('CEL');
+//  fMainMenu.EnableItem('TOOLS');
+//  fMainMenu.EnableItem('INKS');
   InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
 end;
 
