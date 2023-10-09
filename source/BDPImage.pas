@@ -125,7 +125,10 @@ end;
 
 constructor TBDRegion.CreateFromStream(iStream:TStream);
 begin
+  inherited Create(16,16);
   LoadFromStream(iStream);
+  fLeft:=0;
+  fTop:=0;
   fChanged:=false;
 end;
 
