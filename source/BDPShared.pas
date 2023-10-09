@@ -26,7 +26,7 @@ interface
 
 uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, PNGFont2Unit,
   BDPInfoBar, BDPPalette, BDPMessage, BDPCursor, BDPSettings,
-  BDPToolBase, BDPInkBase, BDPImage, BDPProject;
+  BDPToolBase, BDPInkBase, BDPImage, BDPProject, BDPColorEditor;
 
 const
   WINDOWWIDTH=1280;
@@ -205,6 +205,12 @@ const
   //   UInt32 value is the new color.
   MSG_SETPALETTECOLOR=27;
 
+  // Activate ColorClusterEditor
+  MSG_ACTIVATECOLORCLUSTEREDITOR=28;
+
+  // ColorClusterEditor response
+  MSG_COLORCLUSTEREDITORRESPONSE=29;
+
   // ------- Menu Messages ------- Range: 200-299 -------
   {$i includes\menu.inc}
 
@@ -213,16 +219,21 @@ const
   PARM_COL_SELECTOR_MAIN=1;
   PARM_COL_SELECTOR_LEFT=2;
   PARM_COL_SELECTOR_RIGHT=3;
+  PARM_COL_CCEDIT_LEFT=4;
+  PARM_COL_CCEDIT_RIGHT=5;
+  PARM_COL_CCEDIT_ADD1=6;
+  PARM_COL_CCEDIT_ADD2=7;
 
 var
   MM:TGFXManager;  // MediaManager to hold fonts and internal images
+  Settings:TSettings;  // All settings in one place
   InfoBar:TBDInfoBar;  // The information bar on the top of the screen
 
   SystemPalette:TBDPalette;  // The palette holding system colors
   VibroColors:TBDVibroColors; // The flashing color for helping the Tools
   MessageQueue:TMessageQueue;  // Messaging queue for classes who doesn't know each other
   Cursor:TBDCursor;  // The cursor on drawing area
-  Settings:TSettings;  // All settings in one place
+  ColorEditor:TBDColorEditor;
 
   Tools:TBDTools;  // All tools are loaded into this list
   ActiveTool:TBDTool;  // This is the selected tool
@@ -337,6 +348,14 @@ begin
   end;
 end;
 
+procedure CreateDarkBar;
+var atm:TARGBImage;
+begin
+  atm:=TARGBImage.Create(WINDOWWIDTH,WINDOWHEIGHT);
+  atm.Bar(0,0,atm.Width,atm.Height,0,0,0,128);
+  MM.AddImage(atm,'DarkBar',MM_CREATETEXTUREWHENNOANIMATIONDATA);
+end;
+
 procedure LoadAssets;
 begin
   Log.LogStatus('Loading and creating assets...');
@@ -372,6 +391,7 @@ begin
   InfoBar:=TBDInfoBar.Create;
   Log.LogStatus('  Creating UI gfx...');
   CreateArches;
+  CreateDarkBar;
   Log.LogStatus('  Creating cursor...');
   Cursor:=TBDCursor.Create;
   VibroColors:=TBDVibroColors.Create($FF202020,$FFD0D0D0);
