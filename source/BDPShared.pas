@@ -83,7 +83,7 @@ const
   COLORCLUSTERHEIGHT=36;
 
   MAXPALETTEENTRIES=256;  // Palette color count hard limit
-  POSTPROCESSCOLOR=$FFFF00FF;
+  POSTPROCESSCOLOR=$00FF00FF;
 
   // ZIndex of DrawArea
   DRAWAREA_ZINDEX=0;
@@ -119,15 +119,16 @@ const
   // Toggle visibility of main Controls panel and MainMenu.
   MSG_TOGGLECONTROLS=2;
 
-  // Hide Controls, show ColorEditor.
-  //   IntValue is one of the PARM_COL constants.
+  // Open ColorEditor dialog.
+  //   IntValue is one of the PARM_COL constants. (Where it was called from)
   //   UInt32 value is the color to set the sliders to.
-  MSG_ACTIVATECOLOREDITOR=3;
+  MSG_OPENCOLOREDITOR=3;
 
   // Hide ColorEditor, show Controls.
-  //   IntValue is one of the PARM_COL constants if color is selected, otherwise 0.
-  //   UInt32 value is the selected color.
-  MSG_DEACTIVATECOLOREDITOR=4;
+  //   IntValue is one of the PARM_COL constants. (Where it was called from)
+  //   UInt32 value is the selected color, except when it is the POSTPROCESSCOLOR.
+  //     In that case no color was selected.
+  MSG_COLOREDITORRESP=4;
 
   // Set Undo/Redo buttons' state depending on ImageUndosystem state.
   MSG_SETIMAGEUNDOREDOBUTTON=5;

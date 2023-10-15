@@ -278,12 +278,14 @@ end;
 
 procedure TBDColorEditor.SelectClick(Sender:TObject; x,y,buttons:integer);
 begin
-  MessageQueue.AddMessage(MSG_DEACTIVATECOLOREDITOR,fCalledFrom,fColorBox.Color);
+  MessageQueue.AddMessage(MSG_COLOREDITORRESP,fCalledFrom,fColorBox.Color);
+  Self.Hide;
 end;
 
 procedure TBDColorEditor.CancelClick(Sender:TObject; x,y,buttons:integer);
 begin
-  MessageQueue.AddMessage(MSG_DEACTIVATECOLOREDITOR,0,0);
+  MessageQueue.AddMessage(MSG_COLOREDITORRESP,fCalledFrom,POSTPROCESSCOLOR);
+  Self.Hide;
 end;
 
 {procedure TBDColorEditor.UndoButtonClick(Sender:TObject; x,y,buttons:integer);
@@ -311,7 +313,7 @@ end;
 
 function TBDColorEditor.KeyDown(Sender: TObject; key: integer): boolean;
 begin
-  if key=SDL_SCANCODE_ESCAPE then MessageQueue.AddMessage(MSG_DEACTIVATECOLOREDITOR,0,0);
+  if key=SDL_SCANCODE_ESCAPE then MessageQueue.AddMessage(MSG_COLOREDITORRESP,0,0);
   Result:=true;
 end;
 
@@ -351,7 +353,7 @@ begin
   Result:=false;
   if Enabled then begin
     case msg.TypeID of
-      MSG_ACTIVATECOLOREDITOR:begin
+      MSG_OPENCOLOREDITOR:begin
         fSliderA.Position:=(msg.DataUInt32 and $FF000000)>>24;
         fSliderR.Position:=(msg.DataUInt32 and $FF0000)>>16;
         fSliderG.Position:=(msg.DataUInt32 and $FF00)>>8;

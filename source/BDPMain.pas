@@ -82,8 +82,7 @@ type
     procedure FlipCEL(msg:TMessage);
     procedure OpenCEL;
     procedure SaveCEL;
-    procedure ActivatePaletteEditor;
-    procedure DeactivatePaletteEditor;
+    procedure ColorEditorResp(msg:TMessage);
     procedure SelectColor;
 
   end;
@@ -246,8 +245,8 @@ begin
           MSG_OPENMAGNIFYCELDIALOG:      fMagnifyDialog.Show;
           MSG_OPENCEL:                   OpenCEL;
           MSG_SAVECEL:                   SaveCEL;
-          MSG_ACTIVATECOLOREDITOR:       ActivatePaletteEditor;
-          MSG_DEACTIVATECOLOREDITOR:     DeactivatePaletteEditor;
+          MSG_OPENCOLOREDITOR:           ColorEditor.Show;
+          MSG_COLOREDITORRESP:           ColorEditorResp(msg);
           MSG_SELECTCOLOR:               SelectColor;
           MSG_ACTIVATECOLORCLUSTEREDITOR:fColorClusterEditor.Show;
           MSG_COLORCLUSTEREDITORRESPONSE:fColorClusterEditor.Hide;
@@ -558,28 +557,20 @@ begin
   end;
 end;
 
-procedure TMain.ActivatePaletteEditor;
+procedure TMain.ColorEditorResp(msg: TMessage);
 begin
-//  fControls.Hide;
-//  fCoordinateBox.Hide;
-  ColorEditor.Show;
-//  fMainMenu.DisableItem('PROJECT');
-//  fMainMenu.DisableItem('IMAGE');
-//  fMainMenu.DisableItem('CEL');
-//  fMainMenu.DisableItem('TOOLS');
-//  fMainMenu.DisableItem('INKS');
-end;
-
-procedure TMain.DeactivatePaletteEditor;
-begin
-  ColorEditor.Hide;
-//  fControls.Show;
-//  fCoordinateBox.Show;
-//  fMainMenu.EnableItem('PROJECT');
-//  fMainMenu.EnableItem('IMAGE');
-//  fMainMenu.EnableItem('CEL');
-//  fMainMenu.EnableItem('TOOLS');
-//  fMainMenu.EnableItem('INKS');
+  case msg.DataInt of
+    PARM_COL_SELECTOR_LEFT,
+    PARM_COL_SELECTOR_MAIN,
+    PARM_COL_SELECTOR_RIGHT:fControls.SetColor(msg.DataInt,msg.DataUInt32);
+    PARM_COL_CCEDIT_LEFT,
+    PARM_COL_CCEDIT_RIGHT,
+    PARM_COL_CCEDIT_ADD1,
+    PARM_COL_CCEDIT_ADD2:begin
+      fColorClusterEditor.SetColor(msg.DataInt,msg.DataUInt32);
+      fColorClusterEditor.Show;
+    end;
+  end;
   InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
 end;
 

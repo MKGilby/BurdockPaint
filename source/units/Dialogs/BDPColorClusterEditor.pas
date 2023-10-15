@@ -14,6 +14,7 @@ type
   TBDColorClusterEditor=class(TBDModalDialog)
     constructor Create;
     destructor Destroy; override;
+    procedure SetColor(pTarget:integer;pColor:uint32);
   private
     fSimpleColorCluster:TBDSimpleColorCluster;
     fColorCluster:TColorCluster;
@@ -49,14 +50,14 @@ begin
   fColorBoxes[0].Color:=fColorCluster.Color1;
   fColorBoxes[0].ZIndex:=MODALDIALOG_ZINDEX+1;
   fColorBoxes[0].Name:='CCE ColorBox 0';
-  fColorBoxes[0].Tag:=0;
+  fColorBoxes[0].Tag:=PARM_COL_CCEDIT_LEFT;
   fColorBoxes[0].OnClick:=ColorBoxClick;
   AddChild(fColorBoxes[0]);
   fColorBoxes[1]:=TBDColorBox.Create(fLeft+64+512+3,fTop+30,36,36);
   fColorBoxes[1].Color:=fColorCluster.Color2;
   fColorBoxes[1].ZIndex:=MODALDIALOG_ZINDEX+1;
   fColorBoxes[1].Name:='CCE ColorBox 1';
-  fColorBoxes[1].Tag:=1;
+  fColorBoxes[1].Tag:=PARM_COL_CCEDIT_RIGHT;
   fColorBoxes[1].OnClick:=ColorBoxClick;
   AddChild(fColorBoxes[1]);
   fCheckBoxMoreColor1:=TBDCheckBox.Create(fLeft+64-3-32,fTop+30+36+9+4,27,27,'');
@@ -67,7 +68,7 @@ begin
   fColorBoxes[2].Color:=$ffff0000;
   fColorBoxes[2].ZIndex:=MODALDIALOG_ZINDEX+1;
   fColorBoxes[2].Name:='CCE ColorBox 2';
-  fColorBoxes[2].Tag:=2;
+  fColorBoxes[2].Tag:=PARM_COL_CCEDIT_ADD1;
   AddChild(fColorBoxes[2]);
   fCheckBoxMoreColor2:=TBDCheckBox.Create(fLeft+64-3-32,fTop+30+36*2+9*2,27,27,'');
   fCheckBoxMoreColor2.ZIndex:=MODALDIALOG_ZINDEX+1;
@@ -77,7 +78,7 @@ begin
   fColorBoxes[3].Color:=$ffff00ff;
   fColorBoxes[3].ZIndex:=MODALDIALOG_ZINDEX+1;
   fColorBoxes[3].Name:='CCE ColorBox 3';
-  fColorBoxes[3].Tag:=3;
+  fColorBoxes[3].Tag:=PARM_COL_CCEDIT_ADD2;
   AddChild(fColorBoxes[3]);
   fCloseButton:=TBDButton.Create(fLeft+6,fTop+Height-NORMALBUTTONHEIGHT-6,NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,'CLOSE','CLOSE DIALOG');
   fCloseButton.ZIndex:=MODALDIALOG_ZINDEX+1;
@@ -91,10 +92,22 @@ begin
   inherited Destroy;
 end;
 
+procedure TBDColorClusterEditor.SetColor(pTarget: integer; pColor: uint32);
+begin
+  if pColor<>POSTPROCESSCOLOR then
+    case pTarget of
+      PARM_COL_CCEDIT_LEFT:fColorBoxes[0].Color:=pColor;
+      PARM_COL_CCEDIT_RIGHT:fColorBoxes[1].Color:=pColor;
+      PARM_COL_CCEDIT_ADD1:fColorBoxes[2].Color:=pColor;
+      PARM_COL_CCEDIT_ADD2:fColorBoxes[3].Color:=pColor;
+    end;
+end;
+
 procedure TBDColorClusterEditor.ColorBoxClick(Sender: TObject; x, y, buttons: integer);
 begin
-  with TBDColorBox(Sender) do begin
-    MessageQueue.AddMessage(MSG_ACTIVATECOLOREDITOR,PARM_COL_CCEDIT_LEFT+Tag,Color);
+  if Sender is TBDColorBox then begin
+    MessageQueue.AddMessage(MSG_OPENCOLOREDITOR,TBDColorBox(Sender).Tag,TBDColorBox(Sender).Color);
+    Self.Hide;
   end;
 end;
 

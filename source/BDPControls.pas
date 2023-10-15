@@ -36,7 +36,22 @@ type
     constructor Create;
     procedure ActivateToolButton(index:integer);
     procedure ActivateInkButton(index:integer);
+    function ProcessMessage(msg:TMessage):boolean;
+    procedure ChangeActiveToolButtonTo(pTool:TBDTool);
+    procedure ChangeActiveInkButtonTo(pInk:TBDInk);
+    procedure SetColor(pTarget:integer;pColor:uint32);
+  protected
+    procedure ReDraw; override;
+  private
+    fToolButtons:array[0..5] of TBDButton;
+    fInkButtons:array[0..5] of TBDButton;
+    fUndoButton,fRedoButton:TBDButton;
+    fColorSelector:TBDColorSelector;
+    fColorCluster:TBDColorCluster;
+    fImageCountSlider:TBDHorizontalSlider;
     procedure MouseEnter(Sender:TObject);
+    procedure ControlsShow(Sender:TObject);
+    function ControlsKeyDown(Sender:TObject;key:integer):boolean;
     procedure FilledButtonClick(Sender:TObject;x,y,buttons: integer);
     function FilledButtonKeyDown(Sender:TObject;key:integer):boolean;
     procedure ClearKeyColorButtonClick(Sender:TObject;x,y,buttons: integer);
@@ -48,20 +63,6 @@ type
     procedure UndoButtonClick(Sender:TObject;x,y,buttons: integer);
     procedure RedoButtonClick(Sender:TObject;x,y,buttons: integer);
     procedure ActiveImageChange(Sender:TObject;newvalue:integer);
-    function ProcessMessage(msg:TMessage):boolean;
-    procedure ControlsShow(Sender:TObject);
-    function ControlsKeyDown(Sender:TObject;key:integer):boolean;
-    procedure ChangeActiveToolButtonTo(pTool:TBDTool);
-    procedure ChangeActiveInkButtonTo(pInk:TBDInk);
-  protected
-    procedure ReDraw; override;
-  private
-    fToolButtons:array[0..5] of TBDButton;
-    fInkButtons:array[0..5] of TBDButton;
-    fUndoButton,fRedoButton:TBDButton;
-    fColorSelector:TBDColorSelector;
-    fColorCluster:TBDColorCluster;
-    fImageCountSlider:TBDHorizontalSlider;
   end;
 
 implementation
@@ -364,14 +365,19 @@ begin
     MSG_ACTIVECOLORCLUSTERCHANGED:begin
       fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveColorCluster;
     end;
-    MSG_DEACTIVATECOLOREDITOR:begin
-      case msg.DataInt of
-        PARM_COL_SELECTOR_LEFT:Settings.ColorSelectorLeftColor:=msg.DataUInt32;
-        PARM_COL_SELECTOR_MAIN:Settings.ColorSelectorMainColor:=msg.DataUInt32;
-        PARM_COL_SELECTOR_RIGHT:Settings.ColorSelectorRightColor:=msg.DataUInt32;
-      end;
-      if msg.DataInt<>0 then fColorSelector.Refresh;
-    end;
+{    MSG_COLOREDITORRESP:begin
+      if msg.DataInt in [PARM_COL_SELECTOR_LEFT,PARM_COL_SELECTOR_MAIN,PARM_COL_CCEDIT_RIGHT] then begin
+        if msg.DataUInt32<>POSTPROCESSCOLOR then begin
+          case msg.DataInt of
+            PARM_COL_SELECTOR_LEFT:Settings.ColorSelectorLeftColor:=msg.DataUInt32;
+            PARM_COL_SELECTOR_MAIN:Settings.ColorSelectorMainColor:=msg.DataUInt32;
+            PARM_COL_SELECTOR_RIGHT:Settings.ColorSelectorRightColor:=msg.DataUInt32;
+          end;
+          fColorSelector.Refresh;
+        end;
+        Result:=true;
+      end else Result:=false;
+    end;}
     MSG_TOOLDRAW:ChangeActiveToolButtonTo(Tools.ItemByName['DRAW']);
     MSG_TOOLBOX:ChangeActiveToolButtonTo(Tools.ItemByName['BOX']);
     MSG_TOOLLINE:ChangeActiveToolButtonTo(Tools.ItemByName['LINE']);
@@ -439,6 +445,16 @@ begin
   Settings.SelectedInks[Settings.ActiveInk]:=pInk.Name;
   ActiveInk:=pInk;
   MessageQueue.AddMessage(MSG_SETINKSMENU);
+end;
+
+procedure TBDControls.SetColor(pTarget: integer; pColor: uint32);
+begin
+  if pColor<>POSTPROCESSCOLOR then
+    case pTarget of
+      PARM_COL_SELECTOR_LEFT:Settings.ColorSelectorLeftColor:=pColor;
+      PARM_COL_SELECTOR_MAIN:Settings.ColorSelectorMainColor:=pColor;
+      PARM_COL_SELECTOR_RIGHT:Settings.ColorSelectorRightColor:=pColor;
+    end;
 end;
 
 procedure TBDControls.ReDraw;
