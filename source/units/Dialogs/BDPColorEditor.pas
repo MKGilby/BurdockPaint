@@ -106,7 +106,6 @@ const
 { TBDColorEditor }
 
 constructor TBDColorEditor.Create;
-var atmB:TBDButton;
 
   function CreateSlider(pLeft,pTop,pMaxValue:integer;pName:string;
     pOnChange:TOnSliderPositionChangeEvent):TBDHorizontalSlider;
@@ -121,6 +120,19 @@ var atmB:TBDButton;
       OnChange:=pOnChange;
     end;
     AddChild(Result);
+  end;
+
+  procedure CreateButton(pLeft,pTop:integer;pCaption,pHint,pName:string;pOnClick:TMouseButtonEvent=nil);
+  var tmpB:TBDButton;
+  begin
+    tmpB:=TBDButton.Create(pLeft,pTop,NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
+      pCaption,pHint);
+    with tmpB do begin
+      Name:=pName;
+      ZIndex:=MODALDIALOG_ZINDEX+1;
+      OnClick:=pOnClick;
+    end;
+    AddChild(tmpB);
   end;
 
 begin
@@ -160,55 +172,23 @@ begin
   fAlternateLSlider.OnChange:=AlternateLSliderChange;
   AddChild(fAlternateLSlider);
 
-  atmB:=TBDButton.Create(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP,NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-    'SELECT','SELECT THE COLOR SHOWN IN THE BOX.');
-  with atmB do begin
-    Name:='Select Color';
-    ZIndex:=MODALDIALOG_ZINDEX+1;
-    OnClick:=SelectClick;
-  end;
-  AddChild(atmB);
+  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP,
+    'SELECT','SELECT THE COLOR SHOWN IN THE BOX.','Select Color',SelectClick);
 
-  atmB:=TBDButton.Create(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+NORMALBUTTONHEIGHT+3,NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-    'CLOSE','CLOSE PALETTE EDITOR WITHOUT SELECTING COLOR.');
-  with atmB do begin
-    Name:='Cancel Color';
-    ZIndex:=MODALDIALOG_ZINDEX+1;
-    OnClick:=CancelClick;
-  end;
-  AddChild(atmB);
+  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+NORMALBUTTONHEIGHT+3,
+    'CLOSE','CLOSE PALETTE EDITOR WITHOUT SELECTING COLOR.','Cancel Color',CancelClick);
 
-  atmB:=TBDButton.Create(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+2*(NORMALBUTTONHEIGHT+3),NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-    'UNDO','UNDO LAST COLOR OPERATION.');
-  with atmB do begin
-    Name:='Undo Color';
-    ZIndex:=MODALDIALOG_ZINDEX+1;
-  end;
-  AddChild(atmB);
+  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+2*(NORMALBUTTONHEIGHT+3),
+    'UNDO','UNDO LAST COLOR OPERATION.','Undo Color');
 
-  atmB:=TBDButton.Create(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+3*(NORMALBUTTONHEIGHT+3),NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-    'REDO','REDO LAST COLOR OPERATION.');
-  with atmB do begin
-    Name:='Redo Color';
-    ZIndex:=MODALDIALOG_ZINDEX+1;
-  end;
-  AddChild(atmB);
+  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+3*(NORMALBUTTONHEIGHT+3),
+    'REDO','REDO LAST COLOR OPERATION.','Redo Color');
 
-  atmB:=TBDButton.Create(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+4*(NORMALBUTTONHEIGHT+3),NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-    'SAVE','SAVE COLOR PALETTE TO FILE.');
-  with atmB do begin
-    Name:='Save Palette';
-    ZIndex:=MODALDIALOG_ZINDEX+1;
-  end;
-  AddChild(atmB);
+  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+4*(NORMALBUTTONHEIGHT+3),
+    'SAVE','SAVE COLOR PALETTE TO FILE.','Save Palette');
 
-  atmB:=TBDButton.Create(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+5*(NORMALBUTTONHEIGHT+3),NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-    'LOAD','LOAD COLOR PALETTE FROM FILE.');
-  with atmB do begin
-    Name:='Load Palette';
-    ZIndex:=MODALDIALOG_ZINDEX+1;
-  end;
-  AddChild(atmB);
+  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+5*(NORMALBUTTONHEIGHT+3),
+    'LOAD','LOAD COLOR PALETTE FROM FILE.','Load Palette');
 
   fColorBox:=TBDColorBox.Create(fLeft+COLORBOXLEFT,fTop+COLORBOXTOP,COLORBOXWIDTH,COLORBOXHEIGHT);
   fColorBox.Color:=Settings.ActiveColor;
@@ -222,8 +202,6 @@ begin
   fColorPalette.ZIndex:=MODALDIALOG_ZINDEX+1;
   fColorPalette.Name:='ColorPalette';
   AddChild(fColorPalette);
-
-//  fPickingColor:=-1;
 
   Visible:=false;
   MouseObjects.Add(Self);
