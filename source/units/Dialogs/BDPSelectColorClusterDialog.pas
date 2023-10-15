@@ -52,7 +52,7 @@ type
 
 implementation
 
-uses BDPShared, MKMouse2, BDPButton, mk_sdl2, BDPColorCluster, BDPSimpleColorCluster;
+uses BDPShared, MKMouse2, BDPButton, mk_sdl2, BDPGradient, BDPSimpleColorCluster;
 
 const
   COLORCLUSTERDIALOGWIDTH=COLORCLUSTERWIDTH;
@@ -116,7 +116,7 @@ end;
 
 procedure TBDSelectColorClusterDialog.AddButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
-  Project.CurrentColorClusters.Add(TColorCluster.Create(0,15));
+  Project.CurrentColorClusters.Add(TGradient.Create(0,15));
   fTop-=COLORCLUSTERHEIGHT;
   Refresh;
 end;

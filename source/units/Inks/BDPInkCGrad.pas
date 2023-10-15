@@ -57,13 +57,13 @@ begin
   if Settings.CGradRadius>1 then begin
     r:=trunc(Sqrt(sqr(px-Settings.CGradCenterX)+sqr(py-Settings.CGradCenterY))) mod Settings.CGradRadius;
     if Settings.DitherGradients then
-      Result:=Project.CurrentColorClusters.ActiveColorCluster.
+      Result:=Project.CurrentColorClusters.ActiveGradient.
         GetColorAtDithered(r,Settings.CGradRadius,Settings.DitherStrength)
     else
-      Result:=Project.CurrentColorClusters.ActiveColorCluster.
+      Result:=Project.CurrentColorClusters.ActiveGradient.
         GetColorAt(r,Settings.CGradRadius)
   end else
-    Result:=Project.CurrentColorClusters.ActiveColorCluster.GetColorAt(1,2);
+    Result:=Project.CurrentColorClusters.ActiveGradient.GetColorAt(1,2);
 end;
 
 procedure TBDInkCGrad.Configure;

@@ -24,14 +24,14 @@ unit BDPColorClusterControl;
 
 interface
 
-uses vcc2_VisibleControl, BDPColorCluster, ARGBImageUnit, Font2Unit;
+uses vcc2_VisibleControl, BDPGradient, ARGBImageUnit, Font2Unit;
 
 type
 
   { TBDColorCluster }
 
   TBDColorCluster=class(TVisibleControl)
-    constructor Create(iLeft,iTop:integer;iColorCluster:TColorCluster;iRMBPicks:boolean);
+    constructor Create(iLeft,iTop:integer;iColorCluster:TGradient;iRMBPicks:boolean);
     procedure Refresh; override;
     procedure Click(Sender:TObject;x,y,button:integer);
     procedure Draw; override;
@@ -40,15 +40,15 @@ type
     procedure fSetWidth(value:integer); override;
   private
     fTLImage,fTRImage,fBLImage,fBRImage:TARGBImage;
-    fColorCluster:TColorCluster;
+    fColorCluster:TGradient;
     fFont,fFont2:TFont;
     fPingpongSwitchLeft,fReverseSwitchLeft,
     fColorsLeft,fColorsWidth,fArrowLeft:integer;
     fRMBPicks:boolean;
     fPicking:boolean;
-    procedure fSetColorCluster(value:TColorCluster);
+    procedure fSetColorCluster(value:TGradient);
   public
-    property ColorCluster:TColorCluster read fColorCluster write fSetColorCluster;
+    property ColorCluster:TGradient read fColorCluster write fSetColorCluster;
     property Width:integer read fWidth write fSetWidth;
   end;
 
@@ -63,7 +63,7 @@ const
 
 { TBDColorCluster }
 
-constructor TBDColorCluster.Create(iLeft,iTop:integer;iColorCluster:TColorCluster;
+constructor TBDColorCluster.Create(iLeft,iTop:integer;iColorCluster:TGradient;
   iRMBPicks:boolean);
 begin
   fLeft:=iLeft;
@@ -200,7 +200,7 @@ begin
   end;
 end;
 
-procedure TBDColorCluster.fSetColorCluster(value:TColorCluster);
+procedure TBDColorCluster.fSetColorCluster(value:TGradient);
 begin
   fColorCluster:=value;
   fNeedRedraw:=true;

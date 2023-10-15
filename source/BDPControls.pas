@@ -193,7 +193,7 @@ begin
   AddChild(fImageCountSlider);
 
   // Color cluster
-  fColorCluster:=TBDColorCluster.Create(fLeft+INKBUTTONSLEFT,fTop+6,Project.CurrentColorClusters.ActiveColorCluster,false);
+  fColorCluster:=TBDColorCluster.Create(fLeft+INKBUTTONSLEFT,fTop+6,Project.CurrentColorClusters.ActiveGradient,false);
   fColorCluster.Height:=NORMALBUTTONHEIGHT;
   fColorCluster.Width:=CONTROLCOLORCLUSTERWIDTH;
   fColorCluster.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
@@ -339,7 +339,7 @@ end;
 procedure TBDControls.ActiveImageChange(Sender:TObject; newvalue:integer);
 begin
   Project.CurrentImageIndex:=newvalue-1;
-  fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveColorCluster;
+  fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveGradient;
   MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
 end;
 
@@ -363,7 +363,7 @@ begin
       fColorCluster.Refresh;
     end;
     MSG_ACTIVECOLORCLUSTERCHANGED:begin
-      fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveColorCluster;
+      fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveGradient;
     end;
 {    MSG_COLOREDITORRESP:begin
       if msg.DataInt in [PARM_COL_SELECTOR_LEFT,PARM_COL_SELECTOR_MAIN,PARM_COL_CCEDIT_RIGHT] then begin
@@ -401,7 +401,7 @@ procedure TBDControls.ControlsShow(Sender:TObject);
 begin
   ActivateToolButton(-1);
   InfoBar.ShowText('');
-  fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveColorCluster;
+  fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveGradient;
 end;
 
 function TBDControls.ControlsKeyDown(Sender:TObject; key:integer):boolean;

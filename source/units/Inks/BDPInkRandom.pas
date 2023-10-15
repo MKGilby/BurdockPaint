@@ -52,7 +52,7 @@ end;
 
 function TBDInkRandom.GetColorAt(pX,pY:integer):uint32;
 begin
-  Result:=Project.CurrentColorClusters.ActiveColorCluster.
+  Result:=Project.CurrentColorClusters.ActiveGradient.
     GetColorAt(random(256),256);
 end;
 

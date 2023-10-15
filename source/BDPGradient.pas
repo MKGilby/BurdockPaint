@@ -18,7 +18,7 @@
   BurdockPaint. If not, see <https://www.gnu.org/licenses/>.
 }
 
-unit BDPColorCluster;
+unit BDPGradient;
 
 {$mode Delphi}
 
@@ -29,29 +29,29 @@ uses
 
 type
 
-  { TColorCluster }
+  { TGradient }
 
-  TColorCluster=class
-    // Create color cluster.
+  TGradient=class
+    // Create gradient.
     constructor Create(iColor1,iColor2:uint32);
 
-    // Create the color cluster from stream (see fileformats.txt - CCS-block)
+    // Create the gradient from stream (see fileformats.txt - CCS-block)
     constructor CreateFromStream(iStream:TStream);
 
-    // Gives back the colorindex in the cluster at pValue on a scale to 0..pInterval
-    // Example: if you want to draw the color cluster on a control with a width
-    //          of 240 pixels, you should use GetIndexAt(x,240) as each vertical
+    // Gives back the color in the gradient at pValue on a scale to 0..pInterval
+    // Example: if you want to draw the gradient on a control with a width
+    //          of 240 pixels, you should use GetColorAt(x,240) as each vertical
     //          line of the control.
     function GetColorAt(pValue,pInterval:integer):uint32;
 
-    // Gives back the colorindex in the cluster at pValue on a scale to 0..pInterval
+    // Gives back the color in the gradient at pValue on a scale to 0..pInterval
     // randomly modifying it by max +/-(pInterval*pDitherStrength/256)
     function GetColorAtDithered(pValue,pInterval,pDitherStrength:integer):uint32;
 
-    // Save color cluster to the specified stream. (see fileformats.txt - CCS-block)
+    // Save gradient to the specified stream. (see fileformats.txt - CCS-block)
     procedure SaveToStream(pStream:TStream);
 
-    // Load color cluster from the specified stream. (see fileformats.txt - CCS-block)
+    // Load gradient from the specified stream. (see fileformats.txt - CCS-block)
     procedure LoadFromStream(pStream:TStream);
   private
     fColor1,fColor2:uint32;
@@ -66,10 +66,10 @@ type
     property PingPong:boolean read fPingpong write fPingpong;
   end;
 
-  { TColorClusters }
+  { TGradientList }
 
-  TColorClusters=class(TFPGObjectList<TColorCluster>)
-    // Create the list with one default color cluster element.
+  TGradientList=class(TFPGObjectList<TGradient>)
+    // Create the list with one default gradient element.
     constructor Create;
 
     // Create the list from stream. (see fileformats.txt - CCS-block)
@@ -88,10 +88,10 @@ type
     procedure LoadFromStream(pStream:TStream);
   private
     fActiveIndex:integer;
-    function fGetActiveColorCluster:TColorCluster;
+    function fGetActiveGradient:TGradient;
     procedure fSetActiveIndex(value:integer);
   public
-    property ActiveColorCluster:TColorCluster read fGetActiveColorCluster;
+    property ActiveGradient:TGradient read fGetActiveGradient;
     property ActiveIndex:integer read fActiveIndex write fSetActiveIndex;
   end;
 
@@ -101,11 +101,11 @@ implementation
 uses BDPShared, Logger;
 
 const
-  COLORCLUSTERSBLOCKID='CCS';
+  GRADIENTSBLOCKID='CCS';
 
-{ TColorCluster }
+{ TGradient }
 
-constructor TColorCluster.Create(iColor1,iColor2:uint32);
+constructor TGradient.Create(iColor1,iColor2:uint32);
 begin
   Color1:=iColor1;
   Color2:=iColor2;
@@ -113,12 +113,12 @@ begin
   fPingpong:=false;
 end;
 
-constructor TColorCluster.CreateFromStream(iStream:TStream);
+constructor TGradient.CreateFromStream(iStream:TStream);
 begin
   LoadFromStream(iStream);
 end;
 
-function TColorCluster.GetColorAt(pValue, pInterval: integer): uint32;
+function TGradient.GetColorAt(pValue, pInterval: integer): uint32;
 begin
   if fPingpong then begin
     pValue:=pValue*2;
@@ -143,7 +143,7 @@ begin
   end;
 end;
 
-function TColorCluster.GetColorAtDithered(pValue, pInterval,
+function TGradient.GetColorAtDithered(pValue, pInterval,
   pDitherStrength: integer): uint32;
 var dith:integer;
 begin
@@ -152,7 +152,7 @@ begin
   Result:=GetColorAt(pValue,pInterval);
 end;
 
-procedure TColorCluster.SaveToStream(pStream:TStream);
+procedure TGradient.SaveToStream(pStream:TStream);
 var flags:byte;
 begin
   pStream.Write(fColor1,4);
@@ -163,7 +163,7 @@ begin
   pStream.Write(flags,1);
 end;
 
-procedure TColorCluster.LoadFromStream(pStream:TStream);
+procedure TGradient.LoadFromStream(pStream:TStream);
 var tmp:uint32;flags:byte;
 begin
   tmp:=0;
@@ -177,7 +177,7 @@ begin
   fPingpong:=(flags and 2)<>0;
 end;
 
-procedure TColorCluster.fSetColor1(value:uint32);
+procedure TGradient.fSetColor1(value:uint32);
 begin
   if fColor1<>value then begin
     fColor1:=value;
@@ -188,7 +188,7 @@ begin
   end;
 end;
 
-procedure TColorCluster.fSetColor2(value:uint32);
+procedure TGradient.fSetColor2(value:uint32);
 begin
   if fColor2<>value then begin
     fColor2:=value;
@@ -200,21 +200,21 @@ begin
 end;
 
 
-{ TColorClusters }
+{ TGradientList }
 
-constructor TColorClusters.Create;
+constructor TGradientList.Create;
 begin
   inherited Create;
-  Add(TColorCluster.Create($FF000000,$FFFFFFFF));
+  Add(TGradient.Create($FF000000,$FFFFFFFF));
 end;
 
-constructor TColorClusters.CreateFromStream(iStream:TStream);
+constructor TGradientList.CreateFromStream(iStream:TStream);
 begin
   inherited Create;
   LoadFromStream(iStream);
 end;
 
-procedure TColorClusters.SaveToFile(pFilename:string);
+procedure TGradientList.SaveToFile(pFilename:string);
 var Xs:TStream;
 begin
   Xs:=TFileStream.Create(pFilename,fmCreate);
@@ -222,10 +222,10 @@ begin
   Xs.Free;
 end;
 
-procedure TColorClusters.SaveToStream(pStream:TStream);
+procedure TGradientList.SaveToStream(pStream:TStream);
 var i:integer;curr:int64;s:String;
 begin
-  s:=COLORCLUSTERSBLOCKID+#1;
+  s:=GRADIENTSBLOCKID+#1;
   pStream.Write(s[1],4);
   curr:=pStream.Position;
   i:=0;
@@ -240,7 +240,7 @@ begin
   pStream.Position:=pStream.Position+i;
 end;
 
-procedure TColorClusters.LoadFromFile(pFilename:string);
+procedure TGradientList.LoadFromFile(pFilename:string);
 var Xs:TStream;
 begin
   Xs:=TFileStream.Create(pFilename,fmOpenRead or fmShareDenyNone);
@@ -248,15 +248,15 @@ begin
   Xs.Free;
 end;
 
-procedure TColorClusters.LoadFromStream(pStream:TStream);
+procedure TGradientList.LoadFromStream(pStream:TStream);
 var size,curr:int64;count:integer;s:string;
-    tmp:TColorCluster;
+    tmp:TGradient;
 begin
   s:=#0#0#0#0;
   pStream.Read(s[1],4);
-  if uppercase(copy(s,1,3))<>COLORCLUSTERSBLOCKID then raise
-    Exception.Create(Format('ColorClusters block ID expected, got %s)',[copy(s,1,3)]));
-  if ord(s[1]) and $20<>0 then Exception.Create('ColorClusters block cannot be compressed!');
+  if uppercase(copy(s,1,3))<>GRADIENTSBLOCKID then raise
+    Exception.Create(Format('Gradients block ID expected, got %s)',[copy(s,1,3)]));
+  if ord(s[1]) and $20<>0 then Exception.Create('Gradients block cannot be compressed!');
 
   size:=0;
   pStream.Read(Size,4);
@@ -268,19 +268,19 @@ begin
   pStream.Read(fActiveIndex,1);
   Clear;
   while count>0 do begin
-    tmp:=TColorCluster.CreateFromStream(pStream);
+    tmp:=TGradient.CreateFromStream(pStream);
     Add(tmp);
     dec(count);
   end;
   pStream.Position:=curr+size;
 end;
 
-function TColorClusters.fGetActiveColorCluster:TColorCluster;
+function TGradientList.fGetActiveGradient:TGradient;
 begin
   Result:=Self[fActiveIndex];
 end;
 
-procedure TColorClusters.fSetActiveIndex(value:integer);
+procedure TGradientList.fSetActiveIndex(value:integer);
 begin
   if (value>=0) and (value<Count) then fActiveIndex:=value;
 end;

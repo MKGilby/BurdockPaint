@@ -24,7 +24,7 @@ unit BDPColorSelector;
 
 interface
 
-uses vcc2_VisibleControl, BDPColorCluster;
+uses vcc2_VisibleControl, BDPGradient;
 
 type
 
@@ -42,7 +42,7 @@ type
     fMainColorLeft:integer;
     fRightClusterLeft,fRightClusterWidth:integer;
     fRightColorLeft:integer;
-    fLeftColorCluster,fRightColorCluster:TColorCluster;
+    fLeftColorCluster,fRightColorCluster:TGradient;
     procedure Click(Sender:TObject;x, y, buttons: integer);
     function KeyDown(Sender:TObject;key:integer):boolean;
     procedure RecalculatePositions;
@@ -66,10 +66,10 @@ begin
   Height:=fHeight;
   OnClick:=Self.Click;
   OnKeyDown:=Self.KeyDown;
-  fLeftColorCluster:=TColorCluster.Create(
+  fLeftColorCluster:=TGradient.Create(
     Settings.ColorSelectorLeftColor,
     Settings.ColorSelectorMainColor);
-  fRightColorCluster:=TColorCluster.Create(
+  fRightColorCluster:=TGradient.Create(
     Settings.ColorSelectorMainColor,
     Settings.ColorSelectorRightColor);
 end;

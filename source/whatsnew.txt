@@ -1,8 +1,4 @@
 Todo:
-  Azon gondolkozzál, hogy a Modal ColorClusterEditor hogyan tudja úgy meghívni
-  a Modal ColorEditor-t, hogy mûködjön is!
-
-
 - Add "Project"/"New" dialog.
 - Check and warn if current project is modified on opening project.
 - Check and warn if current project is modified on new project.

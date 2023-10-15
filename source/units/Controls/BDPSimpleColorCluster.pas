@@ -4,18 +4,18 @@ unit BDPSimpleColorCluster;
 
 interface
 
-uses vcc2_VisibleControl, BDPColorCluster;
+uses vcc2_VisibleControl, BDPGradient;
 
 type
 
   { TBDSimpleColorCluster }
 
   TBDSimpleColorCluster=class(TVisibleControl)
-    constructor Create(iLeft,iTop,iWidth,iHeight:integer;iColorCluster:TColorCluster);
+    constructor Create(iLeft,iTop,iWidth,iHeight:integer;iColorCluster:TGradient);
   protected
     procedure ReDraw; override;
   private
-    fColorCluster:TColorCluster;
+    fColorCluster:TGradient;
     fColorsWidth:integer;
     function fGetColorsWidth:integer;
   public
@@ -29,7 +29,7 @@ uses BDPShared;
 
 { TBDSimpleColorCluster }
 
-constructor TBDSimpleColorCluster.Create(iLeft,iTop,iWidth,iHeight:integer;iColorCluster:TColorCluster);
+constructor TBDSimpleColorCluster.Create(iLeft,iTop,iWidth,iHeight:integer;iColorCluster:TGradient);
 begin
   inherited Create;
   fLeft:=iLeft;

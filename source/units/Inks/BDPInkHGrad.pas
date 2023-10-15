@@ -54,11 +54,11 @@ function TBDInkHGrad.GetColorAt(pX,pY:integer):uint32;
 begin
   if fWidth>1 then begin
     if Settings.DitherGradients then
-      Result:=Project.CurrentColorClusters.ActiveColorCluster.GetColorAtDithered(px-fLeft,fWidth-1,Settings.DitherStrength)
+      Result:=Project.CurrentColorClusters.ActiveGradient.GetColorAtDithered(px-fLeft,fWidth-1,Settings.DitherStrength)
     else
-      Result:=Project.CurrentColorClusters.ActiveColorCluster.GetColorAt(px-fLeft,fWidth-1)
+      Result:=Project.CurrentColorClusters.ActiveGradient.GetColorAt(px-fLeft,fWidth-1)
   end else
-    Result:=Project.CurrentColorClusters.ActiveColorCluster.GetColorAt(1,2);
+    Result:=Project.CurrentColorClusters.ActiveGradient.GetColorAt(1,2);
 end;
 
 end.

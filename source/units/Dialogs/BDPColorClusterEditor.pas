@@ -5,7 +5,7 @@ unit BDPColorClusterEditor;
 interface
 
 uses BDPModalDialog, BDPSimpleColorCluster, BDPCheckBox, BDPButton,
-  BDPColorBox, BDPColorCluster;
+  BDPColorBox, BDPGradient;
 
 type
 
@@ -17,7 +17,7 @@ type
     procedure SetColor(pTarget:integer;pColor:uint32);
   private
     fSimpleColorCluster:TBDSimpleColorCluster;
-    fColorCluster:TColorCluster;
+    fColorCluster:TGradient;
     fColorBoxes:array[0..3] of TBDColorBox;
     fCheckBoxMoreColor1,
     fCheckBoxMoreColor2:TBDCheckBox;
@@ -41,7 +41,7 @@ begin
   Caption:='COLOR CLUSTER EDITOR';
   fName:='ColorClusterEditor';
   MouseObjects.Add(Self);
-  fColorCluster:=Project.CurrentColorClusters.ActiveColorCluster;
+  fColorCluster:=Project.CurrentColorClusters.ActiveGradient;
   fSimpleColorCluster:=TBDSimpleColorCluster.Create(fLeft+64,fTop+30,512,36,fColorCluster);
   fSimpleColorCluster.ZIndex:=MODALDIALOG_ZINDEX+1;
   fSimpleColorCluster.Name:='CCE ColorCluster';
