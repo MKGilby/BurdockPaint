@@ -18,7 +18,7 @@
   BurdockPaint. If not, see <https://www.gnu.org/licenses/>.
 }
 
-unit BDPColorClusterControl;
+unit BDPGradientControl;
 
 {$mode Delphi}
 
@@ -28,27 +28,25 @@ uses vcc2_VisibleControl, BDPGradient, ARGBImageUnit, Font2Unit;
 
 type
 
-  { TBDColorCluster }
+  { TBDGradient }
 
-  TBDColorCluster=class(TVisibleControl)
-    constructor Create(iLeft,iTop:integer;iColorCluster:TGradient;iRMBPicks:boolean);
+  TBDGradient=class(TVisibleControl)
+    constructor Create(iLeft,iTop,iWidth,iHeight:integer;iGradient:TGradient);
     procedure Refresh; override;
     procedure Click(Sender:TObject;x,y,button:integer);
-    procedure Draw; override;
+//    procedure Draw; override;
   protected
     procedure ReDraw; override;
     procedure fSetWidth(value:integer); override;
   private
     fTLImage,fTRImage,fBLImage,fBRImage:TARGBImage;
-    fColorCluster:TGradient;
+    fGradient:TGradient;
     fFont,fFont2:TFont;
     fPingpongSwitchLeft,fReverseSwitchLeft,
     fColorsLeft,fColorsWidth,fArrowLeft:integer;
-    fRMBPicks:boolean;
-    fPicking:boolean;
-    procedure fSetColorCluster(value:TGradient);
+    procedure fSetGradient(value:TGradient);
   public
-    property ColorCluster:TGradient read fColorCluster write fSetColorCluster;
+    property Gradient:TGradient read fGradient write fSetGradient;
     property Width:integer read fWidth write fSetWidth;
   end;
 
@@ -61,16 +59,16 @@ const
   REVERSESWITCHWIDTH=27;
   ARROWWIDTH=30;
 
-{ TBDColorCluster }
+{ TBDGradient }
 
-constructor TBDColorCluster.Create(iLeft,iTop:integer;iColorCluster:TGradient;
-  iRMBPicks:boolean);
+constructor TBDGradient.Create(iLeft, iTop, iWidth, iHeight: integer;
+  iGradient: TGradient);
 begin
   fLeft:=iLeft;
   fTop:=iTop;
-  fColorCluster:=iColorCluster;
-  Width:=COLORCLUSTERWIDTH;
-  Height:=COLORCLUSTERHEIGHT;
+  fGradient:=iGradient;
+  Width:=iWidth;
+  Height:=iHeight;
   fNeedRedraw:=true;
   fTLImage:=MM.Images.ItemByName['ArchTopLeft'];
   fTRImage:=MM.Images.ItemByName['ArchTopRight'];
@@ -84,66 +82,52 @@ begin
   fArrowLeft:=Width-ARROWWIDTH-3;
   fColorsWidth:=fArrowLeft-fColorsLeft;
   OnClick:=Click;
-  fRMBPicks:=iRMBPicks;
-  fPicking:=false;
 end;
 
-procedure TBDColorCluster.Refresh;
+procedure TBDGradient.Refresh;
 begin
   inherited Refresh;
-  fPicking:=false;
 end;
 
-procedure TBDColorCluster.Click(Sender:TObject; x,y,button:integer);
+procedure TBDGradient.Click(Sender:TObject; x,y,button:integer);
 begin
-  if Assigned(fColorCluster) then begin
+  if Assigned(fGradient) then begin
     x-=Left;
     y-=Top;
     if (x>=fPingpongSwitchLeft) and (x<fReverseSwitchLeft) then begin
-      fColorCluster.PingPong:=not fColorCluster.PingPong;
+      fGradient.PingPong:=not fGradient.PingPong;
       fNeedRedraw:=true;
     end else
     if (x>=fReverseSwitchLeft) and (x<fColorsLeft) then begin
-      fColorCluster.Reversed:=not fColorCluster.Reversed;
+      fGradient.Reversed:=not fGradient.Reversed;
       fNeedRedraw:=true;
     end else
     if (x>=fColorsLeft+3) and (x<fArrowLeft) then begin
       if button=SDL_BUTTON_LEFT then
-        Settings.ActiveColor:=fColorCluster.GetColorAt(x-fColorsLeft-3,fColorsWidth-3)
+        Settings.ActiveColor:=fGradient.GetColorAt(x-fColorsLeft-3,fColorsWidth-3)
       else if (button=SDL_BUTTON_RIGHT) then begin
-        if fRMBPicks then begin
-          fPicking:=true;
-//          MessageQueue.AddMessage(MSG_ACTIVATEPICKCOLORCLUSTER);
-        end else begin
-          MessageQueue.AddMessage(MSG_ACTIVATECOLORCLUSTEREDITOR);
-        end;
+        MessageQueue.AddMessage(MSG_ACTIVATEGRADIENTEDITOR);
       end;
-    end else
-    if (x>=fArrowLeft) then begin
-      MessageQueue.AddMessage(MSG_OPENCOLORCLUSTERDIALOG,fLeft+(fTop<<11)+(fWidth<<22));
+//    end else
+//    if (x>=fArrowLeft) then begin
+//      MessageQueue.AddMessage(MSG_OPENGRADIENTDIALOG,fLeft+(fTop<<11)+(fWidth<<22));
     end;
   end;
 end;
 
-procedure TBDColorCluster.Draw;
-begin
-  if fPicking then fNeedRedraw:=true;
-  inherited Draw;
-end;
-
-procedure TBDColorCluster.ReDraw;
+procedure TBDGradient.ReDraw;
 var i,fonttop:integer;color32:uint32;
 begin
   if Assigned(fTexture) then begin
     with fTexture.ARGBImage do begin
       // Background
       Bar(0,0,fPingpongSwitchLeft,Height,SystemPalette[SYSTEMCOLORMID]);
-      if Assigned(fColorCluster) then begin
-        if fColorCluster.PingPong then
+      if Assigned(fGradient) then begin
+        if fGradient.PingPong then
           Bar(fPingpongSwitchLeft+3,3,PINGPONGSWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
         else
           Bar(fPingpongSwitchLeft+3,3,PINGPONGSWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORMID]);
-        if fColorCluster.Reversed then
+        if fGradient.Reversed then
           Bar(fReverseSwitchLeft+3,3,REVERSESWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
         else
           Bar(fReverseSwitchLeft+3,3,REVERSESWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORMID]);
@@ -169,12 +153,12 @@ begin
       if Assigned(fBRImage) then
         fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,fTexture.ARGBImage,true);
       // Flashing if picking
-      if fPicking then
-        Bar(fColorsLeft,0,fColorsWidth+3,Height,VibroColors.GetColor);
-      // Color cluster bar
-      if Assigned(fColorCluster) then begin
+      //if fPicking then
+      //  Bar(fColorsLeft,0,fColorsWidth+3,Height,VibroColors.GetColor);
+      // Gradient bar
+      if Assigned(fGradient) then begin
         for i:=0 to fColorsWidth-1-3 do begin
-          color32:=fColorCluster.GetColorAt(i,fColorsWidth-3);
+          color32:=fGradient.GetColorAt(i,fColorsWidth-3);
           VLine(fColorsLeft+i+3,3,Height-6,color32);
           if color32=Settings.ActiveColor then begin
             VLine(fColorsLeft+i+3,Height div 2-3,3,SystemPalette[SYSTEMCOLORLIGHT]);
@@ -185,11 +169,11 @@ begin
       // Letters and arrow
       if Assigned(fFont) and Assigned(fFont2) then begin
         fonttop:=(Height-15) div 2;
-        if (Assigned(fColorCluster) and fColorCluster.PingPong) then
+        if (Assigned(fGradient) and fGradient.PingPong) then
           fFont2.OutText(fTexture.ARGBImage,'P',fPingpongSwitchLeft+PINGPONGSWITCHWIDTH div 2+3,fonttop,1)
         else
           fFont.OutText(fTexture.ARGBImage,'P',fPingpongSwitchLeft+PINGPONGSWITCHWIDTH div 2+3,fonttop,1);
-        if (Assigned(fColorCluster) and fColorCluster.Reversed) then
+        if (Assigned(fGradient) and fGradient.Reversed) then
           fFont2.OutText(fTexture.ARGBImage,'R',fReverseSwitchLeft+REVERSESWITCHWIDTH div 2+3,fonttop,1)
         else
           fFont.OutText(fTexture.ARGBImage,'R',fReverseSwitchLeft+REVERSESWITCHWIDTH div 2+3,fonttop,1);
@@ -200,13 +184,13 @@ begin
   end;
 end;
 
-procedure TBDColorCluster.fSetColorCluster(value:TGradient);
+procedure TBDGradient.fSetGradient(value:TGradient);
 begin
-  fColorCluster:=value;
+  fGradient:=value;
   fNeedRedraw:=true;
 end;
 
-procedure TBDColorCluster.fSetWidth(value:integer);
+procedure TBDGradient.fSetWidth(value:integer);
 begin
   inherited fSetWidth(value);
   fArrowLeft:=Width-ARROWWIDTH-3;

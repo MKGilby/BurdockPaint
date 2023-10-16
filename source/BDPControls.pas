@@ -25,7 +25,7 @@ unit BDPControls;
 interface
 
 uses
-  SysUtils, mk_sdl2, vcc2_Container, BDPMessage, BDPColorClusterControl, BDPToolBase,
+  SysUtils, mk_sdl2, vcc2_Container, BDPMessage, BDPGradientControl, BDPToolBase,
   BDPInkBase, BDPColorSelector, BDPButton, BDPSliders;
 
 type
@@ -47,7 +47,7 @@ type
     fInkButtons:array[0..5] of TBDButton;
     fUndoButton,fRedoButton:TBDButton;
     fColorSelector:TBDColorSelector;
-    fColorCluster:TBDColorCluster;
+    fGradient:TBDGradient;
     fImageCountSlider:TBDHorizontalSlider;
     procedure MouseEnter(Sender:TObject);
     procedure ControlsShow(Sender:TObject);
@@ -68,6 +68,11 @@ type
 implementation
 
 uses SDL2, BDPShared, MKMouse2, BDPKeyMapping;
+
+const
+  GRADIENTLEFT=720;
+  GRADIENTWIDTH=320;
+  GRADIENTHEIGHT=36;
 
 { TBDControls }
 
@@ -192,13 +197,13 @@ begin
   fImageCountSlider.OnChange:=ActiveImageChange;
   AddChild(fImageCountSlider);
 
-  // Color cluster
-  fColorCluster:=TBDColorCluster.Create(fLeft+INKBUTTONSLEFT,fTop+6,Project.CurrentColorClusters.ActiveGradient,false);
-  fColorCluster.Height:=NORMALBUTTONHEIGHT;
-  fColorCluster.Width:=CONTROLCOLORCLUSTERWIDTH;
-  fColorCluster.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-  fColorCluster.Name:='ColorCluster (Controls)';
-  AddChild(fColorCluster);
+  // Gradient
+  fGradient:=TBDGradient.Create(fLeft+INKBUTTONSLEFT,fTop+6,GRADIENTWIDTH,GRADIENTHEIGHT,Project.CurrentGradientList.ActiveGradient);
+  fGradient.Height:=NORMALBUTTONHEIGHT;
+  fGradient.Width:=CONTROLGRADIENTWIDTH;
+  fGradient.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fGradient.Name:='Gradient (Controls)';
+  AddChild(fGradient);
 
   MouseObjects.Add(Self);
   fNeedRedraw:=true;
@@ -339,7 +344,7 @@ end;
 procedure TBDControls.ActiveImageChange(Sender:TObject; newvalue:integer);
 begin
   Project.CurrentImageIndex:=newvalue-1;
-  fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveGradient;
+  fGradient.Gradient:=Project.CurrentGradientList.ActiveGradient;
   MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
 end;
 
@@ -360,24 +365,11 @@ begin
     end;
     MSG_ACTIVECOLORCHANGED:begin
 //      fColorSelector.Refresh;
-      fColorCluster.Refresh;
+      fGradient.Refresh;
     end;
-    MSG_ACTIVECOLORCLUSTERCHANGED:begin
-      fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveGradient;
+    MSG_ACTIVEGRADIENTCHANGED:begin
+      fGradient.Gradient:=Project.CurrentGradientList.ActiveGradient;
     end;
-{    MSG_COLOREDITORRESP:begin
-      if msg.DataInt in [PARM_COL_SELECTOR_LEFT,PARM_COL_SELECTOR_MAIN,PARM_COL_CCEDIT_RIGHT] then begin
-        if msg.DataUInt32<>POSTPROCESSCOLOR then begin
-          case msg.DataInt of
-            PARM_COL_SELECTOR_LEFT:Settings.ColorSelectorLeftColor:=msg.DataUInt32;
-            PARM_COL_SELECTOR_MAIN:Settings.ColorSelectorMainColor:=msg.DataUInt32;
-            PARM_COL_SELECTOR_RIGHT:Settings.ColorSelectorRightColor:=msg.DataUInt32;
-          end;
-          fColorSelector.Refresh;
-        end;
-        Result:=true;
-      end else Result:=false;
-    end;}
     MSG_TOOLDRAW:ChangeActiveToolButtonTo(Tools.ItemByName['DRAW']);
     MSG_TOOLBOX:ChangeActiveToolButtonTo(Tools.ItemByName['BOX']);
     MSG_TOOLLINE:ChangeActiveToolButtonTo(Tools.ItemByName['LINE']);
@@ -401,7 +393,7 @@ procedure TBDControls.ControlsShow(Sender:TObject);
 begin
   ActivateToolButton(-1);
   InfoBar.ShowText('');
-  fColorCluster.ColorCluster:=Project.CurrentColorClusters.ActiveGradient;
+  fGradient.Gradient:=Project.CurrentGradientList.ActiveGradient;
 end;
 
 function TBDControls.ControlsKeyDown(Sender:TObject; key:integer):boolean;

@@ -1,4 +1,4 @@
-unit BDPSimpleColorCluster;
+unit BDPSimpleGradient;
 
 {$mode Delphi}
 
@@ -8,14 +8,14 @@ uses vcc2_VisibleControl, BDPGradient;
 
 type
 
-  { TBDSimpleColorCluster }
+  { TBDSimpleGradient }
 
-  TBDSimpleColorCluster=class(TVisibleControl)
-    constructor Create(iLeft,iTop,iWidth,iHeight:integer;iColorCluster:TGradient);
+  TBDSimpleGradient=class(TVisibleControl)
+    constructor Create(iLeft,iTop,iWidth,iHeight:integer;iGradient:TGradient);
   protected
     procedure ReDraw; override;
   private
-    fColorCluster:TGradient;
+    fGradient:TGradient;
     fColorsWidth:integer;
     function fGetColorsWidth:integer;
   public
@@ -27,21 +27,21 @@ implementation
 
 uses BDPShared;
 
-{ TBDSimpleColorCluster }
+{ TBDSimpleGradient }
 
-constructor TBDSimpleColorCluster.Create(iLeft,iTop,iWidth,iHeight:integer;iColorCluster:TGradient);
+constructor TBDSimpleGradient.Create(iLeft,iTop,iWidth,iHeight:integer;iGradient:TGradient);
 begin
   inherited Create;
   fLeft:=iLeft;
   fTop:=iTop;
-  fColorCluster:=iColorCluster;
+  fGradient:=iGradient;
   Width:=iWidth;
   Height:=iHeight;
   fNeedRedraw:=true;
 //  OnClick:=Click;
 end;
 
-procedure TBDSimpleColorCluster.ReDraw;
+procedure TBDSimpleGradient.ReDraw;
 var i:integer;
 begin
   if Assigned(fTexture) then begin
@@ -52,17 +52,17 @@ begin
       Bar(0,Height-3,Width,3,SystemPalette[SYSTEMCOLORDARK]);
       Bar(0,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
       Bar(Width-3,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
-      // Color cluster bar
-      if Assigned(fColorCluster) then begin
+      // Gradient bar
+      if Assigned(fGradient) then begin
         for i:=0 to fColorsWidth-1 do
-          VLine(i+3,3,Height-6,fColorCluster.GetColorAt(i,fColorsWidth-1));
+          VLine(i+3,3,Height-6,fGradient.GetColorAt(i,fColorsWidth-1));
       end;
     end;
     fTexture.Update;
   end;
 end;
 
-function TBDSimpleColorCluster.fGetColorsWidth: integer;
+function TBDSimpleGradient.fGetColorsWidth: integer;
 begin
   Result:=fColorsWidth+6;
 end;

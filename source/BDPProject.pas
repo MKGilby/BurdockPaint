@@ -34,20 +34,20 @@ type
 
   TBDExtendedImage=class
     // Creates a new empty 320x200 image with the NTSC.COL palette,
-    // creates empty UndoSystems and default color clusters.
+    // creates empty UndoSystems and default gradients.
     constructor Create; overload;
 
     // Creates a new empty image with the NTSC.COL palette,
-    // creates empty UndoSystems and default color clusters.
+    // creates empty UndoSystems and default gradients.
     constructor Create(iWidth,iHeight:integer); overload;
 
-    // Loads everything from stream. (fileformats.txt - E-block)
+    // Loads everything from stream. (fileformats.txt - IMG-block)
     constructor CreateFromStream(iStream:TStream);
 
     // Free assigned entities
     destructor Destroy; override;
 
-    // Writes everything to stream. (fileformats.txt - E-block)
+    // Writes everything to stream. (fileformats.txt - IMG-block)
     procedure SaveToStream(pStream:TStream);
 
     // Clears undo/redo data
@@ -57,14 +57,14 @@ type
     fPalette:TBDPalette;
     fImageUndoSystem:TBDImageUndoSystem;
 //    fPaletteUndoSystem:TBDPaletteUndoSystem;
-    fColorClusters:TGradientList;
+    fGradients:TGradientList;
     procedure LoadFromStreamV1(pStream:TStream);
   public
     property Image:TBDRegion read fImage;
     property Palette:TBDPalette read fPalette;
     property ImageUndo:TBDImageUndoSystem read fImageUndoSystem;
 //    property PaletteUndo:TBDPaletteUndoSystem read fPaletteUndoSystem;
-    property ColorClusters:TGradientList read fColorClusters;
+    property Gradients:TGradientList read fGradients;
   end;
 
   TBDExtendedImages=class(TFPGObjectList<TBDExtendedImage>);
@@ -102,7 +102,7 @@ type
     procedure fSetCurrentImageIndex(value:integer);
     function fGetCurrentImage:TBDRegion;
     function fGetCurrentPalette:TBDPalette;
-    function fGetCurrentColorClusters:TGradientList;
+    function fGetCurrentGradientList:TGradientList;
     function fGetCurrentExtImage:TBDExtendedImage;
   public
     property Images:TBDExtendedImages read fImages;
@@ -111,7 +111,7 @@ type
     property CurrentExtImage:TBDExtendedImage read fGetCurrentExtImage;
     property CurrentImage:TBDRegion read fGetCurrentImage;
     property CurrentPalette:TBDPalette read fGetCurrentPalette;
-    property CurrentColorClusters:TGradientList read fGetCurrentColorClusters;
+    property CurrentGradientList:TGradientList read fGetCurrentGradientList;
     property CELImage:TBDRegion read fCELImage write fCELImage;
   end;
 
@@ -136,7 +136,7 @@ begin
   fPalette:=TBDPalette.Create(256);
   fImageUndoSystem:=TBDImageUndoSystem.Create;
 //  fPaletteUndoSystem:=TBDPaletteUndoSystem.Create;
-  fColorClusters:=TGradientList.Create;
+  fGradients:=TGradientList.Create;
 end;
 
 constructor TBDExtendedImage.CreateFromStream(iStream:TStream);
@@ -157,7 +157,7 @@ begin
 
   if not Assigned(fImageUndoSystem) then fImageUndoSystem:=TBDImageUndoSystem.Create;
 //  if not Assigned(fPaletteUndoSystem) then fPaletteUndoSystem:=TBDPaletteUndoSystem.Create;
-  if not Assigned(fColorClusters) then fColorClusters:=TGradientList.Create;
+  if not Assigned(fGradients) then fGradients:=TGradientList.Create;
 
 end;
 
@@ -165,7 +165,7 @@ destructor TBDExtendedImage.Destroy;
 begin
   if Assigned(fImage) then fImage.Free;
   if Assigned(fPalette) then fPalette.Free;
-  if Assigned(fColorClusters) then fColorClusters.Free;
+  if Assigned(fGradients) then fGradients.Free;
   if Assigned(fImageUndoSystem) then fImageUndoSystem.Free;
 //  if Assigned(fPaletteUndoSystem) then fPaletteUndoSystem.Free;
   inherited Destroy;
@@ -183,14 +183,14 @@ begin
   flags:=0;
   if fImageUndoSystem.Count>0 then flags:=flags or 2;
 //  if fPaletteUndoSystem.Count>0 then flags:=flags or 4;
-  if fColorClusters.Count>0 then flags:=flags or 8;
+  if fGradients.Count>0 then flags:=flags or 8;
   pStream.Write(flags,1);
 
   fPalette.SaveToStream(pStream);
   fImage.SaveToStream(pStream);
   if fImageUndoSystem.Count>0 then fImageUndoSystem.SaveToStream(pStream);
 //  if fPaletteUndoSystem.Count>0 then fPaletteUndoSystem.SaveToStream(pStream);
-  if fColorClusters.Count>0 then fColorClusters.SaveToStream(pStream);
+  if fGradients.Count>0 then fGradients.SaveToStream(pStream);
 
   i:=pStream.Position-curr-4;
   pStream.Position:=curr;
@@ -213,7 +213,7 @@ begin
   fImage:=TBDRegion.CreateFromStream(pStream);
   if flags and 2<>0 then fImageUndoSystem:=TBDImageUndoSystem.CreateFromStream(pStream);
 //  if flags and 4<>0 then fPaletteUndoSystem:=TBDPaletteUndoSystem.CreateFromStream(pStream);
-  if flags and 8<>0 then fColorClusters:=TGradientList.CreateFromStream(pStream);
+  if flags and 8<>0 then fGradients:=TGradientList.CreateFromStream(pStream);
 end;
 
 
@@ -345,9 +345,9 @@ begin
   Result:=fImages[fCurrentImageIndex].Palette;
 end;
 
-function TBDProject.fGetCurrentColorClusters:TGradientList;
+function TBDProject.fGetCurrentGradientList:TGradientList;
 begin
-  Result:=fImages[fCurrentImageIndex].ColorClusters;
+  Result:=fImages[fCurrentImageIndex].Gradients;
 end;
 
 function TBDProject.fGetCurrentExtImage:TBDExtendedImage;

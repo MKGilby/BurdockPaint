@@ -325,7 +325,6 @@ begin
       s:=ReadString(Xs);
       SetLength(fItems,length(fItems)+1);
       fItems[length(fItems)-1]:=TMainMenuItem.Init(s);
-      if s='CLUSTER' then fItems[length(fItems)-1]._enabled:=false;
       atm:=TSubMenu.Create(x);
       atm.name:=s;
       atm.Visible:=false;

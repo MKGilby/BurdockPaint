@@ -24,7 +24,7 @@ unit BDPPalette;
 
 interface
 
-uses Classes, SysUtils{, BDPColorCluster};
+uses Classes, SysUtils;
 
 type
 
@@ -81,9 +81,6 @@ type
 
     // Resize the palette to fit the colors
     procedure ResizeAndCopyColorsFrom(Source:TBDPalette;start:integer=0;count:integer=-1);
-
-{    // Creates a color ramp from the start color to the end color.
-    procedure Ramp(pColorCluster:TColorCluster);}
 
     // Returns the closest color to the specified r,g,b values.
     // Difference is calculated weighted: r*0.3, g*0.59 and b*0.11

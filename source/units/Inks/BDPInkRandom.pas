@@ -46,13 +46,13 @@ constructor TBDInkRandom.Create;
 begin
   inherited ;
   fName:='RANDOM';
-  fHint:='RANDOM COLORS FROM THE SELECTED COLOR CLUSTER.';
+  fHint:='RANDOM COLORS FROM THE SELECTED GRADIENT.';
   fSupportsOnTheFly:=true;
 end;
 
 function TBDInkRandom.GetColorAt(pX,pY:integer):uint32;
 begin
-  Result:=Project.CurrentColorClusters.ActiveGradient.
+  Result:=Project.CurrentGradientList.ActiveGradient.
     GetColorAt(random(256),256);
 end;
 

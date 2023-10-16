@@ -220,10 +220,6 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="units\Dialogs\BDPSelectColorClusterDialog.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit>
-      <Unit>
         <Filename Value="units\Dialogs\BDPConfigureRGradDialog.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
@@ -344,15 +340,15 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="units\Controls\BDPColorClusterControl.pas"/>
+        <Filename Value="units\Controls\BDPGradientControl.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="units\Dialogs\BDPColorClusterEditor.pas"/>
+        <Filename Value="units\Dialogs\BDPGradientEditor.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="units\Controls\BDPSimpleColorCluster.pas"/>
+        <Filename Value="units\Controls\BDPSimpleGradient.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>

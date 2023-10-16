@@ -28,8 +28,8 @@ interface
 uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
   BDPControls, BDPDrawArea, BDPColorEditor,
   BDPMagnifyCELDialog, BDPRotateCELDialog, BDPAboutDialog,
-  BDPMessageBox, BDPDitherDialog, BDPSelectColorClusterDialog,
-  BDPConfigureRGradDialog, BDPCoordinateBox, BDPColorClusterEditor;
+  BDPMessageBox, BDPDitherDialog, BDPConfigureRGradDialog, BDPCoordinateBox,
+  BDPGradientEditor;
 
 type
 
@@ -45,13 +45,12 @@ type
     fSplashScreen:TBDAboutDialog;
     fControls:TBDControls;
     fDrawArea:TBDDrawArea;
-    fSelectColorClusterDialog:TBDSelectColorClusterDialog;
     fMagnifyDialog:TBDMagnifyCELDialog;
     fRotateDialog:TBDRotateCELDialog;
     fDitherDialog:TBDDitherDialog;
     fConfigureRGradDialog:TBDConfigureRGradDialog;
     fCoordinateBox:TBDCoordinateBox;
-    fColorClusterEditor:TBDColorClusterEditor;
+    fGradientEditor:TBDGradientEditor;
 
     fBackup:TFileBackup;
     fOpenCELDialog,
@@ -62,8 +61,6 @@ type
     procedure ShowMainControls;
     function CreateOpenDialog(pName,pTitle,pFilter:string):TOpenDialog;
     function CreateSaveDialog(pName,pTitle,pFilter:string):TSaveDialog;
-    procedure OpenColorClusterDialog(msg:TMessage);
-    procedure ColorClusterDialogResp(msg:TMessage);
     procedure ConfigRGradCenter;
     procedure ConfigRGradCenterFinished;
     procedure OpenProject;
@@ -143,7 +140,6 @@ begin
   fSplashScreen:=TBDAboutDialog.Create;
   fControls:=TBDControls.Create;
   fDrawArea:=TBDDrawArea.Create;
-  fSelectColorClusterDialog:=TBDSelectColorClusterDialog.Create;
   ColorEditor:=TBDColorEditor.Create;
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   // To enable/disable Image/Remove menuitem and set Controls image slider
@@ -154,7 +150,7 @@ begin
   fConfigureRGradDialog:=TBDConfigureRGradDialog.Create;
   fCoordinateBox:=TBDCoordinateBox.Create(
     WINDOWWIDTH-COORDINATEBOXWIDTH-24,WINDOWHEIGHT-COORDINATEBOXHEIGHT,COORDINATEBOXWIDTH+24,COORDINATEBOXHEIGHT);
-  fColorClusterEditor:=TBDColorClusterEditor.Create;
+  fGradientEditor:=TBDGradientEditor.Create;
   MouseObjects.List;
 
   fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','All supported file|*.bdc;*.cel;*.png;*.tga|CEL files|*.bdc|Legacy CEL files|*.cel|PNG files|*.png|TGA files|*.tga');
@@ -169,14 +165,13 @@ begin
   if Assigned(fSaveProjectDialog) then fSaveProjectDialog.Free;
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
   if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
-  if Assigned(fColorClusterEditor) then fColorClusterEditor.Free;
+  if Assigned(fGradientEditor) then fGradientEditor.Free;
   if Assigned(fCoordinateBox) then fCoordinateBox.Free;
   if Assigned(fConfigureRGradDialog) then fConfigureRGradDialog.Free;
   if Assigned(fDitherDialog) then fDitherDialog.Free;
   if Assigned(fRotateDialog) then fRotateDialog.Free;
   if Assigned(fMagnifyDialog) then fMagnifyDialog.Free;
   if Assigned(ColorEditor) then ColorEditor.Free;
-  if Assigned(fSelectColorClusterDialog) then fSelectColorClusterDialog.Free;
   if Assigned(fDrawArea) then fDrawArea.Free;
   if Assigned(fControls) then fControls.Free;
   if Assigned(fSplashScreen) then fSplashScreen.Free;
@@ -218,8 +213,6 @@ begin
         case msg.TypeID of
           MSG_OPENABOUTDIALOG:           fSplashScreen.Show;
           MSG_QUIT:                      quit:=(msg.DataInt=1);
-          MSG_OPENCOLORCLUSTERDIALOG:    OpenColorClusterDialog(msg);
-          MSG_COLORCLUSTERDIALOGRESP:    ColorClusterDialogResp(msg);
           MSG_OPENDITHERDIALOG:          fDitherDialog.Show;
           MSG_OPENCONFIGURERGRADDIALOG:  fConfigureRGradDialog.Show;
           MSG_CONFIGRGRADCENTER:         ConfigRGradCenter;
@@ -248,8 +241,8 @@ begin
           MSG_OPENCOLOREDITOR:           ColorEditor.Show;
           MSG_COLOREDITORRESP:           ColorEditorResp(msg);
           MSG_SELECTCOLOR:               SelectColor;
-          MSG_ACTIVATECOLORCLUSTEREDITOR:fColorClusterEditor.Show;
-          MSG_COLORCLUSTEREDITORRESPONSE:fColorClusterEditor.Hide;
+          MSG_ACTIVATEGRADIENTEDITOR:fGradientEditor.Show;
+          MSG_GRADIENTEDITORRESPONSE:fGradientEditor.Hide;
         end;
     end;  // while MessageQueue.HasNewMessage
     HandleMessages;
@@ -302,25 +295,6 @@ begin
     Name:=pName;
     Title:=pTitle;
     InitialDir:=PROJECTBASEPATH;
-  end;
-end;
-
-procedure TMain.OpenColorClusterDialog(msg:TMessage);
-begin
-  fSelectColorClusterDialog.SetPositionAndWidth(msg.DataInt and $07ff,(msg.DataInt and $003ff800)>>11,(msg.DataInt and $ffc00000)>>22);
-  fSelectColorClusterDialog.Show;
-end;
-
-procedure TMain.ColorClusterDialogResp(msg:TMessage);
-begin
-  if msg.DataInt=-2 then begin
-    fSelectColorClusterDialog.Refresh;
-  end else begin
-    if msg.DataInt>-1 then begin
-      Project.CurrentColorClusters.ActiveIndex:=msg.DataInt;
-      MessageQueue.AddMessage(MSG_ACTIVECOLORCLUSTERCHANGED);
-    end;
-    fSelectColorClusterDialog.Hide;
   end;
 end;
 
@@ -567,8 +541,8 @@ begin
     PARM_COL_CCEDIT_RIGHT,
     PARM_COL_CCEDIT_ADD1,
     PARM_COL_CCEDIT_ADD2:begin
-      fColorClusterEditor.SetColor(msg.DataInt,msg.DataUInt32);
-      fColorClusterEditor.Show;
+      fGradientEditor.SetColor(msg.DataInt,msg.DataUInt32);
+      fGradientEditor.Show;
     end;
   end;
   InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;

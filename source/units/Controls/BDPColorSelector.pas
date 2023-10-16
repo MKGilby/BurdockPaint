@@ -38,11 +38,11 @@ type
     procedure fSetWidth(value:integer); override;
     procedure fSetHeight(value:integer); override;
   private
-    fLeftClusterLeft,fLeftClusterWidth:integer;
+    fLeftGradientLeft,fLeftGradientWidth:integer;
     fMainColorLeft:integer;
-    fRightClusterLeft,fRightClusterWidth:integer;
+    fRightGradientLeft,fRightGradientWidth:integer;
     fRightColorLeft:integer;
-    fLeftColorCluster,fRightColorCluster:TGradient;
+    fLeftGradient,fRightGradient:TGradient;
     procedure Click(Sender:TObject;x, y, buttons: integer);
     function KeyDown(Sender:TObject;key:integer):boolean;
     procedure RecalculatePositions;
@@ -66,18 +66,18 @@ begin
   Height:=fHeight;
   OnClick:=Self.Click;
   OnKeyDown:=Self.KeyDown;
-  fLeftColorCluster:=TGradient.Create(
+  fLeftGradient:=TGradient.Create(
     Settings.ColorSelectorLeftColor,
     Settings.ColorSelectorMainColor);
-  fRightColorCluster:=TGradient.Create(
+  fRightGradient:=TGradient.Create(
     Settings.ColorSelectorMainColor,
     Settings.ColorSelectorRightColor);
 end;
 
 destructor TBDColorSelector.Destroy;
 begin
-  if Assigned(fLeftColorCluster) then fLeftColorCluster.Free;
-  if Assigned(fRightColorCluster) then fRightColorCluster.Free;
+  if Assigned(fLeftGradient) then fLeftGradient.Free;
+  if Assigned(fRightGradient) then fRightGradient.Free;
   inherited Destroy;
 end;
 
@@ -85,22 +85,22 @@ procedure TBDColorSelector.Click(Sender:TObject; x,y,buttons:integer);
 begin
   x-=fLeft;
   if buttons=SDL_BUTTON_LEFT then begin
-    if (x>=0) and (x<fLeftClusterLeft) then begin
+    if (x>=0) and (x<fLeftGradientLeft) then begin
       Settings.ActiveColor:=Settings.ColorSelectorLeftColor;
       Refresh;
     end else
-    if (x>=fLeftClusterLeft) and (x<fMainColorLeft) then begin
+    if (x>=fLeftGradientLeft) and (x<fMainColorLeft) then begin
       Settings.ActiveColor:=
-        fLeftColorCluster.GetColorAt(x-fLeftClusterLeft,fLeftClusterWidth);
+        fLeftGradient.GetColorAt(x-fLeftGradientLeft,fLeftGradientWidth);
       Refresh;
     end else
-    if (x>=fMainColorLeft) and (x<fRightClusterLeft) then begin
+    if (x>=fMainColorLeft) and (x<fRightGradientLeft) then begin
       Settings.ActiveColor:=Settings.ColorSelectorMainColor;
       Refresh;
     end else
-    if (x>=fRightClusterLeft) and (x<fRightColorLeft) then begin
+    if (x>=fRightGradientLeft) and (x<fRightColorLeft) then begin
       Settings.ActiveColor:=
-        fRightColorCluster.GetColorAt(x-fRightClusterLeft,fRightClusterWidth);
+        fRightGradient.GetColorAt(x-fRightGradientLeft,fRightGradientWidth);
       Refresh;
     end else
     if (x>=fRightColorLeft) then begin
@@ -109,13 +109,13 @@ begin
     end;
   end else if buttons=SDL_BUTTON_MIDDLE then begin
   end else if buttons=SDL_BUTTON_RIGHT then begin
-    if (x>=0) and (x<fLeftClusterLeft) then begin
+    if (x>=0) and (x<fLeftGradientLeft) then begin
       MessageQueue.AddMessage(
         MSG_OPENCOLOREDITOR,
         PARM_COL_SELECTOR_LEFT,
         Settings.ColorSelectorLeftColor);
     end else
-    if (x>=fMainColorLeft) and (x<fRightClusterLeft) then begin
+    if (x>=fMainColorLeft) and (x<fRightGradientLeft) then begin
       MessageQueue.AddMessage(
         MSG_OPENCOLOREDITOR,
         PARM_COL_SELECTOR_MAIN,
@@ -153,24 +153,24 @@ begin
     Bar(3,3,Height-6,Height-6,Settings.ColorSelectorLeftColor);
     Bar(fMainColorLeft+3,3,Height-6,Height-6,Settings.ColorSelectorMainColor);
     Bar(fRightColorLeft+3,3,Height-6,Height-6,Settings.ColorSelectorRightColor);
-    fLeftColorCluster.Color1:=Settings.ColorSelectorLeftColor;
-    fLeftColorCluster.Color2:=Settings.ColorSelectorMainColor;
-    fRightColorCluster.Color1:=Settings.ColorSelectorMainColor;
-    fRightColorCluster.Color2:=Settings.ColorSelectorRightColor;
-    for i:=0 to fLeftClusterWidth-1 do begin
-      c:=fLeftColorCluster.GetColorAt(i,fLeftClusterWidth);
-      VLine(fLeftClusterLeft+i,3,Height-6,c);
+    fLeftGradient.Color1:=Settings.ColorSelectorLeftColor;
+    fLeftGradient.Color2:=Settings.ColorSelectorMainColor;
+    fRightGradient.Color1:=Settings.ColorSelectorMainColor;
+    fRightGradient.Color2:=Settings.ColorSelectorRightColor;
+    for i:=0 to fLeftGradientWidth-1 do begin
+      c:=fLeftGradient.GetColorAt(i,fLeftGradientWidth);
+      VLine(fLeftGradientLeft+i,3,Height-6,c);
       if Settings.ActiveColor=c then begin
-        VLine(fLeftClusterLeft+i,Height div 2-3,3,SystemPalette[SYSTEMCOLORLIGHT]);
-        VLine(fLeftClusterLeft+i,Height div 2,3,SystemPalette[SYSTEMCOLORBLACK]);
+        VLine(fLeftGradientLeft+i,Height div 2-3,3,SystemPalette[SYSTEMCOLORLIGHT]);
+        VLine(fLeftGradientLeft+i,Height div 2,3,SystemPalette[SYSTEMCOLORBLACK]);
       end;
     end;
-    for i:=0 to fRightClusterWidth-1 do begin
-      c:=fRightColorCluster.GetColorAt(i,fRightClusterWidth);
-      VLine(fRightClusterLeft+i,3,Height-6,c);
+    for i:=0 to fRightGradientWidth-1 do begin
+      c:=fRightGradient.GetColorAt(i,fRightGradientWidth);
+      VLine(fRightGradientLeft+i,3,Height-6,c);
       if Settings.ActiveColor=c then begin
-        VLine(fRightClusterLeft+i,Height div 2-3,3,SystemPalette[SYSTEMCOLORLIGHT]);
-        VLine(fRightClusterLeft+i,Height div 2,3,SystemPalette[SYSTEMCOLORBLACK]);
+        VLine(fRightGradientLeft+i,Height div 2-3,3,SystemPalette[SYSTEMCOLORLIGHT]);
+        VLine(fRightGradientLeft+i,Height div 2,3,SystemPalette[SYSTEMCOLORBLACK]);
       end;
     end;
   end;
@@ -179,12 +179,12 @@ end;
 
 procedure TBDColorSelector.RecalculatePositions;
 begin
-  fLeftClusterLeft:=Height;
-  fLeftClusterWidth:=(Width-3*Height) div 2;
-  fMainColorLeft:=fLeftClusterLeft+fLeftClusterWidth;
-  fRightClusterLeft:=fMainColorLeft+Height;
-  fRightClusterWidth:=(Width-3*Height)-fLeftClusterWidth;
-  fRightColorLeft:=fRightClusterLeft+fRightClusterWidth;
+  fLeftGradientLeft:=Height;
+  fLeftGradientWidth:=(Width-3*Height) div 2;
+  fMainColorLeft:=fLeftGradientLeft+fLeftGradientWidth;
+  fRightGradientLeft:=fMainColorLeft+Height;
+  fRightGradientWidth:=(Width-3*Height)-fLeftGradientWidth;
+  fRightColorLeft:=fRightGradientLeft+fRightGradientWidth;
 end;
 
 procedure TBDColorSelector.fSetWidth(value:integer);

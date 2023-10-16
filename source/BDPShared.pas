@@ -57,7 +57,7 @@ const
   IMAGECOUNTSLIDERTOP=CONTROLSHEIGHT-IMAGECOUNTSLIDERHEIGHT-3;
   INKBUTTONSLEFT=CONTROLCOLORSELECTORLEFT+IMAGECOUNTSLIDERWIDTH+6;
   INKBUTTONSTOP=6+30;
-  CONTROLCOLORCLUSTERWIDTH=NORMALBUTTONWIDTH*3+6;
+  CONTROLGRADIENTWIDTH=NORMALBUTTONWIDTH*3+6;
 
   TOGGLEBUTTONSLEFT=INKBUTTONSLEFT+3*(NORMALBUTTONWIDTH+3);
   TOGGLEBUTTONSTOP=6;
@@ -77,10 +77,6 @@ const
   COLORBOXHEIGHT=72;
   COLORBOXLEFT=WINDOWWIDTH-COLORBOXWIDTH-3;
   COLORBOXTOP=6;
-
-  COLORCLUSTERLEFT=720;
-  COLORCLUSTERWIDTH=320;
-  COLORCLUSTERHEIGHT=36;
 
   MAXPALETTEENTRIES=256;  // Palette color count hard limit
   POSTPROCESSCOLOR=$00FF00FF;
@@ -163,11 +159,11 @@ const
   // Set INKS menu item states based on Settings.SelectedInks
   MSG_SETINKSMENU=14;
 
-  // Open select color cluster dialog. Data is left of the dialog.
-  MSG_OPENCOLORCLUSTERDIALOG=15;
+  // Open select gradient dialog. Data is left of the dialog.
+  //MSG_OPENGRADIENTDIALOG=15;
 
-  // Response from SelectColorClusterDialog. Data is new color cluster index or -1 if not changed.
-  MSG_COLORCLUSTERDIALOGRESP=16;
+  // Response from SelectGradientDialog. Data is new gradient index or -1 if not changed.
+  //MSG_GRADIENTDIALOGRESP=16;
 
   // Open ConfigureRGradDialog.
   MSG_OPENCONFIGURERGRADDIALOG=17;
@@ -186,14 +182,8 @@ const
   //   IntValue is the palette entry
   MSG_PALETTEREQUESTCOLOR=21;
 
-  // Activate PickColorCluster tool.
-  MSG_ACTIVATEPICKCOLORCLUSTER=22;
-
-  // PICKCOLCLS finished, Data is the start in upper word and end in lower word.
-  MSG_COLORCLUSTERPICKED=23;
-
-  // Active color cluster changed, refresh color clusters.
-  MSG_ACTIVECOLORCLUSTERCHANGED=24;
+  // Active gradient changed, refresh gradients.
+  MSG_ACTIVEGRADIENTCHANGED=24;
 
   // Hide controls and select RGradCenter tool.
   MSG_CONFIGRGRADCENTER=25;
@@ -206,11 +196,11 @@ const
   //   UInt32 value is the new color.
   MSG_SETPALETTECOLOR=27;
 
-  // Activate ColorClusterEditor
-  MSG_ACTIVATECOLORCLUSTEREDITOR=28;
+  // Activate GradientEditor
+  MSG_ACTIVATEGRADIENTEDITOR=28;
 
-  // ColorClusterEditor response
-  MSG_COLORCLUSTEREDITORRESPONSE=29;
+  // GradientEditor response
+  MSG_GRADIENTEDITORRESPONSE=29;
 
   // ------- Menu Messages ------- Range: 200-299 -------
   {$i includes\menu.inc}
