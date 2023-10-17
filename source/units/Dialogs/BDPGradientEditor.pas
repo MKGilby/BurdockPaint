@@ -96,8 +96,16 @@ procedure TBDGradientEditor.SetColor(pTarget: integer; pColor: uint32);
 begin
   if pColor<>POSTPROCESSCOLOR then
     case pTarget of
-      PARM_COL_CCEDIT_LEFT:fColorBoxes[0].Color:=pColor;
-      PARM_COL_CCEDIT_RIGHT:fColorBoxes[1].Color:=pColor;
+      PARM_COL_CCEDIT_LEFT:begin
+        fColorBoxes[0].Color:=pColor;
+        fGradient.Color1:=pColor;
+        fSimpleGradient.Refresh;
+      end;
+      PARM_COL_CCEDIT_RIGHT:begin
+        fColorBoxes[1].Color:=pColor;
+        fGradient.Color2:=pColor;
+        fSimpleGradient.Refresh;
+      end;
       PARM_COL_CCEDIT_ADD1:fColorBoxes[2].Color:=pColor;
       PARM_COL_CCEDIT_ADD2:fColorBoxes[3].Color:=pColor;
     end;
