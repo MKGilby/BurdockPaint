@@ -14,12 +14,12 @@
                         IMG - Image data
                         CLR - Color data
                         RGN - Region data
-                        CCS - Color clusters data
+                        CCS - Gradients data
                         USR - UndoSystem data for region
                         USC - UndoSystem data for color palette
-                        USL - UndoSystem data for color clusters
+                        USL - UndoSystem data for gradients
                         UDR - Undo operation data for region
-                        UDL - Undo operation data for color clusters
+                        UDL - Undo operation data for gradients
       3       1       Version of the block
       4       4       Size of the block without the Data ID and the size.
       8     [Size]    The data in uncompressed or ZLib compressed format.
@@ -29,7 +29,6 @@
   starts with lowercase, it is compressed (cLR), if uppercase it is not (CLR).
 
   Each file contains exactly one block.
-
 
 2. Detailed block formats
 =========================
@@ -139,7 +138,7 @@
     .       ???         The affected region after the operation, in an RGN-block
 
 
-2.1.4. UNL - Color cluster undo operation data
+2.1.4. UNL - Gradient undo operation data
 ----------------------------------------------
 
     < To be created >
@@ -181,10 +180,10 @@
         5       4           The color that overwrote the lost color (uint32)
 
 
-2.2.3. USL - UndoSystem data for color clusters
------------------------------------------------
+2.2.3. USL - UndoSystem data for Gradients
+------------------------------------------
 
-  This block contains info about undo/redo operations regarding color clusters.
+  This block contains info about undo/redo operations regarding gradients.
 
 2.2.3.1. Version 1
 ------------------
@@ -195,18 +194,18 @@
     4       ???         UDL-blocks (count times)
 
 
-2.2.4. CCS - Color clusters data
+2.2.4. CCS - Gradients data
 --------------------------------
 
-  Contains data about color clusters.
+  Contains data about gradients.
 
 2.2.4.1. Version 1
 ------------------
 
     Start   Size        Description (content)
-    0       1           Color cluster count
-    1       1           Active color cluster index
-    2       Count*9     Color cluster data, count times
+    0       1           Gradient count
+    1       1           Active gradient index
+    2       Count*9     Gradient data, count times
         0       4           Start color (uint32)
         4       4           End color (uint32)
         8       1           Flags
@@ -218,7 +217,7 @@
 -----------------------
 
   Image data contains everything about an image in BurdockPaint. (The image
-  itself, color clusters, palette, undo/redo data.)
+  itself, gradients, palette, undo/redo data.)
 
 2.2.5.1. Version 1
 ------------------
@@ -228,21 +227,21 @@
                           bit 0 - not used
                           bit 1 - Is data contains ImageUndoSystem data?
                           bit 2 - Is data contains PaletteUndoSystem data?
-                          bit 3 - Is data contains ColorClusters data?
-                          bit 4 - Is data contains ColorClustersUndoSystem data?
+                          bit 3 - Is data contains Gradients data?
+                          bit 4 - Is data contains GradientsUndoSystem data?
     1       ???         Favourite colors data in a CLR-block
     .       ???         Region data in an RGN-block
    [.       ???]        if Flags.bit[1] is set then ImageUndoSystem data in an USR-block
    [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an USC-block
-   [.       ???]        if Flags.bit[3] is set then ColorClusters data in an CCS-block
-   [.       ???]        if Flags.bit[4] is set then ColorClustersUndoSystem data in an USL-block
+   [.       ???]        if Flags.bit[3] is set then Gradients data in an CCS-block
+   [.       ???]        if Flags.bit[4] is set then GradientsUndoSystem data in an USL-block
 
 
 2.2.6. PRJ - Project data
 -------------------------
 
   Project data is the summary of the images of a project. It contains:
-    - one or more images (image, undo, fav. colors and colorcluster data in IMG-blocks)
+    - one or more images (image, undo, fav. colors and gradients data in IMG-blocks)
     - zero or one CEL image (since it shared between the images) (RGN-block)
 
 Version 1
@@ -264,7 +263,7 @@ Version 1
 3.1. Image file (.bpimg)
 ------------------------
 
-It is an IMG-block. Contains image, fav. colors, clusters and undo data.
+It is an IMG-block. Contains image, fav. colors, gradients and undo data.
 
 
 3.2. CEL file format (.png)
