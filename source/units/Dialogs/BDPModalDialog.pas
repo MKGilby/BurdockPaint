@@ -43,14 +43,15 @@ type
   TBDModalDialog=class(TContainer)
     constructor Create(iWidth,iHeight:integer);
     destructor Destroy; override;
-    function KeyDown(Sender:TObject;key:integer):boolean;
-    function KeyUp(Sender:TObject;key:integer):boolean;
+    procedure Show;
+    procedure Hide;
   protected
-    fModalOverlay:TBDModalOverlay;
     fCaption:string;
     procedure ReDraw; override;
   private
     procedure fSetCaption(value:string);
+    function KeyDown(Sender:TObject;key:integer):boolean;
+    function KeyUp(Sender:TObject;key:integer):boolean;
   public
     property Caption:string read fCaption write fSetCaption;
   end;
@@ -68,6 +69,7 @@ begin
   ZIndex:=MODALDIALOG_ZINDEX-1;
   fName:='ModalOverlay';
   DarkBar:=MM.Textures.ItemByName['DarkBar'];
+  Visible:=false;
 end;
 
 procedure TBDModalOverlay.Draw;
@@ -81,8 +83,6 @@ end;
 constructor TBDModalDialog.Create(iWidth,iHeight:integer);
 begin
   inherited Create;
-  fModalOverlay:=TBDModalOverlay.Create;
-  AddChild(fModalOverlay);
   fLeft:=(WINDOWWIDTH-iWidth) div 2;
   fTop:=(WINDOWHEIGHT-iHeight) div 2;
   Width:=iWidth;
@@ -131,6 +131,18 @@ begin
     fCaption:=value;
     fNeedRedraw:=true;
   end;
+end;
+
+procedure TBDModalDialog.Show;
+begin
+  inherited Show;
+  ModalOverlay.Visible:=true;
+end;
+
+procedure TBDModalDialog.Hide;
+begin
+  ModalOverlay.Visible:=false;
+  inherited Hide;
 end;
 
 end.

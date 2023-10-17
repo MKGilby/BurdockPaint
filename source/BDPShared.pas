@@ -24,9 +24,9 @@ unit BDPShared;
 
 interface
 
-uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, PNGFont2Unit,
-  BDPInfoBar, BDPPalette, BDPMessage, BDPCursor, BDPSettings,
-  BDPToolBase, BDPInkBase, BDPImage, BDPProject, BDPColorEditor;
+uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, PNGFont2Unit, MKMouse2,
+  BDPInfoBar, BDPPalette, BDPMessage, BDPCursor, BDPSettings, BDPToolBase,
+  BDPInkBase, BDPImage, BDPProject, BDPColorEditor, BDPModalDialog;
 
 const
   WINDOWWIDTH=1280;
@@ -224,7 +224,9 @@ var
   VibroColors:TBDVibroColors; // The flashing color for helping the Tools
   MessageQueue:TMessageQueue;  // Messaging queue for classes who doesn't know each other
   Cursor:TBDCursor;  // The cursor on drawing area
-  ColorEditor:TBDColorEditor;
+  ModalOverlay:TMouseObject;  // Darkening layer behind modal dialogs, used to
+                              // prevent using other controls while dialog is visible.
+  ColorEditor:TBDColorEditor;  // Color editor dialog.
 
   Tools:TBDTools;  // All tools are loaded into this list
   ActiveTool:TBDTool;  // This is the selected tool
@@ -383,6 +385,8 @@ begin
   Log.LogStatus('  Creating UI gfx...');
   CreateArches;
   CreateDarkBar;
+  ModalOverlay:=TBDModalOverlay.Create;
+  MouseObjects.Add(ModalOverlay);
   Log.LogStatus('  Creating cursor...');
   Cursor:=TBDCursor.Create;
   VibroColors:=TBDVibroColors.Create($FF202020,$FFD0D0D0);
@@ -406,17 +410,18 @@ procedure FreeAssets;
 begin
   if Assigned(Project) then begin
     Project.SaveToFile(TEMPPROJECTFILE);
-    FreeAndNil(Project);
+    Project.Free;
   end;
-  if Assigned(Tools) then FreeAndNil(Tools);
-  if Assigned(Inks) then FreeAndNil(Inks);
-  if Assigned(VibroColors) then FreeAndNil(VibroColors);
-  if Assigned(Cursor) then FreeAndNil(Cursor);
-  if Assigned(CELHelperImage) then FreeAndNil(CELHelperImage);
-  if Assigned(SystemPalette) then FreeAndNil(SystemPalette);
-  if Assigned(MessageQueue) then FreeAndNil(MessageQueue);
-  if Assigned(InfoBar) then FreeAndNil(InfoBar);
-  if Assigned(MM) then FreeAndNil(MM);
+  if Assigned(Tools) then Tools.Free;
+  if Assigned(Inks) then Inks.Free;
+  if Assigned(VibroColors) then VibroColors.Free;
+  if Assigned(Cursor) then Cursor.Free;
+  if Assigned(ModalOverlay) then ModalOverlay.Free;
+  if Assigned(CELHelperImage) then CELHelperImage.Free;
+  if Assigned(SystemPalette) then SystemPalette.Free;
+  if Assigned(MessageQueue) then MessageQueue.Free;
+  if Assigned(InfoBar) then InfoBar.Free;
+  if Assigned(MM) then MM.Free;
 end;
 
 end.
