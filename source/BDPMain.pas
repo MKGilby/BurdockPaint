@@ -42,7 +42,7 @@ type
   private
     fMainWindow:TWindow;
     fMainMenu:TMainMenu;
-    fSplashScreen:TBDAboutDialog;
+    fAboutDialog:TBDAboutDialog;
     fControls:TBDControls;
     fDrawArea:TBDDrawArea;
     fMagnifyDialog:TBDMagnifyCELDialog;
@@ -137,7 +137,7 @@ begin
   LoadAssets;
 
   fMainMenu:=TMainMenu.Create(MenuBin);
-  fSplashScreen:=TBDAboutDialog.Create;
+  fAboutDialog:=TBDAboutDialog.Create;
   fControls:=TBDControls.Create;
   fDrawArea:=TBDDrawArea.Create;
   ColorEditor:=TBDColorEditor.Create;
@@ -174,7 +174,7 @@ begin
   if Assigned(ColorEditor) then ColorEditor.Free;
   if Assigned(fDrawArea) then fDrawArea.Free;
   if Assigned(fControls) then fControls.Free;
-  if Assigned(fSplashScreen) then fSplashScreen.Free;
+  if Assigned(fAboutDialog) then fAboutDialog.Free;
   if Assigned(fMainMenu) then fMainMenu.Free;
   FreeAssets;
   if Assigned(fBackup) then fBackup.Free;
@@ -211,7 +211,7 @@ begin
       if not mres and fMainMenu.Visible then mres:=fMainMenu.ProcessMessage(msg);
       if not mres then
         case msg.TypeID of
-          MSG_OPENABOUTDIALOG:           fSplashScreen.Show;
+          MSG_OPENABOUTDIALOG:           fAboutDialog.Show;
           MSG_QUIT:                      quit:=(msg.DataInt=1);
           MSG_OPENDITHERDIALOG:          fDitherDialog.Show;
           MSG_OPENCONFIGURERGRADDIALOG:  fConfigureRGradDialog.Show;
