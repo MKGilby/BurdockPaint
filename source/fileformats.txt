@@ -14,7 +14,8 @@
                         IMG - Image data
                         CLR - Color data
                         RGN - Region data
-                        CCS - Gradients data
+                        CCS - Color clusters data (deprecated)
+                        GDT - Gradients data
                         USR - UndoSystem data for region
                         USC - UndoSystem data for color palette
                         USL - UndoSystem data for gradients
@@ -194,23 +195,52 @@
     4       ???         UDL-blocks (count times)
 
 
-2.2.4. CCS - Gradients data
+2.2.4. CCS - Color Clusters data (deprecated)
 --------------------------------
 
-  Contains data about gradients.
+  Contains data about color clusters.
+  (They are converted to gradients when loaded.)
 
 2.2.4.1. Version 1
 ------------------
 
     Start   Size        Description (content)
-    0       1           Gradient count
-    1       1           Active gradient index
-    2       Count*9     Gradient data, count times
+    0       1           Color cluster count
+    1       1           Active color cluster index
+    2       Count*9     Color cluster data, count times
         0       4           Start color (uint32)
         4       4           End color (uint32)
         8       1           Flags
                               bit 0 - reversed
                               bit 1 - pingpong
+
+2.2.5. GDT - Gradients data
+--------------------------------
+
+  Contains data about gradients.
+
+2.2.5.1. Version 1
+------------------
+
+    Start   Size          Description (content)
+    0       1             Gradient count
+    1       1             Active gradient index
+    2       count*(9..45) Gradient data, count times
+        0       4           Start color (uint32)
+        4       4           End color (uint32)
+        8       1           Flags
+                              bit 0 - reversed
+                              bit 1 - pingpong
+                              bit 2-3 - additional color count [0..3]
+        if additional color count>0
+        9       4           Color (uint32)
+        13      8           Position in gradient (double)
+        if additional color count>1
+        21      4           Color (uint32)
+        25      8           Position in gradient (double)
+        if additional color count>2
+        33      4           Color (uint32)
+        37      8           Position in gradient (double)
 
 
 2.2.5. IMG - Image data
