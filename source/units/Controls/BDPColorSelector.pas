@@ -153,10 +153,10 @@ begin
     Bar(3,3,Height-6,Height-6,Settings.ColorSelectorLeftColor);
     Bar(fMainColorLeft+3,3,Height-6,Height-6,Settings.ColorSelectorMainColor);
     Bar(fRightColorLeft+3,3,Height-6,Height-6,Settings.ColorSelectorRightColor);
-    fLeftGradient.Color1:=Settings.ColorSelectorLeftColor;
-    fLeftGradient.Color2:=Settings.ColorSelectorMainColor;
-    fRightGradient.Color1:=Settings.ColorSelectorMainColor;
-    fRightGradient.Color2:=Settings.ColorSelectorRightColor;
+    fLeftGradient.Colors[1]:=Settings.ColorSelectorLeftColor;
+    fLeftGradient.Colors[2]:=Settings.ColorSelectorMainColor;
+    fRightGradient.Colors[1]:=Settings.ColorSelectorMainColor;
+    fRightGradient.Colors[2]:=Settings.ColorSelectorRightColor;
     for i:=0 to fLeftGradientWidth-1 do begin
       c:=fLeftGradient.GetColorAt(i,fLeftGradientWidth);
       VLine(fLeftGradientLeft+i,3,Height-6,c);

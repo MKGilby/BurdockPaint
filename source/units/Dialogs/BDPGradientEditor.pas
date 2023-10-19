@@ -47,14 +47,14 @@ begin
   fSimpleGradient.Name:='CCE Gradient';
   AddChild(fSimpleGradient);
   fColorBoxes[0]:=TBDColorBox.Create(fLeft+64-3-36,fTop+30,36,36);
-  fColorBoxes[0].Color:=fGradient.Color1;
+  fColorBoxes[0].Color:=fGradient.Colors[1];
   fColorBoxes[0].ZIndex:=MODALDIALOG_ZINDEX+1;
   fColorBoxes[0].Name:='CCE ColorBox 0';
   fColorBoxes[0].Tag:=PARM_COL_CCEDIT_LEFT;
   fColorBoxes[0].OnClick:=ColorBoxClick;
   AddChild(fColorBoxes[0]);
   fColorBoxes[1]:=TBDColorBox.Create(fLeft+64+512+3,fTop+30,36,36);
-  fColorBoxes[1].Color:=fGradient.Color2;
+  fColorBoxes[1].Color:=fGradient.Colors[2];
   fColorBoxes[1].ZIndex:=MODALDIALOG_ZINDEX+1;
   fColorBoxes[1].Name:='CCE ColorBox 1';
   fColorBoxes[1].Tag:=PARM_COL_CCEDIT_RIGHT;
@@ -98,12 +98,12 @@ begin
     case pTarget of
       PARM_COL_CCEDIT_LEFT:begin
         fColorBoxes[0].Color:=pColor;
-        fGradient.Color1:=pColor;
+        fGradient.Colors[1]:=pColor;
         fSimpleGradient.Refresh;
       end;
       PARM_COL_CCEDIT_RIGHT:begin
         fColorBoxes[1].Color:=pColor;
-        fGradient.Color2:=pColor;
+        fGradient.Colors[2]:=pColor;
         fSimpleGradient.Refresh;
       end;
       PARM_COL_CCEDIT_ADD1:fColorBoxes[2].Color:=pColor;

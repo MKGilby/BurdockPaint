@@ -54,14 +54,17 @@ type
     // Load gradient from the specified stream. (see fileformats.txt - CCS-block)
     procedure LoadFromStream(pStream:TStream);
   private
-    fColor1,fColor2:uint32;
-    fR1,fG1,fB1,fA1,fR2,fG2,fB2,fA2:integer;
+    fColors:array[1..5] of uint32;
+    fColorPositions:array[3..5] of double;
+    fR,fG,fB,fA:array[1..5] of integer;
+//    fColor1,fColor2,fColor3,fColor4,fColor5:uint32;
+//    fR1,fG1,fB1,fA1,fR2,fG2,fB2,fA2:integer;
     fReversed,fPingpong:boolean;
-    procedure fSetColor1(value:uint32);
-    procedure fSetColor2(value:uint32);
+    procedure fSetColor(index:integer;value:uint32);
+    function fGetColor(index:integer):uint32;
   public
-    property Color1:uint32 read fColor1 write fSetColor1;
-    property Color2:uint32 read fColor2 write fSetColor2;
+    property Colors[index:integer]:uint32 read fGetColor write fSetColor;
+
     property Reversed:boolean read fReversed write fReversed;
     property PingPong:boolean read fPingpong write fPingpong;
   end;
@@ -107,8 +110,11 @@ const
 
 constructor TGradient.Create(iColor1,iColor2:uint32);
 begin
-  Color1:=iColor1;
-  Color2:=iColor2;
+  fSetColor(1,iColor1);
+  fSetColor(2,iColor2);
+  fColorPositions[3]:=0;
+  fColorPositions[4]:=0;
+  fColorPositions[5]:=0;
   fReversed:=false;
   fPingpong:=false;
 end;
@@ -130,16 +136,16 @@ begin
   else if pValue>=pInterval then pValue:=pInterval-1;
   if not fReversed then begin
     Result:=
-      ((fA1+(fA2-fA1)*pValue div (pInterval-1)) and $ff) << 24+
-      ((fR1+(fR2-fR1)*pValue div (pInterval-1)) and $ff) << 16+
-      ((fG1+(fG2-fG1)*pValue div (pInterval-1)) and $ff) << 8+
-      ((fB1+(fB2-fB1)*pValue div (pInterval-1)) and $ff)
+      ((fA[1]+(fA[2]-fA[1])*pValue div (pInterval-1)) and $ff) << 24+
+      ((fR[1]+(fR[2]-fR[1])*pValue div (pInterval-1)) and $ff) << 16+
+      ((fG[1]+(fG[2]-fG[1])*pValue div (pInterval-1)) and $ff) << 8+
+      ((fB[1]+(fB[2]-fB[1])*pValue div (pInterval-1)) and $ff)
   end else begin
     Result:=
-      ((fA2+(fA1-fA2)*pValue div (pInterval-1)) and $ff) << 24+
-      ((fR2+(fR1-fR2)*pValue div (pInterval-1)) and $ff) << 16+
-      ((fG2+(fG1-fG2)*pValue div (pInterval-1)) and $ff) << 8+
-      ((fB2+(fB1-fB2)*pValue div (pInterval-1)) and $ff)
+      ((fA[2]+(fA[1]-fA[2])*pValue div (pInterval-1)) and $ff) << 24+
+      ((fR[2]+(fR[1]-fR[2])*pValue div (pInterval-1)) and $ff) << 16+
+      ((fG[2]+(fG[1]-fG[2])*pValue div (pInterval-1)) and $ff) << 8+
+      ((fB[2]+(fB[1]-fB[2])*pValue div (pInterval-1)) and $ff)
   end;
 end;
 
@@ -155,8 +161,8 @@ end;
 procedure TGradient.SaveToStream(pStream:TStream);
 var flags:byte;
 begin
-  pStream.Write(fColor1,4);
-  pStream.Write(fColor2,4);
+  pStream.Write(fColors[1],4);
+  pStream.Write(fColors[2],4);
   flags:=0;
   if fReversed then flags:=flags or 1;
   if fPingpong then flags:=flags or 2;
@@ -168,35 +174,34 @@ var tmp:uint32;flags:byte;
 begin
   tmp:=0;
   pStream.Read(tmp,4);
-  fSetColor1(tmp);
+  fSetColor(1,tmp);
   pStream.Read(tmp,4);
-  fSetColor2(tmp);
+  fSetColor(2,tmp);
   flags:=0;
   pStream.Read(flags,1);
   fReversed:=(flags and 1)<>0;
   fPingpong:=(flags and 2)<>0;
 end;
 
-procedure TGradient.fSetColor1(value:uint32);
+procedure TGradient.fSetColor(index:integer; value:uint32);
 begin
-  if fColor1<>value then begin
-    fColor1:=value;
-    fA1:=(fColor1 and $FF000000)>>24;
-    fR1:=(fColor1 and $FF0000)>>16;
-    fG1:=(fColor1 and $FF00)>>8;
-    fB1:=(fColor1 and $FF);
+  if index in [1..5] then begin
+    if fColors[index]<>value then begin
+      fColors[index]:=value;
+      fA[index]:=(fColors[index] and $FF000000)>>24;
+      fR[index]:=(fColors[index] and $FF0000)>>16;
+      fG[index]:=(fColors[index] and $FF00)>>8;
+      fB[index]:=(fColors[index] and $FF);
+    end;
   end;
 end;
 
-procedure TGradient.fSetColor2(value:uint32);
+function TGradient.fGetColor(index:integer):uint32;
 begin
-  if fColor2<>value then begin
-    fColor2:=value;
-    fA2:=(fColor2 and $FF000000)>>24;
-    fR2:=(fColor2 and $FF0000)>>16;
-    fG2:=(fColor2 and $FF00)>>8;
-    fB2:=(fColor2 and $FF);
-  end;
+  if index in [1..5] then
+    Result:=fColors[index]
+  else
+    Result:=0;
 end;
 
 
