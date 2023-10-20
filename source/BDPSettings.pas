@@ -47,6 +47,7 @@ type
     fActiveColor:uint32;
     fUndoLimit:integer;
     fDitherStrength:integer;
+    fRealDitherStrength:double;
     fCGradCenterX,fCGradCenterY,fCGradRadius:integer;
     fRGradCenterX,fRGradCenterY,fRGradRepetitions,fRGradRotation:integer;
     fTempRGradCenterX,fTempRGradCenterY:integer;
@@ -58,6 +59,7 @@ type
     function fGetSelectedInk(index:integer):string;
     procedure fSetSelectedInk(index:integer;value:string);
     procedure fSetActiveColor(value:uint32);
+    procedure fSetDitherStrength(value:integer);
   public
     ColorSelectorMainColor:uint32;
     ColorSelectorLeftColor:uint32;
@@ -75,7 +77,8 @@ type
     property ActiveInk:integer read fActiveInk write fActiveInk;
     property ActiveColor:uint32 read fActiveColor write fSetActiveColor;
     property UndoLimit:integer read fUndoLimit write fUndoLimit;
-    property DitherStrength:integer read fDitherStrength write fDitherStrength;
+    property DitherStrength:integer read fDitherStrength write fSetDitherStrength;
+    property RealDitherStrength:double read fRealDitherStrength;
     property CGradCenterX:integer read fCGradCenterX write fCGradCenterX;
     property CGradCenterY:integer read fCGradCenterY write fCGradCenterY;
     property CGradRadius:integer read fCGradRadius write fCGradRadius;
@@ -265,6 +268,14 @@ procedure TSettings.fSetActiveColor(value:uint32);
 begin
   fActiveColor:=value;
   MessageQueue.AddMessage(MSG_ACTIVECOLORCHANGED,0,fActiveColor);
+end;
+
+procedure TSettings.fSetDitherStrength(value:integer);
+begin
+  if value<0 then value:=0
+  else if value>255 then value:=255;
+  fDitherStrength:=value;
+  fRealDitherStrength:=value/255;
 end;
 
 end.
