@@ -225,20 +225,17 @@
     Start   Size          Description (content)
     0       1             Gradient count
     1       1             Active gradient index
-    2       count*(9..45) Gradient data, count times
+    2       count*45      Gradient data, count times
         0       4           Start color (uint32)
         4       4           End color (uint32)
         8       1           Flags
                               bit 0 - reversed
                               bit 1 - pingpong
-                              bit 2-3 - additional color count [0..3]
-        if additional color count>0
+                              bit 2-4 - is additional color [3..5] is in use?
         9       4           Color (uint32)
         13      8           Position in gradient (double)
-        if additional color count>1
         21      4           Color (uint32)
         25      8           Position in gradient (double)
-        if additional color count>2
         33      4           Color (uint32)
         37      8           Position in gradient (double)
 
