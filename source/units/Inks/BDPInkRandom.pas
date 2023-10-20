@@ -52,8 +52,7 @@ end;
 
 function TBDInkRandom.GetColorAt(pX,pY:integer):uint32;
 begin
-  Result:=Project.CurrentGradientList.ActiveGradient.
-    GetColorAt(random(256),256);
+  Result:=Project.CurrentGradientList.ActiveGradient.GetColorAt(random);
 end;
 
 end.

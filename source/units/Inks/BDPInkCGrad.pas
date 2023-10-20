@@ -58,12 +58,12 @@ begin
     r:=trunc(Sqrt(sqr(px-Settings.CGradCenterX)+sqr(py-Settings.CGradCenterY))) mod Settings.CGradRadius;
     if Settings.DitherGradients then
       Result:=Project.CurrentGradientList.ActiveGradient.
-        GetColorAtDithered(r,Settings.CGradRadius,Settings.DitherStrength)
+        GetColorAtDithered(r/Settings.CGradRadius)
     else
       Result:=Project.CurrentGradientList.ActiveGradient.
-        GetColorAt(r,Settings.CGradRadius)
+        GetColorAt(r/Settings.CGradRadius)
   end else
-    Result:=Project.CurrentGradientList.ActiveGradient.GetColorAt(1,2);
+    Result:=Project.CurrentGradientList.ActiveGradient.GetColorAt(0.5);
 end;
 
 procedure TBDInkCGrad.Configure;

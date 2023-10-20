@@ -65,17 +65,17 @@ begin
   if Result>0 then begin
     if Settings.DitherGradients then begin
       while i<SegmentRight+1 do begin
-        Project.CurrentImage.PutPixel(i,j,Project.CurrentGradientList.ActiveGradient.GetColorAtDithered(i-SegmentLeft,Result+1,Settings.DitherStrength));
+        Project.CurrentImage.PutPixel(i,j,Project.CurrentGradientList.ActiveGradient.GetColorAtDithered((i-SegmentLeft)/(Result+1)));
         inc(i);
       end;
     end else begin
       while i<SegmentRight+1 do begin
-        Project.CurrentImage.PutPixel(i,j,Project.CurrentGradientList.ActiveGradient.GetColorAt(i-SegmentLeft,Result+1));
+        Project.CurrentImage.PutPixel(i,j,Project.CurrentGradientList.ActiveGradient.GetColorAt((i-SegmentLeft)/(Result+1)));
         inc(i);
       end;
     end;
   end else begin
-    Project.CurrentImage.PutPixel(i,j,Project.CurrentGradientList.ActiveGradient.GetColorAt(1,2));
+    Project.CurrentImage.PutPixel(i,j,Project.CurrentGradientList.ActiveGradient.GetColorAt(0.5));
   end;
 end;
 

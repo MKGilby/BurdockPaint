@@ -41,15 +41,12 @@ type
     // Create the gradient from stream (see fileformats.txt - GDT-block)
     constructor CreateFromStreamGDT1(iStream:TStream);
 
-    // Gives back the color in the gradient at pValue on a scale to 0..pInterval
-    // Example: if you want to draw the gradient on a control with a width
-    //          of 240 pixels, you should use GetColorAt(x,240) as each vertical
-    //          line of the control.
-    function GetColorAt(pValue,pInterval:integer):uint32;
+    // Gives back the color in the gradient at pValue on a scale to 0..1
+    function GetColorAt(pValue:double):uint32;
 
-    // Gives back the color in the gradient at pValue on a scale to 0..pInterval
-    // randomly modifying it by max +/-(pInterval*pDitherStrength/256)
-    function GetColorAtDithered(pValue,pInterval,pDitherStrength:integer):uint32;
+    // Gives back the color in the gradient at pValue on a scale to 0..1
+    // randomly modifying it by max +/- Settings.RealDitherStrength (0..1)
+    function GetColorAtDithered(pValue:double):uint32;
 
     // Save gradient to the specified stream. (see fileformats.txt - GDT-block)
     procedure SaveToStream(pStream:TStream);
@@ -163,40 +160,33 @@ begin
   LoadFromStreamGDT1(iStream);
 end;
 
-function TGradient.GetColorAt(pValue, pInterval: integer): uint32;
-var NormalizedValue:double;  // 0..1 inclusive
-    i:integer;
+function TGradient.GetColorAt(pValue:double):uint32;
+var i:integer;
 begin
+  if pValue<0 then pValue:=0
+  else if pValue>1 then pValue:=1;
   if fPingpong then begin
     pValue:=pValue*2;
-    if pValue>pInterval-1 then begin
-      pValue:=(pInterval*2)-pValue;
-    end;
+    if pValue>1 then pValue:=2-pValue;
   end;
-  if pValue<0 then pValue:=0
-  else if pValue>=pInterval then pValue:=pInterval-1;
-  NormalizedValue:=pValue/(pInterval-1);
-  if fReversed then NormalizedValue:=1-NormalizedValue;
+  if fReversed then pValue:=1-pValue;
   Result:=0;
   for i:=0 to length(fOrder)-2 do
-    if (NormalizedValue>=fColorPositions[fOrder[i]]) and
-       (NormalizedValue<=fColorPositions[fOrder[i+1]]) then begin
+    if (pValue>=fColorPositions[fOrder[i]]) and
+       (pValue<=fColorPositions[fOrder[i+1]]) then begin
      Result:=
-       (round(fA[fOrder[i]]+(fA[fOrder[i+1]]-fA[fOrder[i]])*(NormalizedValue-fColorPositions[fOrder[i]])/(fColorPositions[fOrder[i+1]]-fColorPositions[fOrder[i]])) and $ff) << 24+
-       (round(fR[fOrder[i]]+(fR[fOrder[i+1]]-fR[fOrder[i]])*(NormalizedValue-fColorPositions[fOrder[i]])/(fColorPositions[fOrder[i+1]]-fColorPositions[fOrder[i]])) and $ff) << 16+
-       (round(fG[fOrder[i]]+(fG[fOrder[i+1]]-fG[fOrder[i]])*(NormalizedValue-fColorPositions[fOrder[i]])/(fColorPositions[fOrder[i+1]]-fColorPositions[fOrder[i]])) and $ff) << 8+
-       (round(fB[fOrder[i]]+(fB[fOrder[i+1]]-fB[fOrder[i]])*(NormalizedValue-fColorPositions[fOrder[i]])/(fColorPositions[fOrder[i+1]]-fColorPositions[fOrder[i]])) and $ff);
+       (round(fA[fOrder[i]]+(fA[fOrder[i+1]]-fA[fOrder[i]])*(pValue-fColorPositions[fOrder[i]])/(fColorPositions[fOrder[i+1]]-fColorPositions[fOrder[i]])) and $ff) << 24+
+       (round(fR[fOrder[i]]+(fR[fOrder[i+1]]-fR[fOrder[i]])*(pValue-fColorPositions[fOrder[i]])/(fColorPositions[fOrder[i+1]]-fColorPositions[fOrder[i]])) and $ff) << 16+
+       (round(fG[fOrder[i]]+(fG[fOrder[i+1]]-fG[fOrder[i]])*(pValue-fColorPositions[fOrder[i]])/(fColorPositions[fOrder[i+1]]-fColorPositions[fOrder[i]])) and $ff) << 8+
+       (round(fB[fOrder[i]]+(fB[fOrder[i+1]]-fB[fOrder[i]])*(pValue-fColorPositions[fOrder[i]])/(fColorPositions[fOrder[i+1]]-fColorPositions[fOrder[i]])) and $ff);
      exit;
    end;
 end;
 
-function TGradient.GetColorAtDithered(pValue, pInterval,
-  pDitherStrength: integer): uint32;
-var dith:integer;
+function TGradient.GetColorAtDithered(pValue:double):uint32;
 begin
-  dith:=pInterval*pDitherStrength div 256;
-  if dith>0 then pValue+=random(2*dith)-dith;
-  Result:=GetColorAt(pValue,pInterval);
+  pValue+=random*Settings.RealDitherStrength*2-Settings.RealDitherStrength;
+  Result:=GetColorAt(pValue);
 end;
 
 procedure TGradient.SaveToStream(pStream:TStream);

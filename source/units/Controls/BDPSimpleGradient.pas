@@ -55,7 +55,7 @@ begin
       // Gradient bar
       if Assigned(fGradient) then begin
         for i:=0 to fColorsWidth-1 do
-          VLine(i+3,3,Height-6,fGradient.GetColorAt(i,fColorsWidth-1));
+          VLine(i+3,3,Height-6,fGradient.GetColorAt(i/(fColorsWidth-1)));
       end;
     end;
     fTexture.Update;

@@ -67,9 +67,9 @@ begin
     end;
   end;
   if Settings.DitherGradients then
-    Result:=Project.CurrentGradientList.ActiveGradient.GetColorAtDithered((round((d+Settings.RGradRotation)*Settings.RGradRepetitions)) mod 360,359,Settings.DitherStrength)
+    Result:=Project.CurrentGradientList.ActiveGradient.GetColorAtDithered(((round((d+Settings.RGradRotation)*Settings.RGradRepetitions)) mod 360)/359)
   else
-    Result:=Project.CurrentGradientList.ActiveGradient.GetColorAt((round((d+Settings.RGradRotation)*Settings.RGradRepetitions)) mod 360,359)
+    Result:=Project.CurrentGradientList.ActiveGradient.GetColorAt(((round((d+Settings.RGradRotation)*Settings.RGradRepetitions)) mod 360)/359)
 end;
 
 procedure TBDInkRGrad.Configure;

@@ -104,7 +104,7 @@ begin
     end else
     if (x>=fColorsLeft+3) and (x<fArrowLeft) then begin
       if button=SDL_BUTTON_LEFT then
-        Settings.ActiveColor:=fGradient.GetColorAt(x-fColorsLeft-3,fColorsWidth-3)
+        Settings.ActiveColor:=fGradient.GetColorAt((x-fColorsLeft-3)/(fColorsWidth-3))
       else if (button=SDL_BUTTON_RIGHT) then begin
         MessageQueue.AddMessage(MSG_ACTIVATEGRADIENTEDITOR);
       end;
@@ -158,7 +158,7 @@ begin
       // Gradient bar
       if Assigned(fGradient) then begin
         for i:=0 to fColorsWidth-1-3 do begin
-          color32:=fGradient.GetColorAt(i,fColorsWidth-3);
+          color32:=fGradient.GetColorAt(i/(fColorsWidth-3));
           VLine(fColorsLeft+i+3,3,Height-6,color32);
           if color32=Settings.ActiveColor then begin
             VLine(fColorsLeft+i+3,Height div 2-3,3,SystemPalette[SYSTEMCOLORLIGHT]);
