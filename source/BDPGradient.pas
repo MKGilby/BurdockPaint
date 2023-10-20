@@ -56,6 +56,10 @@ type
 
     // Load gradient from the specified stream. (see fileformats.txt - GDT-block)
     procedure LoadFromStreamGDT1(pStream:TStream);
+
+    // Log contents
+    procedure LogContents;
+
   private
     fColors:array[1..5] of uint32;
     fColorPositions:array[1..5] of double;
@@ -141,9 +145,6 @@ begin
   fColorPositions[5]:=0.75;
   fSetColor(1,iColor1);
   fSetColor(2,iColor2);
-  Log.Trace('Order:');
-  for i:=0 to length(fOrder)-1 do
-    Log.Trace(Format('  %d. %d',[i+1,fOrder[i]]));
   fReversed:=false;
   fPingpong:=false;
 end;
@@ -238,15 +239,37 @@ begin
   pStream.Read(tmp,4);
   fSetColor(3,tmp);
   pStream.Read(fColorPositions[3],8);
+  if fColorPositions[3]<=0 then fColorPositions[3]:=0.01
+  else if fColorPositions[3]>=1 then fColorPositions[3]:=0.99;
   fUsed[3]:=(flags and FLAGS_COLOR3_USED)=FLAGS_COLOR3_USED;
   pStream.Read(tmp,4);
   fSetColor(4,tmp);
   pStream.Read(fColorPositions[4],8);
+  if fColorPositions[4]<=0 then fColorPositions[4]:=0.01
+  else if fColorPositions[4]>=1 then fColorPositions[4]:=0.99;
   fUsed[4]:=(flags and FLAGS_COLOR4_USED)=FLAGS_COLOR4_USED;
   pStream.Read(tmp,4);
   fSetColor(5,tmp);
   pStream.Read(fColorPositions[5],8);
-  fUsed[4]:=(flags and FLAGS_COLOR5_USED)=FLAGS_COLOR5_USED;
+  if fColorPositions[5]<=0 then fColorPositions[5]:=0.01
+  else if fColorPositions[5]>=1 then fColorPositions[5]:=0.99;
+  fUsed[5]:=(flags and FLAGS_COLOR5_USED)=FLAGS_COLOR5_USED;
+end;
+
+procedure TGradient.LogContents;
+var c:char;i:integer;
+begin
+  Log.LogStatus('-------------------------------');
+  Log.LogStatus('Gradient content loggint starts');
+  Log.LogStatus('');
+  Log.LogStatus(Format('Start color: %.8x',[fColors[1]]));
+  Log.LogStatus(Format('End color  : %.8x',[fColors[2]]));
+  for i:=3 to 5 do begin
+    if fUsed[i] then c:='X' else c:=' ';
+    Log.LogStatus(Format('[%s] Color %d: %.8x, Position: %4.2f',[c,i,fColors[i],fColorPositions[i]]));
+  end;
+  Log.LogStatus('Gradient content loggint ends');
+  Log.LogStatus('-----------------------------');
 end;
 
 procedure TGradient.fSetColor(index:integer; value:uint32);
@@ -322,6 +345,9 @@ begin
       fOrder[j]:=i;
     end;
   end;
+  Log.Trace('Order:');
+  for i:=0 to length(fOrder)-1 do
+    Log.Trace(Format('  %d. %d',[i+1,fOrder[i]]));
 end;
 
 

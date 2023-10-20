@@ -537,10 +537,11 @@ begin
     PARM_COL_SELECTOR_LEFT,
     PARM_COL_SELECTOR_MAIN,
     PARM_COL_SELECTOR_RIGHT:fControls.SetColor(msg.DataInt,msg.DataUInt32);
-    PARM_COL_CCEDIT_LEFT,
-    PARM_COL_CCEDIT_RIGHT,
-    PARM_COL_CCEDIT_ADD1,
-    PARM_COL_CCEDIT_ADD2:begin
+    PARM_COL_GRADEDIT_LEFT,
+    PARM_COL_GRADEDIT_RIGHT,
+    PARM_COL_GRADEDIT_COLOR3,
+    PARM_COL_GRADEDIT_COLOR4,
+    PARM_COL_GRADEDIT_COLOR5:begin
       fGradientEditor.SetColor(msg.DataInt,msg.DataUInt32);
       fGradientEditor.Show;
     end;
