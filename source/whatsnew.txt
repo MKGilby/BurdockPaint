@@ -13,19 +13,15 @@ Todo:
   - Darken
   - Brighten
   - Tint
-- Create GUI for settings:
-  - Autosave/backup:
-    - Max folder size.
-    - Max retention time.
+- Autosave:
+  - Add max file count setting.
+  - Add GUI for settings.
 - PaletteEditor buttons:
   - "Undo" and "Redo" should undo/redo any changes made on the PaletteEditor.
 - GradientEditor:
   - Add Undo/Redo buttons.
   - Make them work.
   - Add Cancel button, it cancels all changes were made since entering the editor.
-  - Make TGradient allow 3rd and 4th color. Make their position movable
-    between 0..1, anything outside this range means this color is not used.
-  - Make GetColorAt and GetColorAtDithered use the 3rd and 4th color.
   - Make window smaller in height.
 - Add an option to make the palette always visible. (Needs a palette control.)
 - Add an option to make the current inks/tools property adjustable on the fly.
@@ -37,6 +33,10 @@ Todo:
   - Current (1280x720 windowed)
   - 1920x1080 fullscreen borderless
 
+
+2023.10.20
+- Gradients can have three inner colors. You can toggle them and set their colors
+  in the GradientEditor. (Their position is not yet changeable, working on it.)
 
 2023.10.16
 - Color clusters now are called Gradients, since they are no longer clusters of
