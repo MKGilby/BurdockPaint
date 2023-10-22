@@ -254,6 +254,7 @@ begin
   if fColorPositions[5]<=0 then fColorPositions[5]:=0.01
   else if fColorPositions[5]>=1 then fColorPositions[5]:=0.99;
   fUsed[5]:=(flags and FLAGS_COLOR5_USED)=FLAGS_COLOR5_USED;
+  SortColors;
 end;
 
 procedure TGradient.LogContents;

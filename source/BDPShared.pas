@@ -298,6 +298,42 @@ begin
   // Don't free images, MM will do that!
 end;
 
+const
+  Knob:string=
+    '....x....' +
+    '...xxx...' +
+    '..xxxxx..' +
+    '.xxx.xxx.' +
+    'xxx...xxx' +
+    'xxx...xxx' +
+    'xxx...xxx' +
+    'xxx...xxx' +
+    'xxx...xxx' +
+    'xxx...xxx' +
+    'xxx...xxx' +
+    'xxx...xxx' +
+    'xxxxxxxxx' +
+    'xxxxxxxxx' +
+    'xxxxxxxxx';
+
+procedure CreateKnob;
+var tmpI:TARGBImage;
+    x,y:integer;
+    c:uint32;
+begin
+  tmpI:=TARGBImage.Create(9,15);
+  for y:=0 to 14 do
+    for x:=0 to 8 do begin
+      case Knob[x+y*9+1] of
+        '.':c:=SystemPalette[3];
+        'x':c:=SystemPalette[2];
+        ' ':c:=0;
+      end;
+      tmpI.PutPixel(x,y,c);
+    end;
+  MM.AddImage(tmpI,'Knob');
+end;
+
 procedure LoadSystemFont(pR,pG,pB:integer;pName:string);
 var Xs:TStream;
 begin
@@ -385,6 +421,7 @@ begin
   InfoBar:=TBDInfoBar.Create;
   Log.LogStatus('  Creating UI gfx...');
   CreateArches;
+  CreateKnob;
   CreateDarkBar;
   ModalOverlay:=TBDModalOverlay.Create;
   MouseObjects.Add(ModalOverlay);
