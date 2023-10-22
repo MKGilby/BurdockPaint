@@ -19,14 +19,11 @@ Todo:
 - PaletteEditor buttons:
   - "Undo" and "Redo" should undo/redo any changes made on the PaletteEditor.
 - GradientEditor:
-  - Add Undo/Redo buttons.
-  - Make them work.
-  - Add Cancel button, it cancels all changes were made since entering the editor.
-  - Make window smaller in height.
+  - Make Undo/Redo buttons work.
 - Add an option to make the palette always visible. (Needs a palette control.)
 - Add an option to make the current inks/tools property adjustable on the fly.
   (Should show a small dialog somewhere at the side of the window).
-- New color cluster selector and editor dialog. Or entire screen.
+- New color cluster selector dialog.
 - Colorpalette should update the infobar with color index and color value.
 - Create Controls as fixed width dialog.
 - Add a few other window sizes and layout:
