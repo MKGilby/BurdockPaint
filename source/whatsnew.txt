@@ -18,8 +18,6 @@ Todo:
   - Add GUI for settings.
 - PaletteEditor buttons:
   - "Undo" and "Redo" should undo/redo any changes made on the PaletteEditor.
-- GradientEditor:
-  - Make Undo/Redo buttons work.
 - Add an option to make the palette always visible. (Needs a palette control.)
 - Add an option to make the current inks/tools property adjustable on the fly.
   (Should show a small dialog somewhere at the side of the window).
@@ -30,6 +28,11 @@ Todo:
   - Current (1280x720 windowed)
   - 1920x1080 fullscreen borderless
 
+
+2023.10.24
+- You can undo/redo color changes in GradientEditor.
+- You can undo/redo ticking/unticking boxes in GradientEditor.
+- You can undo/redo moving knobs in GradientEditor.
 
 2023.10.20
 - Gradients can have three inner colors. You can toggle them and set their colors
