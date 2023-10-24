@@ -5,7 +5,7 @@ unit BDPGradientEditor;
 interface
 
 uses SysUtils, BDPModalDialog, BDPSimpleGradient, BDPCheckBox, BDPButton,
-  BDPColorBox, BDPGradient, BDPSlider2;
+  BDPColorBox, BDPGradient, BDPSlider2, BDPGradientEditorUndo;
 
 type
 
@@ -13,16 +13,23 @@ type
 
   TBDGradientEditor=class(TBDModalDialog)
     constructor Create;
+    destructor Destroy; override;
     procedure SetColor(pTarget:integer;pColor:uint32);
   private
-    fSimpleGradient:TBDSimpleGradient;
     fGradient:TGradient;
+    fSimpleGradient:TBDSimpleGradient;
     fColorBoxes:array[1..5] of TBDColorBox;
     fCheckBoxes:array[3..5] of TBDCheckBox;
     fColorSliders:array[3..5] of TBDSlider2;
+    fUndoButton,
+    fRedoButton:TBDButton;
+    fUndoSystem:TBDGradientEditorUndoSystem;
     procedure ColorBoxClick(Sender:TObject;x,y,buttons:integer);
     procedure CheckBoxChange(Sender:TObject);
     procedure SliderChange(Sender:TObject;value:integer);
+    procedure UndoClick(Sender:TObject;x,y,buttons:integer);
+    procedure RedoClick(Sender:TObject;x,y,buttons:integer);
+    procedure RefreshControls(pKnobsToo:boolean=false);
   end;
 
 implementation
@@ -95,7 +102,7 @@ begin
     CreateColorBox(i,fLeft+58+512+12+3,fTop+30+(36+9)*(i-2),fGradient.Colors[i],'GDE ColorBox '+inttostr(i),Helper[i]);
     CreateColorSlider(i,fLeft+60,fTop+30+(36+9)*(i-2),'GDE Slider '+inttostr(i));
   end;
-//  i:=(GRADIENTEDITORWIDTH-(4*(normalbuttonwidth+9)-9)) div 2;
+
   i:=(GRADIENTEDITORWIDTH div 2-(2*normalbuttonwidth+9)) div 2;
   tmpB:=TBDButton.Create(fLeft+i,fTop+Height-NORMALBUTTONHEIGHT-12,NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,'OK','SAVE GRADIENT');
   tmpB.ZIndex:=MODALDIALOG_ZINDEX+1;
@@ -110,17 +117,25 @@ begin
   AddChild(tmpB);
 
   i:=GRADIENTEDITORWIDTH div 2+(GRADIENTEDITORWIDTH div 2-(2*normalbuttonwidth+9)) div 2;
-  tmpB:=TBDButton.Create(fLeft+i,fTop+Height-NORMALBUTTONHEIGHT-12,NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,'UNDO','UNDO LAST CHANGE');
-  tmpB.ZIndex:=MODALDIALOG_ZINDEX+1;
-  tmpB.Name:='GDE Undo';
-  tmpB.Message:=TMessage.Init(MSG_GRADIENTEDITORRESPONSE,0,0);
-  AddChild(tmpB);
+  fUndoButton:=TBDButton.Create(fLeft+i,fTop+Height-NORMALBUTTONHEIGHT-12,NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,'UNDO','UNDO LAST CHANGE');
+  fUndoButton.ZIndex:=MODALDIALOG_ZINDEX+1;
+  fUndoButton.Name:='GDE Undo';
+  fUndoButton.OnClick:=UndoClick;
+  AddChild(fUndoButton);
 
-  tmpB:=TBDButton.Create(fLeft+i+NORMALBUTTONWIDTH+9,fTop+Height-NORMALBUTTONHEIGHT-12,NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,'REDO','REDO LAST CHANGE');
-  tmpB.ZIndex:=MODALDIALOG_ZINDEX+1;
-  tmpB.Name:='GDE Redo';
-  tmpB.Message:=TMessage.Init(MSG_GRADIENTEDITORRESPONSE,0,0);
-  AddChild(tmpB);
+  fRedoButton:=TBDButton.Create(fLeft+i+NORMALBUTTONWIDTH+9,fTop+Height-NORMALBUTTONHEIGHT-12,NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,'REDO','REDO LAST CHANGE');
+  fRedoButton.ZIndex:=MODALDIALOG_ZINDEX+1;
+  fRedoButton.Name:='GDE Redo';
+  fRedoButton.OnClick:=RedoClick;
+  AddChild(fRedoButton);
+
+  fUndoSystem:=TBDGradientEditorUndoSystem.Create(fGradient);
+end;
+
+destructor TBDGradientEditor.Destroy;
+begin
+  fUndoSystem.Free;
+  inherited Destroy;
 end;
 
 procedure TBDGradientEditor.SetColor(pTarget: integer; pColor: uint32);
@@ -128,27 +143,27 @@ begin
   if pColor<>POSTPROCESSCOLOR then begin
     case pTarget of
       PARM_COL_GRADEDIT_LEFT:begin
-        fColorBoxes[1].Color:=pColor;
+        fUndoSystem.AddColorChangeUndo(1,fGradient.Colors[1],pColor);
         fGradient.Colors[1]:=pColor;
       end;
       PARM_COL_GRADEDIT_RIGHT:begin
-        fColorBoxes[2].Color:=pColor;
+        fUndoSystem.AddColorChangeUndo(2,fGradient.Colors[2],pColor);
         fGradient.Colors[2]:=pColor;
       end;
       PARM_COL_GRADEDIT_COLOR3:begin
-        fColorBoxes[3].Color:=pColor;
+        fUndoSystem.AddColorChangeUndo(3,fGradient.Colors[3],pColor);
         fGradient.Colors[3]:=pColor;
       end;
       PARM_COL_GRADEDIT_COLOR4:begin
-        fColorBoxes[4].Color:=pColor;
+        fUndoSystem.AddColorChangeUndo(4,fGradient.Colors[4],pColor);
         fGradient.Colors[4]:=pColor;
       end;
       PARM_COL_GRADEDIT_COLOR5:begin
-        fColorBoxes[5].Color:=pColor;
+        fUndoSystem.AddColorChangeUndo(5,fGradient.Colors[5],pColor);
         fGradient.Colors[5]:=pColor;
       end;
     end;
-    fSimpleGradient.Refresh;
+    RefreshControls;
   end;
 end;
 
@@ -163,16 +178,54 @@ end;
 procedure TBDGradientEditor.CheckBoxChange(Sender:TObject);
 begin
   if Sender is TBDCheckBox then with Sender as TBDCheckBox do begin
+    fUndoSystem.AddColorUsedChangeUndo(Tag,fGradient.ColorUsed[Tag],Selected);
     fGradient.ColorUsed[Tag]:=Selected;
-    fSimpleGradient.Refresh;
+    RefreshControls;
   end;
 end;
 
 procedure TBDGradientEditor.SliderChange(Sender:TObject; value:integer);
 begin
   if sender is TBDSlider2 then with Sender as TBDSlider2 do begin
+    fUndoSystem.AddColorPositionChangedUndo(Tag,fGradient.ColorPositions[Tag],Position/511);
     fGradient.ColorPositions[Tag]:=Position/511;
-    fSimpleGradient.Refresh;
+    RefreshControls;
+  end;
+end;
+
+procedure TBDGradientEditor.UndoClick(Sender:TObject; x,y,buttons:integer);
+begin
+  if fUndoSystem.CanUndo then begin
+    fUndoSystem.Undo;
+    RefreshControls(true);
+  end;
+end;
+
+procedure TBDGradientEditor.RedoClick(Sender:TObject; x,y,buttons:integer);
+begin
+  if fUndoSystem.CanRedo then begin
+    fUndoSystem.Redo;
+    RefreshControls(true);
+  end;
+end;
+
+procedure TBDGradientEditor.RefreshControls(pKnobsToo:boolean);
+begin
+  fUndoButton.Enabled:=fUndoSystem.CanUndo;
+  fRedoButton.Enabled:=fUndoSystem.CanRedo;
+  fSimpleGradient.Refresh;
+  fColorBoxes[1].Color:=fGradient.Colors[1];
+  fColorBoxes[2].Color:=fGradient.Colors[2];
+  fColorBoxes[3].Color:=fGradient.Colors[3];
+  fColorBoxes[4].Color:=fGradient.Colors[4];
+  fColorBoxes[5].Color:=fGradient.Colors[5];
+  fCheckBoxes[3].Selected:=fGradient.ColorUsed[3];
+  fCheckBoxes[4].Selected:=fGradient.ColorUsed[4];
+  fCheckBoxes[5].Selected:=fGradient.ColorUsed[5];
+  if pKnobsToo then begin
+    fColorSliders[3].Position:=round(fGradient.ColorPositions[3]*511);
+    fColorSliders[4].Position:=round(fGradient.ColorPositions[4]*511);
+    fColorSliders[5].Position:=round(fGradient.ColorPositions[5]*511);
   end;
 end;
 
