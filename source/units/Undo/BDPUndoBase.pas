@@ -57,6 +57,7 @@ type
     procedure SaveToStream(pStream:TStream); virtual;
     procedure LoadFromFile(pFilename:string);
     procedure LoadFromStream(pStream:TStream); virtual;
+    procedure AddItem(pItem:TBDUndoItem);
     function CanUndo:boolean;
     function CanRedo:boolean;
   protected
@@ -161,6 +162,15 @@ end;
 procedure TBDUndoSystem.LoadFromStream(pStream:TStream);
 begin
   // Override only when you want to load undosystem state
+end;
+
+procedure TBDUndoSystem.AddItem(pItem:TBDUndoItem);
+begin
+  if (fPointer<>Self.Count-1) then   // If not the last item, delete items after it.
+    Self.DeleteRange(fPointer+1,Self.Count-1);
+  if Self.Count=Settings.UndoLimit then Self.Delete(0);
+  Self.Add(pItem);
+  fPointer:=Self.Count-1;
 end;
 
 function TBDUndoSystem.CanUndo:boolean;
