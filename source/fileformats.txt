@@ -10,17 +10,17 @@
     Start    Size     Description
       0       3       Data ID. Shows the type of the data the blocks contains.
                       Possible IDs:
-                        PRJ - Project data
-                        IMG - Image data
-                        CLR - Color data
-                        RGN - Region data
-                        CCS - Color clusters data (deprecated)
-                        GDT - Gradients data
-                        USR - UndoSystem data for region
-                        USC - UndoSystem data for color palette
-                        USL - UndoSystem data for gradients
-                        UDR - Undo operation data for region
-                        UDL - Undo operation data for gradients
+                        PRJ        - Project data
+                        IMG        - Image data
+                        CLR or cLR - Color data
+                        RGN or rGN - Region data
+                        CCS        - Color clusters data (deprecated)
+                        GDT or gDT - Gradients data
+                        USR        - UndoSystem data for region
+                        USC        - UndoSystem data for color palette
+                        USL        - UndoSystem data for gradients
+                        UDR        - Undo operation data for region
+                        UDL        - Undo operation data for gradients
       3       1       Version of the block
       4       4       Size of the block without the Data ID and the size.
       8     [Size]    The data in uncompressed or ZLib compressed format.
@@ -28,6 +28,7 @@
   The 5th bit of the first byte of ID shows if the block is compressed or not.
   If it is set, the block is compressed, otherwise not. So if the block ID
   starts with lowercase, it is compressed (cLR), if uppercase it is not (CLR).
+  Not all blocks can be compressed, see list above.
 
   Each file contains exactly one block.
 
