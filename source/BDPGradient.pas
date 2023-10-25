@@ -116,7 +116,7 @@ type
 
 implementation
 
-uses BDPShared, Logger;
+uses BDPShared, Logger, MyZStreamUnit;
 
 const
   COLORCLUSTERSBLOCKID='CCS';
@@ -131,7 +131,6 @@ const
 { TGradient }
 
 constructor TGradient.Create(iColor1,iColor2:uint32);
-var i:integer;
 begin
   fUsed[1]:=true;
   fUsed[2]:=true;
@@ -145,6 +144,9 @@ begin
   fColorPositions[5]:=0.75;
   fSetColor(1,iColor1);
   fSetColor(2,iColor2);
+  fSetColor(3,0);
+  fSetColor(4,0);
+  fSetColor(5,0);
   fReversed:=false;
   fPingpong:=false;
 end;
@@ -375,19 +377,38 @@ begin
 end;
 
 procedure TGradientList.SaveToStream(pStream:TStream);
-var i:integer;curr:int64;s:String;
+var i:integer;curr:int64;s:String;Xs,Ys:TStream;
 begin
   s:=GRADIENTSBLOCKID+#1;
-  pStream.Write(s[1],4);
   curr:=pStream.Position;
   i:=0;
-  pStream.Write(i,4);
-  i:=Self.Count;
-  pStream.Write(i,1);
-  pStream.Write(fActiveIndex,1);
-  for i:=0 to Count-1 do Items[i].SaveToStream(pStream);
-  i:=pStream.Position-curr-4;
+  pStream.Write(i,4);  // ID placeholder
+  pStream.Write(i,4);  // Size placeholder
+
+  Xs:=TMemoryStream.Create;
+  Ys:=TMemoryStream.Create;
+  try
+    i:=Self.Count;
+    Xs.Write(i,1);
+    Xs.Write(fActiveIndex,1);
+    for i:=0 to Count-1 do Items[i].SaveToStream(Xs);
+    Xs.Position:=0;
+    CompressStream(Xs,Ys,Xs.Size);
+    if Ys.Size<Xs.Size then begin   // Compressed is smaller
+      Ys.Position:=0;
+      pStream.CopyFrom(Ys,Ys.Size);
+      s[1]:=chr(ord(s[1]) or $20);
+    end else begin
+      Xs.Position:=0;
+      pStream.CopyFrom(Xs,Xs.Size);
+    end;
+  finally
+    Ys.Free;
+    Xs.Free;
+  end;
+  i:=pStream.Position-curr-8;
   pStream.Position:=curr;
+  pStream.Write(s[1],4);
   pStream.write(i,4);
   pStream.Position:=pStream.Position+i;
 end;
@@ -402,30 +423,48 @@ end;
 
 procedure TGradientList.LoadFromStream(pStream:TStream);
 var size,curr:int64;count:integer;s:string;
-    tmp:TGradient;mode:(mCCS1,mGDT1);
+    mode:(mCCS1,mGDT1);
+    Xs:TStream;
 begin
   s:=#0#0#0#0;
   pStream.Read(s[1],4);
   mode:=mGDT1;
-  if UpperCase(copy(s,1,3))=COLORCLUSTERSBLOCKID then mode:=mCCS1
-  else if UpperCase(copy(s,1,3))=GRADIENTSBLOCKID then mode:=mGDT1
+  if UpperCase(copy(s,1,3))=COLORCLUSTERSBLOCKID then begin
+    if ord(s[4])=1 then
+      mode:=mCCS1
+    else
+      raise Exception.Create(Format('Unknown CCS block version! (%d)',[ord(s[4])]));
+  end
+  else if UpperCase(copy(s,1,3))=GRADIENTSBLOCKID then begin
+    if ord(s[4])=1 then
+      mode:=mGDT1
+    else
+      raise Exception.Create(Format('Unknown GDT block version! (%d)',[ord(s[4])]));
+  end
   else raise Exception.Create(Format('Gradients block ID expected, got %s)',[copy(s,1,3)]));
-  if ord(s[1]) and $20<>0 then Exception.Create('Gradients block cannot be compressed!');
-
   size:=0;
   pStream.Read(Size,4);
   curr:=pStream.Position;
 
-  count:=0;
-  pStream.Read(count,1);
-  fActiveIndex:=0;
-  pStream.Read(fActiveIndex,1);
-  Clear;
-  while count>0 do begin
-    if mode=mCCS1 then tmp:=TGradient.CreateFromStreamCCS1(pStream)
-    else if mode=mGDT1 then tmp:=TGradient.CreateFromStreamGDT1(pStream);
-    Add(tmp);
-    dec(count);
+  Xs:=TMemoryStream.Create;
+  try
+    if ord(s[1]) and $20=$20 then
+      UnCompressStream(pStream,Xs)
+    else
+      Xs.CopyFrom(pStream,Size);
+    Xs.Position:=0;
+    count:=0;
+    Xs.Read(count,1);
+    fActiveIndex:=0;
+    Xs.Read(fActiveIndex,1);
+    Clear;
+    while count>0 do begin
+      if mode=mCCS1 then Add(TGradient.CreateFromStreamCCS1(Xs))
+      else if mode=mGDT1 then Add(TGradient.CreateFromStreamGDT1(Xs));
+      dec(count);
+    end;
+  finally
+    Xs.Free
   end;
   pStream.Position:=curr+size;
 end;
