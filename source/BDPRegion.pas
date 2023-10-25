@@ -18,7 +18,7 @@
   BurdockPaint. If not, see <https://www.gnu.org/licenses/>.
 }
 
-unit BDPImage;
+unit BDPRegion;
 
 {$mode Delphi}
 
@@ -249,8 +249,11 @@ procedure TBDRegion.SaveToFile(pFilename:string);
 var Xs:TStream;
 begin
   Xs:=TFileStream.Create(pFilename,fmCreate);
-  SaveToStream(Xs);
-  FreeAndNil(Xs);
+  try
+    SaveToStream(Xs);
+  finally
+    Xs.Free;
+  end;
 end;
 
 procedure TBDRegion.SaveToStream(Target:TStream);
@@ -263,24 +266,27 @@ begin
   Target.Write(i,4);  // Size placeholder
 
   Xs:=TMemoryStream.Create;
-  Xs.Write(fLeft,2);
-  Xs.Write(fTop,2);
-  Xs.Write(Width,2);
-  Xs.Write(Height,2);
-  Xs.Write(Rawdata^,Width*Height*4);
-  Xs.Position:=0;
   Ys:=TMemoryStream.Create;
-  CompressStream(Xs,Ys,Xs.Size);
-  if Xs.Size<=Ys.Size then begin
+  try
+    Xs.Write(fLeft,2);
+    Xs.Write(fTop,2);
+    Xs.Write(Width,2);
+    Xs.Write(Height,2);
+    Xs.Write(Rawdata^,Width*Height*4);
     Xs.Position:=0;
-    Target.CopyFrom(Xs,Xs.Size);
-  end else begin
-    s[1]:=chr(ord(s[1]) or $20);
-    Ys.Position:=0;
-    Target.CopyFrom(Ys,Ys.Size);
+    CompressStream(Xs,Ys,Xs.Size);
+    if Xs.Size<=Ys.Size then begin
+      Xs.Position:=0;
+      Target.CopyFrom(Xs,Xs.Size);
+    end else begin
+      s[1]:=chr(ord(s[1]) or $20);
+      Ys.Position:=0;
+      Target.CopyFrom(Ys,Ys.Size);
+    end;
+  finally
+    Ys.Free;
+    Xs.Free;
   end;
-  FreeAndNil(Ys);
-  FreeAndNil(Xs);
   i:=Target.Position-curr-8;
   Target.Position:=curr;
   Target.Write(s[1],4);
@@ -292,8 +298,11 @@ procedure TBDRegion.LoadFromFile(pFilename:string);
 var Xs:TStream;
 begin
   Xs:=TFileStream.Create(pFilename,fmOpenRead or fmShareDenyNone);
-  LoadFromStream(Xs);
-  FreeAndNil(Xs);
+  try
+    LoadFromStream(Xs);
+  finally
+    Xs.Free;
+  end;
 end;
 
 procedure TBDRegion.LoadFromStream(Source:TStream);
@@ -309,19 +318,22 @@ begin
   b:=ord(s[4]);
   if b=1 then begin
     Xs:=TMemoryStream.Create;
-    if ord(s[1]) and $20<>0 then
-      UnCompressStream(Source,Xs)
-    else
-      Xs.CopyFrom(Source,Size);
-    Xs.Position:=0;
-    Xs.Read(fLeft,2);
-    Xs.Read(fTop,2);
-    Xs.Read(fWidth,2);
-    Xs.Read(fHeight,2);
-    Freemem(fRawdata);
-    fRawdata:=Getmem(fWidth*fHeight*4);
-    Xs.Read(fRawdata^,fWidth*fHeight*4);
-    FreeAndNil(Xs);
+    try
+      if ord(s[1]) and $20<>0 then
+        UnCompressStream(Source,Xs)
+      else
+        Xs.CopyFrom(Source,Size);
+      Xs.Position:=0;
+      Xs.Read(fLeft,2);
+      Xs.Read(fTop,2);
+      Xs.Read(fWidth,2);
+      Xs.Read(fHeight,2);
+      Freemem(fRawdata);
+      fRawdata:=Getmem(fWidth*fHeight*4);
+      Xs.Read(fRawdata^,fWidth*fHeight*4);
+    finally
+      Xs.Free;
+    end;
   end else raise Exception.Create(Format('Invalid region block version! (%d)',[b]));
   Source.Position:=curr+size;
   fChanged:=false;

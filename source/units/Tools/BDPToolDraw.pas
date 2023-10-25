@@ -25,7 +25,7 @@ unit BDPToolDraw;
 interface
 
 uses
-  SysUtils, BDPToolBase, BDPImage;
+  SysUtils, BDPToolBase, BDPRegion;
 
 type
 

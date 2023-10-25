@@ -25,7 +25,7 @@ unit BDPRegionUndo;
 interface
 
 uses
-  Classes, SysUtils, BDPUndoBase, BDPImage;
+  Classes, SysUtils, BDPUndoBase, BDPRegion;
 
 type
 

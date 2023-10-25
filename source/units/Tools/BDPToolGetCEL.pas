@@ -43,7 +43,7 @@ type
 
 implementation
 
-uses sdl2, BDPShared, BDPImage;
+uses sdl2, BDPShared, BDPRegion;
 
 { TBDToolGetCEL }
 

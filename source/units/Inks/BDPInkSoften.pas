@@ -24,7 +24,7 @@ unit BDPInkSoften;
 
 interface
 
-uses BDPInkBase, BDPImage;
+uses BDPInkBase, BDPRegion;
 
 type
 

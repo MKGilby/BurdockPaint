@@ -128,7 +128,7 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="BDPImage.pas"/>
+        <Filename Value="BDPRegion.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>

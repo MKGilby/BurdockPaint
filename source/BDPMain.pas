@@ -87,7 +87,7 @@ type
 implementation
 
 uses Classes, SDL2, BDPShared, MKToolbox, MKStream, MKMouse2, Logger,
-  MAD4MidLevelUnit, ParametersUnit, BDPKeyMapping, BDPSettings, BDPImage,
+  MAD4MidLevelUnit, ParametersUnit, BDPKeyMapping, BDPSettings, BDPRegion,
   BDPProject;
 
 

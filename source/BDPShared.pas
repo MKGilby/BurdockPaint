@@ -26,7 +26,7 @@ interface
 
 uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, PNGFont2Unit, MKMouse2,
   BDPInfoBar, BDPPalette, BDPMessage, BDPCursor, BDPSettings, BDPToolBase,
-  BDPInkBase, BDPImage, BDPProject, BDPColorEditor, BDPModalDialog;
+  BDPInkBase, BDPRegion, BDPProject, BDPColorEditor, BDPModalDialog;
 
 const
   WINDOWWIDTH=1280;

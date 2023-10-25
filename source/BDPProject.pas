@@ -25,7 +25,7 @@ unit BDPProject;
 interface
 
 uses
-  Classes, SysUtils, fgl, BDPImage, BDPGradient, BDPPalette,
+  Classes, SysUtils, fgl, BDPRegion, BDPGradient, BDPPalette,
   BDPRegionUndo;
 
 type
