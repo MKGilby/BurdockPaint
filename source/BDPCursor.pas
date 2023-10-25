@@ -98,7 +98,7 @@ begin
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.x:=x+4;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
-        r.x:=x;r.y:=y-4;r.w:=2;r.h:=2;
+        r.x:=x;r.y:=y-4;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.y:=y+4;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
@@ -133,7 +133,7 @@ begin
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.x:=x+8;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
-        r.x:=x;r.y:=y-8;r.w:=4;r.h:=4;
+        r.x:=x;r.y:=y-8;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.y:=y+8;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
@@ -168,7 +168,7 @@ begin
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.x:=x+16;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
-        r.x:=x;r.y:=y-16;r.w:=8;r.h:=8;
+        r.x:=x;r.y:=y-16;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.y:=y+16;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
@@ -203,7 +203,7 @@ begin
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.x:=x+32;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
-        r.x:=x;r.y:=y-32;r.w:=16;r.h:=16;
+        r.x:=x;r.y:=y-32;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.y:=y+32;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
