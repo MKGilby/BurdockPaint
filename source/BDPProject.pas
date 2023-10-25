@@ -30,9 +30,9 @@ uses
 
 type
 
-  { TBDExtendedImage }
+  { TBDImage }
 
-  TBDExtendedImage=class
+  TBDImage=class
     // Creates a new empty 320x200 image with the NTSC.COL palette,
     // creates empty UndoSystems and default gradients.
     constructor Create; overload;
@@ -53,21 +53,21 @@ type
     // Clears undo/redo data
     procedure ClearUndoData;
   private
-    fImage:TBDRegion;
+    fRegion:TBDRegion;
     fPalette:TBDPalette;
-    fImageUndoSystem:TBDImageUndoSystem;
+    fRegionUndoSystem:TBDRegionUndoSystem;
 //    fPaletteUndoSystem:TBDPaletteUndoSystem;
     fGradients:TGradientList;
     procedure LoadFromStreamV1(pStream:TStream);
   public
-    property Image:TBDRegion read fImage;
+    property Region:TBDRegion read fRegion;
     property Palette:TBDPalette read fPalette;
-    property ImageUndo:TBDImageUndoSystem read fImageUndoSystem;
+    property RegionUndo:TBDRegionUndoSystem read fRegionUndoSystem;
 //    property PaletteUndo:TBDPaletteUndoSystem read fPaletteUndoSystem;
     property Gradients:TGradientList read fGradients;
   end;
 
-  TBDExtendedImages=class(TFPGObjectList<TBDExtendedImage>);
+  TBDImageList=class(TFPGObjectList<TBDImage>);
 
   { TBDProject }
 
@@ -94,22 +94,22 @@ type
     procedure Clean;
   private
     fCurrentImageIndex:integer;
-    fImages:TBDExtendedImages;
+    fImages:TBDImageList;
     // Only needed in-program, but must be the same size as the current image.
     fOverlayImage:TBDRegion;
     fCELImage:TBDRegion;
     procedure LoadFromStreamV1(pStream:TStream);
     procedure fSetCurrentImageIndex(value:integer);
-    function fGetCurrentImage:TBDRegion;
+    function fGetCurrentRegion:TBDRegion;
     function fGetCurrentPalette:TBDPalette;
     function fGetCurrentGradientList:TGradientList;
-    function fGetCurrentExtImage:TBDExtendedImage;
+    function fGetCurrentImage:TBDImage;
   public
-    property Images:TBDExtendedImages read fImages;
+    property Images:TBDImageList read fImages;
     property CurrentImageIndex:integer read fCurrentImageIndex write fSetCurrentImageIndex;
     property OverlayImage:TBDRegion read fOverlayImage;
-    property CurrentExtImage:TBDExtendedImage read fGetCurrentExtImage;
-    property CurrentImage:TBDRegion read fGetCurrentImage;
+    property CurrentImage:TBDImage read fGetCurrentImage;
+    property CurrentRegion:TBDRegion read fGetCurrentRegion;
     property CurrentPalette:TBDPalette read fGetCurrentPalette;
     property CurrentGradientList:TGradientList read fGetCurrentGradientList;
     property CELImage:TBDRegion read fCELImage write fCELImage;
@@ -123,23 +123,23 @@ const
   IMAGEBLOCKID='IMG';
   PROJECTBLOCKID='PRJ';
 
-{ TBDExtendedImage }
+{ TBDImage }
 
-constructor TBDExtendedImage.Create;
+constructor TBDImage.Create;
 begin
   Create(320,200);
 end;
 
-constructor TBDExtendedImage.Create(iWidth,iHeight:integer);
+constructor TBDImage.Create(iWidth,iHeight:integer);
 begin
-  fImage:=TBDRegion.Create(iWidth,iHeight);
+  fRegion:=TBDRegion.Create(iWidth,iHeight);
   fPalette:=TBDPalette.Create(256);
-  fImageUndoSystem:=TBDImageUndoSystem.Create;
+  fRegionUndoSystem:=TBDRegionUndoSystem.Create;
 //  fPaletteUndoSystem:=TBDPaletteUndoSystem.Create;
   fGradients:=TGradientList.Create;
 end;
 
-constructor TBDExtendedImage.CreateFromStream(iStream:TStream);
+constructor TBDImage.CreateFromStream(iStream:TStream);
 var curr,size:int64;b:byte;s:string;
 begin
   s:=#0#0#0#0;
@@ -155,23 +155,23 @@ begin
   else raise Exception.Create(Format('Unknown image data version! (%d)',[b]));
   iStream.Position:=curr+size;
 
-  if not Assigned(fImageUndoSystem) then fImageUndoSystem:=TBDImageUndoSystem.Create;
+  if not Assigned(fRegionUndoSystem) then fRegionUndoSystem:=TBDRegionUndoSystem.Create;
 //  if not Assigned(fPaletteUndoSystem) then fPaletteUndoSystem:=TBDPaletteUndoSystem.Create;
   if not Assigned(fGradients) then fGradients:=TGradientList.Create;
 
 end;
 
-destructor TBDExtendedImage.Destroy;
+destructor TBDImage.Destroy;
 begin
-  if Assigned(fImage) then fImage.Free;
+  if Assigned(fRegion) then fRegion.Free;
   if Assigned(fPalette) then fPalette.Free;
   if Assigned(fGradients) then fGradients.Free;
-  if Assigned(fImageUndoSystem) then fImageUndoSystem.Free;
+  if Assigned(fRegionUndoSystem) then fRegionUndoSystem.Free;
 //  if Assigned(fPaletteUndoSystem) then fPaletteUndoSystem.Free;
   inherited Destroy;
 end;
 
-procedure TBDExtendedImage.SaveToStream(pStream:TStream);
+procedure TBDImage.SaveToStream(pStream:TStream);
 var i,curr:int64;flags:byte;s:string;
 begin
   s:=IMAGEBLOCKID+#1;
@@ -181,14 +181,14 @@ begin
   pStream.Write(i,4);  // Size placeholder
 
   flags:=0;
-  if fImageUndoSystem.Count>0 then flags:=flags or 2;
+  if fRegionUndoSystem.Count>0 then flags:=flags or 2;
 //  if fPaletteUndoSystem.Count>0 then flags:=flags or 4;
   if fGradients.Count>0 then flags:=flags or 8;
   pStream.Write(flags,1);
 
   fPalette.SaveToStream(pStream);
-  fImage.SaveToStream(pStream);
-  if fImageUndoSystem.Count>0 then fImageUndoSystem.SaveToStream(pStream);
+  fRegion.SaveToStream(pStream);
+  if fRegionUndoSystem.Count>0 then fRegionUndoSystem.SaveToStream(pStream);
 //  if fPaletteUndoSystem.Count>0 then fPaletteUndoSystem.SaveToStream(pStream);
   if fGradients.Count>0 then fGradients.SaveToStream(pStream);
 
@@ -198,20 +198,20 @@ begin
   pStream.Position:=pStream.Position+i;
 end;
 
-procedure TBDExtendedImage.ClearUndoData;
+procedure TBDImage.ClearUndoData;
 begin
-  fImageUndoSystem.Clear;
+  fRegionUndoSystem.Clear;
 //  fPaletteUndoSystem.Clear;
 end;
 
-procedure TBDExtendedImage.LoadFromStreamV1(pStream:TStream);
+procedure TBDImage.LoadFromStreamV1(pStream:TStream);
 var flags:byte;
 begin
   flags:=0;
   pStream.Read(flags,1);
   fPalette:=TBDPalette.CreateFromStream(pStream);
-  fImage:=TBDRegion.CreateFromStream(pStream);
-  if flags and 2<>0 then fImageUndoSystem:=TBDImageUndoSystem.CreateFromStream(pStream);
+  fRegion:=TBDRegion.CreateFromStream(pStream);
+  if flags and 2<>0 then fRegionUndoSystem:=TBDRegionUndoSystem.CreateFromStream(pStream);
 //  if flags and 4<>0 then fPaletteUndoSystem:=TBDPaletteUndoSystem.CreateFromStream(pStream);
   if flags and 8<>0 then fGradients:=TGradientList.CreateFromStream(pStream);
 end;
@@ -221,10 +221,10 @@ end;
 
 constructor TBDProject.Create;
 begin
-  fImages:=TBDExtendedImages.Create;
-  fImages.Add(TBDExtendedImage.Create);
+  fImages:=TBDImageList.Create;
+  fImages.Add(TBDImage.Create);
   fCurrentImageIndex:=0;
-  fOverlayImage:=TBDRegion.Create(fImages[0].Image.Width,fImages[0].Image.Height);
+  fOverlayImage:=TBDRegion.Create(fImages[0].Region.Width,fImages[0].Region.Height);
   fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
   fCELImage:=nil;
 end;
@@ -233,14 +233,17 @@ constructor TBDProject.CreateFromFile(iFilename:String);
 var Xs:TStream;
 begin
   Xs:=TFileStream.Create(iFilename,fmOpenRead or fmShareDenyWrite);
-  CreateFromStream(Xs);
-  Xs.Free;
+  try
+    CreateFromStream(Xs);
+  finally
+    Xs.Free;
+  end;
 end;
 
 constructor TBDProject.CreateFromStream(iStream:TStream);
 var curr,size:int64;b:byte;s:String;
 begin
-  fImages:=TBDExtendedImages.Create;
+  fImages:=TBDImageList.Create;
   s:=#0#0#0#0;
   iStream.Read(s[1],4);
   if uppercase(copy(s,1,3))<>PROJECTBLOCKID then raise Exception.Create(Format('Project block ID expected, got %s!',[copy(s,1,3)]));
@@ -253,11 +256,11 @@ begin
   else raise Exception.Create(Format('Unknown project data version! (%d)',[b]));
   iStream.Position:=curr+size;
 
-  if fImages.Count=0 then fImages.Add(TBDExtendedImage.Create);
+  if fImages.Count=0 then fImages.Add(TBDImage.Create);
 
   if (fCurrentImageIndex<0) or (fCurrentImageIndex>=fImages.Count) then
     fCurrentImageIndex:=0;
-  fOverlayImage:=TBDRegion.Create(fImages[fCurrentImageIndex].Image.Width,fImages[fCurrentImageIndex].Image.Height);
+  fOverlayImage:=TBDRegion.Create(fImages[fCurrentImageIndex].Region.Width,fImages[fCurrentImageIndex].Region.Height);
   fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
 end;
 
@@ -273,8 +276,11 @@ procedure TBDProject.SaveToFile(pFilename:string);
 var Xs:TStream;
 begin
   Xs:=TFileStream.Create(pFilename,fmCreate);
-  SaveToStream(Xs);
-  Xs.Free;
+  try
+    SaveToStream(Xs);
+  finally
+    Xs.Free;
+  end;
 end;
 
 procedure TBDProject.SaveToStream(pStream:TStream);
@@ -306,7 +312,7 @@ end;
 procedure TBDProject.Clean;
 var i:integer;
 begin
-  if Assigned(fCELImage) then fCELImage.Free;
+  if Assigned(fCELImage) then FreeAndNil(fCELImage);
   for i:=0 to fImages.Count-1 do fImages[i].ClearUndoData;
 end;
 
@@ -320,7 +326,7 @@ begin
   fCurrentImageIndex:=0;
   pStream.Read(fCurrentImageIndex,2);
   while count>0 do begin
-    fImages.Add(TBDExtendedImage.CreateFromStream(pStream));
+    fImages.Add(TBDImage.CreateFromStream(pStream));
     dec(count);
   end;
   if flags and 1<>0 then fCELImage:=TBDRegion.CreateFromStream(pStream);
@@ -330,14 +336,14 @@ procedure TBDProject.fSetCurrentImageIndex(value:integer);
 begin
   if (value<>fCurrentImageIndex) and (value>=0) and (value<fImages.Count) then begin
     fCurrentImageIndex:=value;
-    fOverlayImage.Recreate(fImages[fCurrentImageIndex].Image.Width,fImages[fCurrentImageIndex].Image.Height);
+    fOverlayImage.Recreate(fImages[fCurrentImageIndex].Region.Width,fImages[fCurrentImageIndex].Region.Height);
     fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
   end;
 end;
 
-function TBDProject.fGetCurrentImage:TBDRegion;
+function TBDProject.fGetCurrentRegion:TBDRegion;
 begin
-  Result:=fImages[fCurrentImageIndex].Image;
+  Result:=fImages[fCurrentImageIndex].Region;
 end;
 
 function TBDProject.fGetCurrentPalette:TBDPalette;
@@ -350,7 +356,7 @@ begin
   Result:=fImages[fCurrentImageIndex].Gradients;
 end;
 
-function TBDProject.fGetCurrentExtImage:TBDExtendedImage;
+function TBDProject.fGetCurrentImage:TBDImage;
 begin
   Result:=fImages[fCurrentImageIndex];
 end;

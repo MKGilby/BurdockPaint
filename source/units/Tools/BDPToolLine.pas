@@ -82,15 +82,15 @@ begin
             Top:=fSY;
             Height:=y-fSY+1;
           end;
-          Project.CurrentExtImage.ImageUndo.AddImageUndo(Left,Top,Width,Height);
+          Project.CurrentImage.RegionUndo.AddImageUndo(Left,Top,Width,Height);
           ActiveInk.InitializeArea(fSX,fSY,x,y);
           if ActiveInk.SupportsOnTheFly then
             DrawLineWithInk(fSX,fSY,x,y)
           else begin
-            Project.CurrentImage.Line(fSX,fSY,fX,fY,POSTPROCESSCOLOR);
+            Project.CurrentRegion.Line(fSX,fSY,fX,fY,POSTPROCESSCOLOR);
             ActiveInk.PostProcess;
           end;
-          Project.CurrentExtImage.ImageUndo.AddImageRedoToLastUndo(Left,Top,Width,Height);
+          Project.CurrentImage.RegionUndo.AddImageRedoToLastUndo(Left,Top,Width,Height);
           Result:=true;
           fState:=0;
           InfoBar.ShowText('');
@@ -188,7 +188,7 @@ begin
   nondiag_inc := b + b;
   diag_inc    := b + b - a - a;
   for i := 0 to a do begin   {draw the a+1 pixels}
-    Project.CurrentImage.PutPixel(x,y,ActiveInk.GetColorAt(x,y));
+    Project.CurrentRegion.PutPixel(x,y,ActiveInk.GetColorAt(x,y));
     if d < 0 then begin
       x := x + dx_nondiag;
       y := y + dy_nondiag;

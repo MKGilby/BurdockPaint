@@ -333,12 +333,12 @@ end;
 
 procedure TBDControls.UndoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
-  Project.CurrentExtImage.ImageUndo.Undo;
+  Project.CurrentImage.RegionUndo.Undo;
 end;
 
 procedure TBDControls.RedoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
-  Project.CurrentExtImage.ImageUndo.Redo;
+  Project.CurrentImage.RegionUndo.Redo;
 end;
 
 procedure TBDControls.ActiveImageChange(Sender:TObject; newvalue:integer);
@@ -353,8 +353,8 @@ begin
   Result:=false;
   case msg.TypeID of
     MSG_SETIMAGEUNDOREDOBUTTON:begin
-      fUndoButton.Enabled:=Project.CurrentExtImage.ImageUndo.CanUndo;
-      fRedoButton.Enabled:=Project.CurrentExtImage.ImageUndo.CanRedo;
+      fUndoButton.Enabled:=Project.CurrentImage.RegionUndo.CanUndo;
+      fRedoButton.Enabled:=Project.CurrentImage.RegionUndo.CanRedo;
       Result:=true;
     end;
     MSG_PROJECTIMAGECOUNTCHANGED:begin

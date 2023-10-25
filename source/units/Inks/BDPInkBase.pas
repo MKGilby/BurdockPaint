@@ -124,8 +124,8 @@ var i,j:integer;
 begin
   for j:=fTop to fTop+fHeight-1 do
     for i:=fLeft to fLeft+fWidth-1 do
-      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
-        Project.CurrentImage.PutPixel(i,j,GetColorAt(i,j));
+      if Project.CurrentRegion.GetPixel(i,j)=POSTPROCESSCOLOR then
+        Project.CurrentRegion.PutPixel(i,j,GetColorAt(i,j));
 end;
 
 procedure TBDInk.Configure;
@@ -142,7 +142,7 @@ begin
       for i:=0 to Project.CELImage.Width-1 do
         if not Settings.ClearKeyColor or
            (Settings.ClearKeyColor and (Project.CELImage.GetPixel(i,j)<>$FF000000)) then
-        Project.CurrentImage.PutPixel(px+i,py+j,POSTPROCESSCOLOR);
+        Project.CurrentRegion.PutPixel(px+i,py+j,POSTPROCESSCOLOR);
     PostProcess;
   end;
 end;

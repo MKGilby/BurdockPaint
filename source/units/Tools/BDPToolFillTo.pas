@@ -62,7 +62,7 @@ begin
   if button=SDL_BUTTON_LEFT then
     case fstate of
       0:begin
-          fSourceColor:=Project.CurrentImage.GetPixel(x,y);
+          fSourceColor:=Project.CurrentRegion.GetPixel(x,y);
           fState:=1;
           Result:=true;
         end;
@@ -72,16 +72,16 @@ begin
           fRight:=x;
           fBottom:=y;
 
-          fTempImage:=TBDRegion.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
-          fTempImage.PutImage(0,0,Project.CurrentImage);
+          fTempImage:=TBDRegion.Create(Project.CurrentRegion.Width,Project.CurrentRegion.Height);
+          fTempImage.PutImage(0,0,Project.CurrentRegion);
 
           FillToWithPostProcessColor(x,y);
-          Project.CurrentExtImage.ImageUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+          Project.CurrentImage.RegionUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
           FreeAndNil(fTempImage);
 
           ActiveInk.InitializeArea(fLeft,fTop,fRight,fBottom);
           ActiveInk.PostProcess;
-          Project.CurrentExtImage.ImageUndo.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
+          Project.CurrentImage.RegionUndo.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
           fState:=0;
           Result:=true;
         end;
@@ -112,27 +112,27 @@ var i,j,ic:integer;w:boolean;
   function FFCheckPixel(x,y:integer):boolean;
   begin
     Result:=false;
-    if (y>0) and (Project.CurrentImage.GetPixel(x,y-1)<>fSourceColor) and
-      (Project.CurrentImage.GetPixel(x,y-1)<>POSTPROCESSCOLOR) then begin
-      Project.CurrentImage.PutPixel(x,y-1,POSTPROCESSCOLOR);
+    if (y>0) and (Project.CurrentRegion.GetPixel(x,y-1)<>fSourceColor) and
+      (Project.CurrentRegion.GetPixel(x,y-1)<>POSTPROCESSCOLOR) then begin
+      Project.CurrentRegion.PutPixel(x,y-1,POSTPROCESSCOLOR);
       if y-1<fTop then fTop:=y-1;
       Result:=true;
     end;
-    if (x<Project.CurrentImage.Width-1) and (Project.CurrentImage.GetPixel(x+1,y)<>fSourceColor) and
-      (Project.CurrentImage.GetPixel(x+1,y)<>POSTPROCESSCOLOR) then begin
-      Project.CurrentImage.PutPixel(x+1,y,POSTPROCESSCOLOR);
+    if (x<Project.CurrentRegion.Width-1) and (Project.CurrentRegion.GetPixel(x+1,y)<>fSourceColor) and
+      (Project.CurrentRegion.GetPixel(x+1,y)<>POSTPROCESSCOLOR) then begin
+      Project.CurrentRegion.PutPixel(x+1,y,POSTPROCESSCOLOR);
       if x+1>fRight then fRight:=x+1;
       Result:=true;
     end;
-    if (y<Project.CurrentImage.Height-1) and (Project.CurrentImage.GetPixel(x,y+1)<>fSourceColor) and
-      (Project.CurrentImage.GetPixel(x,y+1)<>POSTPROCESSCOLOR) then begin
-      Project.CurrentImage.PutPixel(x,y+1,POSTPROCESSCOLOR);
+    if (y<Project.CurrentRegion.Height-1) and (Project.CurrentRegion.GetPixel(x,y+1)<>fSourceColor) and
+      (Project.CurrentRegion.GetPixel(x,y+1)<>POSTPROCESSCOLOR) then begin
+      Project.CurrentRegion.PutPixel(x,y+1,POSTPROCESSCOLOR);
       if y+1>fBottom then fBottom:=y+1;
       Result:=true;
     end;
-    if (x>0) and (Project.CurrentImage.GetPixel(x-1,y)<>fSourceColor) and
-      (Project.CurrentImage.GetPixel(x-1,y)<>POSTPROCESSCOLOR) then begin
-      Project.CurrentImage.PutPixel(x-1,y,POSTPROCESSCOLOR);
+    if (x>0) and (Project.CurrentRegion.GetPixel(x-1,y)<>fSourceColor) and
+      (Project.CurrentRegion.GetPixel(x-1,y)<>POSTPROCESSCOLOR) then begin
+      Project.CurrentRegion.PutPixel(x-1,y,POSTPROCESSCOLOR);
       if x-1<fLeft then fLeft:=x-1;
       Result:=true;
     end;
@@ -140,7 +140,7 @@ var i,j,ic:integer;w:boolean;
 
 begin
   if fSourceColor=POSTPROCESSCOLOR then exit;
-  Project.CurrentImage.PutPixel(x,y,POSTPROCESSCOLOR);
+  Project.CurrentRegion.PutPixel(x,y,POSTPROCESSCOLOR);
   ic:=0;
   repeat
     w:=false;
@@ -151,7 +151,7 @@ begin
           while j<=fBottom do begin
             i:=fLeft;
             while i<=fRight do begin
-              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if Project.CurrentRegion.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j) then w:=true;
               inc(i);
             end;
@@ -163,7 +163,7 @@ begin
           while j>=fTop do begin
             i:=fLeft;
             while i<=fRight do begin
-              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if Project.CurrentRegion.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j) then w:=true;
               inc(i);
             end;
@@ -175,7 +175,7 @@ begin
           while j>=fTop do begin
             i:=fRight;
             while i>=fLeft do begin
-              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if Project.CurrentRegion.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j) then w:=true;
               dec(i);
             end;
@@ -187,7 +187,7 @@ begin
           while j<=fBottom do begin
             i:=fRight;
             while i>=fLeft do begin
-              if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+              if Project.CurrentRegion.GetPixel(i,j)=POSTPROCESSCOLOR then
                 if FFCheckPixel(i,j) then w:=true;
               dec(i);
             end;

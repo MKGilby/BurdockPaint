@@ -58,14 +58,14 @@ procedure TBDInkSoften.InitializeAreaWH(pLeft,pTop,pWidth,pHeight:integer);
 begin
   inherited ;
   fTempImage:=TBDRegion.Create(fWidth,fHeight);
-  fTempImage.PutImagePart(0,0,fLeft,fTop,fWidth,fHeight,Project.CurrentImage);
+  fTempImage.PutImagePart(0,0,fLeft,fTop,fWidth,fHeight,Project.CurrentRegion);
 end;
 
 procedure TBDInkSoften.InitializeArea(pX1,pY1,pX2,pY2:integer);
 begin
   inherited ;
   fTempImage:=TBDRegion.Create(fWidth,fHeight);
-  fTempImage.PutImagePart(0,0,fLeft,fTop,fWidth,fHeight,Project.CurrentImage);
+  fTempImage.PutImagePart(0,0,fLeft,fTop,fWidth,fHeight,Project.CurrentRegion);
 end;
 
 function TBDInkSoften.GetColorAt(pX,pY:integer):uint32;
@@ -116,8 +116,8 @@ var i,j:integer;
 begin
   for j:=fTop to fTop+fHeight-1 do
     for i:=fLeft to fLeft+fWidth-1 do
-      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
-        Project.CurrentImage.PutPixel(i,j,GetColorAt(i,j));
+      if Project.CurrentRegion.GetPixel(i,j)=POSTPROCESSCOLOR then
+        Project.CurrentRegion.PutPixel(i,j,GetColorAt(i,j));
   if Assigned(fTempImage) then fTempImage.Free;
 end;
 

@@ -59,23 +59,23 @@ begin
   SegmentRight:=i;
   repeat
     inc(SegmentRight);
-  until (SegmentRight>=Project.CurrentImage.Width) or (Project.CurrentImage.GetPixel(SegmentRight,j)<>POSTPROCESSCOLOR);
+  until (SegmentRight>=Project.CurrentRegion.Width) or (Project.CurrentRegion.GetPixel(SegmentRight,j)<>POSTPROCESSCOLOR);
   Result:=SegmentRight-i-1;
   dec(SegmentRight);
   if Result>0 then begin
     if Settings.DitherGradients then begin
       while i<SegmentRight+1 do begin
-        Project.CurrentImage.PutPixel(i,j,Project.CurrentGradientList.ActiveGradient.GetColorAtDithered((i-SegmentLeft)/(Result+1)));
+        Project.CurrentRegion.PutPixel(i,j,Project.CurrentGradientList.ActiveGradient.GetColorAtDithered((i-SegmentLeft)/(Result+1)));
         inc(i);
       end;
     end else begin
       while i<SegmentRight+1 do begin
-        Project.CurrentImage.PutPixel(i,j,Project.CurrentGradientList.ActiveGradient.GetColorAt((i-SegmentLeft)/(Result+1)));
+        Project.CurrentRegion.PutPixel(i,j,Project.CurrentGradientList.ActiveGradient.GetColorAt((i-SegmentLeft)/(Result+1)));
         inc(i);
       end;
     end;
   end else begin
-    Project.CurrentImage.PutPixel(i,j,Project.CurrentGradientList.ActiveGradient.GetColorAt(0.5));
+    Project.CurrentRegion.PutPixel(i,j,Project.CurrentGradientList.ActiveGradient.GetColorAt(0.5));
   end;
 end;
 
@@ -85,7 +85,7 @@ begin
   for j:=fTop to fTop+fHeight-1 do begin
     i:=fLeft;
     while i<=fLeft+fWidth-1 do begin
-      if Project.CurrentImage.GetPixel(i,j)=POSTPROCESSCOLOR then
+      if Project.CurrentRegion.GetPixel(i,j)=POSTPROCESSCOLOR then
         i+=ProcessSegment(i,j);
       inc(i);
     end;

@@ -62,9 +62,9 @@ begin
     fRight:=x;
     fBottom:=y;
     // Create temporary image.
-    fTempImage:=TBDRegion.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
+    fTempImage:=TBDRegion.Create(Project.CurrentRegion.Width,Project.CurrentRegion.Height);
     // Copy current image to temporary image.
-    fTempImage.PutImage(0,0,Project.CurrentImage);
+    fTempImage.PutImage(0,0,Project.CurrentRegion);
     // Process Fill on temporary image.
     fTempImage.FloodFill(x,y,POSTPROCESSCOLOR);
     // Scan affected area.
@@ -77,17 +77,17 @@ begin
           if fBottom<j then fBottom:=j;
         end;
     // Create Undo operation with the still unchanged image.
-    Project.CurrentExtImage.ImageUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
+    Project.CurrentImage.RegionUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
     // Initialize ink with affected area. (Current image still unchanged.)
     ActiveInk.InitializeArea(fLeft,fTop,fRight,fBottom);
     // Copy affected area from temporary image to current image.
-    Project.CurrentImage.PutImagePart(fLeft,fTop,fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+    Project.CurrentRegion.PutImagePart(fLeft,fTop,fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
     // Free temporory image.
     fTempImage.Free;
     // PostProcess with ink.
     ActiveInk.PostProcess;
     // Add Redo image to undo operation.
-    Project.CurrentExtImage.ImageUndo.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
+    Project.CurrentImage.RegionUndo.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
     Result:=true;
   end else Result:=false;
 end;

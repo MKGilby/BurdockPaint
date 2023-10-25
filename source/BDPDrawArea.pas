@@ -111,13 +111,13 @@ end;
 procedure TBDDrawArea.CenterImage;
 begin
   if not(fZoomLevel in [1..MAXZOOMLEVEL]) then exit;
-  fZoomLeft:=((Project.CurrentImage.Width*fZoomTimes)-WindowWidth) div 2 div fZoomTimes;
-  fZoomTop:=((Project.CurrentImage.Height*fZoomTimes)-WindowHeight) div 2 div fZoomTimes;
+  fZoomLeft:=((Project.CurrentRegion.Width*fZoomTimes)-WindowWidth) div 2 div fZoomTimes;
+  fZoomTop:=((Project.CurrentRegion.Height*fZoomTimes)-WindowHeight) div 2 div fZoomTimes;
 end;
 
 procedure TBDDrawArea.Draw;
 begin
-  Project.CurrentImage.RenderToTexture(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
+  Project.CurrentRegion.RenderToTexture(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
   ActiveTool.Draw;
   if (ActiveTool.Name='PUTCEL') or (ActiveTool.Name='SHOWCEL') then
     CELHelperImage.RenderToTextureAsOverlay(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
@@ -188,15 +188,15 @@ begin
   fCursorY:=y;
   fFrameX:=MouseXToFrame(x);
   fFrameY:=MouseYToFrame(y);
-  if (fFrameX>=0) and (fFrameX<Project.CurrentImage.Width) then
+  if (fFrameX>=0) and (fFrameX<Project.CurrentRegion.Width) then
     DrawAreaX:=fFrameX
   else
     DrawAreaX:=-1;
-  if (fFrameY>=0) and (fFrameY<Project.CurrentImage.Height) then
+  if (fFrameY>=0) and (fFrameY<Project.CurrentRegion.Height) then
     DrawAreaY:=fFrameY
   else
     DrawAreaY:=-1;
-  if (DrawAreaX>=0) and (DrawAreaY>=0) then ColorUnderMouse:=Project.CurrentImage.GetPixel(DrawAreaX,DrawAreaY);
+  if (DrawAreaX>=0) and (DrawAreaY>=0) then ColorUnderMouse:=Project.CurrentRegion.GetPixel(DrawAreaX,DrawAreaY);
   ActiveTool.Move(fFrameX,fFrameY);
   if not ActiveTool.MouseMove(fFrameX,fFrameY,buttons) then begin
     if fMousePanning=mpWaitMove then fMousePanning:=mpPanning;

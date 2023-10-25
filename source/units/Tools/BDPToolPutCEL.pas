@@ -73,10 +73,10 @@ begin
           fState:=-1;
           Project.CelImage.Left:=Project.CelImage.Left+fX-fSX;
           Project.CelImage.Top:=Project.CelImage.Top+fY-fSY;
-          Project.CurrentExtImage.ImageUndo.AddImageUndo(
+          Project.CurrentImage.RegionUndo.AddImageUndo(
             Project.CelImage.Left,Project.Celimage.Top,Project.CelImage.Width,Project.CELImage.Height);
           ActiveInk.ProcessWithCEL(Project.CelImage.Left,Project.CelImage.Top);
-          Project.CurrentExtImage.ImageUndo.AddImageRedoToLastUndo(Project.CelImage.Left,Project.Celimage.Top,Project.CelImage.Width,Project.CELImage.Height);
+          Project.CurrentImage.RegionUndo.AddImageRedoToLastUndo(Project.CelImage.Left,Project.Celimage.Top,Project.CelImage.Width,Project.CELImage.Height);
           MessageQueue.AddMessage(MSG_RESTORECONTROLS);
         end;
     end;

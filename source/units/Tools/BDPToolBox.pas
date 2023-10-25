@@ -71,24 +71,24 @@ begin
       1:begin
           if fSX>x then begin i:=x;x:=fSX;fSX:=i;end;
           if fSY>y then begin i:=y;y:=fSY;fSY:=i;end;
-          Project.CurrentExtImage.ImageUndo.AddImageUndo(fSX,fSY,x-fSX+1,y-fSY+1);
+          Project.CurrentImage.RegionUndo.AddImageUndo(fSX,fSY,x-fSX+1,y-fSY+1);
           ActiveInk.InitializeArea(fSX,fSY,x,y);
           if Settings.FillShapes then begin
             if ActiveInk.SupportsOnTheFly then
               DrawBarWithInk(fSX,fSY,x,y)
             else begin
-              Project.CurrentImage.Bar(fSX,fSY,x-fSX+1,y-fSY+1,POSTPROCESSCOLOR);
+              Project.CurrentRegion.Bar(fSX,fSY,x-fSX+1,y-fSY+1,POSTPROCESSCOLOR);
               ActiveInk.PostProcess;
             end;
           end else begin
             if ActiveInk.SupportsOnTheFly then
               DrawRectangleWithInk(fSX,fSY,x,y)
             else begin
-              Project.CurrentImage.Rectangle(fSX,fSY,x-fSX+1,y-fSY+1,POSTPROCESSCOLOR);
+              Project.CurrentRegion.Rectangle(fSX,fSY,x-fSX+1,y-fSY+1,POSTPROCESSCOLOR);
               ActiveInk.PostProcess;
             end;
           end;
-          Project.CurrentExtImage.ImageUndo.AddImageRedoToLastUndo(fSX,fSY,x-fSX+1,y-fSY+1);
+          Project.CurrentImage.RegionUndo.AddImageRedoToLastUndo(fSX,fSY,x-fSX+1,y-fSY+1);
           InfoBar.ShowText('');
           fState:=0;
           Result:=true;
@@ -141,7 +141,7 @@ begin
   if y1>y2 then begin i:=y1;y1:=y2;y2:=i;end;
   for j:=y1 to y2 do
     for i:=x1 to x2 do
-      Project.CurrentImage.PutPixel(i,j,ActiveInk.GetColorAt(i,j));
+      Project.CurrentRegion.PutPixel(i,j,ActiveInk.GetColorAt(i,j));
 end;
 
 procedure TBDToolBox.DrawRectangleWithInk(x1,y1,x2,y2:integer);
@@ -151,12 +151,12 @@ begin
   if x1>x2 then begin i:=x1;x1:=x2;x2:=i;end;
   if y1>y2 then begin i:=y1;y1:=y2;y2:=i;end;
   for i:=y1 to y2 do begin
-    Project.CurrentImage.PutPixel(x1,i,ActiveInk.GetColorAt(x1,i));
-    Project.CurrentImage.PutPixel(x2,i,ActiveInk.GetColorAt(x2,i));
+    Project.CurrentRegion.PutPixel(x1,i,ActiveInk.GetColorAt(x1,i));
+    Project.CurrentRegion.PutPixel(x2,i,ActiveInk.GetColorAt(x2,i));
   end;
   for i:=x1+1 to x2-1 do begin
-    Project.CurrentImage.PutPixel(i,y1,ActiveInk.GetColorAt(i,y1));
-    Project.CurrentImage.PutPixel(i,y2,ActiveInk.GetColorAt(i,y2));
+    Project.CurrentRegion.PutPixel(i,y1,ActiveInk.GetColorAt(i,y1));
+    Project.CurrentRegion.PutPixel(i,y2,ActiveInk.GetColorAt(i,y2));
   end;
 end;
 

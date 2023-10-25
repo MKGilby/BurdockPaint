@@ -86,7 +86,7 @@ begin
     if (DrawAreaX>=0) and (DrawAreaY>=0) then begin
       MM.Fonts['Black'].OutText('X='+inttostr(DrawAreaX),fLeft+fCenterX,fTop+12,1);
       MM.Fonts['Black'].OutText('Y='+inttostr(DrawAreaY),fLeft+fCenterX,fTop+42,1);
-      c:=Project.CurrentImage.GetPixel(DrawAreaX,DrawAreaY);
+      c:=Project.CurrentRegion.GetPixel(DrawAreaX,DrawAreaY);
       MM.Fonts['SmallBlack'].OutText(HexStr((c and $ff000000)>>24,2),fLeft+fCenterA,fTop+77,1);
       MM.Fonts['SmallBlack'].OutText(HexStr((c and $ff0000)>>16,2),fLeft+fCenterR,fTop+77,1);
       MM.Fonts['SmallBlack'].OutText(HexStr((c and $ff00)>>8,2),fLeft+fCenterG,fTop+77,1);

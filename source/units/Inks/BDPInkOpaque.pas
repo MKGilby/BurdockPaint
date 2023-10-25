@@ -59,9 +59,9 @@ end;
 procedure TBDInkOpaque.ProcessWithCEL(pX,pY:integer);
 begin
   if Settings.ClearKeyColor then
-    Project.CurrentImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,$FF000000)
+    Project.CurrentRegion.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,$FF000000)
   else
-    Project.CurrentImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage);
+    Project.CurrentRegion.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage);
 end;
 
 end.

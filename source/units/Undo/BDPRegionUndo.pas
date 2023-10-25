@@ -46,9 +46,9 @@ type
   end;
 
 
-  { TBDImageUndoSystem }
+  { TBDRegionUndoSystem }
 
-  TBDImageUndoSystem=class(TBDUndoSystem)
+  TBDRegionUndoSystem=class(TBDUndoSystem)
     constructor Create;
     procedure AddImageUndo(Left,Top,Width,Height:integer;Image:TBDRegion=nil);
     procedure AddImageRedoToLastUndo(Left,Top,Width,Height:integer);
@@ -95,13 +95,13 @@ end;
 
 procedure TBDRegionUndoItem.Undo;
 begin
-  Project.CurrentImage.PutImage(fBefore.Left,fBefore.Top,fBefore);
+  Project.CurrentRegion.PutImage(fBefore.Left,fBefore.Top,fBefore);
 end;
 
 procedure TBDRegionUndoItem.Redo;
 begin
   if Assigned(fAfter) then
-    Project.CurrentImage.PutImage(fAfter.Left,fAfter.Top,fAfter);
+    Project.CurrentRegion.PutImage(fAfter.Left,fAfter.Top,fAfter);
 end;
 
 procedure TBDRegionUndoItem.SaveToStream(pStream:TStream);
@@ -148,15 +148,15 @@ begin
 end;
 
 
-{ TBDImageUndoSystem }
+{ TBDRegionUndoSystem }
 
-constructor TBDImageUndoSystem.Create;
+constructor TBDRegionUndoSystem.Create;
 begin
   inherited Create;
   fAfterUndoRedoMessage:=TMessage.Init(MSG_SETIMAGEUNDOREDOBUTTON,0,0);
 end;
 
-procedure TBDImageUndoSystem.AddImageUndo(Left,Top,Width,Height:integer;Image:TBDRegion);
+procedure TBDRegionUndoSystem.AddImageUndo(Left,Top,Width,Height:integer;Image:TBDRegion);
 var atm:TBDRegionUndoItem;atmi:TBDRegion;
 begin
   if (fPointer<>Self.Count-1) then   // If not the last item, delete items after it.
@@ -166,7 +166,7 @@ begin
   atmi.Left:=Left;
   atmi.Top:=Top;
   if Image=nil then
-    atmi.PutImagePart(0,0,Left,Top,Width,Height,Project.CurrentImage)
+    atmi.PutImagePart(0,0,Left,Top,Width,Height,Project.CurrentRegion)
   else
     atmi.PutImagePart(0,0,Left,Top,Width,Height,Image);
   atm:=TBDRegionUndoItem.Create(atmi);
@@ -175,7 +175,7 @@ begin
   MessageQueue.AddMessage(fAfterUndoRedoMessage);
 end;
 
-procedure TBDImageUndoSystem.AddImageRedoToLastUndo(Left,Top,Width,Height:integer);
+procedure TBDRegionUndoSystem.AddImageRedoToLastUndo(Left,Top,Width,Height:integer);
 var atmi:TBDRegion;
 begin
   if fPointer>-1 then begin
@@ -183,14 +183,14 @@ begin
       atmi:=TBDRegion.Create(Width,Height);
       atmi.Left:=Left;
       atmi.Top:=Top;
-      atmi.PutImagePart(0,0,Left,Top,Width,Height,Project.CurrentImage);
+      atmi.PutImagePart(0,0,Left,Top,Width,Height,Project.CurrentRegion);
       TBDRegionUndoItem(Self[fPointer]).AddAfter(atmi);
       MessageQueue.AddMessage(fAfterUndoRedoMessage);
     end;
   end;
 end;
 
-procedure TBDImageUndoSystem.SaveToStream(pStream:TStream);
+procedure TBDRegionUndoSystem.SaveToStream(pStream:TStream);
 var i:integer;curr:int64;s:string;
 begin
   s:=UNDOSYSTEMREGIONBLOCKID+#1;
@@ -209,7 +209,7 @@ begin
   pStream.Position:=pStream.Position+i;
 end;
 
-procedure TBDImageUndoSystem.LoadFromStream(pStream:TStream);
+procedure TBDRegionUndoSystem.LoadFromStream(pStream:TStream);
 var size,curr:int64;b:byte;count,i:integer;s:string;
 begin
   s:=#0#0#0#0;

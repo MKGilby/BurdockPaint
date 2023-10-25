@@ -364,17 +364,17 @@ procedure TMain.NewImage;
 begin
   case MessageBox('NEW IMAGE','Where to place new image?','First;Last;Insert;Cancel') of
     0:begin
-        Project.Images.Insert(0,TBDExtendedImage.Create);
+        Project.Images.Insert(0,TBDImage.Create);
         Project.CurrentImageIndex:=0;
         MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
       end;
     1:begin
-        Project.Images.Add(TBDExtendedImage.Create);
+        Project.Images.Add(TBDImage.Create);
         Project.CurrentImageIndex:=Project.Images.Count-1;
         MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
       end;
     2:begin
-        Project.Images.Insert(Project.CurrentImageIndex,TBDExtendedImage.Create);
+        Project.Images.Insert(Project.CurrentImageIndex,TBDImage.Create);
         MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
       end;
   end;
@@ -387,9 +387,9 @@ begin
     0:begin
         Xs:=TMemoryStream.Create;
         try
-          Project.CurrentImage.SaveToStream(Xs);
+          Project.CurrentRegion.SaveToStream(Xs);
           Xs.Position:=0;
-          Project.Images.Insert(0,TBDExtendedImage.CreateFromStream(Xs));
+          Project.Images.Insert(0,TBDImage.CreateFromStream(Xs));
         finally
           Xs.Free;
         end;
@@ -399,9 +399,9 @@ begin
     1:begin
         Xs:=TMemoryStream.Create;
         try
-          Project.CurrentImage.SaveToStream(Xs);
+          Project.CurrentRegion.SaveToStream(Xs);
           Xs.Position:=0;
-          Project.Images.Add(TBDExtendedImage.CreateFromStream(Xs));
+          Project.Images.Add(TBDImage.CreateFromStream(Xs));
         finally
           Xs.Free
         end;
@@ -411,9 +411,9 @@ begin
     2:begin
         Xs:=TMemoryStream.Create;
         try
-          Project.CurrentImage.SaveToStream(Xs);
+          Project.CurrentRegion.SaveToStream(Xs);
           Xs.Position:=0;
-          Project.Images.Insert(Project.CurrentImageIndex,TBDExtendedImage.CreateFromStream(Xs));
+          Project.Images.Insert(Project.CurrentImageIndex,TBDImage.CreateFromStream(Xs));
         finally
           Xs.Free;
         end;
@@ -436,9 +436,9 @@ end;
 
 procedure TMain.ClearImage;
 begin
-  Project.CurrentExtImage.ImageUndo.AddImageUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);
-  Project.CurrentImage.Bar(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height,$FF000000);
-  Project.CurrentExtImage.ImageUndo.AddImageRedoToLastUndo(0,0,Project.CurrentImage.Width,Project.CurrentImage.Height);
+  Project.CurrentImage.RegionUndo.AddImageUndo(0,0,Project.CurrentRegion.Width,Project.CurrentRegion.Height);
+  Project.CurrentRegion.Bar(0,0,Project.CurrentRegion.Width,Project.CurrentRegion.Height,$FF000000);
+  Project.CurrentImage.RegionUndo.AddImageRedoToLastUndo(0,0,Project.CurrentRegion.Width,Project.CurrentRegion.Height);
 end;
 
 procedure TMain.GetCEL;
@@ -555,8 +555,8 @@ begin
   SDL_GetMouseState(@mx,@my);
   mx:=fDrawArea.MouseXToFrame(mx);
   my:=fDrawArea.MouseYToFrame(my);
-  if (mx>=0) and (mx<Project.CurrentImage.Width) and (my>=0) and (my<Project.CurrentImage.Height) then
-    Settings.ActiveColor:=Project.CurrentImage.GetPixel(mx,my);
+  if (mx>=0) and (mx<Project.CurrentRegion.Width) and (my>=0) and (my<Project.CurrentRegion.Height) then
+    Settings.ActiveColor:=Project.CurrentRegion.GetPixel(mx,my);
 end;
 
 

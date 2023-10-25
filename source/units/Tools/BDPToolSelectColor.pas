@@ -60,8 +60,8 @@ end;
 procedure TBDToolSelectColor.Move(x,y:integer);
 begin
   inherited Move(x,y);
-  if (fX>=0) and (fX<Project.CurrentImage.Width) and (fY>=0) and (fY<Project.CurrentImage.Height) then
-    SetColor(Project.CurrentImage.GetPixel(fX,fY),'CLOSE PAL. ED.')
+  if (fX>=0) and (fX<Project.CurrentRegion.Width) and (fY>=0) and (fY<Project.CurrentRegion.Height) then
+    SetColor(Project.CurrentRegion.GetPixel(fX,fY),'CLOSE PAL. ED.')
   else
     SetColor(0);
 end;
@@ -69,8 +69,8 @@ end;
 function TBDToolSelectColor.Click(x,y,button:integer):boolean;
 begin
   if button=SDL_BUTTON_LEFT then begin
-    if (x>=0) and (x<Project.CurrentImage.Width) and (y>=0) and (y<Project.CurrentImage.Height) then
-      Settings.ActiveColor:=Project.CurrentImage.GetPixel(x,y);
+    if (x>=0) and (x<Project.CurrentRegion.Width) and (y>=0) and (y<Project.CurrentRegion.Height) then
+      Settings.ActiveColor:=Project.CurrentRegion.GetPixel(x,y);
   end else
   if button=SDL_BUTTON_RIGHT then begin
     MessageQueue.AddMessage(MSG_COLOREDITORRESP);

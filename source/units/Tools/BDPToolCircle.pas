@@ -70,7 +70,7 @@ begin
         end;
       1:begin
           r:=round(sqrt(sqr(fSX-x)+sqr(fSY-y)));
-          Project.CurrentExtImage.ImageUndo.AddImageUndo(fSX-r,fSY-r,r*2+1,r*2+1);
+          Project.CurrentImage.RegionUndo.AddImageUndo(fSX-r,fSY-r,r*2+1,r*2+1);
           ActiveInk.InitializeArea(fSX-r,fSY-r,fSX+r,fSY+r);
           if ActiveInk.SupportsOnTheFly then begin
             if Settings.FillShapes then
@@ -79,12 +79,12 @@ begin
               DrawCircleWithInk(fSX,fSY,r)
           end else begin
             if Settings.FillShapes then
-              Project.CurrentImage.FilledCircle(fSX,fSY,r,POSTPROCESSCOLOR)
+              Project.CurrentRegion.FilledCircle(fSX,fSY,r,POSTPROCESSCOLOR)
             else
-              Project.CurrentImage.Circle(fSX,fSY,r,POSTPROCESSCOLOR);
+              Project.CurrentRegion.Circle(fSX,fSY,r,POSTPROCESSCOLOR);
             ActiveInk.PostProcess;
           end;
-          Project.CurrentExtImage.ImageUndo.AddImageRedoToLastUndo(fSX-r,fSY-r,r*2+1,r*2+1);
+          Project.CurrentImage.RegionUndo.AddImageRedoToLastUndo(fSX-r,fSY-r,r*2+1,r*2+1);
           InfoBar.ShowText('');
           Result:=true;
           fState:=0;
@@ -138,14 +138,14 @@ procedure TBDToolCircle.DrawCircleWithInk(cx,cy,r:integer);
 
   procedure PutPixel8(x,y:integer);
   begin
-    Project.CurrentImage.PutPixel(cx+x, cy+y, ActiveInk.GetColorAt(cx+x, cy+y));
-    Project.CurrentImage.PutPixel(cx-x, cy+y, ActiveInk.GetColorAt(cx-x, cy+y));
-    Project.CurrentImage.PutPixel(cx+x, cy-y, ActiveInk.GetColorAt(cx+x, cy-y));
-    Project.CurrentImage.PutPixel(cx-x, cy-y, ActiveInk.GetColorAt(cx-x, cy-y));
-    Project.CurrentImage.PutPixel(cx+y, cy+x, ActiveInk.GetColorAt(cx+y, cy+x));
-    Project.CurrentImage.PutPixel(cx-y, cy+x, ActiveInk.GetColorAt(cx-y, cy+x));
-    Project.CurrentImage.PutPixel(cx+y, cy-x, ActiveInk.GetColorAt(cx+y, cy-x));
-    Project.CurrentImage.PutPixel(cx-y, cy-x, ActiveInk.GetColorAt(cx-y, cy-x));
+    Project.CurrentRegion.PutPixel(cx+x, cy+y, ActiveInk.GetColorAt(cx+x, cy+y));
+    Project.CurrentRegion.PutPixel(cx-x, cy+y, ActiveInk.GetColorAt(cx-x, cy+y));
+    Project.CurrentRegion.PutPixel(cx+x, cy-y, ActiveInk.GetColorAt(cx+x, cy-y));
+    Project.CurrentRegion.PutPixel(cx-x, cy-y, ActiveInk.GetColorAt(cx-x, cy-y));
+    Project.CurrentRegion.PutPixel(cx+y, cy+x, ActiveInk.GetColorAt(cx+y, cy+x));
+    Project.CurrentRegion.PutPixel(cx-y, cy+x, ActiveInk.GetColorAt(cx-y, cy+x));
+    Project.CurrentRegion.PutPixel(cx+y, cy-x, ActiveInk.GetColorAt(cx+y, cy-x));
+    Project.CurrentRegion.PutPixel(cx-y, cy-x, ActiveInk.GetColorAt(cx-y, cy-x));
   end;
 
 var x,y,d:integer;
@@ -176,12 +176,12 @@ procedure TBDToolCircle.DrawFilledCircleWithInk(cx,cy,r:integer);
   var i:integer;
   begin
     for i:=-x to +x do begin
-      Project.CurrentImage.PutPixel(cx+i,cy+y,ActiveInk.GetColorAt(cx+i,cy+y));
-      Project.CurrentImage.PutPixel(cx+i,cy-y,ActiveInk.GetColorAt(cx+i,cy-y));
+      Project.CurrentRegion.PutPixel(cx+i,cy+y,ActiveInk.GetColorAt(cx+i,cy+y));
+      Project.CurrentRegion.PutPixel(cx+i,cy-y,ActiveInk.GetColorAt(cx+i,cy-y));
     end;
     for i:=-y to +y do begin
-      Project.CurrentImage.PutPixel(cx+i,cy+x,ActiveInk.GetColorAt(cx+i,cy+x));
-      Project.CurrentImage.PutPixel(cx+i,cy-x,ActiveInk.GetColorAt(cx+i,cy-x));
+      Project.CurrentRegion.PutPixel(cx+i,cy+x,ActiveInk.GetColorAt(cx+i,cy+x));
+      Project.CurrentRegion.PutPixel(cx+i,cy-x,ActiveInk.GetColorAt(cx+i,cy-x));
     end;
   end;
 

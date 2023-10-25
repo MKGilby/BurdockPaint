@@ -72,7 +72,7 @@ begin
           if y<fSY then begin i:=y;y:=fSY;fSY:=i;end;
           if Assigned(Project.CELImage) then Project.CELImage.Free;
           Project.CELImage:=TBDRegion.Create(x-fSX+1,y-fSY+1);
-          Project.CELImage.PutImagePart(0,0,fSX,fSY,x-fSX+1,y-fSY+1,Project.CurrentImage);
+          Project.CELImage.PutImagePart(0,0,fSX,fSY,x-fSX+1,y-fSY+1,Project.CurrentRegion);
           Project.CELImage.Left:=fSX;
           Project.CELImage.Top:=fSY;
           fState:=-1;

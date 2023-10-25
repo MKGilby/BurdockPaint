@@ -56,16 +56,16 @@ var i,j,cnt:integer;sc:uint32;
   fTempImage:TBDRegion;
 begin
   if button=SDL_BUTTON_LEFT then begin
-    fTempImage:=TBDRegion.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
-    fTempImage.PutImage(0,0,Project.CurrentImage);
-    fLeft:=Project.CurrentImage.Width;
+    fTempImage:=TBDRegion.Create(Project.CurrentRegion.Width,Project.CurrentRegion.Height);
+    fTempImage.PutImage(0,0,Project.CurrentRegion);
+    fLeft:=Project.CurrentRegion.Width;
     fRight:=-1;
-    fTop:=Project.CurrentImage.Height;
+    fTop:=Project.CurrentRegion.Height;
     fBottom:=-1;
-    sc:=Project.CurrentImage.GetPixel(x,y);
-    for j:=0 to Project.CurrentImage.Height-1 do
-      for i:=0 to Project.CurrentImage.Width-1 do
-        if Project.CurrentImage.GetPixel(i,j)=sc then begin
+    sc:=Project.CurrentRegion.GetPixel(x,y);
+    for j:=0 to Project.CurrentRegion.Height-1 do
+      for i:=0 to Project.CurrentRegion.Width-1 do
+        if Project.CurrentRegion.GetPixel(i,j)=sc then begin
           cnt:=0;
           if (i>0) then begin
             if (j>0) and (fTempImage.GetPixel(i-1,j-1)=sc) then inc(cnt);
@@ -80,18 +80,18 @@ begin
             if (j<fTempImage.Height-1) and (fTempImage.GetPixel(i+1,j+1)=sc) then inc(cnt);
           end;
           if cnt<8 then begin
-            Project.CurrentImage.Putpixel(i,j,POSTPROCESSCOLOR);
+            Project.CurrentRegion.Putpixel(i,j,POSTPROCESSCOLOR);
             if i>fRight then fRight:=i;
             if i<fLeft then fLeft:=i;
             if j>fBottom then fBottom:=j;
             if j<fTop then fTop:=j;
           end;
         end;
-    Project.CurrentExtImage.ImageUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+    Project.CurrentImage.RegionUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
     FreeAndNil(fTempImage);
     ActiveInk.InitializeArea(fLeft,fTop,fRight,fBottom);
     ActiveInk.PostProcess;
-    Project.CurrentExtImage.ImageUndo.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
+    Project.CurrentImage.RegionUndo.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
     Result:=true;
   end else Result:=false;
 end;

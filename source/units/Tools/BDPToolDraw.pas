@@ -59,9 +59,9 @@ end;
 function TBDToolDraw.MouseDown(x,y,button:integer):boolean;
 begin
   if button=SDL_BUTTON_LEFT then begin
-    fTempImage:=TBDRegion.Create(Project.CurrentImage.Width,Project.CurrentImage.Height);
-    fTempImage.PutImage(0,0,Project.CurrentImage);
-    Project.CurrentImage.PutPixel(x,y,ActiveInk.GetColorAt(x,y));
+    fTempImage:=TBDRegion.Create(Project.CurrentRegion.Width,Project.CurrentRegion.Height);
+    fTempImage.PutImage(0,0,Project.CurrentRegion);
+    Project.CurrentRegion.PutPixel(x,y,ActiveInk.GetColorAt(x,y));
     Result:=true;
     fLeft:=x;
     fTop:=y;
@@ -78,9 +78,9 @@ function TBDToolDraw.MouseUp(x,y,button:integer):boolean;
 begin
   if fDown then begin
     fDown:=false;
-    Project.CurrentExtImage.ImageUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
+    Project.CurrentImage.RegionUndo.AddImageUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1,fTempImage);
     FreeAndNil(fTempImage);
-    Project.CurrentExtImage.ImageUndo.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
+    Project.CurrentImage.RegionUndo.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
     Result:=true;
   end else Result:=false;
 end;
@@ -88,7 +88,7 @@ end;
 function TBDToolDraw.MouseMove(x,y,button:integer):boolean;
 begin
   if fDown then begin
-    Project.CurrentImage.PutPixel(x,y,ActiveInk.GetColorAt(x,y));
+    Project.CurrentRegion.PutPixel(x,y,ActiveInk.GetColorAt(x,y));
     if fLeft>x then fLeft:=x;
     if fTop>y then fTop:=y;
     if fRight<x then fRight:=x;
