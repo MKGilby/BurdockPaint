@@ -263,7 +263,7 @@ procedure TGradient.LogContents;
 var c:char;i:integer;
 begin
   Log.LogStatus('-------------------------------');
-  Log.LogStatus('Gradient content loggint starts');
+  Log.LogStatus('Gradient content logging starts');
   Log.LogStatus('');
   Log.LogStatus(Format('Start color: %.8x',[fColors[1]]));
   Log.LogStatus(Format('End color  : %.8x',[fColors[2]]));
@@ -271,7 +271,7 @@ begin
     if fUsed[i] then c:='X' else c:=' ';
     Log.LogStatus(Format('[%s] Color %d: %.8x, Position: %4.2f',[c,i,fColors[i],fColorPositions[i]]));
   end;
-  Log.LogStatus('Gradient content loggint ends');
+  Log.LogStatus('Gradient content logging ends');
   Log.LogStatus('-----------------------------');
 end;
 
