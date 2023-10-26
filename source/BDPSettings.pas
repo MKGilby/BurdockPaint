@@ -115,7 +115,7 @@ begin
   fSelectedInks[0]:='OPAQUE';
   fSelectedInks[1]:='H GRAD';
   fSelectedInks[2]:='V GRAD';
-  fSelectedInks[3]:='ADD';
+  fSelectedInks[3]:='SOFTEN';
   fSelectedInks[4]:='L GRAD';
   fSelectedInks[5]:='C GRAD';
   fActiveInk:=0;
@@ -159,7 +159,7 @@ begin
   fSelectedInks[0]:=INI.ReadString('BasicControls','Ink0','OPAQUE');
   fSelectedInks[1]:=INI.ReadString('BasicControls','Ink1','H GRAD');
   fSelectedInks[2]:=INI.ReadString('BasicControls','Ink2','V GRAD');
-  fSelectedInks[3]:=INI.ReadString('BasicControls','Ink3','ADD');
+  fSelectedInks[3]:=INI.ReadString('BasicControls','Ink3','SOFTEN');
   fSelectedInks[4]:=INI.ReadString('BasicControls','Ink4','L GRAD');
   fSelectedInks[5]:=INI.ReadString('BasicControls','Ink5','C GRAD');
   fActiveInk:=INI.ReadInteger('BasicControls','ActiveInk',0);
