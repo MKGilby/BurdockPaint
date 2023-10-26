@@ -29,14 +29,24 @@ Todo:
   - 1920x1080 fullscreen borderless
 
 
+2023.10.26
+- OpenCEL can open BMPs.
+- CEL can be saved as BMP.
+- BUGFIX: Tried to use a non-existing ink when no INI file was found.
+- BUGFIX: Selecting a color in the gradient removes the color indicator from
+  ColorSelector.
+
+2023.10.25
+- GDT block can be compressed from now.
+
 2023.10.24
 - You can undo/redo color changes in GradientEditor.
 - You can undo/redo ticking/unticking boxes in GradientEditor.
 - You can undo/redo moving knobs in GradientEditor.
 
 2023.10.20
-- Gradients can have three inner colors. You can toggle them and set their colors
-  in the GradientEditor. (Their position is not yet changeable, working on it.)
+- Gradients can have three inner colors. You can toggle them, set their colors
+  and position in the GradientEditor.
 
 2023.10.16
 - Color clusters now are called Gradients, since they are no longer clusters of
