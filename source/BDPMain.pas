@@ -153,9 +153,9 @@ begin
   fGradientEditor:=TBDGradientEditor.Create;
   MouseObjects.List;
 
-  fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','All supported file|*.bdc;*.cel;*.png;*.tga|CEL files|*.bdc|Legacy CEL files|*.cel|PNG files|*.png|TGA files|*.tga');
+  fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','All supported file|*.bdc;*.cel;*.png;*.tga;*.bmp|CEL files|*.bdc|Legacy CEL files|*.cel|PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
   fOpenProjectDialog:=CreateOpenDialog('OpenProjectDialog','Open Project','Project files|*.bpprj');
-  fSaveCELDialog:=CreateSaveDialog('SaveCELDialog','Save CEL','CEL files|*.bdc|PNG files|*.png|TGA files|*.tga');
+  fSaveCELDialog:=CreateSaveDialog('SaveCELDialog','Save CEL','PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
   fSaveProjectDialog:=CreateSaveDialog('SaveProjectDialog','Save Project','Project files|*.bpprj');
 end;
 

@@ -28,6 +28,7 @@ uses
   BDPMain,
   Logger,
   ARGBImageBMPReaderUnit,
+  ARGBImageBMPWriterUnit,
   ARGBImageCELReaderUnit,
   ARGBImagePNGReaderUnit,
   ARGBImagePNGWriterUnit,
