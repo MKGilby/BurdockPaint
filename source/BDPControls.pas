@@ -364,7 +364,7 @@ begin
       Result:=false;  // Not true, let the others also know about the count change!
     end;
     MSG_ACTIVECOLORCHANGED:begin
-//      fColorSelector.Refresh;
+      fColorSelector.Refresh;
       fGradient.Refresh;
     end;
     MSG_ACTIVEGRADIENTCHANGED:begin
@@ -441,12 +441,14 @@ end;
 
 procedure TBDControls.SetColor(pTarget: integer; pColor: uint32);
 begin
-  if pColor<>POSTPROCESSCOLOR then
+  if pColor<>POSTPROCESSCOLOR then begin
     case pTarget of
       PARM_COL_SELECTOR_LEFT:Settings.ColorSelectorLeftColor:=pColor;
       PARM_COL_SELECTOR_MAIN:Settings.ColorSelectorMainColor:=pColor;
       PARM_COL_SELECTOR_RIGHT:Settings.ColorSelectorRightColor:=pColor;
     end;
+    fColorSelector.Refresh;
+  end;
 end;
 
 procedure TBDControls.ReDraw;
