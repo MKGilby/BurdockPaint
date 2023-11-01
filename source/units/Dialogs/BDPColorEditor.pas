@@ -197,7 +197,7 @@ begin
   AddChild(fColorBox);
 
   fColorPalette:=TBDColorPalette.Create(fLeft+COLORPALETTELEFT,fTop+COLORPALETTETOP,
-    COLORPALETTEWIDTH,COLORPALETTEHEIGHT);
+    COLORPALETTEWIDTH,COLORPALETTEHEIGHT,16,16);
   fColorPalette.Palette:=Project.CurrentPalette;
   fColorPalette.ZIndex:=MODALDIALOG_ZINDEX+1;
   fColorPalette.Name:='ColorPalette';
@@ -369,7 +369,8 @@ begin
         RefreshHSLbyRGB;
       end;
       MSG_PALETTEREQUESTCOLOR:begin
-        fColorPalette.SetColor(msg.DataInt,fColorBox.Color);
+        if Self.Visible then
+          fColorPalette.SetColor(msg.DataInt,fColorBox.Color);
       end;
 {      MSG_SETPALETTEUNDOREDOBUTTON:begin
         fUndoButton.Enabled:=Project.CurrentExtImage.PaletteUndo.CanUndo;

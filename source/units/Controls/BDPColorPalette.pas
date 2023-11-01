@@ -32,12 +32,14 @@ type
   { TBDColorPalette }
 
   TBDColorPalette=class(TVisibleControl)
-    constructor Create(iLeft,iTop,iWidth,iHeight:integer);
+    constructor Create(iLeft,iTop,iWidth,iHeight,iHorizontalEntryCount,iVerticalEntryCount:integer);
     procedure ReDraw; override;
     procedure SetColor(pColorIndex:integer;pColor:uint32);
   private
     fEntryWidth,fEntryHeight:integer;
     fPalette:TBDPalette;
+    fHorizontalEntryCount,
+    fVerticalEntryCount:integer;
     procedure fSetPalette(pPalette:TBDPalette);
     procedure Click(Sender:TObject;x,y,buttons:integer);
   public
@@ -48,21 +50,24 @@ implementation
 
 uses BDPShared, sdl2;
 
-const
-  PALETTEHORIZONTALENTRYCOUNT=16;
-  PALETTEVERTICALENTRYCOUNT=16;
+//const
+//  PALETTEHORIZONTALENTRYCOUNT=16;
+//  PALETTEVERTICALENTRYCOUNT=16;
 
 { TBDColorPalette }
 
-constructor TBDColorPalette.Create(iLeft, iTop, iWidth, iHeight: integer);
+constructor TBDColorPalette.Create(iLeft,iTop,iWidth,iHeight,
+  iHorizontalEntryCount,iVerticalEntryCount:integer);
 begin
   inherited Create;
   fLeft:=iLeft;
   fTop:=iTop;
   Width:=iWidth;
   Height:=iHeight;
-  fEntryWidth:=(fWidth-3) div PALETTEHORIZONTALENTRYCOUNT;
-  fEntryHeight:=(fHeight-3) div PALETTEVERTICALENTRYCOUNT;
+  fHorizontalEntryCount:=iHorizontalEntryCount;
+  fVerticalEntryCount:=iVerticalEntryCount;
+  fEntryWidth:=(fWidth-3) div fHorizontalEntryCount;
+  fEntryHeight:=(fHeight-3) div fVerticalEntryCount;
   fPalette:=nil;
   fNeedRedraw:=true;
   OnClick:=Click;
@@ -74,10 +79,10 @@ begin
   if Assigned(fTexture) then begin
     fTexture.ARGBImage.Bar(0,0,Width,Height,SystemPalette.Colors[SYSTEMCOLORDARK]);
     if Assigned(fPalette) then begin
-      for j:=0 to PALETTEVERTICALENTRYCOUNT-1 do
-        for i:=0 to PALETTEHORIZONTALENTRYCOUNT-1 do begin
+      for j:=0 to fVerticalEntryCount-1 do
+        for i:=0 to fHorizontalEntryCount-1 do begin
           fTexture.ARGBImage.Bar(i*fEntryWidth+3,j*fEntryHeight+3,fEntryWidth-3,fEntryHeight-3,
-            fPalette.Colors[j*PALETTEHORIZONTALENTRYCOUNT+i]);
+            fPalette.Colors[j*fHorizontalEntryCount+i]);
         end;
     end;
     fTexture.Update;
@@ -94,8 +99,8 @@ end;
 procedure TBDColorPalette.fSetPalette(pPalette:TBDPalette);
 begin
   fPalette:=pPalette;
-  if fPalette.Size<(PALETTEHORIZONTALENTRYCOUNT*PALETTEVERTICALENTRYCOUNT) then
-    fPalette.Resize(64);
+  if fPalette.Size<(fHorizontalEntryCount*fVerticalEntryCount) then
+    fPalette.Resize(fHorizontalEntryCount*fVerticalEntryCount);
   Refresh;
 end;
 
@@ -104,10 +109,10 @@ begin
   x-=fLeft;
   y-=fTop;
   if buttons=SDL_BUTTON_LEFT then begin
-    Settings.ActiveColor:=fPalette.Colors[y div fEntryHeight*PALETTEHORIZONTALENTRYCOUNT+x div fEntryWidth];
+    Settings.ActiveColor:=fPalette.Colors[y div fEntryHeight*fHorizontalEntryCount+x div fEntryWidth];
   end
   else if buttons=SDL_BUTTON_RIGHT then begin
-    MessageQueue.AddMessage(MSG_PALETTEREQUESTCOLOR,y div fEntryHeight*PALETTEHORIZONTALENTRYCOUNT+x div fEntryWidth);
+    MessageQueue.AddMessage(MSG_PALETTEREQUESTCOLOR,y div fEntryHeight*fHorizontalEntryCount+x div fEntryWidth);
   end;
 end;
 
