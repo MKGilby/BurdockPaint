@@ -36,7 +36,6 @@ type
 
   TBDCoordinateBox=class(TVisibleControl)
     constructor Create(iLeft,iTop,iWidth,iHeight:integer);
-    destructor Destroy; override;
     procedure Draw; override;
   protected
     procedure ReDraw; override;
@@ -62,7 +61,7 @@ constructor TBDCoordinateBox.Create(iLeft,iTop,iWidth,iHeight:integer);
 begin
   fLeft:=iLeft;
   fTop:=iTop;
-  if iWidth<COORDINATEBOXWIDTH then iWidth:=COORDINATEBOXWIDTH*18;
+  if iWidth<COORDINATEBOXWIDTH then iWidth:=COORDINATEBOXWIDTH{*18};  // ???
   if iHeight<COORDINATEBOXHEIGHT then iHeight:=COORDINATEBOXHEIGHT;
   Width:=iWidth;
   Height:=iHeight;
@@ -70,12 +69,6 @@ begin
   ZIndex:=LEVEL1CONTROLS_ZINDEX+10;
   MouseObjects.Add(Self);
   Visible:=true;
-end;
-
-destructor TBDCoordinateBox.Destroy;
-begin
-  if MouseObjects.IndexOf(Self)>-1 then MouseObjects.Remove(Self);
-  inherited Destroy;
 end;
 
 procedure TBDCoordinateBox.Draw;
