@@ -16,18 +16,28 @@ Todo:
 - Autosave:
   - Add max file count setting.
   - Add GUI for settings.
-- PaletteEditor buttons:
+- ColorEditor buttons:
   - "Undo" and "Redo" should undo/redo any changes made on the PaletteEditor.
-- Add an option to make the palette always visible. (Needs a palette control.)
 - Add an option to make the current inks/tools property adjustable on the fly.
   (Should show a small dialog somewhere at the side of the window).
 - New color cluster selector dialog.
-- Colorpalette should update the infobar with color index and color value.
+- Palette sidebar should update color value in the coordinatebox when moving
+  mouse over the colors.
+- Right clicking on a color in the palette sidebar should open:
+  !decide!
+    - ColorEditor (easier to implement)
+    - Color picking mode from any source where color can be selected.
+      (harder to implement, but I think it would be a better solution.)
 - Create Controls as fixed width dialog.
 - Add a few other window sizes and layout:
   - Current (1280x720 windowed)
   - 1920x1080 fullscreen borderless
+- BUG: Backup saves not the current state but the one at the opening of the app.
 
+
+2023.11.02
+- Added palette sidebar. Click to select color and use mouse wheel to browse
+  all 256 palette colors.
 
 2023.10.26
 - OpenCEL can open BMPs.
