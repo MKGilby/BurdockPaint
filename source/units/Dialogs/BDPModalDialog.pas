@@ -75,7 +75,6 @@ end;
 procedure TBDModalOverlay.Draw;
 begin
   PutTexture(0,0,DarkBar);
-  ; // Just override the abstract method in TMouseObject
 end;
 
 { TBDModalDialog }
