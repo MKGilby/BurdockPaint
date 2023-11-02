@@ -29,7 +29,7 @@ uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
   BDPControls, BDPDrawArea, BDPColorEditor,
   BDPMagnifyCELDialog, BDPRotateCELDialog, BDPAboutDialog,
   BDPMessageBox, BDPDitherDialog, BDPConfigureRGradDialog, BDPCoordinateBox,
-  BDPGradientEditor;
+  BDPGradientEditor, BDPColorPalette2;
 
 type
 
@@ -52,6 +52,7 @@ type
     fCoordinateBox:TBDCoordinateBox;
     fColorEditor:TBDColorEditor;
     fGradientEditor:TBDGradientEditor;
+    fColorPalette:TBDColorPalette2;
 
     fBackup:TFileBackup;
     fOpenCELDialog,
@@ -144,7 +145,7 @@ begin
   fColorEditor:=TBDColorEditor.Create;
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   // To enable/disable Image/Remove menuitem and set Controls image slider
-  MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
+  MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
   fMagnifyDialog:=TBDMagnifyCELDialog.Create;
   fRotateDialog:=TBDRotateCELDialog.Create;
   fDitherDialog:=TBDDitherDialog.Create;
@@ -152,6 +153,7 @@ begin
   fCoordinateBox:=TBDCoordinateBox.Create(
     WINDOWWIDTH-COORDINATEBOXWIDTH-24,WINDOWHEIGHT-COORDINATEBOXHEIGHT,COORDINATEBOXWIDTH+24,COORDINATEBOXHEIGHT);
   fGradientEditor:=TBDGradientEditor.Create;
+  fColorPalette:=TBDColorPalette2.Create(WINDOWWIDTH-70,TOPMENUHEIGHT,70,WINDOWHEIGHT-TOPMENUHEIGHT-CONTROLSHEIGHT);
   MouseObjects.List;
 
   fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','All supported file|*.bdc;*.cel;*.png;*.tga;*.bmp|CEL files|*.bdc|Legacy CEL files|*.cel|PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
@@ -166,6 +168,7 @@ begin
   if Assigned(fSaveProjectDialog) then fSaveProjectDialog.Free;
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
   if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
+  if Assigned(fColorPalette) then fColorPalette.Free;
   if Assigned(fGradientEditor) then fGradientEditor.Free;
   if Assigned(fCoordinateBox) then fCoordinateBox.Free;
   if Assigned(fConfigureRGradDialog) then fConfigureRGradDialog.Free;
@@ -242,8 +245,9 @@ begin
           MSG_OPENCOLOREDITOR:           fColorEditor.Show;
           MSG_COLOREDITORRESP:           ColorEditorResp(msg);
           MSG_SELECTCOLOR:               SelectColor;
-          MSG_ACTIVATEGRADIENTEDITOR:fGradientEditor.Show;
-          MSG_GRADIENTEDITORRESPONSE:fGradientEditor.Hide;
+          MSG_ACTIVATEGRADIENTEDITOR:    fGradientEditor.Show;
+          MSG_GRADIENTEDITORRESPONSE:    fGradientEditor.Hide;
+          MSG_ACTIVEIMAGECHANGED:  fColorPalette.Refresh;
         end;
     end;  // while MessageQueue.HasNewMessage
     HandleMessages;
@@ -319,7 +323,7 @@ begin
     try
       Project.Free;
       Project:=TBDProject.CreateFromFile(fOpenProjectDialog.FileName);
-      MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
+      MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
     except
       on e:Exception do begin
         Log.LogError(e.message);
@@ -366,16 +370,16 @@ begin
     0:begin
         Project.Images.Insert(0,TBDImage.Create);
         Project.CurrentImageIndex:=0;
-        MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
+        MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
       end;
     1:begin
         Project.Images.Add(TBDImage.Create);
         Project.CurrentImageIndex:=Project.Images.Count-1;
-        MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
+        MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
       end;
     2:begin
         Project.Images.Insert(Project.CurrentImageIndex,TBDImage.Create);
-        MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
+        MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
       end;
   end;
 end;
@@ -394,7 +398,7 @@ begin
           Xs.Free;
         end;
         Project.CurrentImageIndex:=0;
-        MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
+        MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
       end;
     1:begin
         Xs:=TMemoryStream.Create;
@@ -406,7 +410,7 @@ begin
           Xs.Free
         end;
         Project.CurrentImageIndex:=Project.Images.Count-1;
-        MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
+        MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
       end;
     2:begin
         Xs:=TMemoryStream.Create;
@@ -417,7 +421,7 @@ begin
         finally
           Xs.Free;
         end;
-        MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
+        MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
       end;
   end;
 end;
@@ -429,7 +433,7 @@ begin
       Project.Images.Delete(Project.CurrentImageIndex);
       if Project.CurrentImageIndex>=Project.Images.Count then
         Project.CurrentImageIndex:=Project.Images.Count-1;
-      MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
+      MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
     end;
   end;
 end;

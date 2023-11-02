@@ -447,7 +447,7 @@ var submenu:TSubMenu;
 begin
   Result:=false;
   case msg.TypeID of
-    MSG_PROJECTIMAGECOUNTCHANGED:begin
+    MSG_ACTIVEIMAGECHANGED:begin
       submenu:=fSubMenus.ItemByName('IMAGE');
       if Assigned(submenu) then begin
         if msg.DataInt=1 then begin

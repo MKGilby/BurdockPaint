@@ -344,8 +344,7 @@ end;
 procedure TBDControls.ActiveImageChange(Sender:TObject; newvalue:integer);
 begin
   Project.CurrentImageIndex:=newvalue-1;
-  fGradient.Gradient:=Project.CurrentGradientList.ActiveGradient;
-  MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
+  MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED);
 end;
 
 function TBDControls.ProcessMessage(msg: TMessage): boolean;
@@ -357,9 +356,10 @@ begin
       fRedoButton.Enabled:=Project.CurrentImage.RegionUndo.CanRedo;
       Result:=true;
     end;
-    MSG_PROJECTIMAGECOUNTCHANGED:begin
+    MSG_ACTIVEIMAGECHANGED:begin
       fImageCountSlider.MaxValue:=Project.Images.Count;
       fImageCountSlider.Position:=Project.CurrentImageIndex+1;
+      fGradient.Gradient:=Project.CurrentGradientList.ActiveGradient;
       MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
       Result:=false;  // Not true, let the others also know about the count change!
     end;

@@ -175,7 +175,7 @@ const
   MSG_SELECTCOLOR=19;
 
   // Project image count changed. Used to refresh Controls' slider.
-  MSG_PROJECTIMAGECOUNTCHANGED=20;
+  MSG_ACTIVEIMAGECHANGED=20;
 
   // User right clicked on palette entry, request ColorEditor to store selected
   // color into palette.
