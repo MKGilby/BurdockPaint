@@ -105,6 +105,8 @@
 //     * Renamed ResizeN to Magnify.
 //   1.24 - Gilby - 2023.08.10
 //     * Fixed FlipV.
+//   1.25 - Gilby - 2023.11.02
+//     * Fixed line. All parameters was uint32, but only color should be.
 
 
 {$ifdef fpc}
@@ -241,7 +243,7 @@ type
 
     // Draws a line between two points. (using Bresenham's line drawing algorithm)
     // Fills all channels with given pixel data.
-    procedure Line(x1,y1,x2,y2,color32:uint32); overload;
+    procedure Line(x1,y1,x2,y2:integer;color32:uint32); overload;
 
     // Draws a rectangle. If any color value is -1, it leaves that channel unchanged
     procedure Rectangle(x,y,w,h,r,g,b:integer;a:integer=255); overload;
@@ -997,7 +999,7 @@ end;
 
 // Taken from http://www.efg2.com/Lab/Library/Delphi/Graphics/Bresenham.txt
 // Stripped a few comments, variable names changed here and there...
-procedure TARGBImage.Line(x1,y1,x2,y2,color32:uint32);
+procedure TARGBImage.Line(x1, y1, x2, y2: integer; color32: uint32);
 var
   _a,_b,_d : integer;
   diag_inc, nondiag_inc : integer;
