@@ -227,7 +227,6 @@ var
   Cursor:TBDCursor;  // The cursor on drawing area
   ModalOverlay:TMouseObject;  // Darkening layer behind modal dialogs, used to
                               // prevent using other controls while dialog is visible.
-  ColorEditor:TBDColorEditor;  // Color editor dialog.
 
   Tools:TBDTools;  // All tools are loaded into this list
   ActiveTool:TBDTool;  // This is the selected tool

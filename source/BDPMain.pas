@@ -50,6 +50,7 @@ type
     fDitherDialog:TBDDitherDialog;
     fConfigureRGradDialog:TBDConfigureRGradDialog;
     fCoordinateBox:TBDCoordinateBox;
+    fColorEditor:TBDColorEditor;
     fGradientEditor:TBDGradientEditor;
 
     fBackup:TFileBackup;
@@ -140,7 +141,7 @@ begin
   fAboutDialog:=TBDAboutDialog.Create;
   fControls:=TBDControls.Create;
   fDrawArea:=TBDDrawArea.Create;
-  ColorEditor:=TBDColorEditor.Create;
+  fColorEditor:=TBDColorEditor.Create;
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   // To enable/disable Image/Remove menuitem and set Controls image slider
   MessageQueue.AddMessage(MSG_PROJECTIMAGECOUNTCHANGED,Project.Images.Count);
@@ -171,7 +172,7 @@ begin
   if Assigned(fDitherDialog) then fDitherDialog.Free;
   if Assigned(fRotateDialog) then fRotateDialog.Free;
   if Assigned(fMagnifyDialog) then fMagnifyDialog.Free;
-  if Assigned(ColorEditor) then ColorEditor.Free;
+  if Assigned(fColorEditor) then fColorEditor.Free;
   if Assigned(fDrawArea) then fDrawArea.Free;
   if Assigned(fControls) then fControls.Free;
   if Assigned(fAboutDialog) then fAboutDialog.Free;
@@ -207,7 +208,7 @@ begin
     while MessageQueue.HasNewMessage do begin
       msg:=MessageQueue.GetNextMessage;
       mres:=fControls.ProcessMessage(msg);
-      if not mres then mres:=ColorEditor.ProcessMessage(msg);
+      if not mres then mres:=fColorEditor.ProcessMessage(msg);
       if not mres and fMainMenu.Visible then mres:=fMainMenu.ProcessMessage(msg);
       if not mres then
         case msg.TypeID of
@@ -238,7 +239,7 @@ begin
           MSG_OPENMAGNIFYCELDIALOG:      fMagnifyDialog.Show;
           MSG_OPENCEL:                   OpenCEL;
           MSG_SAVECEL:                   SaveCEL;
-          MSG_OPENCOLOREDITOR:           ColorEditor.Show;
+          MSG_OPENCOLOREDITOR:           fColorEditor.Show;
           MSG_COLOREDITORRESP:           ColorEditorResp(msg);
           MSG_SELECTCOLOR:               SelectColor;
           MSG_ACTIVATEGRADIENTEDITOR:fGradientEditor.Show;
