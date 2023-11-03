@@ -128,12 +128,14 @@ begin
     fBackup:=TFileBackup.Create(PROJECTBASEPATH+'\backups');
     fBackup.BackupFolderMaxSize:=Settings.BackupFolderMaxSize;
     fBackup.BackupFolderRetentionTime:=Settings.BackupFolderRetentionTime;
+    fBackup.BackupFolderFileCount:=Settings.BackupFolderMaxFileCount;
     fBackup.BackupFile(TEMPPROJECTFILE);
   end else begin
     PROJECTBASEPATH:=ExtractFileDir(Parameters[0]);
     fBackup:=TFileBackup.Create(PROJECTBASEPATH+'\backups');
     fBackup.BackupFolderMaxSize:=Settings.BackupFolderMaxSize;
     fBackup.BackupFolderRetentionTime:=Settings.BackupFolderRetentionTime;
+    fBackup.BackupFolderFileCount:=Settings.BackupFolderMaxFileCount;
   end;
 
   LoadAssets;
