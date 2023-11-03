@@ -39,27 +39,21 @@ type
     procedure SaveToFile(pFilename:String);
   private
     fShowSplash:Boolean;
-    fZoom,fZoomLeft,fZoomTop:integer;
+    fZoom:integer;
     fSelectedTools:TStringArray6;
     fActiveTool:integer;  // within fSelectedTools
     fSelectedInks:TStringArray6;
     fActiveInk:integer;  // within fSelectedInks
     fActiveColor:uint32;
-    fUndoLimit:integer;
     fDitherStrength:integer;
     fRealDitherStrength:double;
-    fCGradCenterX,fCGradCenterY,fCGradRadius:integer;
-    fRGradCenterX,fRGradCenterY,fRGradRepetitions,fRGradRotation:integer;
-    fTempRGradCenterX,fTempRGradCenterY:integer;
-    fBackupIntervalTicks:uint64;  // in milliseconds
-    fBackupFolderMaxSize:integer;  // in bytes, set 0 to disable size check
-    fBackupFolderRetentionTime:integer; // in seconds, set 0 to disable file age check
     function fGetSelectedTool(index:integer):string;
     procedure fSetSelectedTool(index:integer;value:string);
     function fGetSelectedInk(index:integer):string;
     procedure fSetSelectedInk(index:integer;value:string);
     procedure fSetActiveColor(value:uint32);
     procedure fSetDitherStrength(value:integer);
+    procedure fSetZoom(value:integer);
   public
     ColorSelectorMainColor:uint32;
     ColorSelectorLeftColor:uint32;
@@ -68,29 +62,23 @@ type
     ClearKeyColor:boolean;
     DitherGradients:boolean;
     ShowGrid:boolean;
-    property Zoom:integer read fZoom write fZoom;
-    property ZoomLeft:integer read fZoomLeft write fZoomLeft;
-    property ZoomTop:integer read fZoomTop write fZoomTop;
+    ZoomLeft,ZoomTop:integer;
+    UndoLimit:uint32;
+    CGradCenterX,CGradCenterY,CGradRadius:integer;
+    RGradCenterX,RGradCenterY,RGradRepetitions,RGradRotation:integer;
+    TempRGradCenterX,TempRGradCenterY:integer;
+    BackupIntervalTicks:uint64;  // in milliseconds
+    BackupFolderMaxSize:integer;  // in bytes, set 0 to disable size check
+    BackupFolderRetentionTime:integer; // in seconds, set 0 to disable file age check
+    BackupFolderMaxFileCount:integer;  // set 0 to disable file count check
+    property Zoom:integer read fZoom write fSetZoom;
     property SelectedTools[index:integer]:string read fGetSelectedTool write fSetSelectedTool;
     property ActiveTool:integer read fActiveTool write fActiveTool;
     property SelectedInks[index:integer]:string read fGetSelectedInk write fSetSelectedInk;
     property ActiveInk:integer read fActiveInk write fActiveInk;
     property ActiveColor:uint32 read fActiveColor write fSetActiveColor;
-    property UndoLimit:integer read fUndoLimit write fUndoLimit;
     property DitherStrength:integer read fDitherStrength write fSetDitherStrength;
     property RealDitherStrength:double read fRealDitherStrength;
-    property CGradCenterX:integer read fCGradCenterX write fCGradCenterX;
-    property CGradCenterY:integer read fCGradCenterY write fCGradCenterY;
-    property CGradRadius:integer read fCGradRadius write fCGradRadius;
-    property RGradCenterX:integer read fRGradCenterX write fRGradCenterX;
-    property RGradCenterY:integer read fRGradCenterY write fRGradCenterY;
-    property RGradRepetitions:integer read fRGradRepetitions write fRGradRepetitions;
-    property RGradRotation:integer read fRGradRotation write fRGradRotation;
-    property TempRGradCenterX:integer read fTempRGradCenterX write fTempRGradCenterX;
-    property TempRGradCenterY:integer read fTempRGradCenterY write fTempRGradCenterY;
-    property BackupIntervalTicks:uint64 read fBackupIntervalTicks write fBackupIntervalTicks;
-    property BackupFolderMaxSize:integer read fBackupFolderMaxSize write fBackupFolderMaxSize;
-    property BackupFolderRetentionTime:integer read fBackupFolderRetentionTime write fBackupFolderRetentionTime;
   end;
 
 
@@ -103,8 +91,8 @@ uses MKINIFile, BDPKeyMapping, BDPShared;
 constructor TSettings.Create;
 begin
   fZoom:=2;
-  fZoomLeft:=0;
-  fZoomTop:=0;
+  ZoomLeft:=0;
+  ZoomTop:=0;
   fSelectedTools[0]:='DRAW';
   fSelectedTools[1]:='BOX';
   fSelectedTools[2]:='LINE';
@@ -123,18 +111,19 @@ begin
   ColorSelectorLeftColor:=$FF000000;
   ColorSelectorRightColor:=$FFFFFFFF;
   fActiveColor:=$FFFF0000;
-  fUndoLimit:=16;
+  UndoLimit:=16;
   fDitherStrength:=10;
-  fCGradCenterX:=0;
-  fCGradCenterY:=0;
-  fCGradRadius:=32;
-  fRGradCenterX:=0;
-  fRGradCenterY:=0;
-  fRGradRepetitions:=1;
-  fRGradRotation:=0;
-  fBackupIntervalTicks:=60*1000;
-  fBackupFolderMaxSize:=0;
-  fBackupFolderRetentionTime:=0;
+  CGradCenterX:=0;
+  CGradCenterY:=0;
+  CGradRadius:=32;
+  RGradCenterX:=0;
+  RGradCenterY:=0;
+  RGradRepetitions:=1;
+  RGradRotation:=0;
+  BackupIntervalTicks:=60*1000;
+  BackupFolderMaxSize:=0;
+  BackupFolderRetentionTime:=0;
+  BackupFolderMaxFileCount:=0;
 end;
 
 procedure TSettings.LoadFromFile(pFilename:String);
@@ -144,8 +133,8 @@ begin
   INI:=TIniFile.Create(pFilename);
   // DrawArea state
   fZoom:=INI.ReadInteger('DrawArea','Zoom',2);
-  fZoomLeft:=INI.ReadInteger('DrawArea','ZoomLeft',0);
-  fZoomTop:=INI.ReadInteger('DrawArea','ZoomTop',0);
+  ZoomLeft:=INI.ReadInteger('DrawArea','ZoomLeft',0);
+  ZoomTop:=INI.ReadInteger('DrawArea','ZoomTop',0);
   ShowGrid:=INI.ReadBool('DrawArea','ShowGrid',false);
   // Controls state
   fSelectedTools[0]:=INI.ReadString('BasicControls','Tool0','DRAW');
@@ -168,10 +157,11 @@ begin
   ClearKeyColor:=INI.ReadBool('BasicControls','ClearKeyColor',false);
   // System settings
   fShowSplash:=INI.ReadBool('Settings','ShowSplash',false);
-  fUndoLimit:=INI.ReadInteger('Settings','UndoLimit',16);
-  fBackupIntervalTicks:=INI.ReadInteger('Settings','BackupInterval',60)*1000;
-  fBackupFolderMaxSize:=INI.ReadInteger('Settings','BackupFolderMaxSize',16*1024*1024);
-  fBackupFolderRetentionTime:=INI.ReadInteger('Settings','BackupFolderRetentionTime',0);
+  UndoLimit:=INI.ReadInteger('Settings','UndoLimit',16);
+  BackupIntervalTicks:=INI.ReadInteger('Settings','BackupInterval',60)*1000;
+  BackupFolderMaxSize:=INI.ReadInteger('Settings','BackupFolderMaxSize',16*1024*1024);
+  BackupFolderRetentionTime:=INI.ReadInteger('Settings','BackupFolderRetentionTime',0);
+  BackupFolderMaxFileCount:=INI.ReadInteger('Settings','BackupFolderMaxFileCount',0);
   // Keymap
   LoadKeyMap(INI);
   // Colors selector state
@@ -182,13 +172,13 @@ begin
   // Inks' settings
   DitherGradients:=INI.ReadBool('Inks','DitherGradients',false);
   fDitherStrength:=INI.ReadInteger('Inks','DitherStrength',10);
-  fCGradCenterX:=INI.ReadInteger('Inks','CGradCenterX',0);
-  fCGradCenterY:=INI.ReadInteger('Inks','CGradCenterY',0);
-  fCGradRadius:=INI.ReadInteger('Inks','CGradRadius',32);
-  fRGradCenterX:=INI.ReadInteger('Inks','RGradCenterX',0);
-  fRGradCenterY:=INI.ReadInteger('Inks','RGradCenterY',0);
-  fRGradRepetitions:=INI.ReadInteger('Inks','RGradRepetitions',1);
-  fRGradRotation:=INI.ReadInteger('Inks','RGradRotation',0);
+  CGradCenterX:=INI.ReadInteger('Inks','CGradCenterX',0);
+  CGradCenterY:=INI.ReadInteger('Inks','CGradCenterY',0);
+  CGradRadius:=INI.ReadInteger('Inks','CGradRadius',32);
+  RGradCenterX:=INI.ReadInteger('Inks','RGradCenterX',0);
+  RGradCenterY:=INI.ReadInteger('Inks','RGradCenterY',0);
+  RGradRepetitions:=INI.ReadInteger('Inks','RGradRepetitions',1);
+  RGradRotation:=INI.ReadInteger('Inks','RGradRotation',0);
   FreeAndNil(INI);
 end;
 
@@ -198,8 +188,8 @@ begin
   INI:=TIniFile.Create(pFilename,false);
   // DrawArea state
   INI.WriteInteger('DrawArea','Zoom',fZoom);
-  INI.WriteInteger('DrawArea','ZoomLeft',fZoomLeft);
-  INI.WriteInteger('DrawArea','ZoomTop',fZoomTop);
+  INI.WriteInteger('DrawArea','ZoomLeft',ZoomLeft);
+  INI.WriteInteger('DrawArea','ZoomTop',ZoomTop);
   INI.WriteBool('DrawArea','ShowGrid',ShowGrid);
   // Controls state
   for i:=0 to 5 do
@@ -212,10 +202,11 @@ begin
   INI.WriteBool('BasicControls','ClearKeyColor',ClearKeyColor);
   // System settings
   INI.WriteBool('Settings','ShowSplash',fShowSplash);
-  INI.WriteInteger('Settings','UndoLimit',fUndoLimit);
-  INI.WriteInteger('Settings','BackupInterval',fBackupIntervalTicks div 1000);
-  INI.WriteInteger('Settings','BackupFolderMaxSize',fBackupFolderMaxSize);
-  INI.WriteInteger('Settings','BackupFolderRetentionTime',fBackupFolderRetentionTime);
+  INI.WriteInteger('Settings','UndoLimit',UndoLimit);
+  INI.WriteInteger('Settings','BackupInterval',BackupIntervalTicks div 1000);
+  INI.WriteInteger('Settings','BackupFolderMaxSize',BackupFolderMaxSize);
+  INI.WriteInteger('Settings','BackupFolderRetentionTime',BackupFolderRetentionTime);
+  INI.WriteInteger('Settings','BackupFolderMaxFileCount',BackupFolderMaxFileCount);
   // Keymap
   SaveKeyMap(INI);
   // Color selector state
@@ -226,13 +217,13 @@ begin
   // Inks' settings
   INI.WriteBool('Inks','DitherGradients',DitherGradients);
   INI.WriteInteger('Inks','DitherStrength',fDitherStrength);
-  INI.WriteInteger('Inks','CGradCenterX',fCGradCenterX);
-  INI.WriteInteger('Inks','CGradCenterY',fCGradCenterY);
-  INI.WriteInteger('Inks','CGradRadius',fCGradRadius);
-  INI.WriteInteger('Inks','RGradCenterX',fRGradCenterX);
-  INI.WriteInteger('Inks','RGradCenterY',fRGradCenterY);
-  INI.WriteInteger('Inks','RGradRepetitions',fRGradRepetitions);
-  INI.WriteInteger('Inks','RGradRotation',fRGradRotation);
+  INI.WriteInteger('Inks','CGradCenterX',CGradCenterX);
+  INI.WriteInteger('Inks','CGradCenterY',CGradCenterY);
+  INI.WriteInteger('Inks','CGradRadius',CGradRadius);
+  INI.WriteInteger('Inks','RGradCenterX',RGradCenterX);
+  INI.WriteInteger('Inks','RGradCenterY',RGradCenterY);
+  INI.WriteInteger('Inks','RGradRepetitions',RGradRepetitions);
+  INI.WriteInteger('Inks','RGradRotation',RGradRotation);
   FreeAndNil(INI);
 end;
 
@@ -276,6 +267,11 @@ begin
   else if value>255 then value:=255;
   fDitherStrength:=value;
   fRealDitherStrength:=value/255;
+end;
+
+procedure TSettings.fSetZoom(value:integer);
+begin
+  if value in [1..MAXZOOMLEVEL] then fZoom:=value;
 end;
 
 end.
