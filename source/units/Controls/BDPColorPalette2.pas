@@ -43,6 +43,8 @@ type
     fPage:integer;
     procedure Click(Sender:TObject;x,y,button:integer);
     procedure MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer);
+    procedure MouseMove(Sender:TObject;x,y:integer);
+    procedure MouseLeave(Sender:TObject);
   public
 //    property Width:integer read fWidth write fSetWidth;
     property Height:integer read fHeight write fSetHeight;
@@ -67,6 +69,7 @@ begin
   fName:='ColorPalette2';
   OnClick:=Click;
   OnMouseWheel:=MouseWheel;
+  OnMouseMove:=MouseMove;
   MouseObjects.Add(Self);
   fEntryHeight:=(fHeight-(12+22+3)) div 16;
   fPage:=0;
@@ -126,7 +129,25 @@ begin
   fPage-=wheely;
   if fPage<0 then fPage:=0
   else if fPage>15 then fPage:=15;
-  if (pre<>fPage) then fNeedRedraw:=true;
+  if (pre<>fPage) then begin
+    MouseMove(Sender,x,y);
+    fNeedRedraw:=true;
+  end;
+end;
+
+procedure TBDColorPalette2.MouseMove(Sender:TObject; x,y:integer);
+begin
+  x-=Left;
+  y-=Top;
+  if (x>=9) and (x<Width-9) and (y>=19) and (y<19+fEntryHeight*16) then
+    ColorUnderMouse:=Project.CurrentPalette.Colors[fPage*16+((y-19) div fEntryHeight)]
+  else
+    ColorUnderMouse:=POSTPROCESSCOLOR;
+end;
+
+procedure TBDColorPalette2.MouseLeave(Sender:TObject);
+begin
+  ColorUnderMouse:=POSTPROCESSCOLOR;
 end;
 
 end.

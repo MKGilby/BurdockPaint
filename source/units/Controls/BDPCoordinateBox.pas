@@ -93,10 +93,18 @@ begin
         MM.Fonts['DarkRed'].OutText('Y='+inttostr(DrawAreaY),fLeft+fCenterX,fTop+42,1)
       else
         MM.Fonts['DarkRed'].OutText('Y=OUT',fLeft+fCenterX,fTop+42,1);
-      MM.Fonts['SmallDarkRed'].OutText('--',fLeft+fCenterA,fTop+77,1);
-      MM.Fonts['SmallDarkRed'].OutText('--',fLeft+fCenterR,fTop+77,1);
-      MM.Fonts['SmallDarkRed'].OutText('--',fLeft+fCenterG,fTop+77,1);
-      MM.Fonts['SmallDarkRed'].OutText('--',fLeft+fCenterB,fTop+77,1);
+      c:=ColorUnderMouse;
+      if c=POSTPROCESSCOLOR then begin
+        MM.Fonts['SmallDarkRed'].OutText('--',fLeft+fCenterA,fTop+77,1);
+        MM.Fonts['SmallDarkRed'].OutText('--',fLeft+fCenterR,fTop+77,1);
+        MM.Fonts['SmallDarkRed'].OutText('--',fLeft+fCenterG,fTop+77,1);
+        MM.Fonts['SmallDarkRed'].OutText('--',fLeft+fCenterB,fTop+77,1);
+      end else begin
+        MM.Fonts['SmallBlack'].OutText(HexStr((c and $ff000000)>>24,2),fLeft+fCenterA,fTop+77,1);
+        MM.Fonts['SmallBlack'].OutText(HexStr((c and $ff0000)>>16,2),fLeft+fCenterR,fTop+77,1);
+        MM.Fonts['SmallBlack'].OutText(HexStr((c and $ff00)>>8,2),fLeft+fCenterG,fTop+77,1);
+        MM.Fonts['SmallBlack'].OutText(HexStr(c and $ff,2),fLeft+fCenterB,fTop+77,1);
+      end;
     end;
   end;
 end;

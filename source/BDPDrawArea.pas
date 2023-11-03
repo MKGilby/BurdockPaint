@@ -238,6 +238,7 @@ begin
   SDL_ShowCursor(SDL_ENABLE);
   DrawAreaX:=-1;DrawAreaY:=-1;
 //  if ActiveTool.Name='SELCOL' then TBDToolSelectColor(ActiveTool).SetColor(0);
+  ColorUnderMouse:=POSTPROCESSCOLOR;
   InfoBar.ShowText('');
 end;
 
