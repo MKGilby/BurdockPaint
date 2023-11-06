@@ -31,12 +31,15 @@ type
   { TBDVerticalSlider }
 
   TBDVerticalSlider=class(TVerticalSlider)
-    constructor Create(iLeft,iTop:integer);
+    constructor Create(iLeft,iTop:integer); overload;
+    constructor Create(iLeft,iTop,iWidth,iHeight:integer); overload;
   protected
     procedure ReDraw; override;
   private
     fTLImage,fTRImage,fBLImage,fBRImage:TARGBImage;
-    fArrowFont:TFont;
+    fArrowFont,fDisabledArrowFont:TFont;
+  public
+    ShowNumber:boolean;
   end;
 
   { TBDHorizontalSlider }
@@ -49,6 +52,8 @@ type
   private
     fTLImage,fTRImage,fBLImage,fBRImage:TARGBImage;
     fArrowFont,fDisabledArrowFont:TFont;
+  public
+    ShowNumber:boolean;
   end;
 
 implementation
@@ -56,34 +61,45 @@ implementation
 uses BDPShared;
 
 const
-  SLIDERKNOBWIDTH=57;
+  SLIDERDEFAULTWIDTH=240;
+  SLIDERDEFAULTHEIGHT=33;
+  MINIMUMKNOBSIZE:integer=57;
 
 { TBDVerticalSlider }
 
 constructor TBDVerticalSlider.Create(iLeft,iTop:integer);
 begin
+  Create(iLeft,iTop,SLIDERDEFAULTWIDTH,SLIDERDEFAULTHEIGHT);
+end;
+
+constructor TBDVerticalSlider.Create(iLeft,iTop,iWidth,iHeight:integer);
+begin
   inherited Create;
   Left:=iLeft;
   Top:=iTop;
-  Height:=COLORSLIDERWIDTH;
-  Width:=COLORSLIDERHEIGHT;
-  DecClickAreaSize:=COLORSLIDERHEIGHT;
-  IncClickAreaSize:=COLORSLIDERHEIGHT;
+  Height:=iHeight;
+  Width:=iWidth;
+  DecClickAreaSize:=iWidth;
+  IncClickAreaSize:=iWidth;
   Font:=MM.Fonts['LightGray'];
   fArrowFont:=MM.Fonts['Black'];
+  fDisabledArrowFont:=MM.Fonts['DarkGray'];
   Visible:=true;
   Enabled:=true;
   fTLImage:=MM.Images.ItemByName['ArchTopLeft'];
   fTRImage:=MM.Images.ItemByName['ArchTopRight'];
   fBLImage:=MM.Images.ItemByName['ArchBottomLeft'];
   fBRImage:=MM.Images.ItemByName['ArchBottomRight'];
+  ShowNumber:=true;
   fNeedRedraw:=true;
 end;
 
 procedure TBDVerticalSlider.ReDraw;
-var p:integer;
+var knobsize,p:integer;
 begin
   if Assigned(fTexture) then begin
+    knobsize:=(fSlideAreaSize-6) div (MaxValue-MinValue+1);
+    if knobsize<MINIMUMKNOBSIZE then knobsize:=MINIMUMKNOBSIZE;
     with fTexture.ARGBImage do begin
       Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORMID]);
       Bar(8,0,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
@@ -92,8 +108,11 @@ begin
       Bar(Width-3,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
       Bar(3,fDecClickAreaSize-3,Width-6,3,SystemPalette[SYSTEMCOLORDARK]);
       Bar(3,fDecClickAreaSize+fSlideAreaSize,Width-6,3,SystemPalette[SYSTEMCOLORDARK]);
-      p:=fDecClickAreaSize+3+((fSlideAreaSize-SLIDERKNOBWIDTH-6)*(Position-MinValue) div (MaxValue-MinValue));
-      Bar(6,p,Width-12,SLIDERKNOBWIDTH,SystemPalette[SYSTEMCOLORBLACK]);
+      if (MinValue<>MaxValue) then
+        p:=fDecClickAreaSize+3+((fSlideAreaSize-knobsize-6)*(Position-MinValue) div (MaxValue-MinValue))
+      else
+        p:=fDecClickAreaSize+3+(fSlideAreaSize-knobsize-6) div 2;
+      Bar(6,p,Width-12,knobsize,SystemPalette[SYSTEMCOLORBLACK]);
     end;
     if Assigned(fTLImage) then
       fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fTexture.ARGBImage,true);
@@ -104,11 +123,19 @@ begin
     if Assigned(fBRImage) then
       fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,fTexture.ARGBImage,true);
     if Assigned(fArrowFont) then begin
-      fArrowFont.OutText(fTexture.ARGBImage,#128,fWidth div 2,(fDecClickAreaSize-Font.Height) div 2+1,mjCenter);
-      fArrowFont.OutText(fTexture.ARGBImage,#130,fWidth div 2,fDecClickAreaSize+fSlideAreaSize+(fIncClickAreaSize-Font.Height) div 2+1,mjCenter);
+      if fPosition>fMinValue then
+        fArrowFont.OutText(fTexture.ARGBImage,#128,fWidth div 2,(fDecClickAreaSize-Font.Height) div 2+1,mjCenter);
+      if fPosition<fMaxValue then
+        fArrowFont.OutText(fTexture.ARGBImage,#130,fWidth div 2,fDecClickAreaSize+fSlideAreaSize+(fIncClickAreaSize-Font.Height) div 2+1,mjCenter);
     end;
-    if Assigned(fFont) then
-      fFont.OutText(fTexture.ARGBImage,inttostr(Position),fWidth div 2,p+(SLIDERKNOBWIDTH-Font.Height) div 2,mjCenter);
+    if Assigned(fDisabledArrowFont) then begin
+      if fPosition=fMinValue then
+        fDisabledArrowFont.OutText(fTexture.ARGBImage,#128,fWidth div 2,(fDecClickAreaSize-Font.Height) div 2+1,mjCenter);
+      if fPosition=fMaxValue then
+        fDisabledArrowFont.OutText(fTexture.ARGBImage,#130,fWidth div 2,fDecClickAreaSize+fSlideAreaSize+(fIncClickAreaSize-Font.Height) div 2+1,mjCenter);
+    end;
+    if ShowNumber and Assigned(fFont) then
+      fFont.OutText(fTexture.ARGBImage,inttostr(Position),fWidth div 2,p+(knobsize-Font.Height) div 2,mjCenter);
     fTexture.Update;
   end;
 end;
@@ -117,23 +144,7 @@ end;
 
 constructor TBDHorizontalSlider.Create(iLeft,iTop:integer);
 begin
-  inherited Create;
-  fTLImage:=MM.Images.ItemByName['ArchTopLeft'];
-  fTRImage:=MM.Images.ItemByName['ArchTopRight'];
-  fBLImage:=MM.Images.ItemByName['ArchBottomLeft'];
-  fBRImage:=MM.Images.ItemByName['ArchBottomRight'];
-  Left:=iLeft;
-  Top:=iTop;
-  Height:=COLORSLIDERHEIGHT;
-  Width:=COLORSLIDERWIDTH;
-  DecClickAreaSize:=COLORSLIDERHEIGHT;
-  IncClickAreaSize:=COLORSLIDERHEIGHT;
-  Font:=MM.Fonts['LightGray'];
-  fArrowFont:=MM.Fonts['Black'];
-  fDisabledArrowFont:=MM.Fonts['DarkGray'];
-  Visible:=true;
-  Enabled:=true;
-  fNeedRedraw:=true;
+  Create(iLeft,iTop,SLIDERDEFAULTWIDTH,SLIDERDEFAULTHEIGHT);
 end;
 
 constructor TBDHorizontalSlider.Create(iLeft,iTop,iWidth,iHeight:integer);
@@ -154,6 +165,7 @@ begin
   fDisabledArrowFont:=MM.Fonts['DarkGray'];
   Visible:=true;
   Enabled:=true;
+  ShowNumber:=true;
   fNeedRedraw:=true;
 end;
 
@@ -170,10 +182,10 @@ begin
       Bar(fDecClickAreaSize-3,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
       Bar(fDecClickAreaSize+fSlideAreaSize,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
       if (MaxValue<>MinValue) then
-        p:=fDecClickAreaSize+3+((fSlideAreaSize-SLIDERKNOBWIDTH-6)*(Position-MinValue) div (MaxValue-MinValue))
+        p:=fDecClickAreaSize+3+((fSlideAreaSize-MINIMUMKNOBSIZE-6)*(Position-MinValue) div (MaxValue-MinValue))
       else
-        p:=fDecClickAreaSize+3+((fSlideAreaSize-SLIDERKNOBWIDTH-6) div 2);
-      Bar(p,6,SLIDERKNOBWIDTH,Height-12,SystemPalette[SYSTEMCOLORBLACK]);
+        p:=fDecClickAreaSize+3+((fSlideAreaSize-MINIMUMKNOBSIZE-6) div 2);
+      Bar(p,6,MINIMUMKNOBSIZE,Height-12,SystemPalette[SYSTEMCOLORBLACK]);
     end;
     if Assigned(fTLImage) then
       fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fTexture.ARGBImage,true);
@@ -196,8 +208,8 @@ begin
       if fPosition=fMaxValue then
         fDisabledArrowFont.OutText(fTexture.ARGBImage,#129,fDecClickAreaSize+fSlideAreaSize+fIncClickAreaSize div 2,fonttop,1);
     end;
-    if Assigned(fFont) then
-      fFont.OutText(fTexture.ARGBImage, inttostr(Position), p+SLIDERKNOBWIDTH div 2,fonttop,1);
+    if ShowNumber and Assigned(fFont) then
+      fFont.OutText(fTexture.ARGBImage, inttostr(Position), p+MINIMUMKNOBSIZE div 2,fonttop,1);
     fTexture.Update;
   end;
 end;
