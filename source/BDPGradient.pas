@@ -476,7 +476,10 @@ end;
 
 procedure TGradientList.fSetActiveIndex(value:integer);
 begin
-  if (value>=0) and (value<Count) then fActiveIndex:=value;
+  if (value>=0) and (value<Count) and (value<>fActiveIndex) then begin
+    fActiveIndex:=value;
+    MessageQueue.AddMessage(MSG_ACTIVEGRADIENTCHANGED,fActiveIndex);
+  end;
 end;
 
 end.
