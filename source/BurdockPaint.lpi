@@ -367,6 +367,10 @@
         <Filename Value="units\Controls\BDPColorPalette2.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
+      <Unit>
+        <Filename Value="units\Dialogs\BDPGradientSelector.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

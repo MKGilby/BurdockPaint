@@ -29,7 +29,7 @@ uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
   BDPControls, BDPDrawArea, BDPColorEditor,
   BDPMagnifyCELDialog, BDPRotateCELDialog, BDPAboutDialog,
   BDPMessageBox, BDPDitherDialog, BDPConfigureRGradDialog, BDPCoordinateBox,
-  BDPGradientEditor, BDPColorPalette2;
+  BDPGradientEditor, BDPColorPalette2, BDPGradientSelector;
 
 type
 
@@ -53,6 +53,7 @@ type
     fColorEditor:TBDColorEditor;
     fGradientEditor:TBDGradientEditor;
     fColorPalette:TBDColorPalette2;
+    fGradientSelector:TBDGradientSelector;
 
     fBackup:TFileBackup;
     fOpenCELDialog,
@@ -156,6 +157,7 @@ begin
     WINDOWWIDTH-COORDINATEBOXWIDTH-24,WINDOWHEIGHT-COORDINATEBOXHEIGHT,COORDINATEBOXWIDTH+24,COORDINATEBOXHEIGHT);
   fGradientEditor:=TBDGradientEditor.Create;
   fColorPalette:=TBDColorPalette2.Create(WINDOWWIDTH-70,TOPMENUHEIGHT,70,WINDOWHEIGHT-TOPMENUHEIGHT-CONTROLSHEIGHT);
+  fGradientSelector:=TBDGradientSelector.Create;
   MouseObjects.List;
 
   fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','All supported file|*.bdc;*.cel;*.png;*.tga;*.bmp|CEL files|*.bdc|Legacy CEL files|*.cel|PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
@@ -170,6 +172,7 @@ begin
   if Assigned(fSaveProjectDialog) then fSaveProjectDialog.Free;
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
   if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
+  if Assigned(fGradientSelector) then fGradientSelector.Free;
   if Assigned(fColorPalette) then fColorPalette.Free;
   if Assigned(fGradientEditor) then fGradientEditor.Free;
   if Assigned(fCoordinateBox) then fCoordinateBox.Free;
@@ -249,7 +252,8 @@ begin
           MSG_SELECTCOLOR:               SelectColor;
           MSG_ACTIVATEGRADIENTEDITOR:    fGradientEditor.Show;
           MSG_GRADIENTEDITORRESPONSE:    fGradientEditor.Hide;
-          MSG_ACTIVEIMAGECHANGED:  fColorPalette.Refresh;
+          MSG_ACTIVEIMAGECHANGED:        fColorPalette.Refresh;
+          MSG_ACTIVATEGRADIENTSELECTOR:  fGradientSelector.Show;
         end;
     end;  // while MessageQueue.HasNewMessage
     HandleMessages;
