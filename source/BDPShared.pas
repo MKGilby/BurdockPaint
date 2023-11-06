@@ -144,7 +144,7 @@ const
   // Set INKS menu item states based on Settings.SelectedInks
   MSG_SETINKSMENU=14;
 
-  // Open select gradient dialog.
+  // Open GradientSelector.
   MSG_ACTIVATEGRADIENTSELECTOR=15;
 
   // Response from SelectGradientDialog. Data is new gradient index or -1 if not changed.
@@ -168,6 +168,7 @@ const
   MSG_PALETTEREQUESTCOLOR=21;
 
   // Active gradient changed, refresh gradients.
+  //   IntValue is the new gradient index in Project.CurrentGradientList.
   MSG_ACTIVEGRADIENTCHANGED=24;
 
   // Hide controls and select RGradCenter tool.
