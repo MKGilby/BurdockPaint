@@ -283,6 +283,7 @@ end;
 
 procedure TBDGradientEditor.Show(Sender:TObject);
 begin
+  fUndoSystem.Clear;
   RefreshControls(true);
 end;
 
