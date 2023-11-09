@@ -26,7 +26,8 @@ interface
 
 uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, PNGFont2Unit, MKMouse2,
   BDPInfoBar, BDPPalette, BDPMessage, BDPCursor, BDPSettings, BDPToolBase,
-  BDPInkBase, BDPRegion, BDPProject, BDPColorEditor, BDPModalDialog;
+  BDPInkBase, BDPRegion, BDPProject, BDPColorEditor, BDPModalDialog,
+  BDPGradient;
 
 const
   WINDOWWIDTH=1280;
@@ -202,6 +203,9 @@ const
   PARM_COL_GRADEDIT_COLOR4=7;
   PARM_COL_GRADEDIT_COLOR5=8;
 
+  // PARM_GRAD constants. They mark places where the GradientEditor was invoked from.
+  PARM_GRAD_SELECTOR=1;   // Message's uint32 parameters holds the gradient index.
+
 var
   MM:TGFXManager;  // MediaManager to hold fonts and internal images
   Settings:TSettings;  // All settings in one place
@@ -221,6 +225,7 @@ var
   ActiveInk:TBDInk;  // This is the selected ink
 
   Project:TBDProject;  // The project we are working on
+  GradientEditorGradient:TGradient;
 
   CELHelperImage:TBDRegion;  // Helper image for PUTCel
 
@@ -417,6 +422,8 @@ begin
   Inks:=TBDInks.Create;
   Log.LogStatus('  Creating tools...');
   Tools:=TBDTools.Create;
+  Log.LogStatus('  Creating GradientEditor helper...');
+  GradientEditorGradient:=TGradient.Create($ff000000,$ffffffff);
   if FileExists(TEMPPROJECTFILE) then begin
     Log.LogStatus(Format('Loading previous project (%s)...',[TEMPPROJECTFILE]));
     Project:=TBDProject.CreateFromFile(TEMPPROJECTFILE)
@@ -435,6 +442,7 @@ begin
     Project.SaveToFile(TEMPPROJECTFILE);
     Project.Free;
   end;
+  if Assigned(GradientEditorGradient) then GradientEditorGradient.Free;
   if Assigned(Tools) then Tools.Free;
   if Assigned(Inks) then Inks.Free;
   if Assigned(VibroColors) then VibroColors.Free;

@@ -33,7 +33,9 @@ type
 
   TBDGradientSelector=class(TBDModalDialog)
     constructor Create;
-    destructor Destroy; override;
+    // The gradient editor changed the GradientEditorGradient,
+    // so the gradient pointed by index should be updated (data and screen).
+    procedure SetGradient(pIndex:uint32);
   private
     fUndoButton,
     fRedoButton,
@@ -44,6 +46,7 @@ type
     procedure GradientClick(Sender:TObject;x,y,button:integer);
     procedure SelectClick(Sender:TObject;x,y,button:integer);
     procedure CancelClick(Sender:TObject;x,y,button:integer);
+    procedure EditClick(Sender:TObject;x,y,button:integer);
   end;
 
 implementation
@@ -115,10 +118,13 @@ begin
   fDeleteButton:=TBDButton(fChildren[fChildren.Count-1]);
 
   CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*4,
+    'EDIT','EDIT SELECTED GRADIENT.','GS Edit',EditClick);
+
+  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*5,
     'UNDO','UNDO LAST GRADIENT OPERATION.','GS Undo');
   fUndoButton:=TBDButton(fChildren[fChildren.Count-1]);
 
-  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*5,
+  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*6,
     'REDO','REDO LAST GRADIENT OPERATION.','GS Redo');
   fRedoButton:=TBDButton(fChildren[fChildren.Count-1]);
 
@@ -141,13 +147,14 @@ begin
   fGradients[fSelectedGradientIndex].Selected:=true;
 end;
 
-destructor TBDGradientSelector.Destroy;
+procedure TBDGradientSelector.SetGradient(pIndex:uint32);
 begin
-  inherited Destroy;
+  Project.CurrentGradientList[pIndex].CopyFrom(
+    GradientEditorGradient);
+  fGradients[pIndex-fScrollBar.Position].Refresh;
 end;
 
 procedure TBDGradientSelector.GradientClick(Sender:TObject; x,y,button:integer);
-var i:integer;
 begin
   if Sender is TBDSimpleGradient then with Sender as TBDSimpleGradient do begin
     if Tag<Project.CurrentGradientList.Count then begin
@@ -166,6 +173,17 @@ end;
 
 procedure TBDGradientSelector.CancelClick(Sender:TObject; x,y,button:integer);
 begin
+  Self.Hide;
+end;
+
+procedure TBDGradientSelector.EditClick(Sender:TObject; x,y,button:integer);
+begin
+  GradientEditorGradient.CopyFrom(
+    Project.CurrentGradientList[fScrollBar.Position+fSelectedGradientIndex]);
+  MessageQueue.AddMessage(
+    MSG_ACTIVATEGRADIENTEDITOR,
+    PARM_GRAD_SELECTOR,
+    fScrollBar.Position+fSelectedGradientIndex);
   Self.Hide;
 end;
 

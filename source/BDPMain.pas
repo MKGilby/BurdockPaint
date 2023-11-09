@@ -84,6 +84,7 @@ type
     procedure SaveCEL;
     procedure ColorEditorResp(msg:TMessage);
     procedure SelectColor;
+    procedure GradientEditorResp(msg:TMessage);
 
   end;
 
@@ -217,6 +218,7 @@ begin
       msg:=MessageQueue.GetNextMessage;
       mres:=fControls.ProcessMessage(msg);
       if not mres then mres:=fColorEditor.ProcessMessage(msg);
+      if not mres then mres:=fGradientEditor.ProcessMessage(msg);
       if not mres and fMainMenu.Visible then mres:=fMainMenu.ProcessMessage(msg);
       if not mres then
         case msg.TypeID of
@@ -251,7 +253,7 @@ begin
           MSG_COLOREDITORRESP:           ColorEditorResp(msg);
           MSG_SELECTCOLOR:               SelectColor;
           MSG_ACTIVATEGRADIENTEDITOR:    fGradientEditor.Show;
-          MSG_GRADIENTEDITORRESPONSE:    fGradientEditor.Hide;
+          MSG_GRADIENTEDITORRESPONSE:    GradientEditorResp(msg);
           MSG_ACTIVEIMAGECHANGED:        fColorPalette.Refresh;
           MSG_ACTIVATEGRADIENTSELECTOR:  fGradientSelector.Show;
         end;
@@ -567,6 +569,19 @@ begin
   my:=fDrawArea.MouseYToFrame(my);
   if (mx>=0) and (mx<Project.CurrentRegion.Width) and (my>=0) and (my<Project.CurrentRegion.Height) then
     Settings.ActiveColor:=Project.CurrentRegion.GetPixel(mx,my);
+end;
+
+procedure TMain.GradientEditorResp(msg:TMessage);
+begin
+  case msg.DataInt of
+    PARM_GRAD_SELECTOR:begin
+      if msg.DataUInt32<9999 then begin
+        fGradientSelector.SetGradient(msg.DataUInt32);
+        MessageQueue.AddMessage(MSG_ACTIVEGRADIENTCHANGED);
+      end;
+      fGradientSelector.Show;
+    end;
+  end;
 end;
 
 
