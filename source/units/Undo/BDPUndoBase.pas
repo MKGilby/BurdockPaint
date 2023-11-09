@@ -51,6 +51,7 @@ type
   TBDUndoSystem=class(TBDUndoList)
     constructor Create;
     constructor CreateFromStream(pStream:TStream);
+    procedure Clear;
     procedure Undo;
     procedure Redo;
     procedure SaveToFile(pFilename:string);
@@ -116,6 +117,12 @@ constructor TBDUndoSystem.CreateFromStream(pStream:TStream);
 begin
   inherited Create;
   LoadFromStream(pStream);
+end;
+
+procedure TBDUndoSystem.Clear;
+begin
+  inherited Clear;
+  fPointer:=-1;
 end;
 
 procedure TBDUndoSystem.Undo;
