@@ -25,7 +25,8 @@ unit BDPGradientSelector;
 interface
 
 uses
-  SysUtils, BDPModalDialog, BDPButton, BDPSimpleGradient, BDPSliders;
+  SysUtils, BDPModalDialog, BDPButton, BDPSimpleGradient, BDPSliders,
+  BDPGradientSelectorUndo;
 
 type
 
@@ -33,6 +34,7 @@ type
 
   TBDGradientSelector=class(TBDModalDialog)
     constructor Create;
+    destructor Destroy; override;
     // The gradient editor changed the GradientEditorGradient,
     // so the gradient pointed by index should be updated (data and screen).
     procedure SetGradient(pIndex:uint32);
@@ -43,10 +45,14 @@ type
     fSelectedGradientIndex:integer;
     fGradients:array[0..7] of TBDSimpleGradient;
     fScrollBar:TBDVerticalSlider;
+    fUndoSystem:TBDGradientSelectorUndoSystem;
     procedure GradientClick(Sender:TObject;x,y,button:integer);
     procedure SelectClick(Sender:TObject;x,y,button:integer);
     procedure CancelClick(Sender:TObject;x,y,button:integer);
     procedure EditClick(Sender:TObject;x,y,button:integer);
+    procedure UndoClick(Sender:TObject;x,y,button:integer);
+    procedure RedoClick(Sender:TObject;x,y,button:integer);
+    procedure RefreshUndoRedoButtons;
   end;
 
 implementation
@@ -121,11 +127,11 @@ begin
     'EDIT','EDIT SELECTED GRADIENT.','GS Edit',EditClick);
 
   CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*5,
-    'UNDO','UNDO LAST GRADIENT OPERATION.','GS Undo');
+    'UNDO','UNDO LAST GRADIENT OPERATION.','GS Undo',UndoClick);
   fUndoButton:=TBDButton(fChildren[fChildren.Count-1]);
 
   CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*6,
-    'REDO','REDO LAST GRADIENT OPERATION.','GS Redo');
+    'REDO','REDO LAST GRADIENT OPERATION.','GS Redo',RedoClick);
   fRedoButton:=TBDButton(fChildren[fChildren.Count-1]);
 
   for i:=0 to min(Project.CurrentGradientList.Count-1,7) do
@@ -145,10 +151,21 @@ begin
 
   fSelectedGradientIndex:=Project.CurrentGradientList.ActiveIndex-fScrollBar.Position;
   fGradients[fSelectedGradientIndex].Selected:=true;
+
+  fUndoSystem:=TBDGradientSelectorUndoSystem.Create;
+  RefreshUndoRedoButtons;
+end;
+
+destructor TBDGradientSelector.Destroy;
+begin
+  if Assigned(fUndoSystem) then fUndoSystem.Free;
+  inherited Destroy;
 end;
 
 procedure TBDGradientSelector.SetGradient(pIndex:uint32);
 begin
+  fUndoSystem.AddUndo(Project.CurrentGradientList[pIndex],GradientEditorGradient);
+  RefreshUndoRedoButtons;
   Project.CurrentGradientList[pIndex].CopyFrom(
     GradientEditorGradient);
   fGradients[pIndex-fScrollBar.Position].Refresh;
@@ -185,6 +202,30 @@ begin
     PARM_GRAD_SELECTOR,
     fScrollBar.Position+fSelectedGradientIndex);
   Self.Hide;
+end;
+
+procedure TBDGradientSelector.UndoClick(Sender:TObject; x,y,button:integer);
+var i:integer;
+begin
+  fUndoSystem.Undo;
+  for i:=0 to 7 do fGradients[i].Refresh;
+  MessageQueue.AddMessage(MSG_ACTIVEGRADIENTCHANGED);
+  RefreshUndoRedoButtons;
+end;
+
+procedure TBDGradientSelector.RedoClick(Sender:TObject; x,y,button:integer);
+var i:integer;
+begin
+  fUndoSystem.Redo;
+  for i:=0 to 7 do fGradients[i].Refresh;
+  MessageQueue.AddMessage(MSG_ACTIVEGRADIENTCHANGED);
+  RefreshUndoRedoButtons;
+end;
+
+procedure TBDGradientSelector.RefreshUndoRedoButtons;
+begin
+  fUndoButton.Enabled:=fUndoSystem.CanUndo;
+  fRedoButton.Enabled:=fUndoSystem.CanRedo;
 end;
 
 end.
