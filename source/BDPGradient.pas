@@ -48,6 +48,9 @@ type
     // randomly modifying it by max +/- Settings.RealDitherStrength (0..1)
     function GetColorAtDithered(pValue:double):uint32;
 
+    // Copies gradient data from the given gradient.
+    procedure CopyFrom(pGradient:TGradient);
+
     // Save gradient to the specified stream. (see fileformats.txt - GDT-block)
     procedure SaveToStream(pStream:TStream);
 
@@ -190,6 +193,18 @@ function TGradient.GetColorAtDithered(pValue:double):uint32;
 begin
   pValue+=random*Settings.RealDitherStrength*2-Settings.RealDitherStrength;
   Result:=GetColorAt(pValue);
+end;
+
+procedure TGradient.CopyFrom(pGradient:TGradient);
+var i:integer;
+begin
+  for i:=1 to 5 do begin
+    Colors[i]:=pGradient.Colors[i];
+    if i>=3 then begin
+      ColorUsed[i]:=pGradient.ColorUsed[i];
+      ColorPositions[i]:=pGradient.ColorPositions[i];
+    end;
+  end;
 end;
 
 procedure TGradient.SaveToStream(pStream:TStream);
