@@ -26,7 +26,7 @@ interface
 
 uses
   Classes, SysUtils, fgl, BDPRegion, BDPGradient, BDPPalette,
-  BDPRegionUndo;
+  BDPRegionUndo, BDPGradientSelectorUndo;
 
 type
 
@@ -56,6 +56,7 @@ type
     fRegion:TBDRegion;
     fPalette:TBDPalette;
     fRegionUndoSystem:TBDRegionUndoSystem;
+    fGradientSelectorUndoSystem:TBDGradientSelectorUndoSystem;
 //    fPaletteUndoSystem:TBDPaletteUndoSystem;
     fGradients:TGradientList;
     procedure LoadFromStreamV1(pStream:TStream);
@@ -63,6 +64,7 @@ type
     property Region:TBDRegion read fRegion;
     property Palette:TBDPalette read fPalette;
     property RegionUndo:TBDRegionUndoSystem read fRegionUndoSystem;
+    property GradientSelectorUndo:TBDGradientSelectorUndoSystem read fGradientSelectorUndoSystem;
 //    property PaletteUndo:TBDPaletteUndoSystem read fPaletteUndoSystem;
     property Gradients:TGradientList read fGradients;
   end;
@@ -75,19 +77,19 @@ type
     // Creates a project with a new empty 320x200 image
     constructor Create;
 
-    // Creates a project from file. (fileformats.txt - P-block)
+    // Creates a project from file. (fileformats.txt - PRJ-block)
     constructor CreateFromFile(iFilename:String);
 
-    // Creates a project from stream. (fileformats.txt - P-block)
+    // Creates a project from stream. (fileformats.txt - PRJ-block)
     constructor CreateFromStream(iStream:TStream);
 
     // Free assigned entities
     destructor Destroy; override;
 
-    // Saves project to stream. (fileformats.txt - P-block)
+    // Saves project to stream. (fileformats.txt - PRJ-block)
     procedure SaveToFile(pFilename:string);
 
-    // Saves project to stream. (fileformats.txt - P-block)
+    // Saves project to stream. (fileformats.txt - PRJ-block)
     procedure SaveToStream(pStream:TStream);
 
     // Clears undo data and releases CEL
@@ -123,6 +125,12 @@ const
   IMAGEBLOCKID='IMG';
   PROJECTBLOCKID='PRJ';
 
+  FLAG_HASCEL=1;
+  FLAG_HASREGIONUNDO=2;
+  FLAG_HASCOLORUNDO=4;
+  FLAG_HASGRADIENTS=8;
+  FLAG_HASGRADIENTSUNDO=16;
+
 { TBDImage }
 
 constructor TBDImage.Create;
@@ -137,6 +145,7 @@ begin
   fRegionUndoSystem:=TBDRegionUndoSystem.Create;
 //  fPaletteUndoSystem:=TBDPaletteUndoSystem.Create;
   fGradients:=TGradientList.Create;
+  fGradientSelectorUndoSystem:=TBDGradientSelectorUndoSystem.Create;
 end;
 
 constructor TBDImage.CreateFromStream(iStream:TStream);
@@ -158,16 +167,17 @@ begin
   if not Assigned(fRegionUndoSystem) then fRegionUndoSystem:=TBDRegionUndoSystem.Create;
 //  if not Assigned(fPaletteUndoSystem) then fPaletteUndoSystem:=TBDPaletteUndoSystem.Create;
   if not Assigned(fGradients) then fGradients:=TGradientList.Create;
-
+  if not Assigned(fGradientSelectorUndoSystem) then
+    fGradientSelectorUndoSystem:=TBDGradientSelectorUndoSystem.Create;
 end;
 
 destructor TBDImage.Destroy;
 begin
-  if Assigned(fRegion) then fRegion.Free;
-  if Assigned(fPalette) then fPalette.Free;
+  if Assigned(fGradientSelectorUndoSystem) then fGradientSelectorUndoSystem.Free;
   if Assigned(fGradients) then fGradients.Free;
   if Assigned(fRegionUndoSystem) then fRegionUndoSystem.Free;
-//  if Assigned(fPaletteUndoSystem) then fPaletteUndoSystem.Free;
+  if Assigned(fPalette) then fPalette.Free;
+  if Assigned(fRegion) then fRegion.Free;
   inherited Destroy;
 end;
 
@@ -181,9 +191,10 @@ begin
   pStream.Write(i,4);  // Size placeholder
 
   flags:=0;
-  if fRegionUndoSystem.Count>0 then flags:=flags or 2;
+  if fRegionUndoSystem.Count>0 then flags:=flags or FLAG_HASREGIONUNDO;
 //  if fPaletteUndoSystem.Count>0 then flags:=flags or 4;
-  if fGradients.Count>0 then flags:=flags or 8;
+  if fGradients.Count>0 then flags:=flags or FLAG_HASGRADIENTS;
+  if fGradientSelectorUndoSystem.Count>0 then flags:=flags or FLAG_HASGRADIENTSUNDO;
   pStream.Write(flags,1);
 
   fPalette.SaveToStream(pStream);
@@ -191,6 +202,7 @@ begin
   if fRegionUndoSystem.Count>0 then fRegionUndoSystem.SaveToStream(pStream);
 //  if fPaletteUndoSystem.Count>0 then fPaletteUndoSystem.SaveToStream(pStream);
   if fGradients.Count>0 then fGradients.SaveToStream(pStream);
+  if fGradientSelectorUndoSystem.Count>0 then fGradientSelectorUndoSystem.SaveToStream(pStream);
 
   i:=pStream.Position-curr-4;
   pStream.Position:=curr;
@@ -211,9 +223,12 @@ begin
   pStream.Read(flags,1);
   fPalette:=TBDPalette.CreateFromStream(pStream);
   fRegion:=TBDRegion.CreateFromStream(pStream);
-  if flags and 2<>0 then fRegionUndoSystem:=TBDRegionUndoSystem.CreateFromStream(pStream);
-//  if flags and 4<>0 then fPaletteUndoSystem:=TBDPaletteUndoSystem.CreateFromStream(pStream);
-  if flags and 8<>0 then fGradients:=TGradientList.CreateFromStream(pStream);
+  if flags and FLAG_HASREGIONUNDO<>0 then
+    fRegionUndoSystem:=TBDRegionUndoSystem.CreateFromStream(pStream);
+  if flags and FLAG_HASGRADIENTS<>0 then
+    fGradients:=TGradientList.CreateFromStream(pStream);
+  if flags and FLAG_HASGRADIENTSUNDO<>0 then
+    fGradientSelectorUndoSystem:=TBDGradientSelectorUndoSystem.CreateFromStream(pStream);
 end;
 
 
@@ -293,7 +308,7 @@ begin
   pStream.Write(i,4);  // Size placeholder
 
   flags:=0;
-  if Assigned(fCELImage) then flags:=flags or 1;
+  if Assigned(fCELImage) then flags:=flags or FLAG_HASCEL;
   pStream.Write(flags,1);
   i:=fImages.Count;
   pStream.Write(i,2);
@@ -329,7 +344,7 @@ begin
     fImages.Add(TBDImage.CreateFromStream(pStream));
     dec(count);
   end;
-  if flags and 1<>0 then fCELImage:=TBDRegion.CreateFromStream(pStream);
+  if flags and FLAG_HASCEL<>0 then fCELImage:=TBDRegion.CreateFromStream(pStream);
 end;
 
 procedure TBDProject.fSetCurrentImageIndex(value:integer);

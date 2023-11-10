@@ -34,7 +34,6 @@ type
 
   TBDGradientSelector=class(TBDModalDialog)
     constructor Create;
-    destructor Destroy; override;
     // The gradient editor changed the GradientEditorGradient,
     // so the gradient pointed by index should be updated (data and screen).
     procedure SetGradient(pIndex:uint32);
@@ -45,7 +44,6 @@ type
     fSelectedGradientIndex:integer;
     fGradients:array[0..7] of TBDSimpleGradient;
     fScrollBar:TBDVerticalSlider;
-    fUndoSystem:TBDGradientSelectorUndoSystem;
     procedure GradientClick(Sender:TObject;x,y,button:integer);
     procedure SelectClick(Sender:TObject;x,y,button:integer);
     procedure CancelClick(Sender:TObject;x,y,button:integer);
@@ -152,19 +150,13 @@ begin
   fSelectedGradientIndex:=Project.CurrentGradientList.ActiveIndex-fScrollBar.Position;
   fGradients[fSelectedGradientIndex].Selected:=true;
 
-  fUndoSystem:=TBDGradientSelectorUndoSystem.Create;
   RefreshUndoRedoButtons;
-end;
-
-destructor TBDGradientSelector.Destroy;
-begin
-  if Assigned(fUndoSystem) then fUndoSystem.Free;
-  inherited Destroy;
 end;
 
 procedure TBDGradientSelector.SetGradient(pIndex:uint32);
 begin
-  fUndoSystem.AddUndo(Project.CurrentGradientList[pIndex],GradientEditorGradient);
+  Project.CurrentImage.GradientSelectorUndo.AddUndo(
+    pIndex,Project.CurrentGradientList[pIndex],GradientEditorGradient);
   RefreshUndoRedoButtons;
   Project.CurrentGradientList[pIndex].CopyFrom(
     GradientEditorGradient);
@@ -207,7 +199,7 @@ end;
 procedure TBDGradientSelector.UndoClick(Sender:TObject; x,y,button:integer);
 var i:integer;
 begin
-  fUndoSystem.Undo;
+  Project.CurrentImage.GradientSelectorUndo.Undo;
   for i:=0 to 7 do fGradients[i].Refresh;
   MessageQueue.AddMessage(MSG_ACTIVEGRADIENTCHANGED);
   RefreshUndoRedoButtons;
@@ -216,7 +208,7 @@ end;
 procedure TBDGradientSelector.RedoClick(Sender:TObject; x,y,button:integer);
 var i:integer;
 begin
-  fUndoSystem.Redo;
+  Project.CurrentImage.GradientSelectorUndo.Redo;
   for i:=0 to 7 do fGradients[i].Refresh;
   MessageQueue.AddMessage(MSG_ACTIVEGRADIENTCHANGED);
   RefreshUndoRedoButtons;
@@ -224,8 +216,8 @@ end;
 
 procedure TBDGradientSelector.RefreshUndoRedoButtons;
 begin
-  fUndoButton.Enabled:=fUndoSystem.CanUndo;
-  fRedoButton.Enabled:=fUndoSystem.CanRedo;
+  fUndoButton.Enabled:=Project.CurrentImage.GradientSelectorUndo.CanUndo;
+  fRedoButton.Enabled:=Project.CurrentImage.GradientSelectorUndo.CanRedo;
 end;
 
 end.
