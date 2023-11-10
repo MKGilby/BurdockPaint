@@ -15,12 +15,13 @@
                         CLR or cLR - Color data
                         RGN or rGN - Region data
                         CCS        - Color clusters data (deprecated)
+                        GRD        - Gradient data
                         GDT or gDT - Gradients data
                         USR        - UndoSystem data for region
                         USC        - UndoSystem data for color palette
-                        USL        - UndoSystem data for gradients
+                        USG        - UndoSystem data for gradients
                         UDR        - Undo operation data for region
-                        UDL        - Undo operation data for gradients
+                        UDG        - Undo operation data for gradients
       3       1       Version of the block
       4       4       Size of the block without the Data ID and the size.
       8     [Size]    The data in uncompressed or ZLib compressed format.
@@ -126,13 +127,36 @@
     8       width*height*4      Pixels line by line
 
 
-2.1.3. UNR - Region undo operation data
+2.1.3. GRD - Gradient data
+------------------------
+
+  Gradient data block contains everything about a gradient.
+
+2.1.3.1. Version 1
+------------------
+
+    Start   Size        Description (content)
+    0       4           Start color (uint32)
+    4       4           End color (uint32)
+    8       1           Flags
+                          bit 0 - reversed
+                          bit 1 - pingpong
+                          bit 2-4 - is additional color [3..5] is in use?
+    9       4           Color (uint32)
+    13      8           Position in gradient (double)
+    21      4           Color (uint32)
+    25      8           Position in gradient (double)
+    33      4           Color (uint32)
+    37      8           Position in gradient (double)
+
+
+2.1.4. UDR - Region undo operation data
 ---------------------------------------
 
   Region undo operation data contains information about one undo/redo operation
   regarding a region of the image.
 
-2.1.3.1. Version 1
+2.1.4.1. Version 1
 ------------------
 
     Start   Size        Description (content)
@@ -140,10 +164,19 @@
     .       ???         The affected region after the operation, in an RGN-block
 
 
-2.1.4. UNL - Gradient undo operation data
+2.1.5. UDG - Gradient undo operation data
 ----------------------------------------------
 
-    < To be created >
+  Gradient undo operation data contains information about one undo/redo operation
+  about a gradient.
+
+2.1.5.1. Version 1
+------------------
+
+    Start   Size        Description (content)
+    0       4           Affected gradient index (in current image's gradient list).
+    4       ???         The affected gradient before the editing in a GRD-block.
+    .       ???         The affected gradient after the editing in a GRD-block.
 
 
 2.2. Complex blocks
@@ -193,7 +226,7 @@
     Start   Size        Description (content)
     0       2           Undo/redo operation count
     2       2           Index of current operation
-    4       ???         UDL-blocks (count times)
+    4       ???         UDG-blocks (count times)
 
 
 2.2.4. CCS - Color Clusters data (deprecated)
@@ -220,7 +253,7 @@
 
   Contains data about gradients.
 
-2.2.5.1. Version 1
+2.2.5.1. Version 1 (deprecated)
 ------------------
 
     Start   Size          Description (content)
@@ -240,14 +273,22 @@
         33      4           Color (uint32)
         37      8           Position in gradient (double)
 
+2.2.5.2. Version 2
+------------------
 
-2.2.5. IMG - Image data
+    Start   Size          Description (content)
+    0       1             Gradient count
+    1       1             Active gradient index
+    2       ???           Gradient datas in a GRD-blocks.
+
+
+2.2.6. IMG - Image data
 -----------------------
 
   Image data contains everything about an image in BurdockPaint. (The image
   itself, gradients, palette, undo/redo data.)
 
-2.2.5.1. Version 1
+2.2.6.1. Version 1
 ------------------
 
     Start   Size        Description (content)
@@ -262,10 +303,10 @@
    [.       ???]        if Flags.bit[1] is set then ImageUndoSystem data in an USR-block
    [.       ???]        if Flags.bit[2] is set then PaletteUndoSystem data in an USC-block
    [.       ???]        if Flags.bit[3] is set then Gradients data in an CCS-block
-   [.       ???]        if Flags.bit[4] is set then GradientsUndoSystem data in an USL-block
+   [.       ???]        if Flags.bit[4] is set then GradientsUndoSystem data in an USG-block
 
 
-2.2.6. PRJ - Project data
+2.2.7. PRJ - Project data
 -------------------------
 
   Project data is the summary of the images of a project. It contains:
