@@ -35,6 +35,9 @@ type
     // Create gradient.
     constructor Create(iColor1,iColor2:uint32);
 
+    // Create the gradient from stream (see fileformats.txt - GDR-block)
+    constructor CreateFromStream(iStream:TStream);
+
     // Create the gradient from stream (see fileformats.txt - CCS-block)
     constructor CreateFromStreamCCS1(iStream:TStream);
 
@@ -51,8 +54,11 @@ type
     // Copies gradient data from the given gradient.
     procedure CopyFrom(pGradient:TGradient);
 
-    // Save gradient to the specified stream. (see fileformats.txt - GDT-block)
+    // Save gradient to the specified stream. (see fileformats.txt - GDR-block)
     procedure SaveToStream(pStream:TStream);
+
+    // Load gradient from the specified stream. (see fileformats.txt - GDR-block)
+    procedure LoadFromStream(pStream:TStream);
 
     // Load gradient from the specified stream. (see fileformats.txt - CCS-block)
     procedure LoadFromStreamCCS1(pStream:TStream);
@@ -79,6 +85,7 @@ type
     function fGetColorUsed(index:integer):boolean;
     procedure fSetColorUsed(index:integer;value:boolean);
     procedure SortColors;
+    procedure LoadFromStreamV1(pStream:TStream);
   public
     property Colors[index:integer]:uint32 read fGetColor write fSetColor;
     property ColorPositions[index:integer]:double read fGetColorPos write fSetColorPos;
@@ -124,6 +131,7 @@ uses BDPShared, Logger, MyZStreamUnit;
 const
   COLORCLUSTERSBLOCKID='CCS';
   GRADIENTSBLOCKID='GDT';
+  GRADIENTBLOCKID='GDR';
 
   FLAGS_REVERSED=1;
   FLAGS_PINGPONG=2;
@@ -152,6 +160,12 @@ begin
   fSetColor(5,0);
   fReversed:=false;
   fPingpong:=false;
+end;
+
+constructor TGradient.CreateFromStream(iStream:TStream);
+begin
+  Create(0,0);
+  LoadFromStream(iStream);
 end;
 
 constructor TGradient.CreateFromStreamCCS1(iStream:TStream);
@@ -208,8 +222,14 @@ begin
 end;
 
 procedure TGradient.SaveToStream(pStream:TStream);
-var flags:byte;
+var i,curr:int64;flags:byte;s:string;
 begin
+  s:=GRADIENTBLOCKID+#1;
+  pStream.Write(s[1],4);
+  curr:=pStream.Position;
+  i:=0;
+  pStream.Write(i,4);  // Size placeholder
+
   pStream.Write(fColors[1],4);
   pStream.Write(fColors[2],4);
   flags:=0;
@@ -225,6 +245,27 @@ begin
   pStream.Write(fColorPositions[4],8);
   pStream.Write(fColors[5],4);
   pStream.Write(fColorPositions[5],8);
+
+  i:=pStream.Position-curr-4;
+  pStream.Position:=curr;
+  pStream.write(i,4);
+  pStream.Position:=pStream.Position+i;
+end;
+
+procedure TGradient.LoadFromStream(pStream:TStream);
+var curr,size:int64;b:byte;s:String;
+begin
+  s:=#0#0#0#0;
+  pStream.Read(s[1],4);
+  if uppercase(copy(s,1,3))<>GRADIENTBLOCKID then raise Exception.Create(Format('Gradient block ID expected, got %s!',[copy(s,1,3)]));
+  if ord(s[1]) and $20<>0 then Exception.Create('Gradient block cannot be compressed!');
+  size:=0;
+  pStream.Read(size,4);
+  curr:=pStream.Position;
+  b:=ord(s[4]);
+  if b=1 then LoadFromStreamV1(pStream)
+  else raise Exception.Create(Format('Unknown gradient data version! (%d)',[b]));
+  pStream.Position:=curr+size;
 end;
 
 procedure TGradient.LoadFromStreamCCS1(pStream:TStream);
@@ -368,6 +409,12 @@ begin
     Log.Trace(Format('  %d. %d',[i+1,fOrder[i]]));
 end;
 
+procedure TGradient.LoadFromStreamV1(pStream:TStream);
+begin
+  // Since internal format is the same we can use GDT1 loader to load V1 GDR.
+  LoadFromStreamGDT1(pStream);
+end;
+
 
 { TGradientList }
 
@@ -394,7 +441,7 @@ end;
 procedure TGradientList.SaveToStream(pStream:TStream);
 var i:integer;curr:int64;s:String;Xs,Ys:TStream;
 begin
-  s:=GRADIENTSBLOCKID+#1;
+  s:=GRADIENTSBLOCKID+#2;
   curr:=pStream.Position;
   i:=0;
   pStream.Write(i,4);  // ID placeholder
@@ -438,7 +485,7 @@ end;
 
 procedure TGradientList.LoadFromStream(pStream:TStream);
 var size,curr:int64;count:integer;s:string;
-    mode:(mCCS1,mGDT1);
+    mode:(mCCS1,mGDT1,mGDT2);
     Xs:TStream;
 begin
   s:=#0#0#0#0;
@@ -451,8 +498,8 @@ begin
       raise Exception.Create(Format('Unknown CCS block version! (%d)',[ord(s[4])]));
   end
   else if UpperCase(copy(s,1,3))=GRADIENTSBLOCKID then begin
-    if ord(s[4])=1 then
-      mode:=mGDT1
+    if ord(s[4])=1 then mode:=mGDT1
+    else if ord(s[4])=2 then mode:=mGDT2
     else
       raise Exception.Create(Format('Unknown GDT block version! (%d)',[ord(s[4])]));
   end
@@ -475,7 +522,8 @@ begin
     Clear;
     while count>0 do begin
       if mode=mCCS1 then Add(TGradient.CreateFromStreamCCS1(Xs))
-      else if mode=mGDT1 then Add(TGradient.CreateFromStreamGDT1(Xs));
+      else if mode=mGDT1 then Add(TGradient.CreateFromStreamGDT1(Xs))
+      else if mode=mGDT2 then Add(TGradient.CreateFromStream(Xs));
       dec(count);
     end;
   finally
