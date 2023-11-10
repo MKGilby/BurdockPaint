@@ -14,13 +14,11 @@ Todo:
   - Brighten
   - Tint
 - Autosave:
-  - Add max file count setting.
   - Add GUI for settings.
 - ColorEditor buttons:
-  - "Undo" and "Redo" should undo/redo any changes made on the PaletteEditor.
+  - "Undo" and "Redo" should undo/redo any changes made on the ColorEditor.
 - Add an option to make the current inks/tools property adjustable on the fly.
   (Should show a small dialog somewhere at the side of the window).
-- New color cluster selector dialog.
 - Coordinatebox colors should be updated on moving mouse over every source of color.
   (ColorSelector, Gradient)
 - Right clicking on a color in the palette sidebar should open:
@@ -29,11 +27,15 @@ Todo:
     - Color picking mode from any source where color can be selected.
       (harder to implement, but I think it would be a better solution.)
 - Create Controls as fixed width dialog.
-- Add a few other window sizes and layout:
-  - Current (1280x720 windowed)
-  - 1920x1080 fullscreen borderless
-- BUG: Backup saves not the current state but the one at the opening of the app.
 
+
+2023.11.10
+- GradientSelector Undo/Redo state is saved into the project.
+
+2023.11.09
+- Clicking Edit in GradientSelector opens GradientEditor with the selected gradient.
+- In GradientSelector the Undo/Redo buttons work. (Undostate not yet saved.)
+- GradientEditor discards Undo/Redo data from previous editing.
 
 2023.11.06
 - Clicking the down arrow in the GradientControl opens GradientSelector.
@@ -46,7 +48,7 @@ Todo:
 2023.11.03
 - Backup is created only if the project is changed since the last backup.
 - You can limit the amount of backed up files by file count.
-- CoordinateBox shows color of palette entry when moving mouse over palette sidebar. 
+- CoordinateBox shows color of palette entry when moving mouse over palette sidebar.
 
 2023.11.02
 - Added palette sidebar. Click to select color and use mouse wheel to browse
