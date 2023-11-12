@@ -119,7 +119,7 @@ type
 
 implementation
 
-uses BDPShared;
+uses BDPShared, BDPInternalFileFormat;
 
 const
   IMAGEBLOCKID='IMG';
@@ -149,20 +149,17 @@ begin
 end;
 
 constructor TBDImage.CreateFromStream(iStream:TStream);
-var curr,size:int64;b:byte;s:string;
+var tmp:TInternalBlock;
 begin
-  s:=#0#0#0#0;
-  iStream.Read(s[1],4);
-  if uppercase(copy(s,1,3))<>IMAGEBLOCKID then raise
-    Exception.Create(Format('Image block ID expected, got %s!',[copy(s,1,3)]));
-  if ord(s[1]) and $20<>0 then Exception.Create('Image block cannot be compressed!');
-  size:=0;
-  iStream.Read(size,4);
-  curr:=iStream.Position;
-  b:=ord(s[4]);
-  if b=1 then LoadFromStreamV1(iStream)
-  else raise Exception.Create(Format('Unknown image data version! (%d)',[b]));
-  iStream.Position:=curr+size;
+  tmp:=TInternalFileFormat.ReadBlock(iStream);
+  try
+    if tmp.BlockID<>IMAGEBLOCKID then
+      raise Exception.Create(Format('Image block expected, got %s!',[tmp.BlockID]));
+    if tmp.Version=1 then LoadFromStreamV1(tmp.Data)
+    else raise Exception.Create(Format('Unknown image data version! (%d)',[tmp.Version]));
+  finally
+    tmp.Free;
+  end;
 
   if not Assigned(fRegionUndoSystem) then fRegionUndoSystem:=TBDRegionUndoSystem.Create;
 //  if not Assigned(fPaletteUndoSystem) then fPaletteUndoSystem:=TBDPaletteUndoSystem.Create;
@@ -182,37 +179,33 @@ begin
 end;
 
 procedure TBDImage.SaveToStream(pStream:TStream);
-var i,curr:int64;flags:byte;s:string;
+var Xs:TStream;flags:byte;
 begin
-  s:=IMAGEBLOCKID+#1;
-  pStream.Write(s[1],4);
-  curr:=pStream.Position;
-  i:=0;
-  pStream.Write(i,4);  // Size placeholder
+  Xs:=TMemoryStream.Create;
+  try
+    flags:=0;
+    if fRegionUndoSystem.Count>0 then flags:=flags or FLAG_HASREGIONUNDO;
+  //  if fPaletteUndoSystem.Count>0 then flags:=flags or 4;
+    if fGradients.Count>0 then flags:=flags or FLAG_HASGRADIENTS;
+    if fGradientSelectorUndoSystem.Count>0 then flags:=flags or FLAG_HASGRADIENTSUNDO;
+    Xs.Write(flags,1);
 
-  flags:=0;
-  if fRegionUndoSystem.Count>0 then flags:=flags or FLAG_HASREGIONUNDO;
-//  if fPaletteUndoSystem.Count>0 then flags:=flags or 4;
-  if fGradients.Count>0 then flags:=flags or FLAG_HASGRADIENTS;
-  if fGradientSelectorUndoSystem.Count>0 then flags:=flags or FLAG_HASGRADIENTSUNDO;
-  pStream.Write(flags,1);
-
-  fPalette.SaveToStream(pStream);
-  fRegion.SaveToStream(pStream);
-  if fRegionUndoSystem.Count>0 then fRegionUndoSystem.SaveToStream(pStream);
-//  if fPaletteUndoSystem.Count>0 then fPaletteUndoSystem.SaveToStream(pStream);
-  if fGradients.Count>0 then fGradients.SaveToStream(pStream);
-  if fGradientSelectorUndoSystem.Count>0 then fGradientSelectorUndoSystem.SaveToStream(pStream);
-
-  i:=pStream.Position-curr-4;
-  pStream.Position:=curr;
-  pStream.write(i,4);
-  pStream.Position:=pStream.Position+i;
+    fPalette.SaveToStream(Xs);
+    fRegion.SaveToStream(Xs);
+    if fRegionUndoSystem.Count>0 then fRegionUndoSystem.SaveToStream(Xs);
+  //  if fPaletteUndoSystem.Count>0 then fPaletteUndoSystem.SaveToStream(Xs);
+    if fGradients.Count>0 then fGradients.SaveToStream(Xs);
+    if fGradientSelectorUndoSystem.Count>0 then fGradientSelectorUndoSystem.SaveToStream(Xs);
+    TInternalFileFormat.WriteBlock(pStream,IMAGEBLOCKID,1,Xs,false);
+  finally
+    Xs.Free;
+  end;
 end;
 
 procedure TBDImage.ClearUndoData;
 begin
   fRegionUndoSystem.Clear;
+  fGradientSelectorUndoSystem.Clear;
 //  fPaletteUndoSystem.Clear;
 end;
 
@@ -256,21 +249,19 @@ begin
 end;
 
 constructor TBDProject.CreateFromStream(iStream:TStream);
-var curr,size:int64;b:byte;s:String;
+var tmp:TInternalBlock;
 begin
   fImages:=TBDImageList.Create;
-  s:=#0#0#0#0;
-  iStream.Read(s[1],4);
-  if uppercase(copy(s,1,3))<>PROJECTBLOCKID then raise Exception.Create(Format('Project block ID expected, got %s!',[copy(s,1,3)]));
-  if ord(s[1]) and $20<>0 then Exception.Create('Project block cannot be compressed!');
-  size:=0;
-  iStream.Read(size,4);
-  curr:=iStream.Position;
-  b:=ord(s[4]);
-  if b=1 then LoadFromStreamV1(iStream)
-  else raise Exception.Create(Format('Unknown project data version! (%d)',[b]));
-  iStream.Position:=curr+size;
 
+  tmp:=TInternalFileFormat.ReadBlock(iStream);
+  try
+    if tmp.BlockID<>PROJECTBLOCKID then
+      raise Exception.Create(Format('Project block expected, got %s!',[tmp.BlockID]));
+    if tmp.Version=1 then LoadFromStreamV1(tmp.Data)
+    else raise Exception.Create(Format('Unknown project data version! (%d)',[tmp.Version]));
+  finally
+    tmp.Free;
+  end;
   if fImages.Count=0 then fImages.Add(TBDImage.Create);
 
   if (fCurrentImageIndex<0) or (fCurrentImageIndex>=fImages.Count) then
@@ -299,29 +290,24 @@ begin
 end;
 
 procedure TBDProject.SaveToStream(pStream:TStream);
-var curr:int64;flags:byte;i:integer;s:string;
+var flags:byte;i:integer;Xs:TStream;
 begin
-  s:=PROJECTBLOCKID+#1;
-  pStream.Write(s[1],4);
-  curr:=pStream.Position;
-  i:=0;
-  pStream.Write(i,4);  // Size placeholder
+  Xs:=TMemoryStream.Create;
+  try
+    flags:=0;
+    if Assigned(fCELImage) then flags:=flags or FLAG_HASCEL;
+    Xs.Write(flags,1);
+    i:=fImages.Count;
+    Xs.Write(i,2);
+    Xs.Write(fCurrentImageIndex,2);
+    for i:=0 to fImages.Count-1 do
+      fImages[i].SaveToStream(Xs);
 
-  flags:=0;
-  if Assigned(fCELImage) then flags:=flags or FLAG_HASCEL;
-  pStream.Write(flags,1);
-  i:=fImages.Count;
-  pStream.Write(i,2);
-  pStream.Write(fCurrentImageIndex,2);
-  for i:=0 to fImages.Count-1 do
-    fImages[i].SaveToStream(pStream);
-
-  if Assigned(fCELImage) then fCELImage.SaveToStream(pStream);
-
-  i:=pStream.Position-curr-4;
-  pStream.Position:=curr;
-  pStream.write(i,4);
-  pStream.Position:=pStream.Position+i;
+    if Assigned(fCELImage) then fCELImage.SaveToStream(Xs);
+    TInternalFileFormat.WriteBlock(pStream,PROJECTBLOCKID,1,Xs,false);
+  finally
+    Xs.Free;
+  end;
 end;
 
 procedure TBDProject.Clean;
