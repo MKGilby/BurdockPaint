@@ -36,8 +36,6 @@ type
     constructor Create(iWidth,iHeight:integer);
     // Creates region from stream (fileformats.txt - R-block)
     constructor CreateFromStream(iStream:TStream);
-    // Free up entities
-    destructor Destroy; override;
 
     // ---------------- Drawing operations -------------------
     // Puts source onto Self at x,y skipping pixels having colorkey value.
@@ -97,6 +95,8 @@ type
     fLeft,fTop:integer;
     // Is the pixel data changed?
     fChanged:boolean;
+  private
+    procedure LoadFromStreamV1(pSource:TStream);
   public
     property Left:integer read fLeft write fLeft;
     property Top:integer read fTop write fTop;
@@ -105,7 +105,8 @@ type
 
 implementation
 
-uses MyZStreamUnit, Logger, BDPShared, MKToolbox, FastPaletteUnit;
+uses MyZStreamUnit, Logger, BDPShared, MKToolbox, FastPaletteUnit,
+  BDPInternalFileFormat;
 
 {$i includes\ntsccol.inc}
 
@@ -130,11 +131,6 @@ begin
   fLeft:=0;
   fTop:=0;
   fChanged:=false;
-end;
-
-destructor TBDRegion.Destroy;
-begin
-  inherited Destroy;
 end;
 
 procedure TBDRegion.PutImage(x,y:integer; source:TARGBImage; colorkey:uint32);
@@ -257,41 +253,19 @@ begin
 end;
 
 procedure TBDRegion.SaveToStream(Target:TStream);
-var i:integer;curr:int64;Xs,Ys:TStream;s:string;
+var Xs:TStream;
 begin
-  s:=REGIONBLOCKID+#1;
-  curr:=Target.Position;
-  i:=0;
-  Target.Write(i,4);  // ID placeholder
-  Target.Write(i,4);  // Size placeholder
-
   Xs:=TMemoryStream.Create;
-  Ys:=TMemoryStream.Create;
   try
     Xs.Write(fLeft,2);
     Xs.Write(fTop,2);
     Xs.Write(Width,2);
     Xs.Write(Height,2);
     Xs.Write(Rawdata^,Width*Height*4);
-    Xs.Position:=0;
-    CompressStream(Xs,Ys,Xs.Size);
-    if Xs.Size<=Ys.Size then begin
-      Xs.Position:=0;
-      Target.CopyFrom(Xs,Xs.Size);
-    end else begin
-      s[1]:=chr(ord(s[1]) or $20);
-      Ys.Position:=0;
-      Target.CopyFrom(Ys,Ys.Size);
-    end;
+    TInternalFileFormat.WriteBlock(Target,REGIONBLOCKID,1,Xs);
   finally
-    Ys.Free;
     Xs.Free;
   end;
-  i:=Target.Position-curr-8;
-  Target.Position:=curr;
-  Target.Write(s[1],4);
-  Target.write(i,4);
-  Target.Position:=Target.Position+i;
 end;
 
 procedure TBDRegion.LoadFromFile(pFilename:string);
@@ -306,37 +280,29 @@ begin
 end;
 
 procedure TBDRegion.LoadFromStream(Source:TStream);
-var curr,size:uint32;b:byte;s:string;Xs:TStream;
+var tmp:TInternalBlock;
 begin
-  s:=#0#0#0#0;
-  Source.Read(s[1],4);
-  if uppercase(system.copy(s,1,3))<>REGIONBLOCKID then
-    raise Exception.Create(Format('Region block id expected, got %s.',[system.copy(s,1,3)]));
-  size:=0;
-  Source.Read(size,4);
-  curr:=Source.Position;
-  b:=ord(s[4]);
-  if b=1 then begin
-    Xs:=TMemoryStream.Create;
-    try
-      if ord(s[1]) and $20<>0 then
-        UnCompressStream(Source,Xs)
-      else
-        Xs.CopyFrom(Source,Size);
-      Xs.Position:=0;
-      Xs.Read(fLeft,2);
-      Xs.Read(fTop,2);
-      Xs.Read(fWidth,2);
-      Xs.Read(fHeight,2);
-      Freemem(fRawdata);
-      fRawdata:=Getmem(fWidth*fHeight*4);
-      Xs.Read(fRawdata^,fWidth*fHeight*4);
-    finally
-      Xs.Free;
-    end;
-  end else raise Exception.Create(Format('Invalid region block version! (%d)',[b]));
-  Source.Position:=curr+size;
+  tmp:=TInternalFileFormat.ReadBlock(Source);
+  try
+    if tmp.BlockID<>REGIONBLOCKID then
+      raise Exception.Create(Format('Region block expected, got %s.',[tmp.BlockID]));
+    if tmp.Version=1 then LoadFromStreamV1(tmp.Data)
+    else raise Exception.Create(Format('Unknown region block version! (%d)',[tmp.Version]));
+  finally
+    tmp.Free;
+  end;
   fChanged:=false;
+end;
+
+procedure TBDRegion.LoadFromStreamV1(pSource:TStream);
+begin
+  pSource.Read(fLeft,2);
+  pSource.Read(fTop,2);
+  pSource.Read(fWidth,2);
+  pSource.Read(fHeight,2);
+  Freemem(fRawdata);
+  fRawdata:=Getmem(fWidth*fHeight*4);
+  pSource.Read(fRawdata^,fWidth*fHeight*4);
 end;
 
 end.
