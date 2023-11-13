@@ -53,12 +53,14 @@ type
     procedure AddImageUndo(Left,Top,Width,Height:integer;Image:TBDRegion=nil);
     procedure AddImageRedoToLastUndo(Left,Top,Width,Height:integer);
     procedure SaveToStream(pStream:TStream); override;
-    procedure LoadFromStream(pStream:TStream);  override;
+    procedure LoadFromStream(pStream:TStream); override;
+  private
+    procedure LoadFromStreamV1(pStream:TStream);
   end;
 
 implementation
 
-uses BDPShared, BDPMessage;
+uses BDPShared, BDPMessage, BDPInternalFileFormat;
 
 const
   UNDOOPERATIONREGIONBLOCKID='UDR';
@@ -105,40 +107,34 @@ begin
 end;
 
 procedure TBDRegionUndoItem.SaveToStream(pStream:TStream);
-var i:integer;curr:int64;s:string;
+var Xs:TStream;
 begin
   if Assigned(fAfter) then begin
-    s:=UNDOOPERATIONREGIONBLOCKID+#1;
-    pStream.Write(s[1],4);
-    curr:=pStream.Position;
-    i:=0;
-    pStream.Write(i,4);
-    fBefore.SaveToStream(pStream);
-    fAfter.SaveToStream(pStream);
-    i:=pStream.Position-curr-4;
-    pStream.Position:=curr;
-    pStream.write(i,4);
-    pStream.Position:=pStream.Position+i;
+    Xs:=TMemoryStream.Create;
+    try
+      fBefore.SaveToStream(Xs);
+      fAfter.SaveToStream(Xs);
+      TInternalFileFormat.WriteBlock(pStream,UNDOOPERATIONREGIONBLOCKID,1,Xs,false);
+    finally
+      Xs.Free;
+    end;
   end else
-    raise Exception.Create('UndoImageItem save error: No AfterImage assigned!');
+    raise Exception.Create('RegionUndoItem save error: No AfterImage assigned!');
 end;
 
 procedure TBDRegionUndoItem.LoadFromStream(pStream:TStream);
-var size,curr:int64;b:byte;s:string;
+var tmp:TInternalBlock;
 begin
-  s:=#0#0#0#0;
-  pStream.Read(s[1],4);
-  if uppercase(copy(s,1,3))<>UNDOOPERATIONREGIONBLOCKID then
-    raise Exception.Create(Format('Region undo operation block id expected, got %s.',[copy(s,1,3)]));
-  if ord(s[1]) and $20<>0 then Exception.Create('Region undo operation block cannot be compressed!');
-  size:=0;
-  pStream.Read(Size,4);
-  curr:=pStream.Position;
-  b:=ord(s[4]);
-  if b=1 then LoadFromStreamV1(pStream)
-  else raise Exception.Create(Format('Unknown region undo operation block version! (%d)',[b]));
+  tmp:=TInternalFileFormat.ReadBlock(pStream);
+  try
+    if tmp.BlockID<>UNDOOPERATIONREGIONBLOCKID then
+      raise Exception.Create(Format('Region undo operation block expected, got %s.',[tmp.BlockID]));
+    if tmp.Version=1 then LoadFromStreamV1(tmp.Data)
+    else raise Exception.Create(Format('Unknown region undo operation block version! (%d)',[tmp.Version]));
+  finally
+    tmp.Free;
+  end;
   fRedoable:=true;
-  pStream.Position:=curr+size;
 end;
 
 procedure TBDRegionUndoItem.LoadFromStreamV1(pStream:TStream);
@@ -191,48 +187,48 @@ begin
 end;
 
 procedure TBDRegionUndoSystem.SaveToStream(pStream:TStream);
-var i:integer;curr:int64;s:string;
+var i:integer;Xs:TStream;
 begin
-  s:=UNDOSYSTEMREGIONBLOCKID+#1;
-  pStream.Write(s[1],4);
-  curr:=pStream.Position;
-  i:=0;
-  pStream.Write(i,4);  // Size placeholder
-  i:=Self.Count;
-  pStream.Write(i,2);
-  pStream.Write(fPointer,2);
-  for i:=0 to Self.Count-1 do
-    Self[i].SaveToStream(pStream);
-  i:=pStream.Position-curr-4;
-  pStream.Position:=curr;
-  pStream.write(i,4);
-  pStream.Position:=pStream.Position+i;
+  Xs:=TMemoryStream.Create;
+  try
+    i:=Self.Count;
+    Xs.Write(i,2);
+    Xs.Write(fPointer,2);
+    for i:=0 to Self.Count-1 do
+      Self[i].SaveToStream(Xs);
+    TInternalFileFormat.WriteBlock(pStream,UNDOSYSTEMREGIONBLOCKID,1,Xs,false);
+  finally
+    Xs.Free;
+  end;
 end;
 
 procedure TBDRegionUndoSystem.LoadFromStream(pStream:TStream);
-var size,curr:int64;b:byte;count,i:integer;s:string;
+var tmp:TInternalBlock;
 begin
-  s:=#0#0#0#0;
-  pStream.Read(s[1],4);
-  if uppercase(copy(s,1,3))<>UNDOSYSTEMREGIONBLOCKID then
-    raise Exception.Create(Format('Region undosystem block id expected, got %s.',[copy(s,1,3)]));
-  if ord(s[1]) and $20<>0 then Exception.Create('Region undosystem block cannot be compressed!');
-
-  size:=0;
-  pStream.Read(Size,4);
-  curr:=pStream.Position;
-  b:=ord(s[4]);
-  if b=1 then begin
-    count:=0;
-    pStream.Read(count,2);
-    fPointer:=0;
-    pStream.Read(fPointer,2);
-    if fPointer=65535 then fPointer:=-1;
-    for i:=0 to Count-1 do
-      Self.Add(TBDRegionUndoItem.CreateFromStream(pStream));
-  end else raise Exception.Create(Format('Unknown region undosystem block version! (%d)',[b]));
-  pStream.Position:=curr+size;
+  tmp:=TInternalFileFormat.ReadBlock(pStream);
+  try
+    if tmp.BlockID<>UNDOSYSTEMREGIONBLOCKID then
+      raise Exception.Create(Format('Region undosystem block expected, got %s.',[tmp.BlockID]));
+    if tmp.Version=1 then LoadFromStreamV1(tmp.Data)
+    else raise Exception.Create(Format('Unknown region undosystem block version! (%d)',[tmp.Version]));
+  finally
+    tmp.Free;
+  end;
   fAfterUndoRedoMessage:=TMessage.Init(MSG_SETIMAGEUNDOREDOBUTTON,0,0);
+end;
+
+procedure TBDRegionUndoSystem.LoadFromStreamV1(pStream:TStream);
+var count:integer;
+begin
+  count:=0;
+  pStream.Read(count,2);
+  fPointer:=0;
+  pStream.Read(fPointer,2);
+  if fPointer=65535 then fPointer:=-1;
+  while count>0 do begin
+    Self.Add(TBDRegionUndoItem.CreateFromStream(pStream));
+    dec(count);
+  end;
 end;
 
 end.
