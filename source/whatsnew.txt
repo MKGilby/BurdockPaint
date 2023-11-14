@@ -27,7 +27,19 @@ Todo:
     - Color picking mode from any source where color can be selected.
       (harder to implement, but I think it would be a better solution.)
 - Create Controls as fixed width dialog.
+- BUG: Adding new image adds a bogus image!
 
+
+2023.11.14
+- Add and Delete buttons work in GradientSelector. Undo/Redo also works for them.
+  (Don't add more than 8 gradients, you can only access first 8 yet.)
+- GradientSelector refreshes when changing images.
+- Gradient selector and editor show gradient without modifier flags
+  (reversed, pingpong).   
+
+2023.11.13
+- Fixed a bug with undoing/redoing drawing operations. (Image piece was put in
+  the wrong place.)
 
 2023.11.10
 - GradientSelector Undo/Redo state is saved into the project.
