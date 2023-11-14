@@ -84,7 +84,7 @@ begin
         Bar(Width-3,3,3,Height-6,c);
         // Gradient bar
         for i:=0 to fColorsWidth-1 do
-          VLine(i+3,3,Height-6,fGradient.GetColorAt(i/(fColorsWidth-1)));
+          VLine(i+3,3,Height-6,fGradient.GetColorAtRaw(i/(fColorsWidth-1)));
       end;
     end else
       fTexture.ARGBImage.Bar(0,0,Width,Height,0);
