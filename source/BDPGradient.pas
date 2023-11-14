@@ -218,6 +218,8 @@ begin
       ColorUsed[i]:=pGradient.ColorUsed[i];
       ColorPositions[i]:=pGradient.ColorPositions[i];
     end;
+    fReversed:=pGradient.Reversed;
+    fPingpong:=pGradient.PingPong;
   end;
 end;
 
