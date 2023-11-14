@@ -51,6 +51,10 @@ type
     // randomly modifying it by max +/- Settings.RealDitherStrength (0..1)
     function GetColorAtDithered(pValue:double):uint32;
 
+    // Gives back the color in the gradient at pValue on a scale to 0..1
+    // discarding reverse or pingpong flags.
+    function GetColorAtRaw(pValue:double):uint32;
+
     // Copies gradient data from the given gradient.
     procedure CopyFrom(pGradient:TGradient);
 
@@ -207,6 +211,24 @@ function TGradient.GetColorAtDithered(pValue:double):uint32;
 begin
   pValue+=random*Settings.RealDitherStrength*2-Settings.RealDitherStrength;
   Result:=GetColorAt(pValue);
+end;
+
+function TGradient.GetColorAtRaw(pValue:double):uint32;
+var i:integer;
+begin
+  if pValue<0 then pValue:=0
+  else if pValue>1 then pValue:=1;
+  Result:=0;
+  for i:=0 to length(fOrder)-2 do
+    if (pValue>=fColorPositions[fOrder[i]]) and
+       (pValue<=fColorPositions[fOrder[i+1]]) then begin
+     Result:=
+       (round(fA[fOrder[i]]+(fA[fOrder[i+1]]-fA[fOrder[i]])*(pValue-fColorPositions[fOrder[i]])/(fColorPositions[fOrder[i+1]]-fColorPositions[fOrder[i]])) and $ff) << 24+
+       (round(fR[fOrder[i]]+(fR[fOrder[i+1]]-fR[fOrder[i]])*(pValue-fColorPositions[fOrder[i]])/(fColorPositions[fOrder[i+1]]-fColorPositions[fOrder[i]])) and $ff) << 16+
+       (round(fG[fOrder[i]]+(fG[fOrder[i+1]]-fG[fOrder[i]])*(pValue-fColorPositions[fOrder[i]])/(fColorPositions[fOrder[i+1]]-fColorPositions[fOrder[i]])) and $ff) << 8+
+       (round(fB[fOrder[i]]+(fB[fOrder[i+1]]-fB[fOrder[i]])*(pValue-fColorPositions[fOrder[i]])/(fColorPositions[fOrder[i+1]]-fColorPositions[fOrder[i]])) and $ff);
+     exit;
+   end;
 end;
 
 procedure TGradient.CopyFrom(pGradient:TGradient);
