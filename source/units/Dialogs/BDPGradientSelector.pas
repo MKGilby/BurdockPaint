@@ -50,7 +50,11 @@ type
     procedure EditClick(Sender:TObject;x,y,button:integer);
     procedure UndoClick(Sender:TObject;x,y,button:integer);
     procedure RedoClick(Sender:TObject;x,y,button:integer);
+    procedure AddClick(Sender:TObject;x,y,button:integer);
+    procedure DeleteClick(Sender:TObject;x,y,button:integer);
     procedure RefreshUndoRedoButtons;
+    procedure RefreshGradients;
+    procedure GDSShow(Sender:TObject);
   end;
 
 implementation
@@ -106,30 +110,31 @@ begin
   inherited Create(GRADIENTSELECTORWIDTH,GRADIENTSELECTORHEIGHT);
   Caption:='GRADIENT SELECTOR';
   fName:='GradientSelector';
+  Self.OnShow:=GDSShow;
   MouseObjects.Add(Self);
 
   CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP,
-    'SELECT','SELECT THE GRADIENT.','GS Select',SelectClick);
+    'SELECT','SELECT THE GRADIENT.','GDS Select',SelectClick);
 
   CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+NORMALBUTTONHEIGHT+3,
-    'CANCEL','CLOSE DIALOG.','GS Close',CancelClick);
+    'CANCEL','CLOSE DIALOG.','GDS Close',CancelClick);
 
-  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*2,
-    'ADD','ADD NEW GRADIENT.','GS Add');
+  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*2+6,
+    'EDIT','EDIT SELECTED GRADIENT.','GDS Edit',EditClick);
 
-  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*3,
-    'DELETE','DELETE SELECTED GRADIENT.','GS Delete');
+  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*3+12,
+    'ADD','ADD NEW GRADIENT.','GDS Add',AddClick);
+
+  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*4+12,
+    'DELETE','DELETE SELECTED GRADIENT.','GDS Delete',DeleteClick);
   fDeleteButton:=TBDButton(fChildren[fChildren.Count-1]);
 
-  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*4,
-    'EDIT','EDIT SELECTED GRADIENT.','GS Edit',EditClick);
-
-  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*5,
-    'UNDO','UNDO LAST GRADIENT OPERATION.','GS Undo',UndoClick);
+  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*5+18,
+    'UNDO','UNDO LAST GRADIENT OPERATION.','GDS Undo',UndoClick);
   fUndoButton:=TBDButton(fChildren[fChildren.Count-1]);
 
-  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*6,
-    'REDO','REDO LAST GRADIENT OPERATION.','GS Redo',RedoClick);
+  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*6+18,
+    'REDO','REDO LAST GRADIENT OPERATION.','GDS Redo',RedoClick);
   fRedoButton:=TBDButton(fChildren[fChildren.Count-1]);
 
   for i:=0 to min(Project.CurrentGradientList.Count-1,7) do
@@ -155,7 +160,7 @@ end;
 
 procedure TBDGradientSelector.SetGradient(pIndex:uint32);
 begin
-  Project.CurrentImage.GradientSelectorUndo.AddUndo(
+  Project.CurrentImage.GradientSelectorUndo.AddUndo_EDIT(
     pIndex,Project.CurrentGradientList[pIndex],GradientEditorGradient);
   RefreshUndoRedoButtons;
   Project.CurrentGradientList[pIndex].CopyFrom(
@@ -200,24 +205,60 @@ procedure TBDGradientSelector.UndoClick(Sender:TObject; x,y,button:integer);
 var i:integer;
 begin
   Project.CurrentImage.GradientSelectorUndo.Undo;
+  RefreshUndoRedoButtons;
+  RefreshGradients;
   for i:=0 to 7 do fGradients[i].Refresh;
   MessageQueue.AddMessage(MSG_ACTIVEGRADIENTCHANGED);
-  RefreshUndoRedoButtons;
 end;
 
 procedure TBDGradientSelector.RedoClick(Sender:TObject; x,y,button:integer);
 var i:integer;
 begin
   Project.CurrentImage.GradientSelectorUndo.Redo;
+  RefreshUndoRedoButtons;
+  RefreshGradients;
   for i:=0 to 7 do fGradients[i].Refresh;
   MessageQueue.AddMessage(MSG_ACTIVEGRADIENTCHANGED);
+end;
+
+procedure TBDGradientSelector.AddClick(Sender:TObject; x,y,button:integer);
+begin
+  Project.CurrentImage.GradientSelectorUndo.AddUndo_ADD(Project.CurrentGradientList.Count);
   RefreshUndoRedoButtons;
+  Project.CurrentGradientList.Add(TGradient.Create($ff000000,$ffffffff));
+  RefreshGradients;
+end;
+
+procedure TBDGradientSelector.DeleteClick(Sender:TObject; x,y,button:integer);
+begin
+  Project.CurrentImage.GradientSelectorUndo.AddUndo_DELETE(fSelectedGradientIndex);
+  RefreshUndoRedoButtons;
+  Project.CurrentGradientList.Delete(fSelectedGradientIndex);
+  RefreshGradients;
 end;
 
 procedure TBDGradientSelector.RefreshUndoRedoButtons;
 begin
   fUndoButton.Enabled:=Project.CurrentImage.GradientSelectorUndo.CanUndo;
   fRedoButton.Enabled:=Project.CurrentImage.GradientSelectorUndo.CanRedo;
+  fDeleteButton.Enabled:=Project.CurrentGradientList.Count>1;
+end;
+
+procedure TBDGradientSelector.RefreshGradients;
+var i,j:integer;
+begin
+  j:=min(Project.CurrentGradientList.Count-fScrollBar.Position-1,7);
+  for i:=0 to j do
+    fGradients[i].Gradient:=Project.CurrentGradientList[fScrollBar.Position+i];
+
+  for i:=j+1 to 7 do
+    fGradients[i].Gradient:=nil;
+end;
+
+procedure TBDGradientSelector.GDSShow(Sender:TObject);
+begin
+  RefreshGradients;
+  RefreshUndoRedoButtons;
 end;
 
 end.
