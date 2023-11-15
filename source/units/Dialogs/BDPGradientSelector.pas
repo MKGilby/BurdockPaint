@@ -192,13 +192,16 @@ end;
 
 procedure TBDGradientSelector.EditClick(Sender:TObject; x,y,button:integer);
 begin
-  GradientEditorGradient.CopyFrom(
-    Project.CurrentGradientList[fScrollBar.Position+fSelectedGradientIndex]);
-  MessageQueue.AddMessage(
-    MSG_ACTIVATEGRADIENTEDITOR,
-    PARM_GRAD_SELECTOR,
-    fScrollBar.Position+fSelectedGradientIndex);
-  Self.Hide;
+  if (fScrollBar.Position+fSelectedGradientIndex>=0) and
+     (fScrollBar.Position+fSelectedGradientIndex<Project.CurrentGradientList.Count) then begin
+    GradientEditorGradient.CopyFrom(
+      Project.CurrentGradientList[fScrollBar.Position+fSelectedGradientIndex]);
+    MessageQueue.AddMessage(
+      MSG_ACTIVATEGRADIENTEDITOR,
+      PARM_GRAD_SELECTOR,
+      fScrollBar.Position+fSelectedGradientIndex);
+    Self.Hide;
+  end;
 end;
 
 procedure TBDGradientSelector.UndoClick(Sender:TObject; x,y,button:integer);
