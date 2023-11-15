@@ -121,6 +121,8 @@ implementation
 
 uses BDPShared, BDPInternalFileFormat;
 
+{$i includes\ntsccol.inc}
+
 const
   IMAGEBLOCKID='IMG';
   PROJECTBLOCKID='PRJ';
@@ -139,9 +141,16 @@ begin
 end;
 
 constructor TBDImage.Create(iWidth,iHeight:integer);
+var Xs:TStream;
 begin
   fRegion:=TBDRegion.Create(iWidth,iHeight);
   fPalette:=TBDPalette.Create(256);
+  Xs:=TStringStream.Create(NTSCCOL);
+  try
+    fPalette.LoadCOL(Xs,0);
+  finally
+    Xs.Free;
+  end;
   fRegionUndoSystem:=TBDRegionUndoSystem.Create;
 //  fPaletteUndoSystem:=TBDPaletteUndoSystem.Create;
   fGradients:=TGradientList.Create;
