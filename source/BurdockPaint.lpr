@@ -33,17 +33,30 @@ uses
   ARGBImagePNGReaderUnit,
   ARGBImagePNGWriterUnit,
   ARGBImageTGAReaderUnit,
-  ARGBImageTGAWriterUnit;
+  ARGBImageTGAWriterUnit,
+  FileInfo,
+  winpeimagereader,
+  MKToolbox;
 
 const
-  VERSION='0.9';
   BDATE={$i %DATE%};
 
 {$R *.res}
 
+function GetVersionString:string;
+var
+  PV:TProgramVersion;
+begin
+  GetProgramVersion(PV);
+  if PV.Revision=0 then
+    Result:=Format('%d.%d build %d',[PV.Major,PV.Minor,PV.Build])
+  else
+    Result:=Format('%d.%d.%d build %d',[PV.Major,PV.Minor,PV.Revision,PV.Build]);
+end;
+
 begin
   try
-    with TMain.Create(VERSION,BDATE) do try
+    with TMain.Create(GetVersionString,BDATE) do try
       Run;
     finally
       Free;
