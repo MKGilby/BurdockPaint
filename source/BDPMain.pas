@@ -393,44 +393,31 @@ begin
 end;
 
 procedure TMain.DuplicateImage;
-var Xs:TMemoryStream;
+var i:integer;Xs:TMemoryStream;
 begin
-  case MessageBox('DUPLICATE IMAGE','Where to place duplicated image?','First;Last;Insert;Cancel') of
-    0:begin
-        Xs:=TMemoryStream.Create;
-        try
-          Project.CurrentRegion.SaveToStream(Xs);
-          Xs.Position:=0;
-          Project.Images.Insert(0,TBDImage.CreateFromStream(Xs));
-        finally
-          Xs.Free;
-        end;
-        Project.CurrentImageIndex:=0;
-        MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
+  i:=MessageBox('DUPLICATE IMAGE','Where to place duplicated image?','First;Last;Insert;Cancel');
+  if i in [0..2] then begin
+    Xs:=TMemoryStream.Create;
+    try
+      Project.CurrentImage.SaveToStream(Xs);
+      Xs.Position:=0;
+      case i of
+        0:begin
+            Project.Images.Insert(0,TBDImage.CreateFromStream(Xs));
+            Project.CurrentImageIndex:=0;
+          end;
+        1:begin
+            Project.Images.Add(TBDImage.CreateFromStream(Xs));
+            Project.CurrentImageIndex:=Project.Images.Count-1;
+          end;
+        2:begin
+            Project.Images.Insert(Project.CurrentImageIndex,TBDImage.CreateFromStream(Xs));
+          end;
       end;
-    1:begin
-        Xs:=TMemoryStream.Create;
-        try
-          Project.CurrentRegion.SaveToStream(Xs);
-          Xs.Position:=0;
-          Project.Images.Add(TBDImage.CreateFromStream(Xs));
-        finally
-          Xs.Free
-        end;
-        Project.CurrentImageIndex:=Project.Images.Count-1;
-        MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
-      end;
-    2:begin
-        Xs:=TMemoryStream.Create;
-        try
-          Project.CurrentRegion.SaveToStream(Xs);
-          Xs.Position:=0;
-          Project.Images.Insert(Project.CurrentImageIndex,TBDImage.CreateFromStream(Xs));
-        finally
-          Xs.Free;
-        end;
-        MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
-      end;
+    finally
+      Xs.Free;
+    end;
+    MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
   end;
 end;
 
