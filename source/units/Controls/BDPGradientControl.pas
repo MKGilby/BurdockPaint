@@ -24,7 +24,7 @@ unit BDPGradientControl;
 
 interface
 
-uses vcc2_VisibleControl, BDPGradient, ARGBImageUnit, Font2Unit;
+uses vcc2_VisibleControl, BDPGradient, ARGBImageUnit, Font2Unit, mk_sdl2;
 
 type
 
@@ -32,19 +32,23 @@ type
 
   TBDGradient=class(TVisibleControl)
     constructor Create(iLeft,iTop,iWidth,iHeight:integer;iGradient:TGradient);
+    destructor Destroy; override;
     procedure Refresh; override;
     procedure Click(Sender:TObject;x,y,button:integer);
-//    procedure Draw; override;
+    procedure Draw; override;
   protected
     procedure ReDraw; override;
     procedure fSetWidth(value:integer); override;
   private
     fTLImage,fTRImage,fBLImage,fBRImage:TARGBImage;
     fGradient:TGradient;
+    fGradientTexture:TStreamingTexture;
+    fAlphaBack:TTexture;
     fFont,fFont2:TFont;
     fPingpongSwitchLeft,fReverseSwitchLeft,
     fColorsLeft,fColorsWidth,fArrowLeft:integer;
     procedure fSetGradient(value:TGradient);
+    procedure RecreateTexture(Sender:TObject);
   public
     property Gradient:TGradient read fGradient write fSetGradient;
     property Width:integer read fWidth write fSetWidth;
@@ -67,8 +71,8 @@ begin
   fLeft:=iLeft;
   fTop:=iTop;
   fGradient:=iGradient;
-  Width:=iWidth;
-  Height:=iHeight;
+  OnRecreateTexture:=RecreateTexture;
+  fWidth:=iWidth;
   fNeedRedraw:=true;
   fTLImage:=MM.Images.ItemByName['ArchTopLeft'];
   fTRImage:=MM.Images.ItemByName['ArchTopRight'];
@@ -81,7 +85,15 @@ begin
   fColorsLeft:=fReverseSwitchLeft+REVERSESWITCHWIDTH+3;
   fArrowLeft:=Width-ARROWWIDTH-3;
   fColorsWidth:=fArrowLeft-fColorsLeft;
+  fAlphaBack:=MM.Textures.ItemByName['AlphaBack'];
+  Height:=iHeight;
   OnClick:=Click;
+end;
+
+destructor TBDGradient.Destroy;
+begin
+  if Assigned(fGradientTexture) then fGradientTexture.Free;
+  inherited Destroy;
 end;
 
 procedure TBDGradient.Refresh;
@@ -113,6 +125,13 @@ begin
       MessageQueue.AddMessage(MSG_ACTIVATEGRADIENTSELECTOR);
     end;
   end;
+end;
+
+procedure TBDGradient.Draw;
+begin
+  inherited Draw;
+  PutTexturePart(fLeft+fColorsLeft+3,fTop+3,0,0,fColorsWidth-3,fHeight-6,fAlphaBack);
+  PutTexture(fLeft+fColorsLeft+3,fTop+3,fGradientTexture);
 end;
 
 procedure TBDGradient.ReDraw;
@@ -155,17 +174,6 @@ begin
       // Flashing if picking
       //if fPicking then
       //  Bar(fColorsLeft,0,fColorsWidth+3,Height,VibroColors.GetColor);
-      // Gradient bar
-      if Assigned(fGradient) then begin
-        for i:=0 to fColorsWidth-1-3 do begin
-          color32:=fGradient.GetColorAt(i/(fColorsWidth-3));
-          VLine(fColorsLeft+i+3,3,Height-6,color32);
-          if color32=Settings.ActiveColor then begin
-            VLine(fColorsLeft+i+3,Height div 2-3,3,SystemPalette[SYSTEMCOLORLIGHT]);
-            VLine(fColorsLeft+i+3,Height div 2,3,SystemPalette[SYSTEMCOLORBLACK]);
-          end;
-        end;
-      end;
       // Letters and arrow
       if Assigned(fFont) and Assigned(fFont2) then begin
         fonttop:=(Height-15) div 2;
@@ -182,6 +190,18 @@ begin
     end;
     fTexture.Update;
   end;
+  // Gradient bar
+  if Assigned(fGradient) and Assigned(fGradientTexture) then begin
+    for i:=0 to fColorsWidth-1-3 do begin
+      color32:=fGradient.GetColorAt(i/(fColorsWidth-3));
+      fGradientTexture.ARGBImage.VLine(i,0,fGradientTexture.Height,color32);
+      if color32=Settings.ActiveColor then begin
+        fGradientTexture.ARGBImage.VLine(i,fGradientTexture.Height div 2-3,3,SystemPalette[SYSTEMCOLORLIGHT]);
+        fGradientTexture.ARGBImage.VLine(i,fGradientTexture.Height div 2,3,SystemPalette[SYSTEMCOLORBLACK]);
+      end;
+    end;
+    fGradientTexture.Update;
+  end;
 end;
 
 procedure TBDGradient.fSetGradient(value:TGradient);
@@ -190,11 +210,20 @@ begin
   fNeedRedraw:=true;
 end;
 
+procedure TBDGradient.RecreateTexture(Sender:TObject);
+begin
+  if Assigned(fGradientTexture) then fGradientTexture.Free;
+  // Recreate texture by inner texture
+  fGradientTexture:=TStreamingTexture.Create(fColorsWidth-3,fTexture.Height-6);
+  SDL_SetTextureBlendMode(fGradientTexture.Texture,SDL_BLENDMODE_BLEND);
+end;
+
 procedure TBDGradient.fSetWidth(value:integer);
 begin
-  inherited fSetWidth(value);
-  fArrowLeft:=Width-ARROWWIDTH-3;
+  fArrowLeft:=value-ARROWWIDTH-3;
   fColorsWidth:=fArrowLeft-fColorsLeft;
+  // At this point we already have to know fColorsWidth for the new width!
+  inherited fSetWidth(value);
 end;
 
 end.
