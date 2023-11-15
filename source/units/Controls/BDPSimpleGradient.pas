@@ -24,7 +24,7 @@ unit BDPSimpleGradient;
 
 interface
 
-uses vcc2_VisibleControl, BDPGradient;
+uses vcc2_VisibleControl, BDPGradient, mk_sdl2;
 
 type
 
@@ -32,14 +32,19 @@ type
 
   TBDSimpleGradient=class(TVisibleControl)
     constructor Create(iLeft,iTop,iWidth,iHeight:integer;iGradient:TGradient);
+    destructor Destroy; override;
+    procedure Draw; override;
   protected
     procedure ReDraw; override;
   private
     fGradient:TGradient;
     fColorsWidth:integer;
+    fAlphaBack:TTexture;
+    fGradientTexture:TStreamingTexture;
     function fGetColorsWidth:integer;
     procedure fSetGradient(value:TGradient);
     procedure fSetSelected(value:boolean);
+    procedure RecreateTexture(Sender:TObject);
   public
     property ColorsWidth:integer read fGetColorsWidth;
     property Gradient:TGradient write fSetGradient;
@@ -49,7 +54,7 @@ type
 
 implementation
 
-uses BDPShared;
+uses BDPShared, SDL2;
 
 { TBDSimpleGradient }
 
@@ -59,11 +64,26 @@ begin
   fLeft:=iLeft;
   fTop:=iTop;
   fGradient:=iGradient;
-  Width:=iWidth;
+  OnRecreateTexture:=RecreateTexture;
+  fWidth:=iWidth;
   Height:=iHeight;
   fNeedRedraw:=true;
   Selected:=false;
+  fAlphaBack:=MM.Textures.ItemByName['AlphaBack'];
 //  OnClick:=Click;
+end;
+
+destructor TBDSimpleGradient.Destroy;
+begin
+  if Assigned(fGradientTexture) then fGradientTexture.Free;
+  inherited Destroy;
+end;
+
+procedure TBDSimpleGradient.Draw;
+begin
+  inherited Draw;
+  PutTexturePart(fLeft+3,fTop+3,0,0,fWidth-6,fHeight-6,fAlphaBack);
+  PutTexture(fLeft+3,fTop+3,fGradientTexture);
 end;
 
 procedure TBDSimpleGradient.ReDraw;
@@ -82,13 +102,16 @@ begin
         Bar(0,Height-3,Width,3,c);
         Bar(0,3,3,Height-6,c);
         Bar(Width-3,3,3,Height-6,c);
-        // Gradient bar
-        for i:=0 to fColorsWidth-1 do
-          VLine(i+3,3,Height-6,fGradient.GetColorAtRaw(i/(fColorsWidth-1)));
       end;
     end else
       fTexture.ARGBImage.Bar(0,0,Width,Height,0);
     fTexture.Update;
+  end;
+  if Assigned(fGradientTexture) then begin
+    // Gradient bar
+    for i:=0 to fColorsWidth-1 do
+      fGradientTexture.ARGBImage.VLine(i,0,Height,fGradient.GetColorAtRaw(i/(fColorsWidth-1)));
+    fGradientTexture.Update;
   end;
 end;
 
@@ -111,6 +134,14 @@ begin
     fSelected:=value;
     Refresh;
   end;
+end;
+
+procedure TBDSimpleGradient.RecreateTexture(Sender:TObject);
+begin
+  if Assigned(fGradientTexture) then fGradientTexture.Free;
+  // Recreate texture by inner texture
+  fGradientTexture:=TStreamingTexture.Create(fTexture.Width-6,fTexture.Height-6);
+  SDL_SetTextureBlendMode(fGradientTexture.Texture,SDL_BLENDMODE_BLEND);
 end;
 
 end.
