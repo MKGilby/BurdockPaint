@@ -376,6 +376,19 @@ begin
   MM.AddImage(atm,'DarkBar',MM_CREATETEXTUREWHENNOANIMATIONDATA);
 end;
 
+procedure CreateAlphaBack;
+const CHECKERSIZE=8;
+var atm:TARGBImage;i,j:integer;
+begin
+  atm:=TARGBImage.Create(WINDOWWIDTH,WINDOWHEIGHT);
+  atm.Bar(0,0,atm.Width,atm.Height,64,64,64,255);
+  for j:=0 to WINDOWHEIGHT div CHECKERSIZE-1 do
+    for i:=0 to WINDOWWIDTH div CHECKERSIZE-1 do
+      if (i+j) mod 2=0 then
+        atm.Bar(i*CHECKERSIZE,j*CHECKERSIZE,CHECKERSIZE,CHECKERSIZE,192,192,192,255);
+  MM.AddImage(atm,'AlphaBack',MM_CREATETEXTUREWHENNOANIMATIONDATA);
+end;
+
 procedure LoadAssets;
 begin
   Log.LogStatus('Loading and creating assets...');
@@ -413,6 +426,7 @@ begin
   CreateArches;
   CreateKnob;
   CreateDarkBar;
+  CreateAlphaBack;
   ModalOverlay:=TBDModalOverlay.Create;
   MouseObjects.Add(ModalOverlay);
   Log.LogStatus('  Creating cursor...');
