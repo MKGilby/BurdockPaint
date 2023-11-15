@@ -82,8 +82,10 @@ end;
 procedure TBDSimpleGradient.Draw;
 begin
   inherited Draw;
-  PutTexturePart(fLeft+3,fTop+3,0,0,fWidth-6,fHeight-6,fAlphaBack);
-  PutTexture(fLeft+3,fTop+3,fGradientTexture);
+  if Assigned(fGradient) then begin
+    PutTexturePart(fLeft+3,fTop+3,0,0,fWidth-6,fHeight-6,fAlphaBack);
+    PutTexture(fLeft+3,fTop+3,fGradientTexture);
+  end;
 end;
 
 procedure TBDSimpleGradient.ReDraw;
@@ -107,12 +109,13 @@ begin
       fTexture.ARGBImage.Bar(0,0,Width,Height,0);
     fTexture.Update;
   end;
-  if Assigned(fGradientTexture) then begin
-    // Gradient bar
-    for i:=0 to fColorsWidth-1 do
-      fGradientTexture.ARGBImage.VLine(i,0,Height,fGradient.GetColorAtRaw(i/(fColorsWidth-1)));
-    fGradientTexture.Update;
-  end;
+  if Assigned(fGradientTexture) then
+    if Assigned(fGradient) then begin
+      // Gradient bar
+      for i:=0 to fColorsWidth-1 do
+        fGradientTexture.ARGBImage.VLine(i,0,Height,fGradient.GetColorAtRaw(i/(fColorsWidth-1)));
+      fGradientTexture.Update;
+    end;
 end;
 
 function TBDSimpleGradient.fGetColorsWidth: integer;
