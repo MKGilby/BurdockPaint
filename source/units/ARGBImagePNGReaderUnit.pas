@@ -251,9 +251,6 @@ begin
     pSource.Read(w,2);
     atm.StartFrame:=w;
     w:=0;
-    if s='Wheel1L' then begin
-      write;
-    end;
     pSource.Read(w,1);
     atm.Looped:=(w and AF_LOOPED)>0;
     atm.RandomStart:=(w and AF_RANDOMSTART)>0;
