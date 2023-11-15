@@ -108,8 +108,6 @@ implementation
 uses MyZStreamUnit, Logger, BDPShared, MKToolbox, FastPaletteUnit,
   BDPInternalFileFormat;
 
-{$i includes\ntsccol.inc}
-
 const
   REGIONBLOCKID='RGN';
 
@@ -119,6 +117,7 @@ const
 constructor TBDRegion.Create(iWidth,iHeight:integer);
 begin
   inherited Create(iWidth,iHeight);
+  Bar(0,0,Width,Height,0,0,0,255);
   fLeft:=0;
   fTop:=0;
   fChanged:=false;
