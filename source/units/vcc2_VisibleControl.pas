@@ -35,6 +35,8 @@
 //    * Bugfix in fSetEnabled.
 //  V1.03: Gilby - 2023.04.12
 //    * Added Refresh method. It sets fNeededRedraw to true.
+//  V1.04: Gilby - 2023.11.15
+//    * Added OnRecreateTexture event. It fires when texture is recreated.
 
 {$mode delphi}
 {$smartlink on}
@@ -71,6 +73,7 @@ type
     procedure fSetSelected(value:boolean);
     procedure fSetEnabled(value:boolean);
   public
+    OnRecreateTexture:TSimpleEvent;
     property Width:integer read fWidth write fSetWidth;
     property Height:integer read fHeight write fSetHeight;
     property Enabled:boolean read fEnabled write fSetEnabled;
@@ -83,7 +86,7 @@ uses SysUtils, MKToolBox, Logger, SDL2;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.03';
+  Version='1.04';
 
 
 { TVisibleControl}
@@ -94,6 +97,7 @@ begin
   fNeedRedraw:=true;
   fWidth:=64;
   fHeight:=24;
+  OnRecreateTexture:=nil;
   RecreateTexture;
 end;
 
@@ -143,6 +147,7 @@ begin
       if Assigned(fTexture) then FreeAndNil(fTexture);
       fTexture:=TStreamingTexture.Create(fWidth,fHeight);
       SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
+      if Assigned(OnRecreateTexture) then OnRecreateTexture(Self);
     end;
   end;
 end;
