@@ -24,6 +24,11 @@
 //
 //  V1.00: Gilby - 2023.03.16
 //     * Initial creation from MediaManager
+//  V1.01: Gilby - 2023.11.16
+//     * Added MM_DONTKEEPIMAGE flag.
+//     * Added MM_CREATETEXTUREONLY flag, which is a combination of
+//       MM_CREATETEXTUREWHENNOANIMATIONDATA and MM_DONTKEEPIMAGE.
+//     * Added
 
 unit GFXManagerUnit;
 
@@ -41,6 +46,12 @@ const
   MM_CREATEMASKFORANIMATIONFRAMES=2;
   // Don't create font when font data included in image
   MM_DONTCREATEFONTFROMIMAGE=4;
+  // Don't keep image, only the texture will be used.
+  MM_DONTKEEPIMAGE=8;
+  // Don't create texture from font.
+  MM_DONTCREATETEXTUREFROMFONT=16;
+  // Create texture, don't keep image.
+  MM_CREATETEXTUREONLY=MM_CREATETEXTUREWHENNOANIMATIONDATA+MM_DONTKEEPIMAGE;
 
 
 type
@@ -166,7 +177,7 @@ var
   atmA:TAnimationDataWithTexture;
   i,j:integer;
 begin
-  fImages.AddObject(pImageName,pImage);
+  if pFlags and MM_DONTKEEPIMAGE=0 then fImages.AddObject(pImageName,pImage);
   if pImage.Animations.Count>0 then begin
     atmT:=TStaticTexture.Create(pImage);
     fTextures.AddObject(pImageName,atmT);
@@ -189,8 +200,12 @@ begin
       fTextures.AddObject(pImageName,atmT);
     end;
   if Assigned(pImage.FontData) and (pFlags and MM_DONTCREATEFONTFROMIMAGE=0) then begin
-    fFonts.Add(TFont.Create(pImage),pImageName);
+    if pFlags and MM_DONTCREATETEXTUREFROMFONT=0 then
+      fFonts.Add(TFont.Create(pImage),pImageName)
+    else
+      fFonts.Add(TFont.Create(pImage,FONT_CREATE_ARGB),pImageName)
   end;
+  if pFlags and MM_DONTKEEPIMAGE<>0 then pImage.Free;
 end;
 
 procedure TGFXManager.AddMask(pMask:TMask;pMaskName:string);

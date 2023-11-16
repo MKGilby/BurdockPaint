@@ -44,6 +44,8 @@
 //      * BUGFix in creating from ARGBImage. Missed fRerender.
 //   V1.08: Gilby - 2023.04.05
 //      * You can specify chars to exclude from recoloring.
+//   V1.09: Gilby - 2023.11.16
+//      * You can specify if you want ARGBImage and/or Texture font.
 
 {$ifdef fpc}
   {$mode delphi}
@@ -56,9 +58,14 @@ interface
 
 uses Classes, mk_sdl2, ARGBImageUnit;
 
-const mjLeft=0;
-      mjCenter=1;
-      mjRight=2;
+const
+  mjLeft=0;
+  mjCenter=1;
+  mjRight=2;
+
+  FONT_CREATE_ARGB=1;
+  FONT_CREATE_TEXTURE=2;
+  FONT_CREATE_BOTH=FONT_CREATE_ARGB+FONT_CREATE_TEXTURE;
 
 type
   TCharRect=record
@@ -68,8 +75,8 @@ type
   { TFont }
 
   TFont=class
-    constructor Create; overload;
-    constructor Create(iImage:TARGBImage); overload;
+    constructor Create(iCreateFlags:integer=FONT_CREATE_BOTH); overload;
+    constructor Create(iImage:TARGBImage;iCreateFlags:integer=FONT_CREATE_BOTH); overload;
     destructor Destroy; override;
     procedure OutText(Text:string;x,y,align:integer); overload;
     procedure OutText(Target:TARGBImage;text:string;x,y,align:integer); overload;
@@ -98,6 +105,7 @@ type
     fHeight:integer;
     fLetterSpace:integer;
     fSpaceSpace:integer;
+    fCreateFlags:integer;
     // Adds one pixel padding between chars (modifies char definitions too)
     function fAddPadding(pImage:TARGBImage):TARGBImage;
     procedure fReRender;
@@ -118,13 +126,14 @@ uses SDL2, Logger, MKToolBox, SysUtils;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.08';
+  Version='1.09';
 
 // --------------------------------------------------------------- [ TFont ]---
 
-constructor TFont.Create;
+constructor TFont.Create(iCreateFlags:integer);
 begin
   fillchar(fDefs,sizeof(fDefs),0);
+  fCreateFlags:=iCreateFlags;
   LetterSpace:=1;
   SpaceSpace:=10;
   fIsColorKey:=false;
@@ -137,11 +146,10 @@ begin
   fOriginalImage:=nil;
 end;
 
-constructor TFont.Create(iImage:TARGBImage);
+constructor TFont.Create(iImage:TARGBImage; iCreateFlags:integer);
 var i:integer;
 begin
-  Create;
-  fillchar(fDefs,sizeof(fDefs),0);
+  Create(iCreateFlags);
   fOriginalImage:=TARGBImage.Create(iImage.Width,iImage.Height);
   iImage.Copy(0,0,iImage.Width,iImage.Height,fOriginalImage);
   if Assigned(iImage.FontData) then begin
@@ -157,8 +165,7 @@ begin
     end;
   end;
   fOriginalImage:=fAddPadding(fOriginalImage);
-  fTexture:=TStaticTexture.Create(fOriginalImage);
-  fHeight:=fTexture.Height;
+  fHeight:=fOriginalImage.Height;
   fIsColorKey:=false;
   fFixedWidth:=0;
   fRerender;
@@ -166,57 +173,63 @@ end;
 
 destructor TFont.Destroy;
 begin
-  if Assigned(fOriginalImage) then FreeAndNil(fOriginalImage);
-  if Assigned(fARGBImage) then FreeAndNil(fARGBImage);
-  if Assigned(fTexture) then FreeAndNIL(fTexture);
+  if Assigned(fOriginalImage) then fOriginalImage.Free;
+  if Assigned(fARGBImage) then fARGBImage.Free;
+  if Assigned(fTexture) then fTexture.Free;
   inherited;
 end;
 
 procedure TFont.OutText(text:string;x,y,align:longint);
 var i:longint;
 begin
-  case align of
-    mjLeft:;
-    mjCenter:x-=TextWidth(text) div 2;
-    mjRight:x-=TextWidth(text);
-  end;
-  for i:=1 to length(text) do with fDefs[ord(text[i])] do begin
-    if fFixedWidth=0 then begin
-      if text[i]<>#32 then begin
-        PutTexturePart(x,y+Top,Left,Top,Width,Height,fTexture);
-        x+=Width+fLetterSpace*fSize;
-      end else
-        x+=fSpaceSpace*fSize;
-    end else begin
-      if text[i]<>#32 then
-        PutTexturePart(x+(fFixedWidth-Width)>>1,y+Top,Left,Top,Width,Height,fTexture);
-      x+=fFixedWidth+fLetterSpace*fSize;
+  if fCreateFlags or FONT_CREATE_TEXTURE<>0 then begin
+    case align of
+      mjLeft:;
+      mjCenter:x-=TextWidth(text) div 2;
+      mjRight:x-=TextWidth(text);
     end;
-  end;
+    for i:=1 to length(text) do with fDefs[ord(text[i])] do begin
+      if fFixedWidth=0 then begin
+        if text[i]<>#32 then begin
+          PutTexturePart(x,y+Top,Left,Top,Width,Height,fTexture);
+          x+=Width+fLetterSpace*fSize;
+        end else
+          x+=fSpaceSpace*fSize;
+      end else begin
+        if text[i]<>#32 then
+          PutTexturePart(x+(fFixedWidth-Width)>>1,y+Top,Left,Top,Width,Height,fTexture);
+        x+=fFixedWidth+fLetterSpace*fSize;
+      end;
+    end;
+  end else
+    raise Exception.Create('Font was not created with FONT_CREATE_TEXTURE flag!');
 end;
 
 procedure TFont.OutText(Target:TARGBImage;text:string;x,y,align:longint);
 var i:longint;
 begin
-  case align of
-    mjLeft:;
-    mjCenter:x-=TextWidth(text) div 2;
-    mjRight:x-=TextWidth(text);
-  end;
-  for i:=1 to length(text) do with fDefs[ord(text[i])] do begin
-    if fFixedWidth=0 then begin
-      if text[i]<>#32 then begin
-        fARGBImage.CopyTo(Left,Top,Width,Height,x,y+Top,Target,true);
-        x+=Width+fLetterSpace*fSize;
-      end else begin
-        x+=fSpaceSpace*fSize;
-      end;
-    end else begin
-      if text[i]<>#32 then
-        fARGBImage.CopyTo(Left,Top,Width,Height,x+(fFixedWidth-Width)>>1,y+Top,Target,true);
-      x+=fFixedWidth+fLetterSpace*fSize;
+  if fCreateFlags or FONT_CREATE_ARGB<>0 then begin
+    case align of
+      mjLeft:;
+      mjCenter:x-=TextWidth(text) div 2;
+      mjRight:x-=TextWidth(text);
     end;
-  end;
+    for i:=1 to length(text) do with fDefs[ord(text[i])] do begin
+      if fFixedWidth=0 then begin
+        if text[i]<>#32 then begin
+          fARGBImage.CopyTo(Left,Top,Width,Height,x,y+Top,Target,true);
+          x+=Width+fLetterSpace*fSize;
+        end else begin
+          x+=fSpaceSpace*fSize;
+        end;
+      end else begin
+        if text[i]<>#32 then
+          fARGBImage.CopyTo(Left,Top,Width,Height,x+(fFixedWidth-Width)>>1,y+Top,Target,true);
+        x+=fFixedWidth+fLetterSpace*fSize;
+      end;
+    end;
+  end else
+    raise Exception.Create('Font was not created with FONT_CREATE_ARGB flag!');
 end;
 
 procedure TFont.SetColorKey(r,g,b:byte);
@@ -292,8 +305,8 @@ end;
 procedure TFont.fReRender;
 var i:integer;
 begin
-  if Assigned(fTexture) then FreeAndNIL(fTexture);
-  if Assigned(fARGBImage) then FreeAndNil(fARGBImage);
+  if Assigned(fTexture) then fTexture.Free;
+  if Assigned(fARGBImage) then fARGBImage.Free;
   fARGBImage:=TARGBImage.Create(fOriginalImage.Width,fOriginalImage.Height);
   fOriginalImage.Copy(0,0,fOriginalImage.Width,fOriginalImage.Height,fARGBImage);
   if fR>-1 then fARGBImage.RecolorRGB(fR,fG,fB);
@@ -306,9 +319,12 @@ begin
     fARGBImage.SetColorkey(fCKr,fCKg,fCKb);
   end;
   if fSize<>1 then fARGBImage.Magnify(fSize);
-  fTexture:=TStaticTexture.Create(fARGBImage);
-  if SDL_SetTextureAlphaMod(fTexture.Texture,fAlpha)=-1 then
-    Log.LogWarning('SetAlpha failed! (Font: '+fName+')');
+  if fCreateFlags and FONT_CREATE_TEXTURE<>0 then begin
+    fTexture:=TStaticTexture.Create(fARGBImage);
+    if SDL_SetTextureAlphaMod(fTexture.Texture,fAlpha)=-1 then
+      Log.LogWarning('SetAlpha failed! (Font: '+fName+')');
+  end;
+  if fCreateFlags and FONT_CREATE_ARGB=0 then FreeAndNIL(fARGBImage);
 end;
 
 function TFont.fAddPadding(pImage:TARGBImage):TARGBImage;

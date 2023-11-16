@@ -39,7 +39,15 @@
 //      + Added FlipNoLimit. This fLipping will not limit the fps and updates
 //        the FPS counter. Will fully use one cpu core.
 //   V1.10 - 2023.06.22
-//      * Added FPS counter update to Flip.
+//      + Added FPS counter update to Flip.
+//   V1.11 - 2023.07.14
+//      + Added TWindow.CreateCustomSized.
+//   V1.12 - 2023.07.21
+//      + Added FindController.
+//   V1.13 - 2023.07.26
+//      + Added ControllerButtons array. It works like Keys array.
+//   V1.14 - 2023.07.26
+//      + Added Bar with Texture instead of color. (Draws bar tiled with texture.)
 
 
 {$ifdef fpc}
@@ -63,10 +71,14 @@ const
   Terminate:boolean=false;
 
 type
+
+  { TWindow }
+
   TWindow=class
     constructor Create(Left,Top,Width,Height:integer;Title:string);
     constructor CreateDoubleSized(Left,Top,Width,Height:integer;Title:string);
     constructor CreateFullScreenBordered(Width,Height:integer;Title:string);
+    constructor CreateCustomSized(Left,Top,Width,Height,LogicalWidth,LogicalHeight:integer;Title:string);
     destructor Destroy; override;
   private
     fLogicalWidth,fLogicalHeight:integer;
@@ -119,6 +131,7 @@ const
 
 var
   keys : array[0..SDL_NUM_SCANCODES] of boolean;
+  controllerbuttons : array[0..SDL_CONTROLLER_BUTTON_MAX] of boolean;
   FrameCount : UInt32;
   fps: integer;
 
@@ -129,30 +142,52 @@ var
 //  function ReadKeyEx(wait:boolean):char;
 //  procedure ClearKeyBuffer;
   procedure ClearKeys;
+  procedure ClearControllerButtons;
   function TimeLeft : UInt32;   // From Kichy's Oxygene spriteenginedemo...
   procedure SetFPS(value:uint32);
   function GetDesktopSize:TRect;
   procedure RegisterEventHandler(EventHandlerProc:TEventHandlerProc);
   procedure UnRegisterEventHandler(EventHandlerProc:TEventHandlerProc);
 
-  procedure Bar(x,y,w,h,r,g,b:integer;a:integer=255);
+  // Draws a filled rectangle with the given color
+  procedure Bar(x,y,w,h,r,g,b:integer;a:integer=255); overload;
+
+  // Draws a filled rectangle, filled with the given texture.
+  procedure Bar(x,y,w,h:integer;Texture:TTexture); overload;
+
+  // Draws a rectangle with the given color.
   procedure Rectangle(x,y,w,h,r,g,b:integer;a:integer=255);
+
+  // Draws a line with the given color.
   procedure Line(x1,y1,x2,y2,r,g,b:integer;a:integer=255);
+
+  // Draws a horizontal line with the given color.
   procedure HLine(x1,y1,w,r,g,b:integer;a:integer=255);
+
+  // Draws a vertical line with the given color.
   procedure VLine(x1,y1,h,r,g,b:integer;a:integer=255);
 
+  // Draws the given texture at x,y.
   procedure PutTexture(x,y:integer;Texture:TTexture); overload;
+
+  // Draws the given texture at x,y, resized to w*h logical pixels.
   procedure PutTexture(x,y,w,h:integer;Texture:TTexture); overload;
+
+  // Draws a part of the given texture at x,y.
   procedure PutTexturePart(x,y,sx,sy,w,h:integer;Texture:TTexture); overload;
+
+  // Draws a part of the given texture at tx,ty, resized to tw*th.
   procedure PutTexturePart(sx,sy,sw,sh,tx,ty,tw,th:integer;Texture:TTexture); overload;
+
+  function FindController:PSDL_GameController;
 
 implementation
 
 uses SysUtils, Logger;
 
-const 
+const
   Fstr={$I %FILE%}+', ';
-  Version='1.10';
+  Version='1.14';
 
 type
   TEventHandlers=array of TEventHandlerProc;
@@ -212,6 +247,22 @@ begin
   if PrimaryWindow=nil then PrimaryWindow:=Self;
   fLogicalWidth:=Width;
   fLogicalHeight:=Height;
+  FrameCount:=0;
+  fps:=0;
+  prevTicks:=SDL_GetTicks;
+end;
+
+constructor TWindow.CreateCustomSized(Left,Top,Width,Height,
+  LogicalWidth,LogicalHeight:integer; Title:string);
+begin
+  fWindow:=SDL_CreateWindow(PChar(Title), Left, Top, Width, Height, SDL_WINDOW_OPENGL);
+  if fWindow=nil then raise Exception.Create('Could not create window!');
+  fRenderer:=SDL_CreateRenderer(fWindow, -1, 0);
+  if fRenderer=nil then raise Exception.Create('Could not create renderer!');
+  SDL_RenderSetLogicalSize(fRenderer, LogicalWidth, LogicalHeight);
+  if PrimaryWindow=nil then PrimaryWindow:=Self;
+  fLogicalWidth:=LogicalWidth;
+  fLogicalHeight:=LogicalHeight;
   FrameCount:=0;
   fps:=0;
   prevTicks:=SDL_GetTicks;
@@ -364,6 +415,18 @@ begin
                  @DestRect);
 end;
 
+function FindController: PSDL_GameController;
+var i,n:integer;
+begin
+  n:=SDL_NumJoysticks;
+//  if n<0
+  Result:=nil;
+  for i:=0 to n-1 do
+    if SDL_IsGameController(i) then
+      Result:=SDL_GameControllerOpen(i);
+
+end;
+
 procedure Flip;
 var i:integer;
 begin
@@ -423,12 +486,8 @@ begin
           keys[Event.Key.keysym.scancode]:=false;
         end;
         SDL_MOUSEMOTION: begin
-//          if not P2x2 then begin
           MouseX:=Event.Motion.X;
           MouseY:=Event.Motion.Y;
-//          end else begin
-//            MouseX:=Event.Motion.X >> 1;
-//            MouseY:=Event.Motion.Y >> 1;
         end;
         SDL_MOUSEBUTTONDOWN:begin
           MouseButtonDown:=true;
@@ -436,6 +495,12 @@ begin
         end;
         SDL_MOUSEBUTTONUP:begin
           MouseButtonDown:=false;
+        end;
+        SDL_CONTROLLERBUTTONDOWN:begin
+          controllerbuttons[Event.cbutton.button]:=true;
+        end;
+        SDL_CONTROLLERBUTTONUP:begin
+          controllerbuttons[Event.cbutton.button]:=false;
         end;
       end;
     end;
@@ -445,11 +510,17 @@ end;
 procedure ClearKeys;
 var i:integer;
 begin
-  for i:=0 to 511 do keys[i]:=false;
+  for i:=0 to SDL_NUM_SCANCODES do keys[i]:=false;
 end;
 
 const next_time:UInt32=0;
 const TICK_INTERVAL:UInt32=1000 div 40;
+
+procedure ClearControllerButtons;
+var i:integer;
+begin
+  for i:=0 to SDL_CONTROLLER_BUTTON_MAX do controllerbuttons[i]:=false;
+end;
 
 function TimeLeft : UInt32;   // From Kichy's Oxygene spriteenginedemo...
 var
@@ -511,6 +582,24 @@ begin
   DestRect.h:=h;
   SDL_SetRenderDrawColor(PrimaryWindow.Renderer, r, g, b, a);
   SDL_RenderFillRect(PrimaryWindow.Renderer,@DestRect);
+end;
+
+procedure Bar(x,y,w,h:integer; Texture:TTexture);
+var i,j:integer;
+begin
+  for j:=0 to (h div Texture.Height)-1 do begin
+    for i:=0 to (w div Texture.Width)-1 do
+      PutTexture(x+i*Texture.Width,y+j*Texture.Height,Texture);
+    if w mod Texture.Width>0 then
+      PutTexturePart(x+i*Texture.Width,y+j*Texture.Height,0,0,w mod Texture.Width,Texture.Height,Texture);
+  end;
+  if h mod Texture.Height>0 then begin
+    j:=h div Texture.Height;
+    for i:=0 to (w div Texture.Width)-1 do
+      PutTexturePart(x+i*Texture.Width,y+j*Texture.Height,0,0,Texture.Width,h mod Texture.Height,Texture);
+    if w mod Texture.Width>0 then
+      PutTexturePart(x+i*Texture.Width,y+j*Texture.Height,0,0,w mod Texture.Width,h mod Texture.Height,Texture);
+  end;
 end;
 
 procedure Rectangle(x,y,w,h,r,g,b:integer;a:integer=255);

@@ -347,8 +347,11 @@ end;
 procedure TMouseObjects.Draw;
 var i:integer;
 begin
-  for i:=fTop to Count-1 do
-    if Assigned(Self[i]) and Self[i].Visible then Self[i].Draw;
+  for i:=fTop to Count-1 do begin
+    if Assigned(Self[i]) then begin
+      if Self[i].Visible then Self[i].Draw;
+    end;
+  end;
 end;
 
 procedure TMouseObjects.NewSession;
