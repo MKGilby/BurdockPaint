@@ -130,9 +130,9 @@ begin
     end;
     if Assigned(fDisabledArrowFont) then begin
       if fPosition=fMinValue then
-        fDisabledArrowFont.OutText(fTexture.ARGBImage,#128,fWidth div 2,(fDecClickAreaSize-Font.Height) div 2+1,mjCenter);
+        fDisabledArrowFont.OutText(fTexture.ARGBImage,#128,fWidth div 2,(fDecClickAreaSize-fDisabledArrowFont.Height) div 2+1,mjCenter);
       if fPosition=fMaxValue then
-        fDisabledArrowFont.OutText(fTexture.ARGBImage,#130,fWidth div 2,fDecClickAreaSize+fSlideAreaSize+(fIncClickAreaSize-Font.Height) div 2+1,mjCenter);
+        fDisabledArrowFont.OutText(fTexture.ARGBImage,#130,fWidth div 2,fDecClickAreaSize+fSlideAreaSize+(fIncClickAreaSize-fDisabledArrowFont.Height) div 2+1,mjCenter);
     end;
     if ShowNumber and Assigned(fFont) then
       fFont.OutText(fTexture.ARGBImage,inttostr(Position),fWidth div 2,p+(knobsize-Font.Height) div 2,mjCenter);
