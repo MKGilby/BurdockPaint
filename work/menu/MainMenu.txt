@@ -50,7 +50,7 @@ Image
     Save image to file.
   Duplicate
     DUPLICATEIMAGE
-    Duplicate image.  
+    Duplicate image.
   Remove
     REMOVEIMAGE
     Remove image from project.
@@ -140,7 +140,10 @@ Inks
     Select Random pixels ink instead of selected one.
   Soften
     INKSOFTEN
-    Select soften ink instead of selected one.
+    Select Soften ink instead of selected one.
+  Tint
+    INKTINT
+    Select Tint ink instead of selected one.
 
 ;------------------------------
 About

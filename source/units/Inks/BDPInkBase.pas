@@ -61,7 +61,7 @@ implementation
 
 uses
   BDPShared, BDPInkOpaque, BDPInkHGrad, BDPInkLGrad, BDPInkVGrad, BDPInkCGrad,
-  BDPInkRandom, BDPInkSoften, BDPInkRGrad;
+  BDPInkRandom, BDPInkSoften, BDPInkRGrad, BDPInkTint;
 
 { TBDInk }
 
@@ -159,6 +159,7 @@ begin
   AddObject('RANDOM',TBDInkRandom.Create);
   AddObject('SOFTEN',TBDInkSoften.Create);
   AddObject('R GRAD',TBDInkRGrad.Create);
+  AddObject('TINT',TBDInkTint.Create);
 end;
 
 end.

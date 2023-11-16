@@ -47,13 +47,16 @@ type
     fActiveColor:uint32;
     fDitherStrength:integer;
     fRealDitherStrength:double;
+    fTintStrength:integer;
+    fRealTintStrength:double;
+    procedure fSetZoom(value:integer);
     function fGetSelectedTool(index:integer):string;
     procedure fSetSelectedTool(index:integer;value:string);
     function fGetSelectedInk(index:integer):string;
     procedure fSetSelectedInk(index:integer;value:string);
     procedure fSetActiveColor(value:uint32);
     procedure fSetDitherStrength(value:integer);
-    procedure fSetZoom(value:integer);
+    procedure fSetTintStrength(value:integer);
   public
     ColorSelectorMainColor:uint32;
     ColorSelectorLeftColor:uint32;
@@ -79,6 +82,8 @@ type
     property ActiveColor:uint32 read fActiveColor write fSetActiveColor;
     property DitherStrength:integer read fDitherStrength write fSetDitherStrength;
     property RealDitherStrength:double read fRealDitherStrength;
+    property TintStrength:integer read fTintStrength write fSetTintStrength;
+    property RealTintStrength:double read fRealTintStrength;
   end;
 
 
@@ -112,7 +117,8 @@ begin
   ColorSelectorRightColor:=$FFFFFFFF;
   fActiveColor:=$FFFF0000;
   UndoLimit:=16;
-  fDitherStrength:=10;
+  DitherStrength:=10;
+  TintStrength:=10;
   CGradCenterX:=0;
   CGradCenterY:=0;
   CGradRadius:=32;
@@ -171,7 +177,8 @@ begin
   fActiveColor:=INI.ReadUInt32('Colors','ActiveColor',$FFFF0000);
   // Inks' settings
   DitherGradients:=INI.ReadBool('Inks','DitherGradients',false);
-  fDitherStrength:=INI.ReadInteger('Inks','DitherStrength',10);
+  DitherStrength:=INI.ReadInteger('Inks','DitherStrength',10);
+  TintStrength:=INI.ReadInteger('Inks','TintStrength',10);
   CGradCenterX:=INI.ReadInteger('Inks','CGradCenterX',0);
   CGradCenterY:=INI.ReadInteger('Inks','CGradCenterY',0);
   CGradRadius:=INI.ReadInteger('Inks','CGradRadius',32);
@@ -217,6 +224,7 @@ begin
   // Inks' settings
   INI.WriteBool('Inks','DitherGradients',DitherGradients);
   INI.WriteInteger('Inks','DitherStrength',fDitherStrength);
+  INI.WriteInteger('Inks','TintStrength',fTintStrength);
   INI.WriteInteger('Inks','CGradCenterX',CGradCenterX);
   INI.WriteInteger('Inks','CGradCenterY',CGradCenterY);
   INI.WriteInteger('Inks','CGradRadius',CGradRadius);
@@ -267,6 +275,14 @@ begin
   else if value>255 then value:=255;
   fDitherStrength:=value;
   fRealDitherStrength:=value/255;
+end;
+
+procedure TSettings.fSetTintStrength(value: integer);
+begin
+  if value<0 then value:=0
+  else if value>100 then value:=100;
+  fTintStrength:=value;
+  fRealTintStrength:=value/100;
 end;
 
 procedure TSettings.fSetZoom(value:integer);
