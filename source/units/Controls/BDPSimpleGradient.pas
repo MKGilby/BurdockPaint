@@ -83,7 +83,7 @@ procedure TBDSimpleGradient.Draw;
 begin
   inherited Draw;
   if Assigned(fGradient) then begin
-    PutTexturePart(fLeft+3,fTop+3,0,0,fWidth-6,fHeight-6,fAlphaBack);
+    Bar(fLeft+3,fTop+3,fWidth-6,fHeight-6,fAlphaBack);
     PutTexture(fLeft+3,fTop+3,fGradientTexture);
   end;
 end;

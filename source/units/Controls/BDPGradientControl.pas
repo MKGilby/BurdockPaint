@@ -130,7 +130,7 @@ end;
 procedure TBDGradient.Draw;
 begin
   inherited Draw;
-  PutTexturePart(fLeft+fColorsLeft+3,fTop+3,0,0,fColorsWidth-3,fHeight-6,fAlphaBack);
+  Bar(fLeft+fColorsLeft+3,fTop+3,fColorsWidth-3,fHeight-6,fAlphaBack);
   PutTexture(fLeft+fColorsLeft+3,fTop+3,fGradientTexture);
 end;
 
