@@ -25,7 +25,7 @@ unit BDPConfigureRGradDialog;
 interface
 
 uses
-  BDPSliders, BDPModalDialog;
+  SysUtils, BDPSliders, BDPModalDialog;
 
 type
 
@@ -127,6 +127,8 @@ begin
   Settings.RGradRepetitions:=fRepetitionSlider.Position;
   Settings.RGradRotation:=fRotationSlider.Position;
   Self.Hide;
+  MouseObjects.Remove(Self);
+  FreeAndNil(Self);
 end;
 
 procedure TBDConfigureRGradDialog.CenterButtonClick(Sender:TObject;x,y,buttons:integer);
@@ -138,6 +140,8 @@ end;
 procedure TBDConfigureRGradDialog.CancelButtonClick(Sender:TObject;x,y,buttons:integer);
 begin
   Self.Hide;
+  MouseObjects.Remove(Self);
+  FreeAndNil(Self);
 end;
 
 procedure TBDConfigureRGradDialog.Show(Sender:TObject);
