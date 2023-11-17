@@ -24,7 +24,7 @@ unit BDPButton;
 
 interface
 
-uses SysUtils, vcc2_Button, Font2Unit, ARGBImageUnit, BDPMessage;
+uses SysUtils, vcc2_ButtonStatic, Font2Unit, ARGBImageUnit, BDPMessage;
 
 type
 
@@ -56,7 +56,7 @@ type
 
 implementation
 
-uses BDPShared;
+uses BDPShared, mk_sdl2, sdl2;
 
 { TBDButton }
 
@@ -113,37 +113,46 @@ begin
 end;
 
 procedure TBDButton.ReDraw;
+var tmp:TARGBImage;
 begin
-  with fTexture.ARGBImage do begin
-    Bar(8,0,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
-    Bar(8,Height-3,fWidth-16,3,SystemPalette[SYSTEMCOLORDARK]);
-    Bar(0,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
-    Bar(Width-3,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
-    if fSelected then
-      Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
-    else begin
-      if fEnabled then
-        Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORMID])
-      else
-        Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORDARK]);
+  if Assigned(fTexture) then FreeAndNil(fTexture);
+  tmp:=TARGBImage.Create(fWidth,fHeight);
+  try
+    with tmp do begin
+      Bar(8,0,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(8,Height-3,fWidth-16,3,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(0,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(Width-3,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
+      if fSelected then
+        Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
+      else begin
+        if fEnabled then
+          Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORMID])
+        else
+          Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORDARK]);
+      end;
     end;
+    if Assigned(fTLImage) then
+      fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,tmp,true);
+    if Assigned(fTRImage) then
+      fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,fWidth-8,0,tmp,true);
+    if Assigned(fBLImage) then
+      fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,0,fHeight-8,tmp,true);
+    if Assigned(fBRImage) then
+      fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,tmp,true);
+    if not fSelected then begin
+      if Assigned(fFont) then
+        fFont.OutText(tmp,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX)
+    end else begin
+      if Assigned(fFont2) then
+        fFont2.OutText(tmp,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX);
+    end;
+
+    fTexture:=TStaticTexture.Create(tmp);
+    SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
+  finally
+    tmp.Free;
   end;
-  if Assigned(fTLImage) then
-    fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fTexture.ARGBImage,true);
-  if Assigned(fTRImage) then
-    fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,fWidth-8,0,fTexture.ARGBImage,true);
-  if Assigned(fBLImage) then
-    fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,0,fHeight-8,fTexture.ARGBImage,true);
-  if Assigned(fBRImage) then
-    fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,fTexture.ARGBImage,true);
-  if not fSelected then begin
-    if Assigned(fFont) then
-      fFont.OutText(fTexture.ARGBImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX)
-  end else begin
-    if Assigned(fFont2) then
-      fFont2.OutText(fTexture.ARGBImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX);
-  end;
-  fTexture.Update;
 end;
 
 end.
