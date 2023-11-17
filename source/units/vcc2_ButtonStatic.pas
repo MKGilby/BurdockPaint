@@ -42,15 +42,8 @@
 
 // Version info:
 //
-//  V1.00: Gilby - 2023.03.14
-//    * Initial creation form vcc_Button2
-//  V1.01: Gilby - 2023.03.23
-//    * Following change in MKMouse2
-//  V1.02: Gilby - 2023.04.07
-//    * Following change in vcc2_VisibleControl
-//  V1.03: Gilby - 2023.05.24
-//    * Added Top and Height properties, without it fSetTop and fSetHeight
-//      won't be called.
+//  V1.00: Gilby - 2023.11.17
+//    * Initial creation form vcc2_Button
 
 {$mode delphi}
 {$smartlink on}
@@ -166,34 +159,21 @@ begin
 end;
 
 procedure TButton.ReDraw;
-var tmp:TARGBImage;
 
   procedure DrawButton(color:uint32);
   begin
-    tmp.Rectangle(0,0,fWidth,fHeight,fBorderColor);
-    tmp.Bar(1,1,fWidth-2,fHeight-2,color);
+    fImage.Rectangle(0,0,fWidth,fHeight,fBorderColor);
+    fImage.Bar(1,1,fWidth-2,fHeight-2,color);
   end;
 
 begin
-  if Assigned(fTexture) then FreeAndNil(fTexture);
-  tmp:=TARGBImage.Create(fWidth,fHeight);
-
-  try
-    case fState of
-      cNormal:DrawButton(fNormalColor);
-      cHighlighted:DrawButton(fHighlightedColor);
-      cButtonDown:DrawButton(fPushedColor);
-    end;
-    if Assigned(fFont) then
-      fFont.OutText(tmp,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX);
-
-    fTexture:=TStaticTexture.Create(tmp);
-    SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
-
-  finally
-    tmp.Free;
+  case fState of
+    cNormal:DrawButton(fNormalColor);
+    cHighlighted:DrawButton(fHighlightedColor);
+    cButtonDown:DrawButton(fPushedColor);
   end;
-
+  if Assigned(fFont) then
+    fFont.OutText(fImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX);
 end;
 
 initialization

@@ -33,7 +33,7 @@ unit vcc2_VisibleControlStatic;
 
 interface
 
-uses Classes, MKMouse2, mk_sdl2;
+uses Classes, MKMouse2, mk_sdl2, ARGBImageUnit;
 
 type
 
@@ -49,6 +49,7 @@ type
   protected
     fNeedRedraw:boolean;
     fTexture:TStaticTexture;
+    fImage:TARGBImage;
     procedure fSetHeight(value:integer); override;
     procedure fSetWidth(value:integer); override;
     // This one is called when one of the visible properties is changed.
@@ -95,7 +96,15 @@ end;
 procedure TVisibleControlStatic.Draw;
 begin
   if fNeedRedraw then begin
-    ReDraw;
+    if Assigned(fTexture) then FreeAndNil(fTexture);
+    fImage:=TARGBImage.Create(fWidth,fHeight);
+    try
+      ReDraw;
+      fTexture:=TStaticTexture.Create(fImage);
+      SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
+    finally
+      fImage.Free;
+    end;
     fNeedRedraw:=false;
   end;
   if Assigned(fTexture) then PutTexture(Left,Top,fTexture);

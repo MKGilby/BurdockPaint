@@ -23,8 +23,8 @@
 
 // Version info:
 //
-//  V1.00: Gilby - 2023.03.14
-//    * Initial creation from vcc_Button2
+//  V1.00: Gilby - 2023.11.17
+//    * Initial creation from vcc2_Button
 
 {$mode delphi}
 {$smartlink on}
