@@ -24,7 +24,7 @@ unit BDPCheckBox;
 
 interface
 
-uses vcc2_Button, ARGBImageUnit, BDPMessage, MKMouse2;
+uses SysUtils, vcc2_ButtonStatic, ARGBImageUnit, BDPMessage, MKMouse2;
 
 type
 
@@ -54,7 +54,7 @@ type
 
 implementation
 
-uses BDPShared, sdl2;
+uses BDPShared, sdl2, mk_sdl2;
 
 { TBDCheckBox }
 
@@ -109,9 +109,12 @@ begin
 end;
 
 procedure TBDCheckBox.ReDraw;
+var tmp:TARGBImage;
 begin
-  if Assigned(fTexture) then begin
-    with fTexture.ARGBImage do begin
+  if Assigned(fTexture) then FreeAndNil(fTexture);
+  tmp:=TARGBImage.Create(fWidth,fHeight);
+  try
+    with tmp do begin
       Bar(8,0,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
       Bar(8,Height-3,fWidth-16,3,SystemPalette[SYSTEMCOLORDARK]);
       Bar(0,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
@@ -125,19 +128,20 @@ begin
           Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORDARK]);
       end;
     end;
-    with fTexture do begin
-      if Assigned(fTLImage) then
-        fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,ARGBImage,true);
-      if Assigned(fTRImage) then
-        fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,fWidth-8,0,ARGBImage,true);
-      if Assigned(fBLImage) then
-        fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,0,fHeight-8,ARGBImage,true);
-      if Assigned(fBRImage) then
-        fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,ARGBImage,true);
-      if fSelected and Assigned(fFont) then
-        fFont.OutText(ARGBImage,#134,Width div 2,Height div 2-8,1);
-      Update;
-    end;
+    if Assigned(fTLImage) then
+      fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,tmp,true);
+    if Assigned(fTRImage) then
+      fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,fWidth-8,0,tmp,true);
+    if Assigned(fBLImage) then
+      fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,0,fHeight-8,tmp,true);
+    if Assigned(fBRImage) then
+      fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,tmp,true);
+    if fSelected and Assigned(fFont) then
+      fFont.OutText(tmp,#134,Width div 2,Height div 2-8,1);
+    fTexture:=TStaticTexture.Create(tmp);
+    SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
+  finally
+    tmp.Free;
   end;
 end;
 
