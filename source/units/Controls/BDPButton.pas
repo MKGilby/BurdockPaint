@@ -113,45 +113,35 @@ begin
 end;
 
 procedure TBDButton.ReDraw;
-var tmp:TARGBImage;
 begin
-  if Assigned(fTexture) then FreeAndNil(fTexture);
-  tmp:=TARGBImage.Create(fWidth,fHeight);
-  try
-    with tmp do begin
-      Bar(8,0,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(8,Height-3,fWidth-16,3,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(0,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(Width-3,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
-      if fSelected then
-        Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
-      else begin
-        if fEnabled then
-          Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORMID])
-        else
-          Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORDARK]);
-      end;
+  with fImage do begin
+    Bar(8,0,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(8,Height-3,fWidth-16,3,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(0,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(Width-3,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
+    if fSelected then
+      Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
+    else begin
+      if fEnabled then
+        Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORMID])
+      else
+        Bar(3,3,Width-6,Height-6,SystemPalette[SYSTEMCOLORDARK]);
     end;
-    if Assigned(fTLImage) then
-      fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,tmp,true);
-    if Assigned(fTRImage) then
-      fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,fWidth-8,0,tmp,true);
-    if Assigned(fBLImage) then
-      fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,0,fHeight-8,tmp,true);
-    if Assigned(fBRImage) then
-      fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,tmp,true);
-    if not fSelected then begin
-      if Assigned(fFont) then
-        fFont.OutText(tmp,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX)
-    end else begin
-      if Assigned(fFont2) then
-        fFont2.OutText(tmp,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX);
-    end;
-
-    fTexture:=TStaticTexture.Create(tmp);
-    SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
-  finally
-    tmp.Free;
+  end;
+  if Assigned(fTLImage) then
+    fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fImage,true);
+  if Assigned(fTRImage) then
+    fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,fWidth-8,0,fImage,true);
+  if Assigned(fBLImage) then
+    fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,0,fHeight-8,fImage,true);
+  if Assigned(fBRImage) then
+    fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,fImage,true);
+  if not fSelected then begin
+    if Assigned(fFont) then
+      fFont.OutText(fImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX)
+  end else begin
+    if Assigned(fFont2) then
+      fFont2.OutText(fImage,fCaption,fTextAlignPointX-fLeft,fTextAlignPointY+fTextOffsetY-fTop,fTextAlignX);
   end;
 end;
 

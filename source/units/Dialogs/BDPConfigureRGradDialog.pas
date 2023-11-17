@@ -115,11 +115,8 @@ end;
 procedure TBDConfigureRGradDialog.ReDraw;
 begin
   inherited ReDraw;
-  if Assigned(fTexture) then with fTexture do begin
-    MM.Fonts['Black'].OutText(ARGBImage,'REPETITIONS',CONFIGURERGRADDIALOGWIDTH div 2,34,1);
-    MM.Fonts['Black'].OutText(ARGBImage,'ROTATION °',CONFIGURERGRADDIALOGWIDTH div 2,114,1);
-    Update;
-  end;
+  MM.Fonts['Black'].OutText(fImage,'REPETITIONS',CONFIGURERGRADDIALOGWIDTH div 2,34,1);
+  MM.Fonts['Black'].OutText(fImage,'ROTATION °',CONFIGURERGRADDIALOGWIDTH div 2,114,1);
 end;
 
 procedure TBDConfigureRGradDialog.OKButtonClick(Sender:TObject;x,y,buttons:integer);

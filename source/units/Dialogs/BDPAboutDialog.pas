@@ -69,14 +69,11 @@ end;
 procedure TBDAboutDialog.ReDraw;
 begin
   inherited ReDraw;
-  if Assigned(fTexture) then with fTexture do begin
-    MM.Fonts['LogoFont'].OutText(ARGBImage,'BURDoCK PAINT',80,42,0);
-    MM.Fonts['DarkGray'].OutText(ARGBImage,'CODE: GILBY/MKSZTSZ',80,74,0);
-    MM.Fonts['DarkGray'].OutText(ARGBImage,'LICENSED UNDER GNU GPL 3',80,106,0);
-    MM.Fonts['DarkGray'].OutText(ARGBImage,'COPYRIGHT 2023 MKSZTSZ',80,138,0);
-    MM.Images.ItemByName['Burdock'].CopyTo(0,0,46,52,16,(ABOUTDIALOGHEIGHT-52) div 2,ARGBImage,true);
-    Update;
-  end;
+  MM.Fonts['LogoFont'].OutText(fImage,'BURDoCK PAINT',80,42,0);
+  MM.Fonts['DarkGray'].OutText(fImage,'CODE: GILBY/MKSZTSZ',80,74,0);
+  MM.Fonts['DarkGray'].OutText(fImage,'LICENSED UNDER GNU GPL 3',80,106,0);
+  MM.Fonts['DarkGray'].OutText(fImage,'COPYRIGHT 2023 MKSZTSZ',80,138,0);
+  MM.Images.ItemByName['Burdock'].CopyTo(0,0,46,52,16,(ABOUTDIALOGHEIGHT-52) div 2,fImage,true);
 end;
 
 procedure TBDAboutDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);

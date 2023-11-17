@@ -94,10 +94,7 @@ end;
 procedure TBDDitherDialog.ReDraw;
 begin
   inherited ReDraw;
-  if Assigned(fTexture) then begin
-    MM.Fonts['Black'].OutText(fTexture.ARGBImage,'DITHER STRENGTH',DITHERDIALOGWIDTH div 2,34,1);
-    fTexture.Update;
-  end;
+  MM.Fonts['Black'].OutText(fImage,'DITHER STRENGTH',DITHERDIALOGWIDTH div 2,34,1);
 end;
 
 procedure TBDDitherDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);

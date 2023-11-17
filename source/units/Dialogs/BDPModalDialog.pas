@@ -25,7 +25,7 @@ unit BDPModalDialog;
 interface
 
 uses
-  SysUtils, mk_sdl2, vcc2_Container, MKMouse2;
+  SysUtils, mk_sdl2, vcc2_ContainerStatic, MKMouse2;
 
 type
 
@@ -40,7 +40,7 @@ type
 
   { TBDModalDialog }
 
-  TBDModalDialog=class(TContainer)
+  TBDModalDialog=class(TContainerStatic)
     constructor Create(iWidth,iHeight:integer);
     destructor Destroy; override;
     procedure Show;
@@ -58,7 +58,7 @@ type
 
 implementation
 
-uses BDPShared;
+uses BDPShared, ARGBImageUnit, sdl2;
 
 { TBDModalOverlay }
 
@@ -106,19 +106,15 @@ end;
 
 procedure TBDModalDialog.ReDraw;
 begin
-  if Assigned(fTexture) then with fTexture do begin
-    // Panel border
-    ARGBImage.Bar(0,0,Width,MODALDIALOGCAPTIONHEIGHT,SystemPalette[SYSTEMCOLORDARK]);
-    ARGBImage.Bar(0,Height-3,fTexture.ARGBImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
-    ARGBImage.Bar(0,MODALDIALOGCAPTIONHEIGHT,3,Height-3-MODALDIALOGCAPTIONHEIGHT,SystemPalette[SYSTEMCOLORDARK]);
-    ARGBImage.Bar(Width-3,MODALDIALOGCAPTIONHEIGHT,3,ARGBImage.Height-3-MODALDIALOGCAPTIONHEIGHT,SystemPalette[SYSTEMCOLORDARK]);
-    // Panel caption
-    MM.Fonts['Black'].OutText(ARGBImage,fCaption,Width div 2,3,1);
-    // Panel background
-    ARGBImage.Bar(3,MODALDIALOGCAPTIONHEIGHT,Width-6,Height-3-MODALDIALOGCAPTIONHEIGHT,SystemPalette[SYSTEMCOLORMID]);
-    // Update texture
-    Update;
-  end;
+  // Panel border
+  fImage.Bar(0,0,Width,MODALDIALOGCAPTIONHEIGHT,SystemPalette[SYSTEMCOLORDARK]);
+  fImage.Bar(0,Height-3,fImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
+  fImage.Bar(0,MODALDIALOGCAPTIONHEIGHT,3,Height-3-MODALDIALOGCAPTIONHEIGHT,SystemPalette[SYSTEMCOLORDARK]);
+  fImage.Bar(Width-3,MODALDIALOGCAPTIONHEIGHT,3,fImage.Height-3-MODALDIALOGCAPTIONHEIGHT,SystemPalette[SYSTEMCOLORDARK]);
+  // Panel caption
+  MM.Fonts['Black'].OutText(fImage,fCaption,Width div 2,3,1);
+  // Panel background
+  fImage.Bar(3,MODALDIALOGCAPTIONHEIGHT,Width-6,Height-3-MODALDIALOGCAPTIONHEIGHT,SystemPalette[SYSTEMCOLORMID]);
 end;
 
 function TBDModalDialog.KeyDown(Sender:TObject; key:integer):boolean;

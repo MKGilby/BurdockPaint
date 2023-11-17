@@ -76,7 +76,7 @@ begin
   ZIndex:=MODALDIALOG_ZINDEX;
   Caption:=iCaption;
   MouseObjects.Add(Self);
-  x:=(fTexture.Width-(buttoncount*(NORMALBUTTONWIDTH+18))+18) div 2;
+  x:=(Width-(buttoncount*(NORMALBUTTONWIDTH+18))+18) div 2;
   i:=0;
   while length(iButtons)>0 do begin
     key:=-1;
@@ -105,10 +105,7 @@ end;
 procedure TBDMessageBox.ReDraw;
 begin
   inherited ReDraw;
-  if Assigned(fTexture) then begin
-    MM.Fonts['Black'].OutText(fTexture.ARGBImage,fMessage,fTexture.Width div 2,42,1);
-    fTexture.Update;
-  end;
+  MM.Fonts['Black'].OutText(fImage,fMessage,Width div 2,42,1);
 end;
 
 function TBDMessageBox.Run:integer;

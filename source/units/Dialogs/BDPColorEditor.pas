@@ -213,13 +213,8 @@ procedure TBDColorEditor.Redraw;
 var i:integer;
 begin
   inherited ReDraw;
-  if Assigned(fTexture) then begin
-    // Letters for sliders
-    for i:=0 to 6 do
-      MM.Fonts['Black'].OutText(fTexture.ARGBImage,'HSLRGBA'[i+1],SLIDERSLEFT-20,SLIDERSTOP+9+(NORMALSLIDERHEIGHT+3)*i,1);
-    // Update texture
-    fTexture.Update;
-  end;
+  for i:=0 to 6 do
+    MM.Fonts['Black'].OutText(fImage,'HSLRGBA'[i+1],SLIDERSLEFT-20,SLIDERSTOP+9+(NORMALSLIDERHEIGHT+3)*i,1);
 end;
 
 procedure TBDColorEditor.MouseEnter(Sender:TObject);

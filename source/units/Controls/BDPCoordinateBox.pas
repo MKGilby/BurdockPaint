@@ -53,7 +53,7 @@ type
 
 implementation
 
-uses BDPShared, MKMouse2, ARGBImageUnit, mk_sdl2, sdl2;
+uses BDPShared, MKMouse2, ARGBImageUnit, mk_sdl2;
 
 { TBDCoordinateBox }
 
@@ -110,23 +110,13 @@ begin
 end;
 
 procedure TBDCoordinateBox.ReDraw;
-var tmp:TARGBImage;
 begin
-  if Assigned(fTexture) then FreeAndNil(fTexture);
-  tmp:=TARGBImage.Create(fWidth,fHeight);
-  try
-    with tmp do begin
-      Bar(0,0,Width,Height,SystemPalette.Colors[SYSTEMCOLORDARK]);
-      Bar(fLeftA,67,fWidthA,32,128,128,128);
-      Bar(fLeftR,67,fWidthR,32,128,64,64);
-      Bar(fLeftG,67,fWidthG,32,64,128,64);
-      Bar(fLeftB,67,fWidthB,32,64,64,128);
-    end;
-
-    fTexture:=TStaticTexture.Create(tmp);
-    SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
-  finally
-    tmp.Free;
+  with fImage do begin
+    Bar(0,0,Width,Height,SystemPalette.Colors[SYSTEMCOLORDARK]);
+    Bar(fLeftA,67,fWidthA,32,128,128,128);
+    Bar(fLeftR,67,fWidthR,32,128,64,64);
+    Bar(fLeftG,67,fWidthG,32,64,128,64);
+    Bar(fLeftB,67,fWidthB,32,64,64,128);
   end;
 end;
 

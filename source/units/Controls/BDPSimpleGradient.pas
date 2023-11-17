@@ -24,13 +24,13 @@ unit BDPSimpleGradient;
 
 interface
 
-uses vcc2_VisibleControl, BDPGradient, mk_sdl2;
+uses SysUtils, vcc2_VisibleControlStatic, BDPGradient, mk_sdl2;
 
 type
 
   { TBDSimpleGradient }
 
-  TBDSimpleGradient=class(TVisibleControl)
+  TBDSimpleGradient=class(TVisibleControlStatic)
     constructor Create(iLeft,iTop,iWidth,iHeight:integer;iGradient:TGradient);
     destructor Destroy; override;
     procedure Draw; override;
@@ -40,11 +40,10 @@ type
     fGradient:TGradient;
     fColorsWidth:integer;
     fAlphaBack:TTexture;
-    fGradientTexture:TStreamingTexture;
+    fGradientTexture:TStaticTexture;
     function fGetColorsWidth:integer;
     procedure fSetGradient(value:TGradient);
     procedure fSetSelected(value:boolean);
-    procedure RecreateTexture(Sender:TObject);
   public
     property ColorsWidth:integer read fGetColorsWidth;
     property Gradient:TGradient write fSetGradient;
@@ -54,7 +53,7 @@ type
 
 implementation
 
-uses BDPShared, SDL2;
+uses BDPShared, SDL2, ARGBImageUnit;
 
 { TBDSimpleGradient }
 
@@ -64,11 +63,11 @@ begin
   fLeft:=iLeft;
   fTop:=iTop;
   fGradient:=iGradient;
-  OnRecreateTexture:=RecreateTexture;
   fWidth:=iWidth;
   Height:=iHeight;
   fNeedRedraw:=true;
   Selected:=false;
+  fGradientTexture:=nil;
   fAlphaBack:=MM.Textures.ItemByName['AlphaBack'];
 //  OnClick:=Click;
 end;
@@ -89,33 +88,39 @@ begin
 end;
 
 procedure TBDSimpleGradient.ReDraw;
-var i:integer;c:uint32;
+var i:integer;c:uint32;tmp:TARGBImage;
 begin
-  if Assigned(fTexture) then begin
-    if Assigned(fGradient) then begin
-      fColorsWidth:=Width-6;
-      with fTexture.ARGBImage do begin
-        if not Selected then
-          c:=SystemPalette[SYSTEMCOLORDARK]
-        else
-          c:=SystemPalette[SYSTEMCOLORHIGHLIGHT];
-        // Outer border
-        Bar(0,0,Width,3,c);
-        Bar(0,Height-3,Width,3,c);
-        Bar(0,3,3,Height-6,c);
-        Bar(Width-3,3,3,Height-6,c);
-      end;
-    end else
-      fTexture.ARGBImage.Bar(0,0,Width,Height,0);
-    fTexture.Update;
-  end;
-  if Assigned(fGradientTexture) then
+  if Assigned(fGradient) then begin
+    fColorsWidth:=Width-6;
+    with fImage do begin
+      if not Selected then
+        c:=SystemPalette[SYSTEMCOLORDARK]
+      else
+        c:=SystemPalette[SYSTEMCOLORHIGHLIGHT];
+      // Outer border
+      Bar(0,0,Width,3,c);
+      Bar(0,Height-3,Width,3,c);
+      Bar(0,3,3,Height-6,c);
+      Bar(Width-3,3,3,Height-6,c);
+    end;
+  end else
+    fImage.Bar(0,0,Width,Height,0);
+
+  if Assigned(fGradientTexture) then FreeAndNil(fGradientTexture);
+  tmp:=TARGBImage.Create(Width-6,Height-6);
+  try
     if Assigned(fGradient) then begin
       // Gradient bar
       for i:=0 to fColorsWidth-1 do
-        fGradientTexture.ARGBImage.VLine(i,0,Height,fGradient.GetColorAtRaw(i/(fColorsWidth-1)));
-      fGradientTexture.Update;
-    end;
+        tmp.VLine(i,0,Height,fGradient.GetColorAtRaw(i/(fColorsWidth-1)));
+    end else
+      tmp.Bar(0,0,tmp.Width,tmp.Height,SystemPalette[SYSTEMCOLORTRANSPARENT]);
+
+    fGradientTexture:=TStaticTexture.Create(tmp);
+    SDL_SetTextureBlendMode(fGradientTexture.Texture,SDL_BLENDMODE_BLEND);
+  finally
+    tmp.Free;
+  end;
 end;
 
 function TBDSimpleGradient.fGetColorsWidth: integer;
@@ -137,14 +142,6 @@ begin
     fSelected:=value;
     Refresh;
   end;
-end;
-
-procedure TBDSimpleGradient.RecreateTexture(Sender:TObject);
-begin
-  if Assigned(fGradientTexture) then fGradientTexture.Free;
-  // Recreate texture by inner texture
-  fGradientTexture:=TStreamingTexture.Create(fTexture.Width-6,fTexture.Height-6);
-  SDL_SetTextureBlendMode(fGradientTexture.Texture,SDL_BLENDMODE_BLEND);
 end;
 
 end.

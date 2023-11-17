@@ -24,13 +24,13 @@ unit BDPColorBox;
 
 interface
 
-uses SysUtils, ARGBImageUnit, vcc2_VisibleControl;
+uses SysUtils, ARGBImageUnit, vcc2_VisibleControlStatic;
 
 type
 
   { TBDColorBox }
 
-  TBDColorBox=class(TVisibleControl)
+  TBDColorBox=class(TVisibleControlStatic)
     constructor Create(iLeft,iTop,iWidth,iHeight:integer);
     procedure ColorChanged;
   protected
@@ -45,7 +45,7 @@ type
 
 implementation
 
-uses BDPShared;
+uses BDPShared, mk_sdl2, sdl2;
 
 { TBDColorBox }
 
@@ -73,24 +73,21 @@ end;
 
 procedure TBDColorBox.ReDraw;
 begin
-  if Assigned(fTexture) then begin
-    with fTexture.ARGBImage do begin
-      Bar(3,3,Width-6,Height-6,fColor);
-      Bar(8,0,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(8,Height-3,fWidth-16,3,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(0,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(Width-3,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
-    end;
-    if Assigned(fTLImage) then
-      fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fTexture.ARGBImage,true);
-    if Assigned(fTRImage) then
-      fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,fWidth-8,0,fTexture.ARGBImage,true);
-    if Assigned(fBLImage) then
-      fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,0,fHeight-8,fTexture.ARGBImage,true);
-    if Assigned(fBRImage) then
-      fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,fTexture.ARGBImage,true);
-    fTexture.Update;
+  with fImage do begin
+    Bar(3,3,Width-6,Height-6,fColor);
+    Bar(8,0,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(8,Height-3,fWidth-16,3,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(0,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(Width-3,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
   end;
+  if Assigned(fTLImage) then
+    fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fImage,true);
+  if Assigned(fTRImage) then
+    fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,fWidth-8,0,fImage,true);
+  if Assigned(fBLImage) then
+    fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,0,fHeight-8,fImage,true);
+  if Assigned(fBRImage) then
+    fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,fImage,true);
 end;
 
 procedure TBDColorBox.fSetColor(value:uint32);
