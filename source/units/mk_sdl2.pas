@@ -46,8 +46,10 @@
 //      + Added FindController.
 //   V1.13 - 2023.07.26
 //      + Added ControllerButtons array. It works like Keys array.
-//   V1.14 - 2023.07.26
+//   V1.14 - 2023.11.16
 //      + Added Bar with Texture instead of color. (Draws bar tiled with texture.)
+//   V1.14a - 2023.11.17
+//      * Fixed Bar with Texture. Sometimes it missed the last column.
 
 
 {$ifdef fpc}
@@ -187,7 +189,7 @@ uses SysUtils, Logger;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.14';
+  Version='1.14a';
 
 type
   TEventHandlers=array of TEventHandlerProc;
@@ -588,15 +590,21 @@ procedure Bar(x,y,w,h:integer; Texture:TTexture);
 var i,j:integer;
 begin
   for j:=0 to (h div Texture.Height)-1 do begin
-    for i:=0 to (w div Texture.Width)-1 do
+    i:=0;
+    while i<(w div Texture.Width) do begin
       PutTexture(x+i*Texture.Width,y+j*Texture.Height,Texture);
+      inc(i);
+    end;
     if w mod Texture.Width>0 then
       PutTexturePart(x+i*Texture.Width,y+j*Texture.Height,0,0,w mod Texture.Width,Texture.Height,Texture);
   end;
   if h mod Texture.Height>0 then begin
     j:=h div Texture.Height;
-    for i:=0 to (w div Texture.Width)-1 do
+    i:=0;
+    while i<(w div Texture.Width) do begin
       PutTexturePart(x+i*Texture.Width,y+j*Texture.Height,0,0,Texture.Width,h mod Texture.Height,Texture);
+      inc(i);
+    end;
     if w mod Texture.Width>0 then
       PutTexturePart(x+i*Texture.Width,y+j*Texture.Height,0,0,w mod Texture.Width,h mod Texture.Height,Texture);
   end;
