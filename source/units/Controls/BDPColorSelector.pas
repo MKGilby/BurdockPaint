@@ -24,13 +24,13 @@ unit BDPColorSelector;
 
 interface
 
-uses vcc2_VisibleControl, BDPGradient;
+uses vcc2_VisibleControlStatic, BDPGradient;
 
 type
 
   { TBDColorSelector }
 
-  TBDColorSelector=class(TVisibleControl)
+  TBDColorSelector=class(TVisibleControlStatic)
     constructor Create(iLeft,iTop,fWidth,fHeight:integer);
     destructor Destroy; override;
   protected
@@ -142,8 +142,8 @@ end;
 procedure TBDColorSelector.ReDraw;
 var i:integer;c:uint32;
 begin
-  with fTexture.ARGBImage do begin
-    Bar(0,0,fTexture.Width,fTexture.Height,SystemPalette[SYSTEMCOLORDARK]);
+  with fImage do begin
+    Bar(0,0,Width,Height,SystemPalette[SYSTEMCOLORDARK]);
     if Settings.ActiveColor=Settings.ColorSelectorLeftColor then
       Bar(0,0,Height,Height,SystemPalette[SYSTEMCOLORHIGHLIGHT]);
     if Settings.ActiveColor=Settings.ColorSelectorMainColor then
@@ -174,7 +174,6 @@ begin
       end;
     end;
   end;
-  fTexture.Update;
 end;
 
 procedure TBDColorSelector.RecalculatePositions;

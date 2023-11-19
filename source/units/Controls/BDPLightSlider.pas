@@ -24,13 +24,13 @@ unit BDPLightSlider;
 
 interface
 
-uses vcc2_VisibleControl, MKMouse2;
+uses vcc2_VisibleControlStatic, MKMouse2;
 
 type
 
   { TBDLightSlider }
 
-  TBDLightSlider=class(TVisibleControl)
+  TBDLightSlider=class(TVisibleControlStatic)
     constructor Create(iLeft,iTop,iWidth,iHeight:integer);
   protected
     procedure ReDraw; override;
@@ -81,23 +81,20 @@ end;
 procedure TBDLightSlider.ReDraw;
 var i:integer;c:uint32;
 begin
-  if Assigned(fTexture) then begin
-    with fTexture.ARGBImage do begin
-      Bar(0,0,Width,3,SystemPalette[SYSTEMCOLORMID]);  // The arrow area
-      HLine(fX-2,0,5,SystemPalette[SYSTEMCOLORBLACK]);  // The arrow
-      HLine(fX-1,1,3,SystemPalette[SYSTEMCOLORBLACK]);
-      PutPixel(fX,2,SystemPalette[SYSTEMCOLORBLACK]);
-      Bar(0,3,Width,3,SystemPalette[SYSTEMCOLORDARK]);  // Border
-      Bar(0,Height-3,fWidth,3,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(0,6,3,Height-9,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(Width-3,6,3,Height-9,SystemPalette[SYSTEMCOLORDARK]);
-      // Color area
-      for i:=3 to fWidth-3-1 do begin
-        c:=GetColorByL((i-3)*100 div (fWidth-6));
-        VLine(i,6,Height-9,c);
-      end;
+  with fImage do begin
+    Bar(0,0,Width,3,SystemPalette[SYSTEMCOLORMID]);  // The arrow area
+    HLine(fX-2,0,5,SystemPalette[SYSTEMCOLORBLACK]);  // The arrow
+    HLine(fX-1,1,3,SystemPalette[SYSTEMCOLORBLACK]);
+    PutPixel(fX,2,SystemPalette[SYSTEMCOLORBLACK]);
+    Bar(0,3,Width,3,SystemPalette[SYSTEMCOLORDARK]);  // Border
+    Bar(0,Height-3,fWidth,3,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(0,6,3,Height-9,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(Width-3,6,3,Height-9,SystemPalette[SYSTEMCOLORDARK]);
+    // Color area
+    for i:=3 to fWidth-3-1 do begin
+      c:=GetColorByL((i-3)*100 div (fWidth-6));
+      VLine(i,6,Height-9,c);
     end;
-    fTexture.Update;
   end;
 end;
 

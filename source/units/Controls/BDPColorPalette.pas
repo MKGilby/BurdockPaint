@@ -25,13 +25,13 @@ unit BDPColorPalette;
 interface
 
 uses
-  vcc2_VisibleControl, BDPPalette;
+  vcc2_VisibleControlStatic, BDPPalette;
 
 type
 
   { TBDColorPalette }
 
-  TBDColorPalette=class(TVisibleControl)
+  TBDColorPalette=class(TVisibleControlStatic)
     constructor Create(iLeft,iTop,iWidth,iHeight,iHorizontalEntryCount,iVerticalEntryCount:integer);
     procedure ReDraw; override;
     procedure SetColor(pColorIndex:integer;pColor:uint32);
@@ -76,16 +76,13 @@ end;
 procedure TBDColorPalette.ReDraw;
 var i,j:integer;
 begin
-  if Assigned(fTexture) then begin
-    fTexture.ARGBImage.Bar(0,0,Width,Height,SystemPalette.Colors[SYSTEMCOLORDARK]);
-    if Assigned(fPalette) then begin
-      for j:=0 to fVerticalEntryCount-1 do
-        for i:=0 to fHorizontalEntryCount-1 do begin
-          fTexture.ARGBImage.Bar(i*fEntryWidth+3,j*fEntryHeight+3,fEntryWidth-3,fEntryHeight-3,
-            fPalette.Colors[j*fHorizontalEntryCount+i]);
-        end;
-    end;
-    fTexture.Update;
+  fImage.Bar(0,0,Width,Height,SystemPalette.Colors[SYSTEMCOLORDARK]);
+  if Assigned(fPalette) then begin
+    for j:=0 to fVerticalEntryCount-1 do
+      for i:=0 to fHorizontalEntryCount-1 do begin
+        fImage.Bar(i*fEntryWidth+3,j*fEntryHeight+3,fEntryWidth-3,fEntryHeight-3,
+          fPalette.Colors[j*fHorizontalEntryCount+i]);
+      end;
   end;
 end;
 

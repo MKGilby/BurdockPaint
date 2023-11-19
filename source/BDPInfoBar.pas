@@ -24,22 +24,22 @@ unit BDPInfoBar;
 
 interface
 
-uses SysUtils, vcc2_VisibleControl;
+uses SysUtils, vcc2_VisibleControlStatic;
 
 type
 
   { TBDInfoBar }
 
-  TBDInfoBar=class(TVisibleControl)
+  TBDInfoBar=class(TVisibleControlStatic)
     constructor Create;
-    procedure Draw; override;
+//    procedure Draw; override;
 //    procedure ShowSimpleCoords(x,y:integer;valid:boolean);
     procedure ShowText(text:string);
+  protected
+    procedure ReDraw; override;
   private
-    fClear:boolean;
-    fTop:integer;
     fTextTop:integer;
-    procedure Clear;
+    fText:string;
     procedure fSetTop(aValue:integer);
   public
     property Top:integer read fTop write fSetTop;
@@ -57,38 +57,32 @@ begin
   Width:=WINDOWWIDTH;
   Height:=INFOBARHEIGHT;
   fTop:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
-//  SDL_SetTextureAlphaMod(fTexture.Texture,224);
-//  SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
-  Clear;
-  fTexture.Update;
-  fClear:=true;
+  fText:='';
   if fTop=0 then fTextTop:=3 else fTextTop:=6;
-end;
-
-procedure TBDInfoBar.Draw;
-begin
-  if not fClear then PutTexture(0,fTop,fTexture);
+  fNeedRedraw:=true;
 end;
 
 procedure TBDInfoBar.ShowText(text:string);
 begin
-  Clear;
-  if text<>'' then begin
-    MM.Fonts['Black'].OutText(fTexture.ARGBImage,text,8,fTextTop,mjLeft);
-    fClear:=false;
-  end else fClear:=true;
-  fTexture.Update;
+  if fText<>text then begin
+    fText:=text;
+    fNeedRedraw:=true;
+  end;
 end;
 
-procedure TBDInfoBar.Clear;
+procedure TBDInfoBar.ReDraw;
 begin
-  if fTop>0 then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.Width,3,SystemPalette.Colors[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(0,3,fTexture.Width,fTexture.Height-3,SystemPalette.Colors[SYSTEMCOLORMID]);
-  end else begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.Width,fTexture.Height-3,SystemPalette.Colors[SYSTEMCOLORMID]);
-    fTexture.ARGBImage.Bar(0,fTexture.Height-3,fTexture.Width,3,SystemPalette.Colors[SYSTEMCOLORDARK]);
-  end;
+  if fText<>'' then begin
+    if fTop>0 then begin
+      fImage.Bar(0,0,Width,3,SystemPalette.Colors[SYSTEMCOLORDARK]);
+      fImage.Bar(0,3,Width,Height-3,SystemPalette.Colors[SYSTEMCOLORMID]);
+    end else begin
+      fImage.Bar(0,0,Width,Height-3,SystemPalette.Colors[SYSTEMCOLORMID]);
+      fImage.Bar(0,Height-3,Width,3,SystemPalette.Colors[SYSTEMCOLORDARK]);
+    end;
+    MM.Fonts['Black'].OutText(fImage,fText,8,fTextTop,mjLeft);
+  end else
+    fImage.Bar(0,0,Width,Height,0,0,0,0);
 end;
 
 procedure TBDInfoBar.fSetTop(aValue:integer);

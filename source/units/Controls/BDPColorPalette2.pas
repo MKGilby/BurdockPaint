@@ -24,7 +24,7 @@ unit BDPColorPalette2;
 
 interface
 
-uses SysUtils, vcc2_Container;
+uses SysUtils, vcc2_ContainerStatic;
 
 // This is the colorpalette tool at the right side of the window.
 
@@ -32,7 +32,7 @@ type
 
   { TBDColorPalette2 }
 
-  TBDColorPalette2=class(TContainer)
+  TBDColorPalette2=class(TContainerStatic)
     constructor Create(iLeft,iTop,iWidth,iHeight:integer);
   protected
     procedure ReDraw; override;
@@ -78,21 +78,18 @@ end;
 procedure TBDColorPalette2.ReDraw;
 var i:integer;
 begin
-  if Assigned(fTexture) then begin
-    fTexture.ARGBImage.Bar(0,0,Width,Height,SystemPalette.Colors[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(3,3,Width-6,Height-6,SystemPalette.Colors[SYSTEMCOLORMID]);
-    fTexture.ARGBImage.Bar(6,19,Width-12,fEntryHeight*16+3,SystemPalette.Colors[SYSTEMCOLORDARK]);
-    if Assigned(Project.CurrentPalette) then begin
-      for i:=0 to 15 do begin
-        if Project.CurrentPalette.Colors[fPage*16+i]=Settings.ActiveColor then
-          fTexture.ARGBImage.Bar(6,19+i*fEntryHeight,fWidth-12,fEntryHeight+3,SystemPalette.Colors[SYSTEMCOLORHIGHLIGHT]);
-        fTexture.ARGBImage.Bar(9,19+i*fEntryHeight+3,fWidth-18,fEntryHeight-3,
-            Project.CurrentPalette.Colors[fPage*16+i]);
-      end;
+  fImage.Bar(0,0,Width,Height,SystemPalette.Colors[SYSTEMCOLORDARK]);
+  fImage.Bar(3,3,Width-6,Height-6,SystemPalette.Colors[SYSTEMCOLORMID]);
+  fImage.Bar(6,19,Width-12,fEntryHeight*16+3,SystemPalette.Colors[SYSTEMCOLORDARK]);
+  if Assigned(Project.CurrentPalette) then begin
+    for i:=0 to 15 do begin
+      if Project.CurrentPalette.Colors[fPage*16+i]=Settings.ActiveColor then
+        fImage.Bar(6,19+i*fEntryHeight,fWidth-12,fEntryHeight+3,SystemPalette.Colors[SYSTEMCOLORHIGHLIGHT]);
+      fImage.Bar(9,19+i*fEntryHeight+3,fWidth-18,fEntryHeight-3,
+          Project.CurrentPalette.Colors[fPage*16+i]);
     end;
-    MM.Fonts['SmallBlack'].OutText(fTexture.ARGBImage,inttostr(fPage+1)+'/16',Width div 2,6,1);
-    fTexture.Update;
   end;
+  MM.Fonts['SmallBlack'].OutText(fImage,inttostr(fPage+1)+'/16',Width div 2,6,1);
 end;
 
 {procedure TBDColorPalette2.fSetWidth(value: integer);

@@ -25,7 +25,7 @@ unit BDPSlider2;
 interface
 
 uses
-  vcc2_VisibleControl, ARGBImageUnit;
+  vcc2_VisibleControlStatic, ARGBImageUnit;
 
 type
 
@@ -35,7 +35,7 @@ type
 
   { TBDSlider2 }
 
-  TBDSlider2=class(TVisibleControl)
+  TBDSlider2=class(TVisibleControlStatic)
     constructor Create(iLeft,iTop,iWidth,iHeight:integer);
   protected
     procedure ReDraw; override;
@@ -100,15 +100,12 @@ end;
 procedure TBDSlider2.ReDraw;
 var RealTop:integer;
 begin
-  if Assigned(fTexture) then begin
-    with fTexture.ARGBImage do begin
-      bar(0,0,Width,Height,SystemPalette[SYSTEMCOLORMID]);
-      RealTop:=(fHeight-15) div 2;
-      bar(4,RealTop+5,Width-8,3,SystemPalette[SYSTEMCOLORDARK]);
-      bar(4,RealTop+8,Width-8,3,SystemPalette[SYSTEMCOLORBLACK]);
-      PutImage(fKnobPosition,RealTop,fKnob);
-    end;
-    fTexture.Update;
+  with fImage do begin
+    bar(0,0,Width,Height,SystemPalette[SYSTEMCOLORMID]);
+    RealTop:=(fHeight-15) div 2;
+    bar(4,RealTop+5,Width-8,3,SystemPalette[SYSTEMCOLORDARK]);
+    bar(4,RealTop+8,Width-8,3,SystemPalette[SYSTEMCOLORBLACK]);
+    PutImage(fKnobPosition,RealTop,fKnob);
   end;
 end;
 

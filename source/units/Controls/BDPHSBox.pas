@@ -24,13 +24,13 @@ unit BDPHSBox;
 
 interface
 
-uses SysUtils, vcc2_VisibleControl, MKMouse2;
+uses SysUtils, vcc2_VisibleControlStatic, MKMouse2;
 
 type
 
   { TBDHSBox }
 
-  TBDHSBox=class(TVisibleControl)
+  TBDHSBox=class(TVisibleControlStatic)
     constructor Create(iLeft,iTop,iWidth,iHeight:integer);
     procedure SetColor(pH:word;pS:byte);
   protected
@@ -92,23 +92,20 @@ end;
 procedure TBDHSBox.ReDraw;
 var i,j:integer;c:uint32;
 begin
-  if Assigned(fTexture) then begin
-    with fTexture.ARGBImage do begin
-      Bar(0,0,Width,3,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(0,Height-3,fWidth,3,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(0,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(Width-3,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
-      for i:=3 to fWidth-3-1 do begin
-        c:=GetColorByH(i);
-        for j:=3 to fHeight-3-1 do
-          PutPixel(i,j,ModifyColorByS(c,j));
-      end;
-      Bar(fX+3,fY,4,2,0,0,0);
-      Bar(fX,fY+3,2,4,0,0,0);
-      Bar(fX-5,fY,4,2,0,0,0);
-      Bar(fX,fY-5,2,4,0,0,0);
+  with fImage do begin
+    Bar(0,0,Width,3,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(0,Height-3,fWidth,3,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(0,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(Width-3,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
+    for i:=3 to fWidth-3-1 do begin
+      c:=GetColorByH(i);
+      for j:=3 to fHeight-3-1 do
+        PutPixel(i,j,ModifyColorByS(c,j));
     end;
-    fTexture.Update;
+    Bar(fX+3,fY,4,2,0,0,0);
+    Bar(fX,fY+3,2,4,0,0,0);
+    Bar(fX-5,fY,4,2,0,0,0);
+    Bar(fX,fY-5,2,4,0,0,0);
   end;
 end;
 
