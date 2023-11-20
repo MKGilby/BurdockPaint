@@ -438,6 +438,7 @@ constructor TGradientList.Create;
 begin
   inherited Create;
   Add(TGradient.Create($FF000000,$FFFFFFFF));
+  fActiveIndex:=0;
 end;
 
 constructor TGradientList.CreateFromStream(iStream:TStream);
