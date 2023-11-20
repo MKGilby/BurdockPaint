@@ -35,8 +35,7 @@ uses
   ARGBImageTGAReaderUnit,
   ARGBImageTGAWriterUnit,
   FileInfo,
-  winpeimagereader,
-  MKToolbox;
+  winpeimagereader;
 
 const
   BDATE={$i %DATE%};
