@@ -114,7 +114,7 @@ begin
   case fState of
     0:;
     1:begin
-        Project.OverlayImage.RectangleXY(fSX,fSY,fX,fY,VibroColors.GetColor);
+        OverlayImage.RectangleXY(fSX,fSY,fX,fY,VibroColors.GetColor);
 
         InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
           'WI='+inttostr(abs(fSX-fX)+1)+' HE='+inttostr(abs(fSY-fY)+1)+' '+
@@ -128,7 +128,7 @@ begin
   case fState of
     0:;
     1:begin
-        Project.OverlayImage.RectangleXY(fSX,fSY,fX,fY,0);
+        OverlayImage.RectangleXY(fSX,fSY,fX,fY,0);
       end;
   end;
 end;

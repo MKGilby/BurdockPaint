@@ -49,38 +49,6 @@ type
     // Recreates the image with the new dimensions.
     procedure Recreate(pWidth,pHeight:integer);
 
-    // -------------- Rendering operations --------------------
-    // Renders the image onto a Texture.
-    // TextureLeft, TextureTop   : The topleft position of the image on the target texture
-    // RenderWidth, RenderHeight : The dimensions of rendering in IMAGE pixels
-    // ImageLeft, ImageTop       : The topleft position of rendering in the image
-    // Zoom                      : Zoom level (1->1x, 2->2x, 3->4x, 4->8x)
-    procedure RenderToTexture(Target:TStreamingTexture;
-      TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
-
-    // Renders the image onto a Texture skipping all pixels where alpha is not 255.
-    // TextureLeft, TextureTop   : The topleft position of the image on the target texture
-    // RenderWidth, RenderHeight : The dimensions of rendering in IMAGE pixels
-    // ImageLeft, ImageTop       : The topleft position of rendering in the image
-    // Zoom                      : Zoom level (1->1x, 2->2x, 3->4x, 4->8x)
-    procedure RenderToTextureAsOverlay(Target:TStreamingTexture;
-      TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
-
-    // Renders the image onto the PrimaryWindow
-    // TextureLeft, TextureTop   : The topleft position of the image on PrimaryWindow
-    // RenderWidth, RenderHeight : The dimensions of rendering in IMAGE pixels
-    // ImageLeft, ImageTop       : The topleft position of rendering in the image
-    // Zoom                      : Zoom level (1->1x, 2->2x, 3->4x, 4->8x)
-    //procedure RenderToScreen(ScreenLeft,ScreenTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
-
-    // Renders the image onto the PrimaryWindow skipping all pixels
-    // where alpha is not 255
-    // TextureLeft, TextureTop   : The topleft position of the image on PrimaryWindow
-    // RenderWidth, RenderHeight : The dimensions of rendering in IMAGE pixels
-    // ImageLeft, ImageTop       : The topleft position of rendering in the image
-    // Zoom                      : Zoom level (1->1x, 2->2x, 3->4x, 4->8x)
-    //procedure RenderToScreenAsOverlay(ScreenLeft,ScreenTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
-
     // ------------- File/Stream operations ----------------
     // Saves region to file.
     procedure SaveToFile(pFilename:string);
@@ -162,82 +130,6 @@ begin
   fWidth:=pWidth;
   fHeight:=pHeight;
   fRawdata:=Getmem(fWidth*fHeight*4);
-end;
-
-procedure TBDRegion.RenderToTexture(Target:TStreamingTexture;
-  TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
-var x,y,zPixel,zRenderWidth,zRenderHeight:integer;
-begin
-  if not(Zoom in [1..MAXZOOMLEVEL]) then exit;
-  zPixel:=1<<(Zoom-1);
-
-  // RenderWidth and Height comes in real pixels, convert to image pixels.
-  zRenderWidth:=RenderWidth div ZPixel;
-  zRenderHeight:=RenderHeight div ZPixel;
-
-  FillChar(Target.ARGBImage.Rawdata^,Target.ARGBImage.Width*Target.ARGBImage.Height*4,0);
-  if (zRenderWidth>0) and (zRenderHeight>0) and
-     (ImageLeft<Width) and (ImageLeft+zRenderWidth>0) and
-     (ImageTop<Height) and (ImageTop+zRenderHeight>0) then begin
-    // Still check for clipping
-    if ImageLeft<0 then begin zRenderWidth+=ImageLeft;TextureLeft-=ImageLeft*zPixel;ImageLeft:=0;end;
-    if ImageLeft+zRenderWidth>Width then zRenderWidth:=Width-ImageLeft;
-    if ImageTop<0 then begin zRenderHeight+=ImageTop;TextureTop-=ImageTop*zPixel;ImageTop:=0;end;
-    if ImageTop+zRenderHeight>Height then zRenderHeight:=Height-ImageTop;
-
-
-    // Probably this could be a simple PutImagePart
-    if zPixel=1 then begin
-      for y:=0 to zRenderHeight-1 do
-        for x:=0 to zRenderWidth-1 do
-          Target.ARGBImage.PutPixel(TextureLeft+x,TextureTop+y,GetPixel(ImageLeft+x,ImageTop+y));
-    end else begin
-      for y:=0 to zRenderHeight-1 do
-        for x:=0 to zRenderWidth-1 do
-          Target.ARGBImage.Bar(TextureLeft+x*zPixel,TextureTop+y*zPixel,zPixel,zPixel,GetPixel(ImageLeft+x,ImageTop+y));
-    end;
-
-  end;
-end;
-
-procedure TBDRegion.RenderToTextureAsOverlay(Target:TStreamingTexture;
-  TextureLeft,TextureTop,RenderWidth,RenderHeight,ImageLeft,ImageTop,Zoom:integer);
-var x,y,zPixel,zRenderWidth,zRenderHeight:integer;p:uint32;
-begin
-  if not(Zoom in [1..MAXZOOMLEVEL]) then exit;
-  zPixel:=1<<(Zoom-1);
-
-  // RenderWidth and Height comes in real pixels, convert to image pixels.
-  zRenderWidth:=RenderWidth div ZPixel;
-  zRenderHeight:=RenderHeight div ZPixel;
-
-  if (zRenderWidth>0) and (zRenderHeight>0) and
-     (ImageLeft<Width) and (ImageLeft+zRenderWidth>0) and
-     (ImageTop<Height) and (ImageTop+zRenderHeight>0) then begin
-    // Still check for clipping
-    if ImageLeft<0 then begin zRenderWidth+=ImageLeft;TextureLeft-=ImageLeft*zPixel;ImageLeft:=0;end;
-    if ImageLeft+zRenderWidth>Width then zRenderWidth:=Width-ImageLeft;
-    if ImageTop<0 then begin zRenderHeight+=ImageTop;TextureTop-=ImageTop*zPixel;ImageTop:=0;end;
-    if ImageTop+zRenderHeight>Height then zRenderHeight:=Height-ImageTop;
-
-    // Probably this could be a simple PutImagePart
-    if zPixel=1 then begin
-      for y:=0 to zRenderHeight-1 do
-        for x:=0 to zRenderWidth-1 do begin
-          p:=GetPixel(ImageLeft+x,ImageTop+y);
-          if p and $ff000000<>0 then
-            Target.ARGBImage.PutPixel(TextureLeft+x,TextureTop+y,GetPixel(ImageLeft+x,ImageTop+y));
-        end;
-    end else begin
-      for y:=0 to zRenderHeight-1 do
-        for x:=0 to zRenderWidth-1 do begin
-          p:=GetPixel(ImageLeft+x,ImageTop+y);
-          if p and $ff000000<>0 then
-            Target.ARGBImage.Bar(TextureLeft+x*zPixel,TextureTop+y*zPixel,zPixel,zPixel,GetPixel(ImageLeft+x,ImageTop+y));
-        end;
-    end;
-
-  end;
 end;
 
 procedure TBDRegion.SaveToFile(pFilename:string);

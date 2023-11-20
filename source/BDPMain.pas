@@ -40,6 +40,7 @@ type
     destructor Destroy; override;
     procedure Run;
   private
+    fQuit:boolean;
     fMainWindow:TWindow;
     fMainMenu:TMainMenu;
     fAboutDialog:TBDAboutDialog;
@@ -60,6 +61,7 @@ type
     fOpenProjectDialog:TOpenDialog;
     fSaveCELDialog,
     fSaveProjectDialog:TSaveDialog;
+    procedure ProcessMessages;
     procedure HideMainControls;
     procedure ShowMainControls;
     function CreateOpenDialog(pName,pTitle,pFilter:string):TOpenDialog;
@@ -140,31 +142,46 @@ begin
     fBackup.BackupFolderFileCount:=Settings.BackupFolderMaxFileCount;
   end;
 
+  Log.Trace('Before assets: '+inttostr(GetHeapStatus.TotalAllocated));
+
   LoadAssets;
 
+  Log.Trace('After assets: '+inttostr(GetHeapStatus.TotalAllocated));
   fMainMenu:=TMainMenu.Create(MenuBin);
+  Log.Trace('After MainMenu: '+inttostr(GetHeapStatus.TotalAllocated));
   fAboutDialog:=TBDAboutDialog.Create;
+  Log.Trace('After AboutDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   fControls:=TBDControls.Create;
+  Log.Trace('After Controls: '+inttostr(GetHeapStatus.TotalAllocated));
   fDrawArea:=TBDDrawArea.Create;
+  Log.Trace('After DrawArea: '+inttostr(GetHeapStatus.TotalAllocated));
   fColorEditor:=TBDColorEditor.Create;
+  Log.Trace('After ColorEditor: '+inttostr(GetHeapStatus.TotalAllocated));
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   // To enable/disable Image/Remove menuitem and set Controls image slider
   MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
   fMagnifyDialog:=TBDMagnifyCELDialog.Create;
+  Log.Trace('After MagnifyDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   fRotateDialog:=TBDRotateCELDialog.Create;
+  Log.Trace('After RotateDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   fDitherDialog:=TBDDitherDialog.Create;
-  fConfigureRGradDialog:=TBDConfigureRGradDialog.Create;
+  Log.Trace('After DitherDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   fCoordinateBox:=TBDCoordinateBox.Create(
     WINDOWWIDTH-COORDINATEBOXWIDTH-24,WINDOWHEIGHT-COORDINATEBOXHEIGHT,COORDINATEBOXWIDTH+24,COORDINATEBOXHEIGHT);
+  Log.Trace('After CoordinateBox: '+inttostr(GetHeapStatus.TotalAllocated));
   fGradientEditor:=TBDGradientEditor.Create;
+  Log.Trace('After GradientEditor: '+inttostr(GetHeapStatus.TotalAllocated));
   fColorPalette:=TBDColorPalette2.Create(WINDOWWIDTH-70,TOPMENUHEIGHT,70,WINDOWHEIGHT-TOPMENUHEIGHT-CONTROLSHEIGHT);
+  Log.Trace('After ColorPalette: '+inttostr(GetHeapStatus.TotalAllocated));
   fGradientSelector:=TBDGradientSelector.Create;
+  Log.Trace('After GradientSelector: '+inttostr(GetHeapStatus.TotalAllocated));
   MouseObjects.List;
 
   fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','All supported file|*.bdc;*.cel;*.png;*.tga;*.bmp|CEL files|*.bdc|Legacy CEL files|*.cel|PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
   fOpenProjectDialog:=CreateOpenDialog('OpenProjectDialog','Open Project','Project files|*.bpprj');
   fSaveCELDialog:=CreateSaveDialog('SaveCELDialog','Save CEL','PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
   fSaveProjectDialog:=CreateSaveDialog('SaveProjectDialog','Save Project','Project files|*.bpprj');
+  fQuit:=false;
 end;
 
 destructor TMain.Destroy;
@@ -177,7 +194,6 @@ begin
   if Assigned(fColorPalette) then fColorPalette.Free;
   if Assigned(fGradientEditor) then fGradientEditor.Free;
   if Assigned(fCoordinateBox) then fCoordinateBox.Free;
-  if Assigned(fConfigureRGradDialog) then fConfigureRGradDialog.Free;
   if Assigned(fDitherDialog) then fDitherDialog.Free;
   if Assigned(fRotateDialog) then fRotateDialog.Free;
   if Assigned(fMagnifyDialog) then fMagnifyDialog.Free;
@@ -198,12 +214,10 @@ end;
 
 procedure TMain.Run;
 var
-  msg:TMessage;
-  mres,quit:boolean;
   PrevBackupTick:uint64;
 begin
-  quit:=false;
   PrevBackupTick:=0;
+  ProcessMessages;
 //  fQuitWindow.Visible:=true;
 //  MouseObjects.List;
   repeat
@@ -212,64 +226,74 @@ begin
 
     MouseObjects.Draw;
     InfoBar.Draw;
-    MM.Fonts['Pinky'].OutText('FPS: '+st(fps,3,'0'),WINDOWWIDTH-141,3,0);
-  {$ifndef LimitFPS} FlipNoLimit; {$else} Flip; {$endif}
-    while MessageQueue.HasNewMessage do begin
-      msg:=MessageQueue.GetNextMessage;
-      mres:=fControls.ProcessMessage(msg);
-      if not mres then mres:=fColorEditor.ProcessMessage(msg);
-      if not mres then mres:=fGradientEditor.ProcessMessage(msg);
-      if not mres and fMainMenu.Visible then mres:=fMainMenu.ProcessMessage(msg);
-      if not mres then
-        case msg.TypeID of
-          MSG_OPENABOUTDIALOG:           fAboutDialog.Show;
-          MSG_QUIT:                      quit:=(msg.DataInt=1);
-          MSG_OPENDITHERDIALOG:          fDitherDialog.Show;
-          MSG_OPENCONFIGURERGRADDIALOG:  fConfigureRGradDialog.Show;
-          MSG_CONFIGRGRADCENTER:         ConfigRGradCenter;
-          MSG_CONFIGRGRADCENTERFINISHED: ConfigRGradCenterFinished;
-          MSG_OPENPROJECT:               OpenProject;
-          MSG_SAVEPROJECT:               SaveProject;
-          MSG_SAVECLEARPROJECT:          SaveClearProject;
-          MSG_NEWIMAGE:                  NewImage;
-          MSG_DUPLICATEIMAGE:            DuplicateImage;
-          MSG_REMOVEIMAGE:               RemoveImage;
-          MSG_CLEARIMAGE:                ClearImage;
-          MSG_SETTOOLSMENU:              fMainMenu.SetToolsMenuStates;
-          MSG_SETINKSMENU:               fMainMenu.SetInksMenuStates;
-          MSG_GETCEL:                    GetCEL;
-          MSG_GETCELFINISHED:            GetCELFinished;
-          MSG_PUTCEL:                    PutCEL;
-          MSG_SHOWCEL:                   ShowCEL;
-          MSG_RESTORECONTROLS:           ShowMainControls;
-          MSG_TOGGLECONTROLS:            ToggleControls;
-          MSG_RELEASECEL:                ReleaseCEL;
-          MSG_OPENROTATECELDIALOG:       fRotateDialog.Show;
-          MSG_FLIPCEL:                   FlipCEL(msg);
-          MSG_OPENMAGNIFYCELDIALOG:      fMagnifyDialog.Show;
-          MSG_OPENCEL:                   OpenCEL;
-          MSG_SAVECEL:                   SaveCEL;
-          MSG_OPENCOLOREDITOR:           fColorEditor.Show;
-          MSG_COLOREDITORRESP:           ColorEditorResp(msg);
-          MSG_SELECTCOLOR:               SelectColor;
-          MSG_ACTIVATEGRADIENTEDITOR:    fGradientEditor.Show;
-          MSG_GRADIENTEDITORRESPONSE:    GradientEditorResp(msg);
-          MSG_ACTIVEIMAGECHANGED:        fColorPalette.Refresh;
-          MSG_ACTIVATEGRADIENTSELECTOR:  fGradientSelector.Show;
-        end;
-    end;  // while MessageQueue.HasNewMessage
+    MM.Fonts['DarkRed'].OutText('FPS: '+st(fps,3,'0'),WINDOWWIDTH-141,3,0);
+    {$ifndef LimitFPS} FlipNoLimit; {$else} Flip; {$endif}
+    ProcessMessages;
     HandleMessages;
-    quit:=quit or Terminate;
+    fQuit:=fQuit or Terminate;
     if keys[KeyMap[KEY_QUIT]] then begin
       keys[KeyMap[KEY_QUIT]]:=false;
-      quit:=MessageBox('CONFIRM','EXIT BURDOCK PAINT?','^YES;^NO')=0
+      fQuit:=MessageBox('CONFIRM','EXIT BURDOCK PAINT?','^YES;^NO')=0
     end;
     if GetTickCount64-PrevBackupTick>Settings.BackupIntervalTicks then begin
       Project.SaveToFile(TEMPPROJECTFILE);
       fBackup.BackupFile(TEMPPROJECTFILE);
       PrevBackupTick:=GetTickCount64;
     end;
-  until quit;
+  until fQuit;
+end;
+
+procedure TMain.ProcessMessages;
+var msg:TMessage;mres:boolean;
+begin
+  while MessageQueue.HasNewMessage do begin
+    msg:=MessageQueue.GetNextMessage;
+    mres:=fControls.ProcessMessage(msg);
+    if not mres then mres:=fDrawArea.ProcessMessage(msg);
+    if not mres then mres:=fColorEditor.ProcessMessage(msg);
+    if not mres then mres:=fGradientEditor.ProcessMessage(msg);
+    if not mres and fMainMenu.Visible then mres:=fMainMenu.ProcessMessage(msg);
+    if not mres then
+      case msg.TypeID of
+        MSG_OPENABOUTDIALOG:           fAboutDialog.Show;
+        MSG_QUIT:                      fQuit:=(msg.DataInt=1);
+        MSG_OPENDITHERDIALOG:          fDitherDialog.Show;
+        MSG_OPENCONFIGURERGRADDIALOG:  begin
+                                         fConfigureRGradDialog:=TBDConfigureRGradDialog.Create;
+                                         fConfigureRGradDialog.Show;
+                                       end;
+        MSG_CONFIGRGRADCENTER:         ConfigRGradCenter;
+        MSG_CONFIGRGRADCENTERFINISHED: ConfigRGradCenterFinished;
+        MSG_OPENPROJECT:               OpenProject;
+        MSG_SAVEPROJECT:               SaveProject;
+        MSG_SAVECLEARPROJECT:          SaveClearProject;
+        MSG_NEWIMAGE:                  NewImage;
+        MSG_DUPLICATEIMAGE:            DuplicateImage;
+        MSG_REMOVEIMAGE:               RemoveImage;
+        MSG_CLEARIMAGE:                ClearImage;
+        MSG_SETTOOLSMENU:              fMainMenu.SetToolsMenuStates;
+        MSG_SETINKSMENU:               fMainMenu.SetInksMenuStates;
+        MSG_GETCEL:                    GetCEL;
+        MSG_GETCELFINISHED:            GetCELFinished;
+        MSG_PUTCEL:                    PutCEL;
+        MSG_SHOWCEL:                   ShowCEL;
+        MSG_RESTORECONTROLS:           ShowMainControls;
+        MSG_TOGGLECONTROLS:            ToggleControls;
+        MSG_RELEASECEL:                ReleaseCEL;
+        MSG_OPENROTATECELDIALOG:       fRotateDialog.Show;
+        MSG_FLIPCEL:                   FlipCEL(msg);
+        MSG_OPENMAGNIFYCELDIALOG:      fMagnifyDialog.Show;
+        MSG_OPENCEL:                   OpenCEL;
+        MSG_SAVECEL:                   SaveCEL;
+        MSG_OPENCOLOREDITOR:           fColorEditor.Show;
+        MSG_COLOREDITORRESP:           ColorEditorResp(msg);
+        MSG_SELECTCOLOR:               SelectColor;
+        MSG_ACTIVATEGRADIENTEDITOR:    fGradientEditor.Show;
+        MSG_GRADIENTEDITORRESPONSE:    GradientEditorResp(msg);
+        MSG_ACTIVEIMAGECHANGED:        fColorPalette.Refresh;
+        MSG_ACTIVATEGRADIENTSELECTOR:  fGradientSelector.Show;
+      end;
+  end;  // while MessageQueue.HasNewMessage
 end;
 
 procedure TMain.HideMainControls;

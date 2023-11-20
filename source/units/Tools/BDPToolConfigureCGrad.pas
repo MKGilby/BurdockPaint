@@ -95,7 +95,7 @@ begin
     0:InfoBar.ShowText(Format('%d,%d - CONFIGURE C GRAD - '#132' SELECT CENTER '#133' CANCEL',[fX,fY]));
     1:begin
         r:=round(sqrt(sqr(fSX-fX)+sqr(fSY-fY)));
-        Project.OverlayImage.Circle(fSX,fSY,r,VibroColors.GetColor);
+        OverlayImage.Circle(fSX,fSY,r,VibroColors.GetColor);
         InfoBar.ShowText(
           Format('(%d,%d) R=%d %d,%d - CONFIGURE C GRAD - '#132' SET RADIUS '#133' CANCEL',[fSX,fSY,r,fX,fY]));
       end;
@@ -105,7 +105,7 @@ end;
 procedure TBDToolConfigureCGrad.Clear;
 begin
   if fState=1 then
-    Project.OverlayImage.Circle(fSX,fSY,round(sqrt(sqr(fSX-fX)+sqr(fSY-fY))),0);
+    OverlayImage.Circle(fSX,fSY,round(sqrt(sqr(fSX-fX)+sqr(fSY-fY))),0);
 end;
 
 end.

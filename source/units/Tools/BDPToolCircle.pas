@@ -112,7 +112,7 @@ begin
     0:;
     1:begin
         r:=round(sqrt(sqr(fSX-fX)+sqr(fSY-fY)));
-        Project.OverlayImage.Circle(fSX,fSY,r,VibroColors.GetColor);
+        OverlayImage.Circle(fSX,fSY,r,VibroColors.GetColor);
 
         InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
           'RADIUS='+inttostr(r)+' '+
@@ -128,7 +128,7 @@ begin
     0:;
     1:begin
         r:=round(sqrt(sqr(fSX-fX)+sqr(fSY-fY)));
-        Project.OverlayImage.Circle(fSX,fSY,r,0);
+        OverlayImage.Circle(fSX,fSY,r,0);
       end;
   end;
 end;

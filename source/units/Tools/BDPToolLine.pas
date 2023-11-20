@@ -117,7 +117,7 @@ begin
   case fState of
     0:;
     1:begin
-        Project.OverlayImage.Line(fSX,fSY,fX,fY,VibroColors.GetColor);
+        OverlayImage.Line(fSX,fSY,fX,fY,VibroColors.GetColor);
         if (fSX>fX) then begin
           d:=trunc(arctan((fSY-fY)/(fSX-fX))*180/pi)+270;
         end else
@@ -143,7 +143,7 @@ procedure TBDToolLine.Clear;
 begin
   case fState of
     0:;
-    1:Project.OverlayImage.Line(fSX,fSY,fX,fY,0);
+    1:OverlayImage.Line(fSX,fSY,fX,fY,0);
   end;
 end;
 

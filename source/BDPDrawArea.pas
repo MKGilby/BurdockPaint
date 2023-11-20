@@ -25,7 +25,7 @@ unit BDPDrawArea;
 interface
 
 uses
-  Classes, SysUtils, MKMouse2, mk_sdl2;
+  Classes, SysUtils, MKMouse2, mk_sdl2, BDPMessage;
 
 type
 
@@ -38,17 +38,9 @@ type
     destructor Destroy; override;
     procedure CenterImage;
     procedure Draw; override;
-    procedure Click(Sender:TObject;x,y,buttons:integer);
-    procedure MouseDown(Sender:TObject;x,y,buttons:integer);
-    procedure MouseUp(Sender:TObject;x,y,buttons:integer);
-    procedure MouseMove(Sender:TObject;x,y:integer);
-    procedure MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer);
-    procedure MouseEnter(Sender:TObject);
-    procedure MouseLeave(Sender:TObject);
-    function KeyDown(Sender:TObject;key:integer):boolean;
-    function KeyUp(Sender:TObject;key:integer):boolean;
     function MouseXToFrame(x:integer):integer;
     function MouseYToFrame(y:integer):integer;
+    function ProcessMessage(msg:TMessage):boolean;
   private
     fTexture:TStreamingTexture;
     fZoomTop,fZoomLeft:integer;
@@ -59,6 +51,16 @@ type
     fPanDir,fPanFase:integer;
     fMousePanning:TMousePanning;
     fPanX,fPanY,fPanX2,fPanY2:integer;
+    fCheckered:TTexture;
+    procedure Click(Sender:TObject;x,y,buttons:integer);
+    procedure MouseDown(Sender:TObject;x,y,buttons:integer);
+    procedure MouseUp(Sender:TObject;x,y,buttons:integer);
+    procedure MouseMove(Sender:TObject;x,y:integer);
+    procedure MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer);
+    procedure MouseEnter(Sender:TObject);
+    procedure MouseLeave(Sender:TObject);
+    function KeyDown(Sender:TObject;key:integer):boolean;
+    function KeyUp(Sender:TObject;key:integer):boolean;
   public
     property FrameX:integer read fFrameX;
     property FrameY:integer read fFrameY;
@@ -67,7 +69,7 @@ type
 
 implementation
 
-uses BDPShared, sdl2, BDPKeyMapping;
+uses BDPShared, sdl2, BDPKeyMapping, BDPRegion, Logger;
 
 { TBDDrawArea }
 
@@ -93,15 +95,17 @@ begin
   OnMouseWheel:=Self.MouseWheel;
   OnKeyDown:=Self.KeyDown;
   OnKeyUp:=Self.KeyUp;
-  fTexture:=TStreamingTexture.Create(WINDOWWIDTH,WINDOWHEIGHT);
-  SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
+  fTexture:=nil;
   ZIndex:=DRAWAREA_ZINDEX;
   MouseObjects.Add(Self);
+  fCheckered:=MM.Textures.ItemByName['AlphaBack'];
 end;
 
 destructor TBDDrawArea.Destroy;
 begin
-  if Assigned(fTexture) then FreeAndNil(fTexture);
+  if Assigned(fTexture) then fTexture.Free;
+  if Assigned(OverlayImage) then OverlayImage.Free;
+  if Assigned(CELHelperImage) then CELHelperImage.Free;
   Settings.Zoom:=fZoomLevel;
   Settings.ZoomLeft:=fZoomLeft;
   Settings.ZoomTop:=fZoomTop;
@@ -116,14 +120,43 @@ begin
 end;
 
 procedure TBDDrawArea.Draw;
+var rsx,rsy,rtx,rty,rw,rh:integer;
 begin
-  Project.CurrentRegion.RenderToTexture(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
+  Project.CurrentRegion.CopyTo(
+    0,0,
+    Project.CurrentRegion.Width,Project.CurrentRegion.Height,
+    0,0,
+    fTexture.ARGBImage);
   ActiveTool.Draw;
   if (ActiveTool.Name='PUTCEL') or (ActiveTool.Name='SHOWCEL') then
-    CELHelperImage.RenderToTextureAsOverlay(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
-  Project.OverlayImage.RenderToTextureAsOverlay(fTexture,0,0,WINDOWWIDTH,WINDOWHEIGHT,fZoomLeft,fZoomTop,fZoomLevel);
+    CELHelperImage.CopyTo(0,0,CELHelperImage.Width,CELHelperImage.Height,0,0,fTexture.ARGBImage,true);
+  OverlayImage.CopyTo(0,0,OverlayImage.Width,OverlayImage.Height,0,0,fTexture.ARGBImage,true);
   fTexture.Update;
-  PutTexture(0,0,fTexture);
+
+  // Now clip image with drawarea.
+  rw:=Project.CurrentRegion.Width;
+  rh:=Project.CurrentRegion.Height;
+  // Image sticks out on the left?
+  if (fZoomLeft>0) then begin rsx:=fZoomLeft;rw-=rsx;rtx:=0;end
+                   else begin rtx:=-fZoomLeft;rsx:=0;end;
+  // Image sticks out on the right?
+  if (rtx+rw>WINDOWWIDTH div fZoomTimes) then rw:=WINDOWWIDTH div fZoomTimes-rtx;
+  // Image sticks out on the top?
+  if (fZoomTop>0) then begin rsy:=fZoomTop;rh-=rsy;rty:=0;end
+                  else begin rty:=-fZoomTop;rsy:=0;end;
+  // Image sticks out on the bottom?
+  if (rty+rh>WINDOWHEIGHT div fZoomTimes) then rh:=WINDOWHEIGHT div fZoomTimes-rty;
+
+//  Log.Trace(Format('Zoom: %d,%d  Level: %d  Times: %d',[fZoomLeft,fZoomTop,fZoomLevel,fZoomTimes]));
+//  Log.Trace(Format('Rs: %d,%d  Dim: %d,%d  Rt: %d,%d',[rsx,rsy,rw,rh,rtx,rty]));
+
+  Bar(rtx*fZoomTimes,rty*fZoomTimes,rw*fZoomTimes,rh*fZoomTimes,fCheckered);
+  PutTexturePart(
+    rsx,rsy,
+    rw,rh,
+    rtx*fZoomTimes,rty*fZoomTimes,
+    rw*fZoomTimes,rh*fZoomTimes,fTexture);
+
   ActiveTool.Clear;
   if SDL_ShowCursor(SDL_QUERY)=SDL_DISABLE then
     Cursor.Draw(fCursorX,fCursorY,fZoomLevel);
@@ -301,6 +334,24 @@ end;
 function TBDDrawArea.MouseYToFrame(y:integer):integer;
 begin
   Result:=y div fZoomTimes+fZoomTop;
+end;
+
+function TBDDrawArea.ProcessMessage(msg: TMessage): boolean;
+begin
+  Result:=false;
+  case msg.TypeID of
+    MSG_ACTIVEIMAGECHANGED:begin
+      if Assigned(fTexture) then fTexture.Free;
+      fTexture:=TStreamingTexture.Create(Project.CurrentRegion.Width,Project.CurrentRegion.Height);
+      SDL_SetTextureBlendMode(fTexture.Texture,SDL_BLENDMODE_BLEND);
+      if Assigned(OverlayImage) then OverlayImage.Free;
+      OverlayImage:=TBDRegion.Create(Project.CurrentRegion.Width,Project.CurrentRegion.Height);
+      OverlayImage.Clear(0);
+      if Assigned(CELHelperImage) then CELHelperImage.Free;
+      CELHelperImage:=TBDRegion.Create(Project.CurrentRegion.Width,Project.CurrentRegion.Height);
+      CELHelperImage.Clear(0);
+    end;
+  end;
 end;
 
 end.

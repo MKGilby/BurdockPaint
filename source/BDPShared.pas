@@ -26,8 +26,7 @@ interface
 
 uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, PNGFont2Unit, MKMouse2,
   BDPInfoBar, BDPPalette, BDPMessage, BDPCursor, BDPSettings, BDPToolBase,
-  BDPInkBase, BDPRegion, BDPProject, BDPColorEditor, BDPModalDialog,
-  BDPGradient;
+  BDPInkBase, BDPRegion, BDPProject, BDPModalDialog, BDPGradient;
 
 const
   WINDOWWIDTH=1280;
@@ -148,8 +147,8 @@ const
   // Open GradientSelector.
   MSG_ACTIVATEGRADIENTSELECTOR=15;
 
-  // Response from SelectGradientDialog. Data is new gradient index or -1 if not changed.
-  //MSG_GRADIENTDIALOGRESP=16;
+  // Open ConfigureTintDialog.
+  MSG_OPENCONFIGURETINTDIALOG=16;
 
   // Open ConfigureRGradDialog.
   MSG_OPENCONFIGURERGRADDIALOG=17;
@@ -160,7 +159,8 @@ const
   // KEY_GETCOLOR pressed, select color value under the cursor (if over drawarea).
   MSG_SELECTCOLOR=19;
 
-  // Project image count changed. Used to refresh Controls' slider.
+  // Project active image (or image count) changed. Every control should refresh
+  // what is needed.
   MSG_ACTIVEIMAGECHANGED=20;
 
   // User right clicked on palette entry, request ColorEditor to store selected
@@ -228,6 +228,7 @@ var
   GradientEditorGradient:TGradient;
 
   CELHelperImage:TBDRegion;  // Helper image for PUTCel
+  OverlayImage:TBDRegion;  // The image to draw tools' helper lines, etc.
 
   DrawAreaX,DrawAreaY:integer;  // The coordinates when mouse over drawarea, or -1 when not.
   ColorUnderMouse:uint32;  // Color under mouse. Primarily when over drawarea.
@@ -240,7 +241,7 @@ var
 
 implementation
 
-uses Classes, SysUtils, MKRFont2Unit, Logger, MKStream, MKToolbox;
+uses Classes, SysUtils, MKRFont2Unit, Logger, MKStream, MKToolbox, Font2Unit;
 
 {$i includes\fonts.inc}
 {$i includes\burdock.inc}
@@ -324,12 +325,12 @@ begin
   MM.AddImage(tmpI,'Knob');
 end;
 
-procedure LoadSystemFont(pR,pG,pB:integer;pName:string);
+procedure LoadSystemFont(pR,pG,pB:integer;pName:string;pFlags:integer);
 var Xs:TStream;
 begin
   Xs:=TStringStream.Create(bdpfont);
   try
-    MM.Fonts.Add(TPNGFont.Create(Xs),pName);
+    MM.Fonts.Add(TPNGFont.Create(Xs,pFlags),pName);
     MM.Fonts[pName].LetterSpace:=3;
     MM.Fonts[pName].SpaceSpace:=15;
     MM.Fonts[pName].SetRecolorExcludeChars(#132#133);
@@ -340,12 +341,12 @@ begin
   end;
 end;
 
-procedure LoadSmallFont(pR,pG,pB:integer;pName:string);
+procedure LoadSmallFont(pR,pG,pB:integer;pName:string;pFlags:integer);
 var Xs:TStream;
 begin
   Xs:=TStringStream.Create(SmallFont);
   try
-    MM.Fonts.Add(TPNGFont.Create(Xs),pName);
+    MM.Fonts.Add(TPNGFont.Create(Xs,pFlags),pName);
     MM.Fonts[pName].LetterSpace:=2;
     MM.Fonts[pName].SpaceSpace:=12;
     MM.Fonts[pName].SetColorKey(0,0,0);
@@ -355,14 +356,14 @@ begin
   end;
 end;
 
-procedure LoadImage(incstring,name:string);
+procedure LoadImage(incstring,name:string;pFlags:integer=0);
 var Xs:TStream;atm:TARGBImage;
 begin
   Xs:=TStringStream.Create(incstring);
   atm:=TARGBImage.Create;
   try
     atm.ReadFile(Xs,'PNG');
-    MM.AddImage(atm,name);
+    MM.AddImage(atm,name,pFlags);
   finally
     Xs.Free;
   end;
@@ -371,44 +372,45 @@ end;
 procedure CreateDarkBar;
 var atm:TARGBImage;
 begin
-  atm:=TARGBImage.Create(WINDOWWIDTH,WINDOWHEIGHT);
+  atm:=TARGBImage.Create(64,64);
   atm.Bar(0,0,atm.Width,atm.Height,0,0,0,128);
-  MM.AddImage(atm,'DarkBar',MM_CREATETEXTUREWHENNOANIMATIONDATA);
+  MM.AddImage(atm,'DarkBar',MM_CREATETEXTUREONLY);
 end;
 
 procedure CreateAlphaBack;
 const CHECKERSIZE=8;
 var atm:TARGBImage;i,j:integer;
 begin
-  atm:=TARGBImage.Create(WINDOWWIDTH,WINDOWHEIGHT);
+  atm:=TARGBImage.Create(CHECKERSIZE*4,CHECKERSIZE*4);
   atm.Bar(0,0,atm.Width,atm.Height,64,64,64,255);
-  for j:=0 to WINDOWHEIGHT div CHECKERSIZE-1 do
-    for i:=0 to WINDOWWIDTH div CHECKERSIZE-1 do
+  for j:=0 to atm.Width div CHECKERSIZE-1 do
+    for i:=0 to atm.Width div CHECKERSIZE-1 do
       if (i+j) mod 2=0 then
         atm.Bar(i*CHECKERSIZE,j*CHECKERSIZE,CHECKERSIZE,CHECKERSIZE,192,192,192,255);
-  MM.AddImage(atm,'AlphaBack',MM_CREATETEXTUREWHENNOANIMATIONDATA);
+  MM.AddImage(atm,'AlphaBack',MM_CREATETEXTUREONLY);
 end;
 
 procedure LoadAssets;
 begin
   Log.LogStatus('Loading and creating assets...');
   MM:=TGFXManager.Create;
+  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
   Log.LogStatus('  Loading fonts...');
-  LoadSystemFont(4,4,4,'Black');
-  LoadSmallFont(4,4,4,'SmallBlack');
-  LoadSystemFont($c7,4,4,'Red');
-  LoadSystemFont($40,4,4,'DarkRed');
-  LoadSmallFont($40,4,4,'SmallDarkRed');
-  LoadSystemFont($ee,$ee,$ee,'White');
-  LoadSystemFont($ee,$aa,$cc,'Pinky');
-  LoadSystemFont($9a,$9a,$9a,'LightGray');
-  LoadSystemFont($40,$40,$40,'DarkGray');
-  LoadImage(LogoFont,'LogoFont');
+  LoadSystemFont(4,4,4,'Black',FONT_CREATE_BOTH);
+  LoadSmallFont(4,4,4,'SmallBlack',FONT_CREATE_BOTH);
+  LoadSystemFont($c7,4,4,'Red',FONT_CREATE_ARGB);
+  LoadSystemFont($40,4,4,'DarkRed',FONT_CREATE_BOTH);
+  LoadSmallFont($40,4,4,'SmallDarkRed',FONT_CREATE_BOTH);
+  LoadSystemFont($9a,$9a,$9a,'LightGray',FONT_CREATE_ARGB);
+  LoadSystemFont($40,$40,$40,'DarkGray',FONT_CREATE_ARGB);
+  LoadImage(LogoFont,'LogoFont',MM_DONTCREATETEXTUREFROMFONT);
   MM.Fonts['LogoFont'].SetColorkey(0,0,0);
   LoadImage(BurdockPNG,'Burdock');
   MM.Images.ItemByName['Burdock'].Resize2x;
+  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
   Log.LogStatus('  Creating message queue...');
   MessageQueue:=TMessageQueue.Create(32);
+  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
   Log.LogStatus('  Creating overlay palette...');
   SystemPalette:=TBDPalette.Create(16);
   SystemPalette.Colors[SYSTEMCOLORTRANSPARENT]:=$00000000;
@@ -417,27 +419,39 @@ begin
   SystemPalette.Colors[SYSTEMCOLORMID]:=$ff9a9a9a;
   SystemPalette.Colors[SYSTEMCOLORLIGHT]:=$ffc7c7c7;
   SystemPalette.Colors[SYSTEMCOLORHIGHLIGHT]:=$ffc70404;
+  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
   Log.LogStatus('  Creating CEL helper image...');
-  CELHelperImage:=TBDRegion.Create(320,200);
-  CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,0);
+  CELHelperImage:=nil;
+  OverlayImage:=nil;
+  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
   Log.LogStatus('  Creating information bar...');
   InfoBar:=TBDInfoBar.Create;
+  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
   Log.LogStatus('  Creating UI gfx...');
   CreateArches;
+  Log.Trace('Arches...'+inttostr(GetHeapStatus.TotalAllocated));
   CreateKnob;
+  Log.Trace('Knob...'+inttostr(GetHeapStatus.TotalAllocated));
   CreateDarkBar;
+  Log.Trace('DarkBar...'+inttostr(GetHeapStatus.TotalAllocated));
   CreateAlphaBack;
+  Log.Trace('Checkered back...'+inttostr(GetHeapStatus.TotalAllocated));
   ModalOverlay:=TBDModalOverlay.Create;
   MouseObjects.Add(ModalOverlay);
+  Log.Trace('ModalOverlay...'+inttostr(GetHeapStatus.TotalAllocated));
   Log.LogStatus('  Creating cursor...');
   Cursor:=TBDCursor.Create;
   VibroColors:=TBDVibroColors.Create($FF202020,$FFD0D0D0);
+  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
   Log.LogStatus('  Creating inks...');
   Inks:=TBDInks.Create;
+  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
   Log.LogStatus('  Creating tools...');
   Tools:=TBDTools.Create;
+  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
   Log.LogStatus('  Creating GradientEditor helper...');
   GradientEditorGradient:=TGradient.Create($ff000000,$ffffffff);
+  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
   if FileExists(TEMPPROJECTFILE) then begin
     Log.LogStatus(Format('Loading previous project (%s)...',[TEMPPROJECTFILE]));
     Project:=TBDProject.CreateFromFile(TEMPPROJECTFILE)
@@ -445,6 +459,7 @@ begin
     Log.LogStatus('Creating new project...');
     Project:=TBDProject.Create;
   end;
+  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
   MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
   MessageQueue.AddMessage(MSG_SETPALETTEUNDOREDOBUTTON);
 
@@ -462,7 +477,6 @@ begin
   if Assigned(VibroColors) then VibroColors.Free;
   if Assigned(Cursor) then Cursor.Free;
   if Assigned(ModalOverlay) then ModalOverlay.Free;
-  if Assigned(CELHelperImage) then CELHelperImage.Free;
   if Assigned(SystemPalette) then SystemPalette.Free;
   if Assigned(MessageQueue) then MessageQueue.Free;
   if Assigned(InfoBar) then InfoBar.Free;

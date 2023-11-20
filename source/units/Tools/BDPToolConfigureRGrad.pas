@@ -71,15 +71,15 @@ end;
 
 procedure TBDToolConfigureRGrad.Draw;
 begin
-  Project.OverlayImage.VLine(fX,0,Project.OverlayImage.Height,VibroColors.GetColor);
-  Project.OverlayImage.HLine(0,fY,Project.OverlayImage.Width,VibroColors.GetColor);
+  OverlayImage.VLine(fX,0,OverlayImage.Height,VibroColors.GetColor);
+  OverlayImage.HLine(0,fY,OverlayImage.Width,VibroColors.GetColor);
   InfoBar.ShowText(Format('%d,%d - CONFIGURE R GRAD - '#132' SELECT CENTER '#133' CANCEL',[fX,fY]));
 end;
 
 procedure TBDToolConfigureRGrad.Clear;
 begin
-  Project.OverlayImage.VLine(fX,0,Project.OverlayImage.Height,0);
-  Project.OverlayImage.HLine(0,fY,Project.OverlayImage.Width,0);
+  OverlayImage.VLine(fX,0,OverlayImage.Height,0);
+  OverlayImage.HLine(0,fY,OverlayImage.Width,0);
 end;
 
 end.

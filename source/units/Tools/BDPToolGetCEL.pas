@@ -100,12 +100,12 @@ begin
     -1:fState:=0;  // One frame where we don't draw anything before resetting fState.
                    // This is needed to remove flickering.
     0:begin
-        Project.OverlayImage.VLine(fX,0,Project.OverlayImage.Height,VibroColors.GetColor);
-        Project.OverlayImage.HLine(0,fY,Project.OverlayImage.Width,VibroColors.GetColor);
+        OverlayImage.VLine(fX,0,OverlayImage.Height,VibroColors.GetColor);
+        OverlayImage.HLine(0,fY,OverlayImage.Width,VibroColors.GetColor);
         InfoBar.ShowText(inttostr(fX)+','+inttostr(fY));
       end;
     1:begin
-        Project.OverlayImage.RectangleXY(fSX,fSY,fX,fY,VibroColors.GetColor);
+        OverlayImage.RectangleXY(fSX,fSY,fX,fY,VibroColors.GetColor);
 
         InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
           'WI='+inttostr(abs(fSX-fX)+1)+' HE='+inttostr(abs(fSY-fY)+1)+' '+
@@ -118,11 +118,11 @@ procedure TBDToolGetCEL.Clear;
 begin
   case fState of
     0:begin
-        Project.OverlayImage.VLine(fX,0,Project.OverlayImage.Height,0);
-        Project.OverlayImage.HLine(0,fY,Project.OverlayImage.Width,0);
+        OverlayImage.VLine(fX,0,OverlayImage.Height,0);
+        OverlayImage.HLine(0,fY,OverlayImage.Width,0);
       end;
     1:begin
-        Project.OverlayImage.RectangleXY(fSX,fSY,fX,fY,0);
+        OverlayImage.RectangleXY(fSX,fSY,fX,fY,0);
       end;
   end;
 end;

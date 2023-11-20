@@ -98,7 +98,7 @@ type
     fCurrentImageIndex:integer;
     fImages:TBDImageList;
     // Only needed in-program, but must be the same size as the current image.
-    fOverlayImage:TBDRegion;
+//    fOverlayImage:TBDRegion;
     fCELImage:TBDRegion;
     procedure LoadFromStreamV1(pStream:TStream);
     procedure fSetCurrentImageIndex(value:integer);
@@ -109,7 +109,7 @@ type
   public
     property Images:TBDImageList read fImages;
     property CurrentImageIndex:integer read fCurrentImageIndex write fSetCurrentImageIndex;
-    property OverlayImage:TBDRegion read fOverlayImage;
+//    property OverlayImage:TBDRegion read fOverlayImage;
     property CurrentImage:TBDImage read fGetCurrentImage;
     property CurrentRegion:TBDRegion read fGetCurrentRegion;
     property CurrentPalette:TBDPalette read fGetCurrentPalette;
@@ -241,8 +241,8 @@ begin
   fImages:=TBDImageList.Create;
   fImages.Add(TBDImage.Create);
   fCurrentImageIndex:=0;
-  fOverlayImage:=TBDRegion.Create(fImages[0].Region.Width,fImages[0].Region.Height);
-  fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
+//  fOverlayImage:=TBDRegion.Create(fImages[0].Region.Width,fImages[0].Region.Height);
+//  fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
   fCELImage:=nil;
 end;
 
@@ -275,14 +275,14 @@ begin
 
   if (fCurrentImageIndex<0) or (fCurrentImageIndex>=fImages.Count) then
     fCurrentImageIndex:=0;
-  fOverlayImage:=TBDRegion.Create(fImages[fCurrentImageIndex].Region.Width,fImages[fCurrentImageIndex].Region.Height);
-  fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
+//  fOverlayImage:=TBDRegion.Create(fImages[fCurrentImageIndex].Region.Width,fImages[fCurrentImageIndex].Region.Height);
+//  fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
 end;
 
 destructor TBDProject.Destroy;
 begin
   if Assigned(fCELImage) then fCELImage.Free;
-  if Assigned(fOverlayImage) then fOverlayImage.Free;
+//  if Assigned(fOverlayImage) then fOverlayImage.Free;
   if Assigned(fImages) then fImages.Free;
   inherited Destroy;
 end;
@@ -346,8 +346,8 @@ procedure TBDProject.fSetCurrentImageIndex(value:integer);
 begin
   if (value<>fCurrentImageIndex) and (value>=0) and (value<fImages.Count) then begin
     fCurrentImageIndex:=value;
-    fOverlayImage.Recreate(fImages[fCurrentImageIndex].Region.Width,fImages[fCurrentImageIndex].Region.Height);
-    fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
+//    fOverlayImage.Recreate(fImages[fCurrentImageIndex].Region.Width,fImages[fCurrentImageIndex].Region.Height);
+//    fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
   end;
 end;
 
