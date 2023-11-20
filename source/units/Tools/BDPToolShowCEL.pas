@@ -55,17 +55,16 @@ end;
 
 procedure TBDToolShowCEL.Initialize;
 begin
-  CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,0);
   fStartTime:=GetTickCount64;
 end;
 
 procedure TBDToolShowCEL.Draw;
 begin
-  OverlayImage.Rectangle(Project.CelImage.Left,Project.CelImage.Top,Project.CELImage.Width,Project.CELImage.Height,VibroColors.GetColor);
   if Settings.ClearKeyColor then
-    CELHelperImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,$FF000000)
+    OverlayImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,$FF000000)
   else
-    CELHelperImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage);
+    OverlayImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage);
+  OverlayImage.Rectangle(Project.CelImage.Left,Project.CelImage.Top,Project.CELImage.Width,Project.CELImage.Height,VibroColors.GetColor);
   if GetTickCount64-fStartTime>1000 then begin
     MessageQueue.AddMessage(MSG_RESTORECONTROLS);
   end;
@@ -73,8 +72,7 @@ end;
 
 procedure TBDToolShowCEL.Clear;
 begin
-  OverlayImage.Rectangle(Project.CelImage.Left,Project.CelImage.Top,Project.CELImage.Width,Project.CELImage.Height,0);
-  CELHelperImage.Bar(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage.Width,Project.CELImage.Height,0);
+  OverlayImage.Bar(Project.CelImage.Left,Project.CelImage.Top,Project.CELImage.Width,Project.CELImage.Height,0);
 end;
 
 end.

@@ -227,7 +227,6 @@ var
   Project:TBDProject;  // The project we are working on
   GradientEditorGradient:TGradient;
 
-  CELHelperImage:TBDRegion;  // Helper image for PUTCel
   OverlayImage:TBDRegion;  // The image to draw tools' helper lines, etc.
 
   DrawAreaX,DrawAreaY:integer;  // The coordinates when mouse over drawarea, or -1 when not.
@@ -419,9 +418,6 @@ begin
   SystemPalette.Colors[SYSTEMCOLORMID]:=$ff9a9a9a;
   SystemPalette.Colors[SYSTEMCOLORLIGHT]:=$ffc7c7c7;
   SystemPalette.Colors[SYSTEMCOLORHIGHLIGHT]:=$ffc70404;
-  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
-  Log.LogStatus('  Creating CEL helper image...');
-  CELHelperImage:=nil;
   OverlayImage:=nil;
   Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
   Log.LogStatus('  Creating information bar...');

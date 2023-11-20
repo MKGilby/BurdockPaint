@@ -33,7 +33,6 @@ type
 
   TBDToolPutCEL=class(TBDTool)
     constructor Create; override;
-    procedure Initialize; override;
     function Click(x,y,button:integer):boolean; override;
     function MouseUp(x,y,button:integer):boolean; override;
     procedure Draw; override;
@@ -53,11 +52,6 @@ begin
   inherited Create;
   fName:='PUTCEL';
   fHint:=uppercase('Paste the temporary image to the image.');
-end;
-
-procedure TBDToolPutCEL.Initialize;
-begin
-  CELHelperImage.Bar(0,0,CELHelperImage.Width,CELHelperImage.Height,0);
 end;
 
 function TBDToolPutCEL.Click(x,y,button:integer):boolean;
@@ -99,18 +93,18 @@ begin
     -1:fState:=0;  // One frame where we don't draw anything before resetting fState.
                    // This is needed to remove flickering.
     0:begin
-        OverlayImage.Rectangle(Project.CelImage.Left,Project.CelImage.Top,Project.CELImage.Width,Project.CELImage.Height,VibroColors.GetColor);
         if Settings.ClearKeyColor then
-          CELHelperImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,$FF000000)
+          OverlayImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage,$FF000000)
         else
-          CELHelperImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage);
+          OverlayImage.PutImage(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage);
+        OverlayImage.Rectangle(Project.CelImage.Left,Project.CelImage.Top,Project.CELImage.Width,Project.CELImage.Height,VibroColors.GetColor);
         InfoBar.ShowText(inttostr(fX)+','+inttostr(fY));
       end;
     1:begin
         if Settings.ClearKeyColor then
-          CELHelperImage.PutImage(Project.CELImage.Left+fX-fSX,Project.CELImage.Top+fY-fSY,Project.CELImage,$FF000000)
+          OverlayImage.PutImage(Project.CELImage.Left+fX-fSX,Project.CELImage.Top+fY-fSY,Project.CELImage,$FF000000)
         else
-          CELHelperImage.PutImage(Project.CELImage.Left+fX-fSX,Project.CELImage.Top+fY-fSY,Project.CELImage);
+          OverlayImage.PutImage(Project.CELImage.Left+fX-fSX,Project.CELImage.Top+fY-fSY,Project.CELImage);
         InfoBar.ShowText(Format('%d,%d (%d,%d)',[Project.CELImage.Left+fX-fSX,Project.CELImage.Top+fY-fSY,fX-fSX,fY-fSY]));
       end;
   end;
@@ -119,14 +113,8 @@ end;
 procedure TBDToolPutCEL.Clear;
 begin
   case fState of
-    0:begin
-        OverlayImage.Rectangle(Project.CelImage.Left,Project.CelImage.Top,Project.CELImage.Width,Project.CELImage.Height,0);
-        CELHelperImage.Bar(Project.CELImage.Left,Project.CELImage.Top,Project.CELImage.Width,Project.CELImage.Height,0);
-      end;
-    1:begin
-        CELHelperImage.Bar(Project.CELImage.Left+fX-fSX,Project.CELImage.Top+fY-fSY,Project.CELImage.Width,Project.CELImage.Height,0);
-      end;
-
+    0:OverlayImage.Bar(Project.CelImage.Left,Project.CelImage.Top,Project.CELImage.Width,Project.CELImage.Height,0);
+    1:OverlayImage.Bar(Project.CELImage.Left+fX-fSX,Project.CELImage.Top+fY-fSY,Project.CELImage.Width,Project.CELImage.Height,0);
   end;
 end;
 

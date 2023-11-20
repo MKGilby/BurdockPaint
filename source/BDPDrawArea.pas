@@ -105,7 +105,6 @@ destructor TBDDrawArea.Destroy;
 begin
   if Assigned(fTexture) then fTexture.Free;
   if Assigned(OverlayImage) then OverlayImage.Free;
-  if Assigned(CELHelperImage) then CELHelperImage.Free;
   Settings.Zoom:=fZoomLevel;
   Settings.ZoomLeft:=fZoomLeft;
   Settings.ZoomTop:=fZoomTop;
@@ -128,8 +127,6 @@ begin
     0,0,
     fTexture.ARGBImage);
   ActiveTool.Draw;
-  if (ActiveTool.Name='PUTCEL') or (ActiveTool.Name='SHOWCEL') then
-    CELHelperImage.CopyTo(0,0,CELHelperImage.Width,CELHelperImage.Height,0,0,fTexture.ARGBImage,true);
   OverlayImage.CopyTo(0,0,OverlayImage.Width,OverlayImage.Height,0,0,fTexture.ARGBImage,true);
   fTexture.Update;
 
@@ -347,9 +344,6 @@ begin
       if Assigned(OverlayImage) then OverlayImage.Free;
       OverlayImage:=TBDRegion.Create(Project.CurrentRegion.Width,Project.CurrentRegion.Height);
       OverlayImage.Clear(0);
-      if Assigned(CELHelperImage) then CELHelperImage.Free;
-      CELHelperImage:=TBDRegion.Create(Project.CurrentRegion.Width,Project.CurrentRegion.Height);
-      CELHelperImage.Clear(0);
     end;
   end;
 end;
