@@ -107,6 +107,11 @@
 //     * Fixed FlipV.
 //   1.25 - Gilby - 2023.11.02
 //     * Fixed line. All parameters was uint32, but only color should be.
+//   1.26 - Gilby - 2023.11.20
+//     * Clear now can have a color parameter.
+//     * Added clipping to PutPixel.
+//     * The split color Line now calls the uint32 color version.
+//     * Simplified FilledCircle.
 
 
 {$ifdef fpc}
@@ -179,8 +184,8 @@ type
     // Self and iSource must have the same size.
     procedure CombineMUL(iSource:TARGBImage);
 
-    // Fills the image with (0,0,0,255)
-    procedure Clear;
+    // Fills the image the specified color (defaults to (0,0,0,255))
+    procedure Clear(color:uint32=$FF000000);
 
     // Copies a portion of Self to iTarget and sets iTarget size
     // according to the copied area
@@ -361,7 +366,7 @@ uses SysUtils, MKToolBox, Logger, MKStream;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.25';
+  Version='1.26';
   POSTPROCESSCOLOR=$00FF00FF;  // Fully transparent magenta is the magic color!
 
 var
@@ -507,13 +512,13 @@ begin
   end;
 end;
 
-procedure TARGBImage.Clear;
+procedure TARGBImage.Clear(color: uint32);
 const Istr=Fstr+'TARGBImage.Clear';
 var i:integer;
 begin
   if (fRawdata<>nil) and (fWidth<>0) and (fHeight<>0) then begin
     for i:=0 to fWidth*fHeight-1 do
-      uint32((fRawData+i*4)^):=$ff000000;
+      uint32((fRawData+i*4)^):=color;
   end
   else
     Log.LogWarning('Attempt to clear an uninitialized rawpicture!',Istr);
@@ -808,7 +813,8 @@ end;
 
 procedure TARGBImage.PutPixel(x,y:integer; color32:uint32);
 begin
-  uint32((fRawdata+(x+y*fWidth)*4)^):=color32;
+  if (x>=0) and (x<Width) and (y>=0) and (y<Height) then
+    uint32((fRawdata+(x+y*fWidth)*4)^):=color32;
 end;
 
 function TARGBImage.GetPixel(x,y:integer):uint32;
@@ -937,64 +943,10 @@ begin
   end;
 end;
 
-// Taken from http://www.efg2.com/Lab/Library/Delphi/Graphics/Bresenham.txt
-// Stripped a few comments, variable names changed here and there...
 procedure TARGBImage.Line(x1, y1, x2, y2, r, g, b: integer; a: integer);
-var
-  _a,_b,_d : integer;
-  diag_inc, nondiag_inc : integer;
-  dx_diag, dx_nondiag, dy_diag, dy_nondiag : integer;
-  i,swap,x,y : integer;
-  p:pointer;
 begin
-  x := x1;
-  y := y1;
-  {Determine drawing direction and step to the next pixel.}
-  _a := x2 - x1;
-  _b := y2 - y1;
-  {Determine whether end point lies to right or left of start point.}
-  if _a < 0 then begin
-    _a := -_a;
-    dx_diag := -1;
-  end else
-    dx_diag := 1;
-  {Determine whether end point lies above or below start point.}
-  if _b < 0 then begin
-    _b := -_b;
-    dy_diag := -1
-  end else
-    dy_diag := 1;
-  {Identify octant containing end point.}
-  if _a < _b then begin
-    swap := _a;
-    _a := _b;
-    _b := swap;
-    dx_nondiag := 0;
-    dy_nondiag := dy_diag
-  end else begin
-    dx_nondiag := dx_diag;
-    dy_nondiag := 0
-  end;
-  _d := _b + _b - _a;
-  nondiag_inc := _b + _b;
-  diag_inc    := _b + _b - _a - _a;
-  for i := 0 to _a do begin   {draw the a+1 pixels}
-    p:=RawData+(y*fWidth+x)*4;
-    if a<>-1 then byte(p^):=a and $ff;
-    if r<>-1 then byte((p+1)^):=r and $ff;
-    if g<>-1 then byte((p+2)^):=g and $ff;
-    if b<>-1 then byte((p+3)^):=b and $ff;
-
-    if _d < 0 then begin
-      x := x + dx_nondiag;
-      y := y + dy_nondiag;
-      _d := _d + nondiag_inc
-    end else begin
-      x := x + dx_diag;
-      y := y + dy_diag;
-      _d := _d + diag_inc
-    end;
-  end;
+  Line(x1,y1,x2,y2,
+    (a and $ff)<<24+(b and $ff)<<16+(g and $ff)<<8+(r and $ff));
 end;
 
 // Taken from http://www.efg2.com/Lab/Library/Delphi/Graphics/Bresenham.txt
@@ -1103,17 +1055,20 @@ end;
 
 procedure TARGBImage.FilledCircle(cx,cy,r:integer; color32:uint32);
 
-  procedure HLine(x,y:integer);
-  var i:integer;
+  procedure CHLine(x,y:integer);
   begin
-    for i:=-x to +x do begin
+    HLine(cx-x,cy+y,2*x+1,color32);
+    HLine(cx-x,cy-y,2*x+1,color32);
+    HLine(cx-y,cy+x,2*y+1,color32);
+    HLine(cx-y,cy-x,2*y+1,color32);
+{    for i:=-x to +x do begin
       PutPixel(cx+i,cy+y,color32);
       PutPixel(cx+i,cy-y,color32);
     end;
     for i:=-y to +y do begin
       PutPixel(cx+i,cy+x,color32);
       PutPixel(cx+i,cy-x,color32);
-    end;
+    end;}
   end;
 
 var x,y,d:integer;
@@ -1122,7 +1077,7 @@ begin
   x:=0;
   y:=r;
   d:=3-2*r;
-  HLine(x,y);
+  CHLine(x,y);
   while (y>=x) do begin
     inc(x);
     // check for decision parameter and correspondingly update d, x, y
@@ -1131,7 +1086,7 @@ begin
       d:=d+4*(x-y)+10;
     end else
       d:=d+4*x+6;
-    HLine(x,y);
+    CHLine(x,y);
   end;
 end;
 
