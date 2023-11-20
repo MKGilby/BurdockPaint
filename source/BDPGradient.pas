@@ -25,7 +25,7 @@ unit BDPGradient;
 interface
 
 uses
-  Classes, SysUtils, fgl, vcc2_VisibleControl, ARGBImageUnit, Font2Unit;
+  Classes, SysUtils, fgl, ARGBImageUnit, Font2Unit;
 
 type
 

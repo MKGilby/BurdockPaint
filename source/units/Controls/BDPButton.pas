@@ -56,7 +56,7 @@ type
 
 implementation
 
-uses BDPShared, mk_sdl2, sdl2;
+uses BDPShared, mk_sdl2;
 
 { TBDButton }
 

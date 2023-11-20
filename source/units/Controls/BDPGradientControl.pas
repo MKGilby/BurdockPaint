@@ -24,13 +24,13 @@ unit BDPGradientControl;
 
 interface
 
-uses vcc2_VisibleControl, BDPGradient, ARGBImageUnit, Font2Unit, mk_sdl2;
+uses vcc2_VisibleControlStatic, BDPGradient, ARGBImageUnit, Font2Unit, mk_sdl2;
 
 type
 
   { TBDGradient }
 
-  TBDGradient=class(TVisibleControl)
+  TBDGradient=class(TVisibleControlStatic)
     constructor Create(iLeft,iTop,iWidth,iHeight:integer;iGradient:TGradient);
     destructor Destroy; override;
     procedure Refresh; override;
@@ -71,7 +71,6 @@ begin
   fLeft:=iLeft;
   fTop:=iTop;
   fGradient:=iGradient;
-  OnRecreateTexture:=RecreateTexture;
   fWidth:=iWidth;
   fNeedRedraw:=true;
   fTLImage:=MM.Images.ItemByName['ArchTopLeft'];
@@ -137,60 +136,58 @@ end;
 procedure TBDGradient.ReDraw;
 var i,fonttop:integer;color32:uint32;
 begin
-  if Assigned(fTexture) then begin
-    with fTexture.ARGBImage do begin
-      // Background
-      Bar(0,0,fPingpongSwitchLeft,Height,SystemPalette[SYSTEMCOLORMID]);
-      if Assigned(fGradient) then begin
-        if fGradient.PingPong then
-          Bar(fPingpongSwitchLeft+3,3,PINGPONGSWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
-        else
-          Bar(fPingpongSwitchLeft+3,3,PINGPONGSWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORMID]);
-        if fGradient.Reversed then
-          Bar(fReverseSwitchLeft+3,3,REVERSESWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
-        else
-          Bar(fReverseSwitchLeft+3,3,REVERSESWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORMID]);
-      end;
-      Bar(fArrowLeft,0,ARROWWIDTH,Height,SystemPalette[SYSTEMCOLORMID]);
-      // Outer border
-      Bar(8,0,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(8,Height-3,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(0,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(Width-3,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
-      // Vertical separator lines
-      Bar(fPingpongSwitchLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(fReverseSwitchLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(fColorsLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(fArrowLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
-      // Corners
-      if Assigned(fTLImage) then
-        fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fTexture.ARGBImage,true);
-      if Assigned(fTRImage) then
-        fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,fWidth-8,0,fTexture.ARGBImage,true);
-      if Assigned(fBLImage) then
-        fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,0,fHeight-8,fTexture.ARGBImage,true);
-      if Assigned(fBRImage) then
-        fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,fTexture.ARGBImage,true);
-      // Flashing if picking
-      //if fPicking then
-      //  Bar(fColorsLeft,0,fColorsWidth+3,Height,VibroColors.GetColor);
-      // Letters and arrow
-      if Assigned(fFont) and Assigned(fFont2) then begin
-        fonttop:=(Height-15) div 2;
-        if (Assigned(fGradient) and fGradient.PingPong) then
-          fFont2.OutText(fTexture.ARGBImage,'P',fPingpongSwitchLeft+PINGPONGSWITCHWIDTH div 2+3,fonttop,1)
-        else
-          fFont.OutText(fTexture.ARGBImage,'P',fPingpongSwitchLeft+PINGPONGSWITCHWIDTH div 2+3,fonttop,1);
-        if (Assigned(fGradient) and fGradient.Reversed) then
-          fFont2.OutText(fTexture.ARGBImage,'R',fReverseSwitchLeft+REVERSESWITCHWIDTH div 2+3,fonttop,1)
-        else
-          fFont.OutText(fTexture.ARGBImage,'R',fReverseSwitchLeft+REVERSESWITCHWIDTH div 2+3,fonttop,1);
-        fFont.OutText(fTexture.ARGBImage,#130,fArrowLeft+ARROWWIDTH div 2+1,fonttop,1);
-      end;
+  with fImage do begin
+    // Background
+    Bar(0,0,fPingpongSwitchLeft,Height,SystemPalette[SYSTEMCOLORMID]);
+    if Assigned(fGradient) then begin
+      if fGradient.PingPong then
+        Bar(fPingpongSwitchLeft+3,3,PINGPONGSWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
+      else
+        Bar(fPingpongSwitchLeft+3,3,PINGPONGSWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORMID]);
+      if fGradient.Reversed then
+        Bar(fReverseSwitchLeft+3,3,REVERSESWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
+      else
+        Bar(fReverseSwitchLeft+3,3,REVERSESWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORMID]);
     end;
-    fTexture.Update;
+    Bar(fArrowLeft,0,ARROWWIDTH,Height,SystemPalette[SYSTEMCOLORMID]);
+    // Outer border
+    Bar(8,0,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(8,Height-3,Width-16,3,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(0,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(Width-3,8,3,Height-16,SystemPalette[SYSTEMCOLORDARK]);
+    // Vertical separator lines
+    Bar(fPingpongSwitchLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(fReverseSwitchLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(fColorsLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(fArrowLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
+    // Corners
+    if Assigned(fTLImage) then
+      fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,0,0,fImage,true);
+    if Assigned(fTRImage) then
+      fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,fWidth-8,0,fImage,true);
+    if Assigned(fBLImage) then
+      fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,0,fHeight-8,fImage,true);
+    if Assigned(fBRImage) then
+      fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,fWidth-8,fHeight-8,fImage,true);
+    // Letters and arrow
+    if Assigned(fFont) and Assigned(fFont2) then begin
+      fonttop:=(Height-15) div 2;
+      if (Assigned(fGradient) and fGradient.PingPong) then
+        fFont2.OutText(fImage,'P',fPingpongSwitchLeft+PINGPONGSWITCHWIDTH div 2+3,fonttop,1)
+      else
+        fFont.OutText(fImage,'P',fPingpongSwitchLeft+PINGPONGSWITCHWIDTH div 2+3,fonttop,1);
+      if (Assigned(fGradient) and fGradient.Reversed) then
+        fFont2.OutText(fImage,'R',fReverseSwitchLeft+REVERSESWITCHWIDTH div 2+3,fonttop,1)
+      else
+        fFont.OutText(fImage,'R',fReverseSwitchLeft+REVERSESWITCHWIDTH div 2+3,fonttop,1);
+      fFont.OutText(fImage,#130,fArrowLeft+ARROWWIDTH div 2+1,fonttop,1);
+    end;
   end;
   // Gradient bar
+  if Assigned(fGradientTexture) then fGradientTexture.Free;
+  // Recreate texture by inner texture
+  fGradientTexture:=TStreamingTexture.Create(fColorsWidth-3,Height-6);
+  SDL_SetTextureBlendMode(fGradientTexture.Texture,SDL_BLENDMODE_BLEND);
   if Assigned(fGradient) and Assigned(fGradientTexture) then begin
     for i:=0 to fColorsWidth-1-3 do begin
       color32:=fGradient.GetColorAt(i/(fColorsWidth-3));
@@ -200,8 +197,8 @@ begin
         fGradientTexture.ARGBImage.VLine(i,fGradientTexture.Height div 2,3,SystemPalette[SYSTEMCOLORBLACK]);
       end;
     end;
-    fGradientTexture.Update;
-  end;
+  end else fGradientTexture.ARGBImage.Clear(0);
+  fGradientTexture.Update;
 end;
 
 procedure TBDGradient.fSetGradient(value:TGradient);

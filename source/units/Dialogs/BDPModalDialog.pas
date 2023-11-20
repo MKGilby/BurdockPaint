@@ -58,7 +58,7 @@ type
 
 implementation
 
-uses BDPShared, ARGBImageUnit, sdl2;
+uses BDPShared, ARGBImageUnit;
 
 { TBDModalOverlay }
 
@@ -75,13 +75,6 @@ end;
 procedure TBDModalOverlay.Draw;
 begin
   bar(0,0,WINDOWWIDTH,WINDOWHEIGHT,DarkBar);
-{  mx:=WINDOWWIDTH div DarkBar.Width;
-  if WINDOWWIDTH mod DarkBar.Width<>0 then inc(mx);
-  my:=WINDOWHEIGHT div DarkBar.Height;
-  if WINDOWHEIGHT mod DarkBar.Height<>0 then inc(my);
-  for j:=0 to my do
-    for i:=0 to mx do
-      PutTexture(i*DarkBar.Width,j*DarkBar.Height,DarkBar);}
 end;
 
 { TBDModalDialog }

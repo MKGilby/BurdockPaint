@@ -25,14 +25,14 @@ unit BDPControls;
 interface
 
 uses
-  SysUtils, mk_sdl2, vcc2_Container, BDPMessage, BDPGradientControl, BDPToolBase,
+  SysUtils, mk_sdl2, vcc2_ContainerStatic, BDPMessage, BDPGradientControl, BDPToolBase,
   BDPInkBase, BDPColorSelector, BDPButton, BDPSliders;
 
 type
 
   { TBDControls }
 
-  TBDControls=class(TContainer)
+  TBDControls=class(TContainerStatic)
     constructor Create;
     procedure ActivateToolButton(index:integer);
     procedure ActivateInkButton(index:integer);
@@ -454,11 +454,8 @@ end;
 
 procedure TBDControls.ReDraw;
 begin
-  if Assigned(fTexture) then begin
-    fTexture.ARGBImage.Bar(0,0,fTexture.ARGBImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
-    fTexture.ARGBImage.Bar(0,3,COORDSLEFT,fTexture.ARGBImage.Height-3,SystemPalette[SYSTEMCOLORMID]);
-    fTexture.Update;
-  end;
+  fImage.Bar(0,0,fImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
+  fImage.Bar(0,3,COORDSLEFT,fImage.Height-3,SystemPalette[SYSTEMCOLORMID]);
 end;
 
 end.

@@ -25,7 +25,7 @@ unit BDPColorEditor;
 interface
 
 uses
-  SysUtils, mk_sdl2, vcc2_Container, BDPMessage, BDPSliders,
+  SysUtils, mk_sdl2, BDPMessage, BDPSliders,
   BDPColorBox, BDPHSBox, BDPLightSlider, BDPColorPalette, BDPColorPaletteUndo,
   BDPModalDialog;
 
@@ -68,7 +68,7 @@ type
 
 implementation
 
-uses BDPShared, MKMouse2, MKToolbox, vcc2_SliderLogic, BDPButton, sdl2;
+uses BDPShared, MKMouse2, MKToolbox, vcc2_SliderLogicStatic, BDPButton, sdl2;
 
 const
   HSBOXLEFT=3+9;
