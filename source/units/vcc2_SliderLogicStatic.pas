@@ -24,25 +24,17 @@
 
 // Version info:
 //
-//  V1.00: Gilby - 2023.03.15
-//    * Initial creation from vcc_SliderLogic.
-//  V1.01: Gilby - 2023.04.02
-//    * Slider sets initial value if left with mouse button down.
-//  V1.02: Gilby - 2023.04.04
-//    * Following changes in MKMouse2.
-//  V1.03: Gilby - 2023.04.07
-//    * Following changes in vcc2_VisibleControl.
-//  V1.04: Gilby - 2023.04.26
-//    * Setting MinValue and MaxValue also triggers redrawing.
+//  V1.00: Gilby - 2023.11.20
+//    * Initial creation from vcc2_SliderLogic.
 
 {$mode delphi}
 {$smartlink on}
 
-unit vcc2_SliderLogic;
+unit vcc2_SliderLogicStatic;
 
 interface
 
-uses Classes, vcc2_VisibleControl, MKMouse2, MKINIFile;
+uses Classes, vcc2_VisibleControlStatic, MKMouse2, MKINIFile;
 
 type
 
@@ -52,7 +44,7 @@ type
 
   { THorizontalSliderLogic }
 
-  THorizontalSliderLogic=class(TVisibleControl)
+  THorizontalSliderLogic=class(TVisibleControlStatic)
     constructor Create; overload;
     procedure MouseLeave(Sender:TObject);
     procedure MouseDown(Sender:TObject;x,y,buttons:integer);
@@ -89,7 +81,7 @@ type
      
   { TVerticalSliderLogic }
 
-  TVerticalSliderLogic=class(TVisibleControl)
+  TVerticalSliderLogic=class(TVisibleControlStatic)
     constructor Create; overload;
     procedure MouseLeave(Sender:TObject);
     procedure MouseDown(Sender:TObject;x,y,buttons:integer);
@@ -130,7 +122,7 @@ uses SysUtils, MKToolBox, Logger;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.04';
+  Version='1.00';
 
 
 { THorizontalSliderLogic }

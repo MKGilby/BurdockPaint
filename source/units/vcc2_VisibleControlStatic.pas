@@ -60,7 +60,6 @@ type
     procedure fSetSelected(value:boolean);
     procedure fSetEnabled(value:boolean);
   public
-    OnRecreateTexture:TSimpleEvent;
     property Width:integer read fWidth write fSetWidth;
     property Height:integer read fHeight write fSetHeight;
     property Enabled:boolean read fEnabled write fSetEnabled;
@@ -84,7 +83,6 @@ begin
   fNeedRedraw:=true;
   fWidth:=64;
   fHeight:=24;
-  OnRecreateTexture:=nil;
 end;
 
 destructor TVisibleControlStatic.Destroy;

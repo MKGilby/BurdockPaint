@@ -43,7 +43,9 @@
 // Version info:
 //
 //  V1.00: Gilby - 2023.11.17
-//    * Initial creation form vcc2_Button
+//    * Initial creation form vcc2_Button.
+//  V1.00a: Gilby - 2023.11.20
+//    * Removed unneeded unit from uses.
 
 {$mode delphi}
 {$smartlink on}
@@ -83,11 +85,11 @@ type
      
 implementation
 
-uses SysUtils, MKToolBox, Logger, ARGBImageUnit, sdl2;
+uses SysUtils, MKToolBox, Logger, ARGBImageUnit;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.03';
+  Version='1.00a';
 
 
 { TButton }
