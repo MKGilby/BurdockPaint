@@ -27,7 +27,28 @@ Todo:
     - Color picking mode from any source where color can be selected.
       (harder to implement, but I think it would be a better solution.)
 - Create Controls as fixed width dialog.
+- Things to change to static:
+    - Sliders
+    - Controls
 
+
+2023.11.20
+- DrawArea drawing is reworked, uses less memory and supports checkered alpha
+  background when transparent pixels are used.
+
+2023.11.19
+- Infobar uses static texture.
+
+2023.11.17
+- Controls using static texture are a thing now. They save memory.
+  Max process memory is now 92M in TaskManager. (And I am not done yet!)
+
+2023.11.16
+- Trying to decrease memory footprint. Started with 141M now we are at 116M.
+  (Measured with TaskManager, max process memory column.)
+  Still feels too much for a drawing app...
+  All visible controls are TStreamingTextures, probably we should introduce
+  a static visible control ancestor for TButton and other rarely changing controls.
 
 2023.11.15
 - Added checkered background to gradients to visualize alpha channel.
