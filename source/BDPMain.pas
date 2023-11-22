@@ -151,6 +151,8 @@ begin
   Log.Trace('After RotateDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   fDitherDialog:=TBDDitherDialog.Create;
   Log.Trace('After DitherDialog: '+inttostr(GetHeapStatus.TotalAllocated));
+  fConfigureRGradDialog:=TBDConfigureRGradDialog.Create;
+  Log.Trace('After ConfigureRGradDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   fCoordinateBox:=TBDCoordinateBox.Create(
     WINDOWWIDTH-COORDINATEBOXWIDTH-24,WINDOWHEIGHT-COORDINATEBOXHEIGHT,COORDINATEBOXWIDTH+24,COORDINATEBOXHEIGHT);
   Log.Trace('After CoordinateBox: '+inttostr(GetHeapStatus.TotalAllocated));
@@ -179,6 +181,7 @@ begin
   if Assigned(fColorPalette) then fColorPalette.Free;
   if Assigned(fGradientEditor) then fGradientEditor.Free;
   if Assigned(fCoordinateBox) then fCoordinateBox.Free;
+  if Assigned(fConfigureRGradDialog) then fConfigureRGradDialog.Free;
   if Assigned(fDitherDialog) then fDitherDialog.Free;
   if Assigned(fRotateDialog) then fRotateDialog.Free;
   if Assigned(fMagnifyDialog) then fMagnifyDialog.Free;
@@ -243,10 +246,7 @@ begin
         MSG_OPENABOUTDIALOG:           fAboutDialog.Show;
         MSG_QUIT:                      fQuit:=(msg.DataInt=1);
         MSG_OPENDITHERDIALOG:          fDitherDialog.Show;
-        MSG_OPENCONFIGURERGRADDIALOG:  begin
-                                         fConfigureRGradDialog:=TBDConfigureRGradDialog.Create;
-                                         fConfigureRGradDialog.Show;
-                                       end;
+        MSG_OPENCONFIGURERGRADDIALOG:  fConfigureRGradDialog.Show;
         MSG_CONFIGRGRADCENTER:         ConfigRGradCenter;
         MSG_CONFIGRGRADCENTERFINISHED: ConfigRGradCenterFinished;
         MSG_OPENPROJECT:               OpenProject;
