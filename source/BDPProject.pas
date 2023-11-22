@@ -1,21 +1,6 @@
 {
-  BurdockPaint - Copyright 2023 MKSZTSZ
-  Written by Szabó "Gilby" Zsolt / MKSZTSZ
-
   This file is part of the source code of BurdockPaint.
-
-  BurdockPaint is free software: you can redistribute it and/or modify it
-  under the terms of the GNU General Public License as published by the
-  Free Software Foundation, either version 3 of the License,
-  or (at your option) any later version.
-
-  BurdockPaint is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-  See the GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License along with
-  BurdockPaint. If not, see <https://www.gnu.org/licenses/>.
+  See "copyright.txt" for details.
 }
 
 unit BDPProject;
@@ -241,8 +226,6 @@ begin
   fImages:=TBDImageList.Create;
   fImages.Add(TBDImage.Create);
   fCurrentImageIndex:=0;
-//  fOverlayImage:=TBDRegion.Create(fImages[0].Region.Width,fImages[0].Region.Height);
-//  fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
   fCELImage:=nil;
 end;
 
@@ -275,14 +258,11 @@ begin
 
   if (fCurrentImageIndex<0) or (fCurrentImageIndex>=fImages.Count) then
     fCurrentImageIndex:=0;
-//  fOverlayImage:=TBDRegion.Create(fImages[fCurrentImageIndex].Region.Width,fImages[fCurrentImageIndex].Region.Height);
-//  fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
 end;
 
 destructor TBDProject.Destroy;
 begin
   if Assigned(fCELImage) then fCELImage.Free;
-//  if Assigned(fOverlayImage) then fOverlayImage.Free;
   if Assigned(fImages) then fImages.Free;
   inherited Destroy;
 end;
@@ -346,8 +326,6 @@ procedure TBDProject.fSetCurrentImageIndex(value:integer);
 begin
   if (value<>fCurrentImageIndex) and (value>=0) and (value<fImages.Count) then begin
     fCurrentImageIndex:=value;
-//    fOverlayImage.Recreate(fImages[fCurrentImageIndex].Region.Width,fImages[fCurrentImageIndex].Region.Height);
-//    fOverlayImage.Bar(0,0,fOverlayImage.Width,fOverlayImage.Height,0);
   end;
 end;
 

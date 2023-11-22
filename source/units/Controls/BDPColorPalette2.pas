@@ -1,21 +1,6 @@
 {
-  BurdockPaint - Copyright 2023 MKSZTSZ
-  Written by Szabó "Gilby" Zsolt / MKSZTSZ
-
   This file is part of the source code of BurdockPaint.
-
-  BurdockPaint is free software: you can redistribute it and/or modify it
-  under the terms of the GNU General Public License as published by the
-  Free Software Foundation, either version 3 of the License,
-  or (at your option) any later version.
-
-  BurdockPaint is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-  See the GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License along with
-  BurdockPaint. If not, see <https://www.gnu.org/licenses/>.
+  See "copyright.txt" for details.
 }
 
 unit BDPColorPalette2;
@@ -36,7 +21,6 @@ type
     constructor Create(iLeft,iTop,iWidth,iHeight:integer);
   protected
     procedure ReDraw; override;
-//    procedure fSetWidth(value:integer); override;
     procedure fSetHeight(value:integer); override;
   private
     fEntryHeight:integer;
@@ -46,7 +30,6 @@ type
     procedure MouseMove(Sender:TObject;x,y:integer);
     procedure MouseLeave(Sender:TObject);
   public
-//    property Width:integer read fWidth write fSetWidth;
     property Height:integer read fHeight write fSetHeight;
   end;
 
@@ -92,11 +75,6 @@ begin
   MM.Fonts['SmallBlack'].OutText(fImage,inttostr(fPage+1)+'/16',Width div 2,6,1);
 end;
 
-{procedure TBDColorPalette2.fSetWidth(value: integer);
-begin
-  inherited fSetWidth(value);
-end;}
-
 procedure TBDColorPalette2.fSetHeight(value: integer);
 begin
   inherited fSetHeight(value);
@@ -119,9 +97,6 @@ end;
 procedure TBDColorPalette2.MouseWheel(Sender: TObject; x, y, wheelx, wheely: integer);
 var pre:integer;
 begin
-  // If only the y MouseWheel rolled and CrossWheels enabled, use that.
-{  if (wheelx=0) and fCrossWheels then wheely:=wheelx;
-  if fInvertWheel then wheely:=-wheely;}
   pre:=fPage;
   fPage-=wheely;
   if fPage<0 then fPage:=0
