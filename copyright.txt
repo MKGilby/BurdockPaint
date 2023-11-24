@@ -14,3 +14,4 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with
 BurdockPaint. If not, see <https://www.gnu.org/licenses/>.
 
+Source code is available at GitHub: https://github.com/MKGilby/BurdockPaint
