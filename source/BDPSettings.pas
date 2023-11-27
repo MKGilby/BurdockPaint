@@ -59,6 +59,7 @@ type
     BackupFolderMaxSize:integer;  // in bytes, set 0 to disable size check
     BackupFolderRetentionTime:integer; // in seconds, set 0 to disable file age check
     BackupFolderMaxFileCount:integer;  // set 0 to disable file count check
+    TintCELAsMask:boolean;
     property Zoom:integer read fZoom write fSetZoom;
     property SelectedTools[index:integer]:string read fGetSelectedTool write fSetSelectedTool;
     property ActiveTool:integer read fActiveTool write fActiveTool;
@@ -104,6 +105,7 @@ begin
   UndoLimit:=16;
   DitherStrength:=10;
   TintStrength:=10;
+  TintCELAsMask:=true;
   CGradCenterX:=0;
   CGradCenterY:=0;
   CGradRadius:=32;
@@ -164,6 +166,7 @@ begin
   DitherGradients:=INI.ReadBool('Inks','DitherGradients',false);
   DitherStrength:=INI.ReadInteger('Inks','DitherStrength',10);
   TintStrength:=INI.ReadInteger('Inks','TintStrength',10);
+  TintCELAsMask:=INI.ReadBool('Inks','TintCELAsMask',true);
   CGradCenterX:=INI.ReadInteger('Inks','CGradCenterX',0);
   CGradCenterY:=INI.ReadInteger('Inks','CGradCenterY',0);
   CGradRadius:=INI.ReadInteger('Inks','CGradRadius',32);
@@ -210,6 +213,7 @@ begin
   INI.WriteBool('Inks','DitherGradients',DitherGradients);
   INI.WriteInteger('Inks','DitherStrength',fDitherStrength);
   INI.WriteInteger('Inks','TintStrength',fTintStrength);
+  INI.WriteBool('Inks','TintCELAsMask',TintCELAsMask);
   INI.WriteInteger('Inks','CGradCenterX',CGradCenterX);
   INI.WriteInteger('Inks','CGradCenterY',CGradCenterY);
   INI.WriteInteger('Inks','CGradRadius',CGradRadius);
