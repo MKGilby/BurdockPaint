@@ -70,7 +70,7 @@ var i:integer;tmpB:TBDButton;
 
   procedure CreateCheckBox(pIndex,pLeft,pTop:integer;pName:string;pTag:integer;pSelected:boolean);
   begin
-    fCheckBoxes[pIndex]:=TBDCheckBox.Create(pLeft,pTop,27,27,'');
+    fCheckBoxes[pIndex]:=TBDCheckBox.Create(pLeft,pTop,27,27,'','');
     fCheckBoxes[pIndex].ZIndex:=MODALDIALOG_ZINDEX+1;
     fCheckBoxes[pIndex].Name:=pName;
     fCheckBoxes[pIndex].OnChange:=CheckBoxChange;
