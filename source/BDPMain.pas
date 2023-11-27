@@ -11,10 +11,10 @@ unit BDPMain;
 interface
 
 uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
-  BDPControls, BDPDrawArea, BDPColorEditor,
-  BDPMagnifyCELDialog, BDPRotateCELDialog, BDPAboutDialog,
-  BDPMessageBox, BDPDitherDialog, BDPConfigureRGradDialog, BDPCoordinateBox,
-  BDPGradientEditor, BDPColorPalette2, BDPGradientSelector;
+  BDPControls, BDPDrawArea, BDPColorEditor, BDPMagnifyCELDialog,
+  BDPRotateCELDialog, BDPAboutDialog, BDPMessageBox, BDPDitherDialog,
+  BDPConfigureRGradDialog, BDPCoordinateBox, BDPGradientEditor, BDPColorPalette2,
+  BDPGradientSelector, BDPConfigureTintDialog;
 
 type
 
@@ -40,6 +40,7 @@ type
     fGradientEditor:TBDGradientEditor;
     fColorPalette:TBDColorPalette2;
     fGradientSelector:TBDGradientSelector;
+    fConfigureTintDialog:TBDConfigureTintDialog;
 
     fBackup:TFileBackup;
     fOpenCELDialog,
@@ -162,12 +163,15 @@ begin
   Log.Trace('After ColorPalette: '+inttostr(GetHeapStatus.TotalAllocated));
   fGradientSelector:=TBDGradientSelector.Create;
   Log.Trace('After GradientSelector: '+inttostr(GetHeapStatus.TotalAllocated));
+  fConfigureTintDialog:=TBDConfigureTintDialog.Create;
+  Log.Trace('After ConfigureTintDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   MouseObjects.List;
 
   fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','All supported file|*.bdc;*.cel;*.png;*.tga;*.bmp|CEL files|*.bdc|Legacy CEL files|*.cel|PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
   fOpenProjectDialog:=CreateOpenDialog('OpenProjectDialog','Open Project','Project files|*.bpprj');
   fSaveCELDialog:=CreateSaveDialog('SaveCELDialog','Save CEL','PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
   fSaveProjectDialog:=CreateSaveDialog('SaveProjectDialog','Save Project','Project files|*.bpprj');
+  Log.Trace('After FCL dialogs: '+inttostr(GetHeapStatus.TotalAllocated));
   fQuit:=false;
 end;
 
@@ -177,6 +181,7 @@ begin
   if Assigned(fSaveProjectDialog) then fSaveProjectDialog.Free;
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
   if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
+  if Assigned(fConfigureTintDialog) then fConfigureTintDialog.Free;
   if Assigned(fGradientSelector) then fGradientSelector.Free;
   if Assigned(fColorPalette) then fColorPalette.Free;
   if Assigned(fGradientEditor) then fGradientEditor.Free;
@@ -249,6 +254,7 @@ begin
         MSG_OPENCONFIGURERGRADDIALOG:  fConfigureRGradDialog.Show;
         MSG_CONFIGRGRADCENTER:         ConfigRGradCenter;
         MSG_CONFIGRGRADCENTERFINISHED: ConfigRGradCenterFinished;
+        MSG_OPENCONFIGURETINTDIALOG:   fConfigureTintDialog.Show;
         MSG_OPENPROJECT:               OpenProject;
         MSG_SAVEPROJECT:               SaveProject;
         MSG_SAVECLEARPROJECT:          SaveClearProject;
