@@ -102,11 +102,11 @@ begin
       if button=SDL_BUTTON_LEFT then
         Settings.ActiveColor:=fGradient.GetColorAt((x-fColorsLeft-3)/(fColorsWidth-3))
       else if (button=SDL_BUTTON_RIGHT) then begin
-//        MessageQueue.AddMessage(MSG_ACTIVATEGRADIENTSELECTOR);
+//        MessageQueue.AddMessage(MSG_OPENGRADIENTSELECTOR);
       end;
     end else
     if (x>=fArrowLeft) then begin
-      MessageQueue.AddMessage(MSG_ACTIVATEGRADIENTSELECTOR);
+      MessageQueue.AddMessage(MSG_OPENGRADIENTSELECTOR);
     end;
   end;
 end;

@@ -89,89 +89,85 @@ const
   // Toggle visibility of main Controls panel and MainMenu.
   MSG_TOGGLECONTROLS=2;
 
+  // GETCEL or PUTCEL finished, reactivate selected tool.
+  MSG_RESTORECONTROLS=3;
+
+  // Set TOOLS menu item states based on Settings.SelectedTools
+  MSG_SETTOOLSMENU=4;
+
+  // Set INKS menu item states based on Settings.SelectedInks
+  MSG_SETINKSMENU=5;
+
+  // Set Undo/Redo buttons' state depending on ImageUndosystem state.
+  MSG_SETIMAGEUNDOREDOBUTTON=6;
+
+  // KEY_GETCOLOR pressed, select color value under the cursor (if over drawarea).
+  MSG_SELECTCOLOR=7;
+
+
+  // ActiveColor changed.
+  //   UInt32 value is the new color.
+  MSG_ACTIVECOLORCHANGED=10;
+
+  // Project active image (or image count) changed. Every control should refresh
+  // what is needed.
+  MSG_ACTIVEIMAGECHANGED=11;
+
+  // Active gradient changed, refresh gradients.
+  //   IntValue is the new gradient index in Project.CurrentGradientList.
+  MSG_ACTIVEGRADIENTCHANGED=12;
+
+  // The active palette's one color is changed.
+  //   IntValue is the palette index.
+  //   UInt32 value is the new color.
+  MSG_PALETTECHANGED=13;
+
+
+  // Show CEL image. Hides Controls and MainMenu then activates SHOWCEL tool.
+  MSG_SHOWCEL=20;
+
+  // GetCEL tool finished *successfully*. We should enable menus associated with CEL.
+  MSG_GETCELFINISHED=21;
+
+  // Response from MessageBox.
+  //   IntValue is the pressed button number.
+  MSG_MESSAGEBOXRESP=22;
+
   // Open ColorEditor dialog.
   //   IntValue is one of the PARM_COL constants. (Where it was called from)
   //   UInt32 value is the color to set the sliders to.
-  MSG_OPENCOLOREDITOR=3;
+  MSG_OPENCOLOREDITOR=23;
 
   // Hide ColorEditor, show Controls.
   //   IntValue is one of the PARM_COL constants. (Where it was called from)
   //   UInt32 value is the selected color, except when it is the POSTPROCESSCOLOR.
   //     In that case no color was selected.
-  MSG_COLOREDITORRESP=4;
-
-  // Set Undo/Redo buttons' state depending on ImageUndosystem state.
-  MSG_SETIMAGEUNDOREDOBUTTON=5;
-
-  // Set Undo/Redo buttons' state depending on PaletteUndosystem state.
-  MSG_SETPALETTEUNDOREDOBUTTON=6;
-
-  // GETCEL or PUTCEL finished, reactivate selected tool.
-  MSG_RESTORECONTROLS=7;
-
-  // ActiveColor changed.
-  //   UInt32 value is the new color.
-  MSG_ACTIVECOLORCHANGED=8;
-
-  // ColorEditor should set color box color and set sliders accordingly.
-  //   UInt32 value is the new color.
-  MSG_SETCOLORBOXCOLOR=9;
-
-  // Response from MessageBox.
-  //   IntValue is the pressed button number.
-  MSG_MESSAGEBOXRESP=10;
+  MSG_COLOREDITORRESP=24;
 
   // Open DitherDialog.
-  MSG_OPENDITHERDIALOG=11;
-
-  // Show CEL image. Hides Controls and MainMenu then activates SHOWCEL tool.
-  MSG_SHOWCEL=12;
-
-  // Set TOOLS menu item states based on Settings.SelectedTools
-  MSG_SETTOOLSMENU=13;
-
-  // Set INKS menu item states based on Settings.SelectedInks
-  MSG_SETINKSMENU=14;
+  MSG_OPENDITHERDIALOG=25;
 
   // Open GradientSelector.
-  MSG_ACTIVATEGRADIENTSELECTOR=15;
+  MSG_OPENGRADIENTSELECTOR=26;
 
   // Open ConfigureTintDialog.
-  MSG_OPENCONFIGURETINTDIALOG=16;
+  MSG_OPENCONFIGURETINTDIALOG=27;
 
   // Open ConfigureRGradDialog.
-  MSG_OPENCONFIGURERGRADDIALOG=17;
-
-  // GetCEL tool finished *successfully*. We should enable menus associated with CEL.
-  MSG_GETCELFINISHED=18;
-
-  // KEY_GETCOLOR pressed, select color value under the cursor (if over drawarea).
-  MSG_SELECTCOLOR=19;
-
-  // Project active image (or image count) changed. Every control should refresh
-  // what is needed.
-  MSG_ACTIVEIMAGECHANGED=20;
-
-  // The active palette's one color is changed.
-  //   IntValue is the palette index.
-  //   UInt32 value is the new color.
-  MSG_PALETTECHANGED=21;
-
-  // Active gradient changed, refresh gradients.
-  //   IntValue is the new gradient index in Project.CurrentGradientList.
-  MSG_ACTIVEGRADIENTCHANGED=24;
+  MSG_OPENCONFIGURERGRADDIALOG=28;
 
   // Hide controls and select RGradCenter tool.
-  MSG_CONFIGRGRADCENTER=25;
+  MSG_CONFIGRGRADCENTER=29;
 
   // RGrad configuration "Center" finished. (Data is stored in Settings.TempRGradCenter<X|Y>
-  MSG_CONFIGRGRADCENTERFINISHED=26;
+  MSG_CONFIGRGRADCENTERRESP=30;
 
   // Activate GradientEditor
-  MSG_ACTIVATEGRADIENTEDITOR=28;
+  MSG_OPENGRADIENTEDITOR=31;
 
   // GradientEditor response
-  MSG_GRADIENTEDITORRESPONSE=29;
+  MSG_GRADIENTEDITORRESP=32;
+
 
   // ------- Menu Messages ------- Range: 200-299 -------
   {$i includes\menu.inc}
@@ -441,7 +437,7 @@ begin
   end;
   Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
   MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
-  MessageQueue.AddMessage(MSG_SETPALETTEUNDOREDOBUTTON);
+//  MessageQueue.AddMessage(MSG_SETPALETTEUNDOREDOBUTTON);
 
 end;
 

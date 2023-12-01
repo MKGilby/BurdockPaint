@@ -253,7 +253,7 @@ begin
         MSG_OPENDITHERDIALOG:          fDitherDialog.Show;
         MSG_OPENCONFIGURERGRADDIALOG:  fConfigureRGradDialog.Show;
         MSG_CONFIGRGRADCENTER:         ConfigRGradCenter;
-        MSG_CONFIGRGRADCENTERFINISHED: ConfigRGradCenterFinished;
+        MSG_CONFIGRGRADCENTERRESP:     ConfigRGradCenterFinished;
         MSG_OPENCONFIGURETINTDIALOG:   fConfigureTintDialog.Show;
         MSG_OPENPROJECT:               OpenProject;
         MSG_SAVEPROJECT:               SaveProject;
@@ -279,10 +279,10 @@ begin
         MSG_OPENCOLOREDITOR:           fColorEditor.Show;
         MSG_COLOREDITORRESP:           ColorEditorResp(msg);
         MSG_SELECTCOLOR:               SelectColor;
-        MSG_ACTIVATEGRADIENTEDITOR:    fGradientEditor.Show;
-        MSG_GRADIENTEDITORRESPONSE:    GradientEditorResp(msg);
+        MSG_OPENGRADIENTEDITOR:        fGradientEditor.Show;
+        MSG_GRADIENTEDITORRESP:        GradientEditorResp(msg);
         MSG_ACTIVEIMAGECHANGED:        fColorPalette.Refresh;
-        MSG_ACTIVATEGRADIENTSELECTOR:  fGradientSelector.Show;
+        MSG_OPENGRADIENTSELECTOR:      fGradientSelector.Show;
         MSG_PALETTECHANGED:            fColorPalette.Refresh;
       end;
   end;  // while MessageQueue.HasNewMessage

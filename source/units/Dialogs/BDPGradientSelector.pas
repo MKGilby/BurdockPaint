@@ -182,7 +182,7 @@ begin
     GradientEditorGradient.CopyFrom(
       Project.CurrentGradientList[fScrollBar.Position+fSelectedGradientIndex]);
     MessageQueue.AddMessage(
-      MSG_ACTIVATEGRADIENTEDITOR,
+      MSG_OPENGRADIENTEDITOR,
       PARM_GRAD_SELECTOR,
       fScrollBar.Position+fSelectedGradientIndex);
     Self.Hide;

@@ -183,7 +183,7 @@ begin
   Result:=false;
   if Enabled then begin
     case msg.TypeID of
-      MSG_ACTIVATEGRADIENTEDITOR:begin
+      MSG_OPENGRADIENTEDITOR:begin
         fCalledFrom:=msg.DataInt;
         fCalledFromIndex:=msg.DataUInt32;
         RefreshControls(true);
@@ -220,13 +220,13 @@ end;
 
 procedure TBDGradientEditor.OKClick(Sender:TObject; x,y,buttons:integer);
 begin
-  MessageQueue.AddMessage(MSG_GRADIENTEDITORRESPONSE,fCalledFrom,fCalledFromIndex);
+  MessageQueue.AddMessage(MSG_GRADIENTEDITORRESP,fCalledFrom,fCalledFromIndex);
   Self.Hide;
 end;
 
 procedure TBDGradientEditor.CancelClick(Sender:TObject; x,y,buttons:integer);
 begin
-  MessageQueue.AddMessage(MSG_GRADIENTEDITORRESPONSE,fCalledFrom,9999);
+  MessageQueue.AddMessage(MSG_GRADIENTEDITORRESP,fCalledFrom,9999);
   Self.Hide;
 end;
 

@@ -42,14 +42,14 @@ begin
     InfoBar.ShowText('');
     Settings.TempRGradCenterX:=x;
     Settings.TempRGradCenterY:=y;
-    MessageQueue.AddMessage(MSG_CONFIGRGRADCENTERFINISHED);
+    MessageQueue.AddMessage(MSG_CONFIGRGRADCENTERRESP);
     Result:=true;
   end
   else if Button=SDL_BUTTON_RIGHT then begin  // Right button
     InfoBar.ShowText('');
     Settings.TempRGradCenterX:=Settings.RGradCenterX;
     Settings.TempRGradCenterY:=Settings.RGradCenterY;
-    MessageQueue.AddMessage(MSG_CONFIGRGRADCENTERFINISHED);
+    MessageQueue.AddMessage(MSG_CONFIGRGRADCENTERRESP);
     Result:=true;
   end else Result:=false;
 end;

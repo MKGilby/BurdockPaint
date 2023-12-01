@@ -15,13 +15,13 @@ type
 
   { TBDColorBoxUndoItem }
 
-  TBDColorBoxUndoItem=class(TBDUndoItem)
+{  TBDColorBoxUndoItem=class(TBDUndoItem)
     constructor Create(iBefore,iAfter:uint32);
     procedure Undo; override;
     procedure Redo; override;
   private
     fBefore,fAfter:uint32;
-  end;
+  end;}
 
   { TBDStoreToPaletteUndoItem }
 
@@ -37,7 +37,7 @@ type
 
   TBDColorPaletteUndoSystem=class(TBDUndoSystem)
     constructor Create;
-    procedure AddColorBoxUndo(pBefore,pAfter:uint32);
+//    procedure AddColorBoxUndo(pBefore,pAfter:uint32);
     procedure AddStoreToPaletteUndo(pIndex,pBefore,pAfter:uint32);
   end;
 
@@ -47,7 +47,7 @@ uses BDPShared, BDPMessage;
 
 { TBDColorBoxUndoItem }
 
-constructor TBDColorBoxUndoItem.Create(iBefore,iAfter:uint32);
+{constructor TBDColorBoxUndoItem.Create(iBefore,iAfter:uint32);
 begin
   fBefore:=iBefore;
   fAfter:=iAfter;
@@ -61,7 +61,7 @@ end;
 procedure TBDColorBoxUndoItem.Redo;
 begin
   MessageQueue.AddMessage(MSG_SETCOLORBOXCOLOR,0,fAfter);
-end;
+end;}
 
 
 { TBDStoreToPaletteUndoItem }
@@ -91,16 +91,17 @@ end;
 constructor TBDColorPaletteUndoSystem.Create;
 begin
   inherited Create;
-  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETPALETTEUNDOREDOBUTTON,0,0);
+//  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETPALETTEUNDOREDOBUTTON,0,0);
+  fAfterUndoRedoMessage:=TMessage.Init(MSG_NONE,0,0);
 end;
 
-procedure TBDColorPaletteUndoSystem.AddColorBoxUndo(pBefore,pAfter:uint32);
+{procedure TBDColorPaletteUndoSystem.AddColorBoxUndo(pBefore,pAfter:uint32);
 begin
   if (fPointer<>Self.Count-1) then   // If not the last item, delete items after it.
     Self.DeleteRange(fPointer+1,Self.Count-1);
   if Self.Count=Settings.UndoLimit then Self.Delete(0);
   Self.Add(TBDColorBoxUndoItem.Create(pBefore,pAfter));
-end;
+end;}
 
 procedure TBDColorPaletteUndoSystem.AddStoreToPaletteUndo(pIndex,pBefore,pAfter:uint32);
 begin
