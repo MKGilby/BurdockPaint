@@ -481,6 +481,7 @@ procedure TBDPalette.fSetColor(index:integer; value:uint32);
 begin
   if (index>=0) and (index<fMaxEntries) then begin
     uint32((fEntries+index*4)^):=value;
+    MessageQueue.AddMessage(MSG_PALETTECHANGED,index,value);
     fChanged:=true;
   end;
 end;
@@ -489,6 +490,7 @@ procedure TBDPalette.fSetColorA(index:integer; value:uint8);
 begin
   if (index>=0) and (index<fMaxEntries) then begin
     uint8((fEntries+index*4+3)^):=value;
+    MessageQueue.AddMessage(MSG_PALETTECHANGED,index,value);
     fChanged:=true;
   end;
 end;
@@ -497,6 +499,7 @@ procedure TBDPalette.fSetColorR(index:integer; value:uint8);
 begin
   if (index>=0) and (index<fMaxEntries) then begin
     uint8((fEntries+index*4+2)^):=value;
+    MessageQueue.AddMessage(MSG_PALETTECHANGED,index,value);
     fChanged:=true;
   end;
 end;
@@ -505,6 +508,7 @@ procedure TBDPalette.fSetColorG(index:integer; value:uint8);
 begin
   if (index>=0) and (index<fMaxEntries) then begin
     uint8((fEntries+index*4+1)^):=value;
+    MessageQueue.AddMessage(MSG_PALETTECHANGED,index,value);
     fChanged:=true;
   end;
 end;
@@ -513,6 +517,7 @@ procedure TBDPalette.fSetColorB(index:integer; value:uint8);
 begin
   if (index>=0) and (index<fMaxEntries) then begin
     uint8((fEntries+index*4)^):=value;
+    MessageQueue.AddMessage(MSG_PALETTECHANGED,index,value);
     fChanged:=true;
   end;
 end;

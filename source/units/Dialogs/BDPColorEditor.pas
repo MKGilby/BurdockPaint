@@ -43,6 +43,7 @@ type
     procedure AlternateLSliderChange(Sender:TObject);
     procedure SelectClick(Sender:TObject;x,y,buttons:integer);
     procedure CancelClick(Sender:TObject;x,y,buttons:integer);
+    procedure PaletteClick(Sender:TObject;x,y,buttons:integer);
     procedure ColorEditorShow(Sender:TObject);
     function KeyDown(Sender:TObject;key:integer):boolean;
     procedure RefreshHSLbyRGB;
@@ -186,6 +187,7 @@ begin
   fColorPalette.Palette:=Project.CurrentPalette;
   fColorPalette.ZIndex:=MODALDIALOG_ZINDEX+1;
   fColorPalette.Name:='ColorPalette';
+  fColorPalette.OnClick:=PaletteClick;
   AddChild(fColorPalette);
 
   Visible:=false;
@@ -268,6 +270,21 @@ begin
   Self.Hide;
 end;
 
+procedure TBDColorEditor.PaletteClick(Sender:TObject; x,y,buttons:integer);
+var i:integer;
+begin
+  if Sender is TBDColorPalette then begin
+    i:=(Sender as TBDColorPalette).GetPaletteIndexByCoords(x,y);
+    if buttons=SDL_BUTTON_LEFT then begin
+      Settings.ActiveColor:=Project.CurrentPalette.Colors[i];
+    end
+    else if buttons=SDL_BUTTON_RIGHT then begin
+      Project.CurrentPalette.Colors[i]:=fColorBox.Color;
+      fColorPalette.Refresh;
+    end;
+  end;
+end;
+
 {procedure TBDColorEditor.UndoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   Project.CurrentExtImage.PaletteUndo.Undo;
@@ -341,16 +358,8 @@ begin
         RefreshHSLbyRGB;
         fCalledFrom:=msg.DataInt;
       end;
-      MSG_ACTIVECOLORCHANGED:begin
-        fSliderA.Position:=(msg.DataUInt32 and $FF000000)>>24;
-        fSliderR.Position:=(msg.DataUInt32 and $FF0000)>>16;
-        fSliderG.Position:=(msg.DataUInt32 and $FF00)>>8;
-        fSliderB.Position:=msg.DataUInt32 and $FF;
-        RefreshHSLbyRGB;
-      end;
-      MSG_PALETTEREQUESTCOLOR:begin
-        if Self.Visible then
-          fColorPalette.SetColor(msg.DataInt,fColorBox.Color);
+      MSG_ACTIVEIMAGECHANGED:begin
+        fColorPalette.Palette:=Project.CurrentPalette;
       end;
 {      MSG_SETPALETTEUNDOREDOBUTTON:begin
         fUndoButton.Enabled:=Project.CurrentExtImage.PaletteUndo.CanUndo;

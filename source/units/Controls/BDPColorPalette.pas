@@ -20,24 +20,21 @@ type
     constructor Create(iLeft,iTop,iWidth,iHeight,iHorizontalEntryCount,iVerticalEntryCount:integer);
     procedure ReDraw; override;
     procedure SetColor(pColorIndex:integer;pColor:uint32);
+    function GetPaletteIndexByCoords(x,y:integer):integer;
   private
     fEntryWidth,fEntryHeight:integer;
     fPalette:TBDPalette;
     fHorizontalEntryCount,
     fVerticalEntryCount:integer;
     procedure fSetPalette(pPalette:TBDPalette);
-    procedure Click(Sender:TObject;x,y,buttons:integer);
   public
     property Palette:TBDPalette write fSetPalette;
   end;
 
 implementation
 
-uses BDPShared, sdl2;
+uses BDPShared;
 
-//const
-//  PALETTEHORIZONTALENTRYCOUNT=16;
-//  PALETTEVERTICALENTRYCOUNT=16;
 
 { TBDColorPalette }
 
@@ -55,7 +52,6 @@ begin
   fEntryHeight:=(fHeight-3) div fVerticalEntryCount;
   fPalette:=nil;
   fNeedRedraw:=true;
-  OnClick:=Click;
 end;
 
 procedure TBDColorPalette.ReDraw;
@@ -78,24 +74,17 @@ begin
   Refresh;
 end;
 
+function TBDColorPalette.GetPaletteIndexByCoords(x,y:integer):integer;
+begin
+  Result:=(y-fTop) div fEntryHeight*fHorizontalEntryCount+(x-fLeft) div fEntryWidth;
+end;
+
 procedure TBDColorPalette.fSetPalette(pPalette:TBDPalette);
 begin
   fPalette:=pPalette;
   if fPalette.Size<(fHorizontalEntryCount*fVerticalEntryCount) then
     fPalette.Resize(fHorizontalEntryCount*fVerticalEntryCount);
   Refresh;
-end;
-
-procedure TBDColorPalette.Click(Sender: TObject; x, y, buttons: integer);
-begin
-  x-=fLeft;
-  y-=fTop;
-  if buttons=SDL_BUTTON_LEFT then begin
-    Settings.ActiveColor:=fPalette.Colors[y div fEntryHeight*fHorizontalEntryCount+x div fEntryWidth];
-  end
-  else if buttons=SDL_BUTTON_RIGHT then begin
-    MessageQueue.AddMessage(MSG_PALETTEREQUESTCOLOR,y div fEntryHeight*fHorizontalEntryCount+x div fEntryWidth);
-  end;
 end;
 
 end.

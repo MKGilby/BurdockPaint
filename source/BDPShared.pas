@@ -152,10 +152,10 @@ const
   // what is needed.
   MSG_ACTIVEIMAGECHANGED=20;
 
-  // User right clicked on palette entry, request ColorEditor to store selected
-  // color into palette.
-  //   IntValue is the palette entry
-  MSG_PALETTEREQUESTCOLOR=21;
+  // The active palette's one color is changed.
+  //   IntValue is the palette index.
+  //   UInt32 value is the new color.
+  MSG_PALETTECHANGED=21;
 
   // Active gradient changed, refresh gradients.
   //   IntValue is the new gradient index in Project.CurrentGradientList.
@@ -166,11 +166,6 @@ const
 
   // RGrad configuration "Center" finished. (Data is stored in Settings.TempRGradCenter<X|Y>
   MSG_CONFIGRGRADCENTERFINISHED=26;
-
-  // ColorEditor should set a palette color to the specified color.
-  //   Intvalue is the palette entry index.
-  //   UInt32 value is the new color.
-  MSG_SETPALETTECOLOR=27;
 
   // Activate GradientEditor
   MSG_ACTIVATEGRADIENTEDITOR=28;

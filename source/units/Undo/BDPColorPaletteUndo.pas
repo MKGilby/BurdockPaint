@@ -75,12 +75,14 @@ end;
 
 procedure TBDStoreToPaletteUndoItem.Undo;
 begin
-  MessageQueue.AddMessage(MSG_SETPALETTECOLOR,fIndex,fBefore);
+  Project.CurrentPalette.Colors[fIndex]:=fBefore;
+//  MessageQueue.AddMessage(MSG_SETPALETTECOLOR,fIndex,fBefore);
 end;
 
 procedure TBDStoreToPaletteUndoItem.Redo;
 begin
-  MessageQueue.AddMessage(MSG_SETPALETTECOLOR,fIndex,fAfter);
+  Project.CurrentPalette.Colors[fIndex]:=fAfter;
+//  MessageQueue.AddMessage(MSG_SETPALETTECOLOR,fIndex,fAfter);
 end;
 
 

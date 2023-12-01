@@ -283,6 +283,7 @@ begin
         MSG_GRADIENTEDITORRESPONSE:    GradientEditorResp(msg);
         MSG_ACTIVEIMAGECHANGED:        fColorPalette.Refresh;
         MSG_ACTIVATEGRADIENTSELECTOR:  fGradientSelector.Show;
+        MSG_PALETTECHANGED:            fColorPalette.Refresh;
       end;
   end;  // while MessageQueue.HasNewMessage
 end;
