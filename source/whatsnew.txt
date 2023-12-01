@@ -8,11 +8,9 @@ Todo:
 - Add Inks:
   - Darken
   - Brighten
-  - Tint
 - Add setup dialogs to Inks:
   - Darken
   - Brighten
-  - Tint
 - Autosave:
   - Add GUI for settings.
 - ColorEditor buttons:
@@ -26,15 +24,18 @@ Todo:
     - ColorEditor (easier to implement)
     - Color picking mode from any source where color can be selected.
       (harder to implement, but I think it would be a better solution.)
-- BUG: ColorPalette2 not refreshes when changing active image.
-- BUG: ColorEditor not refreshes when changing active image.
-- BUG: ColorPalette2 not refreshes when changing palette in ColorEditor.
 
+
+2023.12.01 - Build 43
+- Added Image/Crop. It crops the image to the smallest size. This operation is
+  undoable/redoable.
 
 2023.12.01 - Build 42
 - BUGFIX: ColorPalette2 not refreshes when changing active image.
 - BUGFIX: ColorEditor not refreshes when changing active image.
 - BUGFIX: ColorPalette2 not refreshes when changing palette in ColorEditor.
+
+
 
 2023.11.27 - Build 41
 - Added ConfigureTintDialog.

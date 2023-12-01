@@ -9,7 +9,7 @@ unit BDPUndoBase;
 
 interface
 
-uses Classes, Sysutils, fgl, BDPMessage;
+uses Classes, Sysutils, fgl;
 
 type
 
@@ -48,7 +48,6 @@ type
     function CanRedo:boolean;
   protected
     fPointer:integer;  // points to the item that will be undoed if requested.
-    fAfterUndoRedoMessage:TMessage;
   end;
 
 implementation
@@ -95,7 +94,6 @@ constructor TBDUndoSystem.Create;
 begin
   inherited Create;
   fPointer:=-1;
-  fAfterUndoRedoMessage:=TMessage.Init(MSG_NONE,0,0);
 end;
 
 constructor TBDUndoSystem.CreateFromStream(pStream:TStream);
@@ -115,7 +113,6 @@ begin
   if (fPointer>=0) and (fPointer<Count) then begin
     Self[fPointer].Undo;
     dec(fPointer);  // It can go below 0, -1 shows that no more undoable task remains.
-    MessageQueue.AddMessage(fAfterUndoRedoMessage);
   end;
 end;
 
@@ -125,7 +122,6 @@ begin
     if Self[fPointer+1].Redoable then begin
       inc(fPointer);
       Self[fPointer].Redo;
-      MessageQueue.AddMessage(fAfterUndoRedoMessage);
     end;
   end;
 end;

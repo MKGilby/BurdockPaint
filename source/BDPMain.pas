@@ -61,6 +61,7 @@ type
     procedure DuplicateImage;
     procedure RemoveImage;
     procedure ClearImage;
+    procedure CropImage;
     procedure GetCEL;
     procedure GetCELFinished;
     procedure PutCEL;
@@ -221,8 +222,8 @@ begin
     InfoBar.Draw;
     MM.Fonts['DarkRed'].OutText('FPS: '+st(fps,3,'0'),WINDOWWIDTH-141,3,0);
     {$ifndef LimitFPS} FlipNoLimit; {$else} Flip; {$endif}
-    ProcessMessages;
     HandleMessages;
+    ProcessMessages;
     fQuit:=fQuit or Terminate;
     if keys[KeyMap[KEY_QUIT]] then begin
       keys[KeyMap[KEY_QUIT]]:=false;
@@ -262,6 +263,7 @@ begin
         MSG_DUPLICATEIMAGE:            DuplicateImage;
         MSG_REMOVEIMAGE:               RemoveImage;
         MSG_CLEARIMAGE:                ClearImage;
+        MSG_CROPIMAGE:                 CropImage;
         MSG_SETTOOLSMENU:              fMainMenu.SetToolsMenuStates;
         MSG_SETINKSMENU:               fMainMenu.SetInksMenuStates;
         MSG_GETCEL:                    GetCEL;
@@ -454,6 +456,16 @@ begin
   Project.CurrentImage.RegionUndo.AddImageUndo(0,0,Project.CurrentRegion.Width,Project.CurrentRegion.Height);
   Project.CurrentRegion.Bar(0,0,Project.CurrentRegion.Width,Project.CurrentRegion.Height,$FF000000);
   Project.CurrentImage.RegionUndo.AddImageRedoToLastUndo(0,0,Project.CurrentRegion.Width,Project.CurrentRegion.Height);
+end;
+
+procedure TMain.CropImage;
+begin
+  if MessageBox('CUT IMAGE','Really cut image to smallest possible?','^Yes;^No')=0 then begin
+    Project.CurrentImage.RegionUndo.AddResizeUndo;
+    Project.CurrentRegion.Crop(0,0,0,255);
+    Project.CurrentImage.RegionUndo.AddResizeRedo;
+    MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED);
+  end;
 end;
 
 procedure TMain.GetCEL;

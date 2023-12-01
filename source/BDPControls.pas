@@ -319,11 +319,13 @@ end;
 procedure TBDControls.UndoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   Project.CurrentImage.RegionUndo.Undo;
+  MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED);
 end;
 
 procedure TBDControls.RedoButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   Project.CurrentImage.RegionUndo.Redo;
+  MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED);
 end;
 
 procedure TBDControls.ActiveImageChange(Sender:TObject; newvalue:integer);
@@ -336,16 +338,12 @@ function TBDControls.ProcessMessage(msg: TMessage): boolean;
 begin
   Result:=false;
   case msg.TypeID of
-    MSG_SETIMAGEUNDOREDOBUTTON:begin
-      fUndoButton.Enabled:=Project.CurrentImage.RegionUndo.CanUndo;
-      fRedoButton.Enabled:=Project.CurrentImage.RegionUndo.CanRedo;
-      Result:=true;
-    end;
     MSG_ACTIVEIMAGECHANGED:begin
       fImageCountSlider.MaxValue:=Project.Images.Count;
       fImageCountSlider.Position:=Project.CurrentImageIndex+1;
       fGradient.Gradient:=Project.CurrentGradientList.ActiveGradient;
-      MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
+      fUndoButton.Enabled:=Project.CurrentImage.RegionUndo.CanUndo;
+      fRedoButton.Enabled:=Project.CurrentImage.RegionUndo.CanRedo;
       Result:=false;  // Not true, let the others also know about the count change!
     end;
     MSG_ACTIVECOLORCHANGED:begin

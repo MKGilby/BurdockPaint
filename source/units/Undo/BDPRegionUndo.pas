@@ -14,9 +14,9 @@ uses
 
 type
 
-  { TBDRegionUndoItem }
+  { TBDRegionUndoItem_DRAW }
 
-  TBDRegionUndoItem=class(TBDUndoItem)
+  TBDRegionUndoItem_DRAW=class(TBDUndoItem)
     constructor Create(iBefore:TBDRegion);
     constructor CreateFromStream(iStream:TStream);
     destructor Destroy; override;
@@ -27,16 +27,31 @@ type
     procedure LoadFromStream(pStream:TStream); override;
   private
     fBefore,fAfter:TBDRegion;
-    procedure LoadFromStreamV1(pStream:TStream);
+  end;
+
+  { TBDRegionUndoItem_RESIZE }
+
+  TBDRegionUndoItem_RESIZE=class(TBDUndoItem)
+    constructor Create;
+    constructor CreateFromStream(iStream:TStream);
+    destructor Destroy; override;
+    procedure AddAfter;
+    procedure Undo; override;
+    procedure Redo; override;
+    procedure SaveToStream(pStream:TStream); override;
+    procedure LoadFromStream(pStream:TStream); override;
+  private
+    fBefore,fAfter:TBDRegion;
   end;
 
 
   { TBDRegionUndoSystem }
 
   TBDRegionUndoSystem=class(TBDUndoSystem)
-    constructor Create;
     procedure AddImageUndo(Left,Top,Width,Height:integer;Image:TBDRegion=nil);
     procedure AddImageRedoToLastUndo(Left,Top,Width,Height:integer);
+    procedure AddResizeUndo;
+    procedure AddResizeRedo;
     procedure SaveToStream(pStream:TStream); override;
     procedure LoadFromStream(pStream:TStream); override;
   private
@@ -45,53 +60,53 @@ type
 
 implementation
 
-uses BDPShared, BDPMessage, BDPInternalFileFormat;
+uses BDPShared, BDPInternalFileFormat;
 
 const
   UNDOOPERATIONREGIONBLOCKID='UDR';
   UNDOSYSTEMREGIONBLOCKID='USR';
 
 
-{ TBDRegionUndoItem }
+{ TBDRegionUndoItem_DRAW }
 
-constructor TBDRegionUndoItem.Create(iBefore:TBDRegion);
+constructor TBDRegionUndoItem_DRAW.Create(iBefore:TBDRegion);
 begin
   inherited Create;
   fBefore:=iBefore;
   fAfter:=nil;
 end;
 
-constructor TBDRegionUndoItem.CreateFromStream(iStream:TStream);
+constructor TBDRegionUndoItem_DRAW.CreateFromStream(iStream:TStream);
 begin
   inherited Create;
   LoadFromStream(iStream);
 end;
 
-destructor TBDRegionUndoItem.Destroy;
+destructor TBDRegionUndoItem_DRAW.Destroy;
 begin
-  if Assigned(fBefore) then FreeAndNil(fBefore);
-  if Assigned(fAfter) then FreeAndNil(fAfter);
+  if Assigned(fBefore) then fBefore.Free;
+  if Assigned(fAfter) then fAfter.Free;
   inherited Destroy;
 end;
 
-procedure TBDRegionUndoItem.AddAfter(iAfter:TBDRegion);
+procedure TBDRegionUndoItem_DRAW.AddAfter(iAfter:TBDRegion);
 begin
   fAfter:=iAfter;
   fRedoable:=true;
 end;
 
-procedure TBDRegionUndoItem.Undo;
+procedure TBDRegionUndoItem_DRAW.Undo;
 begin
   Project.CurrentRegion.PutImage(fBefore.Left,fBefore.Top,fBefore);
 end;
 
-procedure TBDRegionUndoItem.Redo;
+procedure TBDRegionUndoItem_DRAW.Redo;
 begin
   if Assigned(fAfter) then
     Project.CurrentRegion.PutImage(fAfter.Left,fAfter.Top,fAfter);
 end;
 
-procedure TBDRegionUndoItem.SaveToStream(pStream:TStream);
+procedure TBDRegionUndoItem_DRAW.SaveToStream(pStream:TStream);
 var Xs:TStream;
 begin
   if Assigned(fAfter) then begin
@@ -107,38 +122,84 @@ begin
     raise Exception.Create('RegionUndoItem save error: No AfterImage assigned!');
 end;
 
-procedure TBDRegionUndoItem.LoadFromStream(pStream:TStream);
-var tmp:TInternalBlock;
-begin
-  tmp:=TInternalFileFormat.ReadBlock(pStream);
-  try
-    if tmp.BlockID<>UNDOOPERATIONREGIONBLOCKID then
-      raise Exception.Create(Format('Region undo operation block expected, got %s.',[tmp.BlockID]));
-    if tmp.Version=1 then LoadFromStreamV1(tmp.Data)
-    else raise Exception.Create(Format('Unknown region undo operation block version! (%d)',[tmp.Version]));
-  finally
-    tmp.Free;
-  end;
-  fRedoable:=true;
-end;
-
-procedure TBDRegionUndoItem.LoadFromStreamV1(pStream:TStream);
+procedure TBDRegionUndoItem_DRAW.LoadFromStream(pStream:TStream);
 begin
   fBefore:=TBDRegion.CreateFromStream(pStream);
   fAfter:=TBDRegion.CreateFromStream(pStream);
+  fRedoable:=true;
+end;
+
+
+{ TBDRegionUndoItem_RESIZE }
+
+constructor TBDRegionUndoItem_RESIZE.Create;
+begin
+  inherited Create;
+  fBefore:=TBDRegion.Create(Project.CurrentRegion.Width,Project.CurrentRegion.Height);
+  fBefore.PutImage(0,0,Project.CurrentRegion);
+  fAfter:=nil;
+end;
+
+constructor TBDRegionUndoItem_RESIZE.CreateFromStream(iStream:TStream);
+begin
+  inherited Create;
+  LoadFromStream(iStream);
+end;
+
+destructor TBDRegionUndoItem_RESIZE.Destroy;
+begin
+  if Assigned(fBefore) then fBefore.Free;
+  if Assigned(fAfter) then fAfter.Free;
+  inherited Destroy;
+end;
+
+procedure TBDRegionUndoItem_RESIZE.AddAfter;
+begin
+  fAfter:=TBDRegion.Create(Project.CurrentRegion.Width,Project.CurrentRegion.Height);
+  fAfter.PutImage(0,0,Project.CurrentRegion);
+  fRedoable:=true;
+end;
+
+procedure TBDRegionUndoItem_RESIZE.Undo;
+begin
+  Project.CurrentRegion.Recreate(fBefore.Width,fBefore.Height);
+  Project.CurrentRegion.PutImage(0,0,fBefore);
+end;
+
+procedure TBDRegionUndoItem_RESIZE.Redo;
+begin
+  Project.CurrentRegion.Recreate(fAfter.Width,fAfter.Height);
+  Project.CurrentRegion.PutImage(0,0,fAfter);
+end;
+
+procedure TBDRegionUndoItem_RESIZE.SaveToStream(pStream:TStream);
+var Xs:TStream;
+begin
+  if Assigned(fAfter) then begin
+    Xs:=TMemoryStream.Create;
+    try
+      fBefore.SaveToStream(Xs);
+      fAfter.SaveToStream(Xs);
+      TInternalFileFormat.WriteBlock(pStream,UNDOOPERATIONREGIONBLOCKID,2,Xs,false);
+    finally
+      Xs.Free;
+    end;
+  end else
+    raise Exception.Create('RegionUndoItem save error: No AfterImage assigned!');
+end;
+
+procedure TBDRegionUndoItem_RESIZE.LoadFromStream(pStream:TStream);
+begin
+  fBefore:=TBDRegion.CreateFromStream(pStream);
+  fAfter:=TBDRegion.CreateFromStream(pStream);
+  fRedoable:=true;
 end;
 
 
 { TBDRegionUndoSystem }
 
-constructor TBDRegionUndoSystem.Create;
-begin
-  inherited Create;
-  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETIMAGEUNDOREDOBUTTON,0,0);
-end;
-
 procedure TBDRegionUndoSystem.AddImageUndo(Left,Top,Width,Height:integer;Image:TBDRegion);
-var atm:TBDRegionUndoItem;atmi:TBDRegion;
+var atm:TBDRegionUndoItem_DRAW;atmi:TBDRegion;
 begin
   if (fPointer<>Self.Count-1) then   // If not the last item, delete items after it.
     Self.DeleteRange(fPointer+1,Self.Count-1);
@@ -150,10 +211,9 @@ begin
     atmi.PutImagePart(0,0,Left,Top,Width,Height,Project.CurrentRegion)
   else
     atmi.PutImagePart(0,0,Left,Top,Width,Height,Image);
-  atm:=TBDRegionUndoItem.Create(atmi);
+  atm:=TBDRegionUndoItem_DRAW.Create(atmi);
   Self.Add(atm);
   fPointer:=Self.Count-1;
-  MessageQueue.AddMessage(fAfterUndoRedoMessage);
 end;
 
 procedure TBDRegionUndoSystem.AddImageRedoToLastUndo(Left,Top,Width,Height:integer);
@@ -165,10 +225,21 @@ begin
       atmi.Left:=Left;
       atmi.Top:=Top;
       atmi.PutImagePart(0,0,Left,Top,Width,Height,Project.CurrentRegion);
-      TBDRegionUndoItem(Self[fPointer]).AddAfter(atmi);
-      MessageQueue.AddMessage(fAfterUndoRedoMessage);
+      TBDRegionUndoItem_DRAW(Self[fPointer]).AddAfter(atmi);
     end;
   end;
+end;
+
+procedure TBDRegionUndoSystem.AddResizeUndo;
+begin
+  AddItem(TBDRegionUndoItem_RESIZE.Create);
+end;
+
+procedure TBDRegionUndoSystem.AddResizeRedo;
+begin
+  if fPointer>-1 then
+    if not Self[fPointer].Redoable then
+      TBDRegionUndoItem_RESIZE(Self[fPointer]).AddAfter;
 end;
 
 procedure TBDRegionUndoSystem.SaveToStream(pStream:TStream);
@@ -199,11 +270,10 @@ begin
   finally
     tmp.Free;
   end;
-  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETIMAGEUNDOREDOBUTTON,0,0);
 end;
 
 procedure TBDRegionUndoSystem.LoadFromStreamV1(pStream:TStream);
-var count:integer;
+var count:integer;tmp:TInternalBlock;
 begin
   count:=0;
   pStream.Read(count,2);
@@ -211,7 +281,16 @@ begin
   pStream.Read(fPointer,2);
   if fPointer=65535 then fPointer:=-1;
   while count>0 do begin
-    Self.Add(TBDRegionUndoItem.CreateFromStream(pStream));
+    tmp:=TInternalFileFormat.ReadBlock(pStream);
+    try
+      if tmp.BlockID<>UNDOOPERATIONREGIONBLOCKID then
+        raise Exception.Create(Format('Region undo operation block expected, got %s.',[tmp.BlockID]));
+      if tmp.Version=1 then Self.Add(TBDRegionUndoItem_DRAW.CreateFromStream(tmp.Data))
+      else if tmp.Version=2 then Self.Add(TBDRegionUndoItem_RESIZE.CreateFromStream(tmp.Data))
+      else raise Exception.Create(Format('Unknown Region undo operation block version! (%d)',[tmp.Version]));
+    finally
+      tmp.Free;
+    end;
     dec(count);
   end;
 end;

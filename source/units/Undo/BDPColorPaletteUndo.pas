@@ -43,7 +43,7 @@ type
 
 implementation
 
-uses BDPShared, BDPMessage;
+uses BDPShared;
 
 { TBDColorBoxUndoItem }
 
@@ -76,13 +76,11 @@ end;
 procedure TBDStoreToPaletteUndoItem.Undo;
 begin
   Project.CurrentPalette.Colors[fIndex]:=fBefore;
-//  MessageQueue.AddMessage(MSG_SETPALETTECOLOR,fIndex,fBefore);
 end;
 
 procedure TBDStoreToPaletteUndoItem.Redo;
 begin
   Project.CurrentPalette.Colors[fIndex]:=fAfter;
-//  MessageQueue.AddMessage(MSG_SETPALETTECOLOR,fIndex,fAfter);
 end;
 
 
@@ -91,8 +89,6 @@ end;
 constructor TBDColorPaletteUndoSystem.Create;
 begin
   inherited Create;
-//  fAfterUndoRedoMessage:=TMessage.Init(MSG_SETPALETTEUNDOREDOBUTTON,0,0);
-  fAfterUndoRedoMessage:=TMessage.Init(MSG_NONE,0,0);
 end;
 
 {procedure TBDColorPaletteUndoSystem.AddColorBoxUndo(pBefore,pAfter:uint32);

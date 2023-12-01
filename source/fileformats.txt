@@ -156,12 +156,19 @@
   Region undo operation data contains information about one undo/redo operation
   regarding a region of the image.
 
-  2.1.4.1. Version 1
+  2.1.4.1. Version 1 (drawing operation)
   ------------------
 
       Start   Size        Description (content)
       0       ???         The affected region before the operation, in an RGN-block
       .       ???         The affected region after the operation, in an RGN-block
+
+  2.1.4.2. Version 2 (resizing a region)
+  ------------------
+
+      Start   Size        Description (content)
+      0       ???         Full region before the operation, in an RGN-block
+      .       ???         Full region after the operation, in an RGN-block
 
 
 2.1.5. UDG - Gradient undo operation data

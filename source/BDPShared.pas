@@ -99,7 +99,7 @@ const
   MSG_SETINKSMENU=5;
 
   // Set Undo/Redo buttons' state depending on ImageUndosystem state.
-  MSG_SETIMAGEUNDOREDOBUTTON=6;
+//  MSG_SETIMAGEUNDOREDOBUTTON=6;
 
   // KEY_GETCOLOR pressed, select color value under the cursor (if over drawarea).
   MSG_SELECTCOLOR=7;
@@ -436,7 +436,7 @@ begin
     Project:=TBDProject.Create;
   end;
   Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
-  MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
+//  MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
 //  MessageQueue.AddMessage(MSG_SETPALETTEUNDOREDOBUTTON);
 
 end;

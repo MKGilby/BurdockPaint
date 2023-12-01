@@ -57,6 +57,12 @@ Image
   Clear
     CLEARIMAGE
     Clear image to key color.
+  Resize
+    RESIZEIMAGE
+    Resize image to a new size.
+  CROP
+    CROPIMAGE
+    Crop image to the smallest size.
 
 ;------------------------------
 CEL
