@@ -46,7 +46,8 @@ type
     fOpenCELDialog,
     fOpenProjectDialog:TOpenDialog;
     fSaveCELDialog,
-    fSaveProjectDialog:TSaveDialog;
+    fSaveProjectDialog,
+    fSaveImageDialog:TSaveDialog;
     procedure ProcessMessages;
     procedure HideMainControls;
     procedure ShowMainControls;
@@ -59,6 +60,7 @@ type
     procedure SaveClearProject;
     procedure NewImage;
     procedure DuplicateImage;
+    procedure SaveImage;
     procedure RemoveImage;
     procedure ClearImage;
     procedure CropImage;
@@ -172,12 +174,14 @@ begin
   fOpenProjectDialog:=CreateOpenDialog('OpenProjectDialog','Open Project','Project files|*.bpprj');
   fSaveCELDialog:=CreateSaveDialog('SaveCELDialog','Save CEL','PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
   fSaveProjectDialog:=CreateSaveDialog('SaveProjectDialog','Save Project','Project files|*.bpprj');
+  fSaveImageDialog:=CreateSaveDialog('SaveImageDialog','Save Image','PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
   Log.Trace('After FCL dialogs: '+inttostr(GetHeapStatus.TotalAllocated));
   fQuit:=false;
 end;
 
 destructor TMain.Destroy;
 begin
+  if Assigned(fSaveImageDialog) then fSaveImageDialog.Free;
   if Assigned(fOpenProjectDialog) then fOpenProjectDialog.Free;
   if Assigned(fSaveProjectDialog) then fSaveProjectDialog.Free;
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
@@ -261,6 +265,7 @@ begin
         MSG_SAVECLEARPROJECT:          SaveClearProject;
         MSG_NEWIMAGE:                  NewImage;
         MSG_DUPLICATEIMAGE:            DuplicateImage;
+        MSG_SAVEIMAGE:                 SaveImage;
         MSG_REMOVEIMAGE:               RemoveImage;
         MSG_CLEARIMAGE:                ClearImage;
         MSG_CROPIMAGE:                 CropImage;
@@ -436,6 +441,21 @@ begin
       Xs.Free;
     end;
     MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
+  end;
+end;
+
+procedure TMain.SaveImage;
+begin
+  if fSaveImageDialog.Execute then begin
+    try
+      Project.CurrentRegion.WriteFile(fSaveImageDialog.FileName,copy(ExtractFileExt(fSaveImageDialog.FileName),2));
+      MessageBox('INFORMATION','Image saved successfully.');
+    except
+      on e:Exception do begin
+        Log.LogError(e.message);
+        MessageBox('ERROR',e.Message);
+      end;
+    end;
   end;
 end;
 
