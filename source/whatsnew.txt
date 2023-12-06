@@ -26,6 +26,10 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2023.12.06 - Build 45
+- Fix in GradientSelector/Delete.
+- Fix in ColorEditor/Palette.
+
 2023.12.01 - Build 44
 - Image/Save works. You can save image into PNG, TGA or BMP.
 

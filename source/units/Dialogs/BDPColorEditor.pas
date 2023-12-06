@@ -361,6 +361,15 @@ begin
       MSG_ACTIVEIMAGECHANGED:begin
         fColorPalette.Palette:=Project.CurrentPalette;
       end;
+      MSG_ACTIVECOLORCHANGED:begin
+        if Visible then begin
+          fSliderA.Position:=(msg.DataUInt32 and $FF000000)>>24;
+          fSliderR.Position:=(msg.DataUInt32 and $FF0000)>>16;
+          fSliderG.Position:=(msg.DataUInt32 and $FF00)>>8;
+          fSliderB.Position:=msg.DataUInt32 and $FF;
+          RefreshHSLbyRGB;
+        end;
+      end;
 {      MSG_SETPALETTEUNDOREDOBUTTON:begin
         fUndoButton.Enabled:=Project.CurrentExtImage.PaletteUndo.CanUndo;
         fRedoButton.Enabled:=Project.CurrentExtImage.PaletteUndo.CanRedo;

@@ -107,9 +107,9 @@ var boxtop,boxleft,texttop:integer;
   procedure DrawBox(x,y:integer);
   begin
     with fImage do begin
-      Bar(x+8,y,CHECKBOXBOXSIZE-16,3,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(x+8,y                    ,CHECKBOXBOXSIZE-16,3,SystemPalette[SYSTEMCOLORDARK]);
       Bar(x+8,y+(CHECKBOXBOXSIZE-3),CHECKBOXBOXSIZE-16,3,SystemPalette[SYSTEMCOLORDARK]);
-      Bar(x,y+8,3,CHECKBOXBOXSIZE-16,SystemPalette[SYSTEMCOLORDARK]);
+      Bar(x                    ,y+8,3,CHECKBOXBOXSIZE-16,SystemPalette[SYSTEMCOLORDARK]);
       Bar(x+(CHECKBOXBOXSIZE-3),y+8,3,CHECKBOXBOXSIZE-16,SystemPalette[SYSTEMCOLORDARK]);
       if fSelected then
         Bar(x+3,y+3,CHECKBOXBOXSIZE-6,CHECKBOXBOXSIZE-6,SystemPalette[SYSTEMCOLORLIGHT])
@@ -120,20 +120,20 @@ var boxtop,boxleft,texttop:integer;
           Bar(x+3,y+3,CHECKBOXBOXSIZE-6,CHECKBOXBOXSIZE-6,SystemPalette[SYSTEMCOLORDARK])
       end;
     end;
+    fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,x,y,fImage,true);
+    fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,x+CHECKBOXBOXSIZE-8,y,fImage,true);
+    fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,x,y+CHECKBOXBOXSIZE-8,fImage,true);
+    fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,x+CHECKBOXBOXSIZE-8,y+CHECKBOXBOXSIZE-8,fImage,true);
   end;
 
 begin
   fImage.Bar(0,0,Width,Height,SystemPalette[SYSTEMCOLORTRANSPARENT]);
   boxtop:=(Height-CHECKBOXBOXSIZE) div 2;
-  if Assigned(fFont) then
+  if Assigned(fFont) and (fCaption<>'') then
     boxleft:=(Width-(CHECKBOXBOXSIZE+9+fFont.TextWidth(fCaption))) div 2
   else
     boxleft:=(Width-CHECKBOXBOXSIZE) div 2;
   DrawBox(boxleft,boxtop);
-  fTLImage.CopyTo(0,0,fTLImage.Width,fTLImage.Height,boxleft,boxtop,fImage,true);
-  fTRImage.CopyTo(0,0,fTRImage.Width,fTRImage.Height,boxleft+CHECKBOXBOXSIZE-8,boxtop,fImage,true);
-  fBLImage.CopyTo(0,0,fBLImage.Width,fBLImage.Height,boxleft,boxtop+CHECKBOXBOXSIZE-8,fImage,true);
-  fBRImage.CopyTo(0,0,fBRImage.Width,fBRImage.Height,boxleft+CHECKBOXBOXSIZE-8,boxtop+CHECKBOXBOXSIZE-8,fImage,true);
   texttop:=(Height-fFont.Height) div 2;
   if fSelected and Assigned(fTickFont) then
     fTickFont.OutText(fImage,#134,boxleft+CHECKBOXBOXSIZE div 2,texttop+3,1);

@@ -211,18 +211,28 @@ end;
 
 procedure TBDGradientSelector.AddClick(Sender:TObject; x,y,button:integer);
 begin
-  Project.CurrentImage.GradientSelectorUndo.AddUndo_ADD(Project.CurrentGradientList.Count);
-  RefreshUndoRedoButtons;
-  Project.CurrentGradientList.Add(TGradient.Create($ff000000,$ffffffff));
-  RefreshGradients;
+  if (Sender is TBDButton) and (Sender as TBDButton).Enabled then begin
+    Project.CurrentImage.GradientSelectorUndo.AddUndo_ADD(Project.CurrentGradientList.Count);
+    RefreshUndoRedoButtons;
+    Project.CurrentGradientList.Add(TGradient.Create($ff000000,$ffffffff));
+    RefreshGradients;
+  end;
 end;
 
 procedure TBDGradientSelector.DeleteClick(Sender:TObject; x,y,button:integer);
 begin
-  Project.CurrentImage.GradientSelectorUndo.AddUndo_DELETE(fSelectedGradientIndex);
-  RefreshUndoRedoButtons;
-  Project.CurrentGradientList.Delete(fSelectedGradientIndex);
-  RefreshGradients;
+  if (Sender is TBDButton) and (Sender as TBDButton).Enabled then begin
+    Project.CurrentImage.GradientSelectorUndo.AddUndo_DELETE(fScrollBar.Position+fSelectedGradientIndex);
+    Project.CurrentGradientList.Delete(fScrollBar.Position+fSelectedGradientIndex);
+    RefreshUndoRedoButtons;
+    if fScrollBar.Position+fSelectedGradientIndex=Project.CurrentGradientList.Count then begin
+      fSelectedGradientIndex:=Project.CurrentGradientList.Count-1-fScrollBar.Position;
+      fGradients[fSelectedGradientIndex].Selected:=true;
+    end;
+    RefreshGradients;
+    if Project.CurrentGradientList.ActiveIndex>=Project.CurrentGradientList.Count then
+      Project.CurrentGradientList.ActiveIndex:=Project.CurrentGradientList.Count-1;
+  end;
 end;
 
 procedure TBDGradientSelector.RefreshUndoRedoButtons;
