@@ -26,6 +26,10 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2023.12.08 - Build 46
+- Soften can process alpha channel too (settable in INI/SoftenAlphaToo).
+- You can set Soften center pixel weight in INI/SoftenCenterWeight.
+
 2023.12.06 - Build 45
 - Fix in GradientSelector/Delete.
 - Fix in ColorEditor/Palette.

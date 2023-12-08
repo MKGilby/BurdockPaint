@@ -54,16 +54,19 @@ begin
 end;
 
 function TBDInkSoften.GetColorAt(pX,pY:integer):uint32;
-var r,g,b,c:integer;p:uint32;
+var r,g,b,a,c:integer;p:uint32;
 begin
   pX-=fLeft;pY-=fTop;
-  c:=1;
+  c:=Settings.SoftenCenterWeight;
   p:=fTempImage.GetPixel(px,py);
-  r:=(p and $FF0000)>>16;
-  g:=(p and $FF00)>>8;
-  b:=(p and $FF);
+  if not Settings.SoftenAlphaToo then Result:=(p and $FF000000)>>24;
+  a:=Settings.SoftenCenterWeight*(p and $FF000000)>>24;
+  r:=Settings.SoftenCenterWeight*(p and $FF0000)>>16;
+  g:=Settings.SoftenCenterWeight*(p and $FF00)>>8;
+  b:=Settings.SoftenCenterWeight*(p and $FF);
   if px>0 then begin
     p:=fTempImage.GetPixel(px-1,py);
+    a+=(p and $FF000000)>>24;
     r+=(p and $FF0000)>>16;
     g+=(p and $FF00)>>8;
     b+=(p and $FF);
@@ -71,6 +74,7 @@ begin
   end;
   if px<fTempImage.Width-1 then begin
     p:=fTempImage.GetPixel(px+1,py);
+    a+=(p and $FF000000)>>24;
     r+=(p and $FF0000)>>16;
     g+=(p and $FF00)>>8;
     b+=(p and $FF);
@@ -78,6 +82,7 @@ begin
   end;
   if py>0 then begin
     p:=fTempImage.GetPixel(px,py-1);
+    a+=(p and $FF000000)>>24;
     r+=(p and $FF0000)>>16;
     g+=(p and $FF00)>>8;
     b+=(p and $FF);
@@ -85,15 +90,21 @@ begin
   end;
   if py<fTempImage.Height-1 then begin
     p:=fTempImage.GetPixel(px,py+1);
+    a+=(p and $FF000000)>>24;
     r+=(p and $FF0000)>>16;
     g+=(p and $FF00)>>8;
     b+=(p and $FF);
     inc(c);
   end;
-  Result:=($FF000000)+
-          (((r div c) and $ff)<<16)+
-          (((g div c) and $ff)<<8)+
-          (((b div c) and $ff));
+  if Settings.SoftenAlphaToo then
+    Result:=(((a div c) and $ff)<<24)+
+            (((r div c) and $ff)<<16)+
+            (((g div c) and $ff)<<8)+
+            (((b div c) and $ff))
+  else
+    Result+=(((r div c) and $ff)<<16)+
+            (((g div c) and $ff)<<8)+
+            (((b div c) and $ff));
 end;
 
 procedure TBDInkSoften.PostProcess;

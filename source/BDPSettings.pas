@@ -60,6 +60,8 @@ type
     BackupFolderRetentionTime:integer; // in seconds, set 0 to disable file age check
     BackupFolderMaxFileCount:integer;  // set 0 to disable file count check
     TintCELAsMask:boolean;
+    SoftenCenterWeight:integer;
+    SoftenAlphaToo:boolean;
     property Zoom:integer read fZoom write fSetZoom;
     property SelectedTools[index:integer]:string read fGetSelectedTool write fSetSelectedTool;
     property ActiveTool:integer read fActiveTool write fActiveTool;
@@ -117,6 +119,8 @@ begin
   BackupFolderMaxSize:=0;
   BackupFolderRetentionTime:=0;
   BackupFolderMaxFileCount:=0;
+  SoftenCenterWeight:=1;
+  SoftenAlphaToo:=false;
 end;
 
 procedure TSettings.LoadFromFile(pFilename:String);
@@ -174,6 +178,8 @@ begin
   RGradCenterY:=INI.ReadInteger('Inks','RGradCenterY',0);
   RGradRepetitions:=INI.ReadInteger('Inks','RGradRepetitions',1);
   RGradRotation:=INI.ReadInteger('Inks','RGradRotation',0);
+  SoftenCenterWeight:=INI.ReadInteger('Inks','SoftenCenterWeight',1);
+  SoftenAlphaToo:=INI.ReadBool('Inks','SoftenAlphaToo',false);
   FreeAndNil(INI);
 end;
 
@@ -221,6 +227,8 @@ begin
   INI.WriteInteger('Inks','RGradCenterY',RGradCenterY);
   INI.WriteInteger('Inks','RGradRepetitions',RGradRepetitions);
   INI.WriteInteger('Inks','RGradRotation',RGradRotation);
+  INI.WriteInteger('Inks','SoftenCenterWeight',SoftenCenterWeight);
+  INI.WriteBool('Inks','SoftenAlphaToo',SoftenAlphaToo);
   FreeAndNil(INI);
 end;
 
