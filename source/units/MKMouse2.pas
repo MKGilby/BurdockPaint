@@ -81,6 +81,8 @@
 //       ZIndex value is changed.
 //   V1.15a - 2023.06.07 - Gilby
 //     * Only mouse and keyup keydown events are consumed.
+//   V1.16 - 2024.01.19 - Gilby
+//     * Added TValueChangeEvent.
 
 {$ifdef fpc}
   {$mode delphi}
@@ -99,6 +101,7 @@ type
   TMouseMotionEvent=procedure(Sender:TObject;x,y:integer) of object;
   TMouseWheelEvent=procedure(Sender:TObject;x,y,wheelx,wheely:integer) of object;
   TKeyEvent=function(Sender:TObject;key:integer):boolean of object;
+  TValueChangeEvent=procedure(Sender:TObject;oldValue,newValue:integer) of object;
 
   { TMouseObject }
 
@@ -182,7 +185,7 @@ uses SysUtils, Logger, MK_SDL2;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.15a';
+  Version='1.16';
 
 constructor TMouseObjects.Create;
 begin

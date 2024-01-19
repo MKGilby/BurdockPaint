@@ -26,6 +26,9 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2024.01.19 - Build 47
+- You can now have more than 8 gradients in GradientSelector.
+
 2023.12.08 - Build 46
 - Soften can process alpha channel too (settable in INI/SoftenAlphaToo).
 - You can set Soften center pixel weight in INI/SoftenCenterWeight.

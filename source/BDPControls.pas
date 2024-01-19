@@ -47,7 +47,7 @@ type
     procedure InkButtonClick(Sender:TObject;x,y,buttons: integer);
     procedure UndoButtonClick(Sender:TObject;x,y,buttons: integer);
     procedure RedoButtonClick(Sender:TObject;x,y,buttons: integer);
-    procedure ActiveImageChange(Sender:TObject;newvalue:integer);
+    procedure ActiveImageChange(Sender:TObject;oldvalue,newvalue:integer);
   end;
 
 implementation
@@ -328,7 +328,7 @@ begin
   MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED);
 end;
 
-procedure TBDControls.ActiveImageChange(Sender:TObject; newvalue:integer);
+procedure TBDControls.ActiveImageChange(Sender:TObject; oldvalue,newvalue:integer);
 begin
   Project.CurrentImageIndex:=newvalue-1;
   MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED);

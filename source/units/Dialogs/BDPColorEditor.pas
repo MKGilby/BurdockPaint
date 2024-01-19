@@ -33,10 +33,10 @@ type
     fCalledFrom:integer;
     procedure MouseEnter(Sender:TObject);
     procedure MouseLeave(Sender:TObject);
-    procedure SliderRGBChange(Sender:TObject;newValue:integer);
-    procedure SliderAChange(Sender:TObject;newValue:integer);
-    procedure SliderHSChange(Sender:TObject;newValue:integer);
-    procedure SliderLChange(Sender:TObject;newValue:integer);
+    procedure SliderRGBChange(Sender:TObject;oldValue,newValue:integer);
+    procedure SliderAChange(Sender:TObject;oldValue,newValue:integer);
+    procedure SliderHSChange(Sender:TObject;oldValue,newValue:integer);
+    procedure SliderLChange(Sender:TObject;oldValue,newValue:integer);
 //    procedure UndoButtonClick(Sender:TObject;x,y,buttons:integer);
 //    procedure RedoButtonClick(Sender:TObject;x,y,buttons:integer);
     procedure HSBoxChange(Sender:TObject);
@@ -94,7 +94,7 @@ const
 constructor TBDColorEditor.Create;
 
   function CreateSlider(pLeft,pTop,pMaxValue:integer;pName:string;
-    pOnChange:TOnSliderPositionChangeEvent):TBDHorizontalSlider;
+    pOnChange:TValueChangeEvent):TBDHorizontalSlider;
   begin
     Result:=TBDHorizontalSlider.Create(pLeft,pTop,SLIDERSWIDTH,NORMALSLIDERHEIGHT);
     with Result do begin
@@ -213,17 +213,20 @@ procedure TBDColorEditor.MouseLeave(Sender:TObject);
 begin
 end;
 
-procedure TBDColorEditor.SliderRGBChange(Sender:TObject; newValue:integer);
+procedure TBDColorEditor.SliderRGBChange(Sender:TObject;
+  oldValue,newValue:integer);
 begin
   RefreshHSLbyRGB;
 end;
 
-procedure TBDColorEditor.SliderAChange(Sender:TObject; newValue:integer);
+procedure TBDColorEditor.SliderAChange(Sender:TObject; oldValue,newValue:integer
+  );
 begin
   RefreshColorBox;
 end;
 
-procedure TBDColorEditor.SliderHSChange(Sender:TObject; newValue:integer);
+procedure TBDColorEditor.SliderHSChange(Sender:TObject;
+  oldValue,newValue:integer);
 begin
   fHSBox.SetColor(fSliderH.Position,fSliderS.Position);
   fAlternateLSlider.BaseColor:=fHSBox.Color;
@@ -231,7 +234,8 @@ begin
   RefreshRGBbyHSL;
 end;
 
-procedure TBDColorEditor.SliderLChange(Sender:TObject; newValue:integer);
+procedure TBDColorEditor.SliderLChange(Sender:TObject; oldValue,newValue:integer
+  );
 begin
   fAlternateLSlider.L:=fSliderL.Position;
   RefreshColorBox;

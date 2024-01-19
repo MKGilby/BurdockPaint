@@ -26,6 +26,9 @@
 //
 //  V1.00: Gilby - 2023.11.20
 //    * Initial creation from vcc2_SliderLogic.
+//  V1.01: Gilby - 2024.01.19
+//    * Removed TOnSliderPositionChangeEvent declaration.
+//    * OnChange is now a TValueChangeEvent (declared in MKMouse2)
 
 {$mode delphi}
 {$smartlink on}
@@ -37,8 +40,6 @@ interface
 uses Classes, vcc2_VisibleControlStatic, MKMouse2, MKINIFile;
 
 type
-
-  TOnSliderPositionChangeEvent=procedure(Sender:TObject;newValue:integer) of object;
 
   TSliderMouseState=(csMouseDown,csMouseUp);
 
@@ -58,7 +59,7 @@ type
     fPosition,fSavedPosition:integer;
     fDecClickAreaSize,fIncClickAreaSize:integer;
     fSlideAreaSize:integer;
-    fOnChange:TOnSliderPositionChangeEvent;
+    fOnChange:TValueChangeEvent;
     fInvertWheel,
     fCrossWheels:boolean;
     procedure fSetWidth(value:integer); override;
@@ -76,7 +77,7 @@ type
     property Position:integer read fPosition write fSetPosition;
     property InvertWheel:boolean read fInvertWheel write fInvertWheel;
     property CrossWheels:boolean read fCrossWheels write fCrossWheels;
-    property OnChange:TOnSliderPositionChangeEvent read fOnChange write fOnChange;
+    property OnChange:TValueChangeEvent read fOnChange write fOnChange;
   end;
      
   { TVerticalSliderLogic }
@@ -95,7 +96,7 @@ type
     fPosition,fSavedPosition:integer;
     fDecClickAreaSize,fIncClickAreaSize:integer;
     fSlideAreaSize:integer;
-    fOnChange:TOnSliderPositionChangeEvent;
+    fOnChange:TValueChangeEvent;
     fInvertWheel,
     fCrossWheels:boolean;
     procedure fSetHeight(value:integer); override;
@@ -113,7 +114,7 @@ type
     property Position:integer read fPosition write fSetPosition;
     property InvertWheel:boolean read fInvertWheel write fInvertWheel;
     property CrossWheels:boolean read fCrossWheels write fCrossWheels;
-    property OnChange:TOnSliderPositionChangeEvent read fOnChange write fOnChange;
+    property OnChange:TValueChangeEvent read fOnChange write fOnChange;
   end;
 
 implementation
@@ -122,7 +123,7 @@ uses SysUtils, MKToolBox, Logger;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.00';
+  Version='1.01';
 
 
 { THorizontalSliderLogic }
@@ -160,7 +161,7 @@ begin
     pre:=fPosition;
     fPosition:=fSavedPosition;
     if (pre<>fPosition) then begin
-      if Assigned(fOnChange) then fOnChange(Self,fPosition);
+      if Assigned(fOnChange) then fOnChange(Self,pre,fPosition);
       fNeedRedraw:=true;
     end;
   end;
@@ -184,7 +185,7 @@ begin
     if (fPosition<fMaxValue) then inc(fPosition);
   end;
   if (pre<>fPosition) then begin
-    if Assigned(fOnChange) then fOnChange(Self,fPosition);
+    if Assigned(fOnChange) then fOnChange(Self,pre,fPosition);
     fNeedRedraw:=true;
   end;
 end;
@@ -203,7 +204,7 @@ begin
     x:=x-fDecClickAreaSize;
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*x div (fSlideAreaSize-1);
     if (pre<>fPosition) then begin
-      if Assigned(fOnChange) then fOnChange(Self,fPosition);
+      if Assigned(fOnChange) then fOnChange(Self,pre,fPosition);
       fNeedRedraw:=true;
     end;
   end;
@@ -220,7 +221,7 @@ begin
   if fPosition>fMaxValue then fPosition:=fMaxValue;
   if fPosition<fMinValue then fPosition:=fMinValue;
   if (pre<>fPosition) then begin
-    if Assigned(fOnChange) then fOnChange(Self,fPosition);
+    if Assigned(fOnChange) then fOnChange(Self,pre,fPosition);
     fNeedRedraw:=true;
   end;
 end;
@@ -265,8 +266,8 @@ begin
     fMinValue:=value;
     fNeedRedraw:=true;
     if fPosition<fMinValue then begin
+      if Assigned(fOnChange) then fOnChange(Self,fPosition,fMinValue);
       fPosition:=fMinValue;
-      if Assigned(fOnChange) then fOnChange(Self,Position);
     end;
   end;
 end;
@@ -277,8 +278,8 @@ begin
     fMaxValue:=value;
     fNeedRedraw:=true;
     if fPosition>fMaxValue then begin
+      if Assigned(fOnChange) then fOnChange(Self,fPosition,fMaxValue);
       fPosition:=fMaxValue;
-      if Assigned(fOnChange) then fOnChange(Self,Position);
     end;
   end;
 end;
@@ -318,7 +319,7 @@ begin
     pre:=fPosition;
     fPosition:=fSavedPosition;
     if (pre<>fPosition) then begin
-      if Assigned(fOnChange) then fOnChange(Self,fPosition);
+      if Assigned(fOnChange) then fOnChange(Self,pre,fPosition);
       fNeedRedraw:=true;
     end;
   end;
@@ -342,7 +343,7 @@ begin
     if (fPosition<fMaxValue) then inc(fPosition);
   end;
   if (pre<>fPosition) then begin
-    if Assigned(fOnChange) then fOnChange(Self,fPosition);
+    if Assigned(fOnChange) then fOnChange(Self,pre,fPosition);
     fNeedRedraw:=true;
   end;
 end;
@@ -361,7 +362,7 @@ begin
     y:=y-fDecClickAreaSize;
     fPosition:=(fMinValue)+(fMaxValue-fMinValue)*y div (fSlideAreaSize-1);
     if (pre<>fPosition) then begin
-      if Assigned(fOnChange) then fOnChange(Self,fPosition);
+      if Assigned(fOnChange) then fOnChange(Self,pre,fPosition);
       fNeedRedraw:=true;
     end;
   end;
@@ -378,7 +379,7 @@ begin
   if fPosition>fMaxValue then fPosition:=fMaxValue;
   if fPosition<fMinValue then fPosition:=fMinValue;
   if (pre<>fPosition) then begin
-    if Assigned(fOnChange) then fOnChange(Self,fPosition);
+    if Assigned(fOnChange) then fOnChange(Self,pre,fPosition);
     fNeedRedraw:=true;
   end;
 end;
@@ -423,8 +424,8 @@ begin
     fMinValue:=value;
     fNeedRedraw:=true;
     if fPosition<fMinValue then begin
+      if Assigned(fOnChange) then fOnChange(Self,fPosition,fMinValue);
       fPosition:=fMinValue;
-      if Assigned(fOnChange) then fOnChange(Self,Position);
     end;
   end;
 end;
@@ -435,8 +436,8 @@ begin
     fMaxValue:=value;
     fNeedRedraw:=true;
     if fPosition>fMaxValue then begin
+      if Assigned(fOnChange) then fOnChange(Self,fPosition,fMaxValue);
       fPosition:=fMaxValue;
-      if Assigned(fOnChange) then fOnChange(Self,Position);
     end;
   end;
 end;
