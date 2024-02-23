@@ -3,14 +3,16 @@
   See "copyright.txt" for details.
 }
 
+// Generated on 2024.02.23
+
 unit BDPDitherDialog;
 
-{$mode Delphi}
+{$mode delphi}
 
 interface
 
 uses
-  BDPSliders, BDPModalDialog;
+  SysUtils, BDPModalDialog, BDPButton, BDPSliders;
 
 type
 
@@ -19,79 +21,77 @@ type
   TBDDitherDialog=class(TBDModalDialog)
     constructor Create;
     procedure ReDraw; override;
-    procedure OKButtonClick(Sender:TObject;x,y,buttons:integer);
-    procedure CancelButtonClick(Sender:TObject;x,y,buttons:integer);
   private
-    fSlider:TBDHorizontalSlider;
+    ConfDitherSlider:TBDHorizontalSlider;
+    procedure SaveSettings;
+    procedure Show(Sender:TObject);
+    procedure ConfDitherOKButtonClick(Sender:TObject;x,y,buttons:integer);
+    procedure ConfDitherCancelButtonClick(Sender:TObject;x,y,buttons:integer);
   end;
 
 implementation
 
-uses BDPButton, BDPShared, MKMouse2;
-
-const
-  DITHERDIALOGWIDTH=512;
-  DITHERDIALOGHEIGHT=144+MODALDIALOGCAPTIONHEIGHT-3;
+uses BDPShared, MKMouse2;
 
 { TBDDitherDialog }
 
 constructor TBDDitherDialog.Create;
-const SLIDERWIDTH=360;
-      SLIDERHEIGHT=33;
-var atmB:TBDButton;
+var tmp:TBDButton;
 begin
-  inherited Create(DITHERDIALOGWIDTH,DITHERDIALOGHEIGHT);
-  fName:='DitherDialog';
-  Caption:='CONFIGURE DITHER PARAMETERS';
-
-  fSlider:=TBDHorizontalSlider.Create(
-    fLeft+(DITHERDIALOGWIDTH-SLIDERWIDTH) div 2, fTop+66, SLIDERWIDTH, SLIDERHEIGHT);
-  fSlider.ZIndex:=MODALDIALOG_ZINDEX+1;
-  fSlider.Name:='DitherSlider';
-  fSlider.MinValue:=1;
-  fSlider.MaxValue:=100;
-  fSlider.Position:=Settings.DitherStrength;
-  AddChild(fSlider);
-
-  atmB:=TBDButton.Create(
-    fLeft+(DITHERDIALOGWIDTH div 3-NORMALBUTTONWIDTH div 2),
-    fTop+114,
-    NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-    'OK','APPLY DITHER STRENGTH');
-  atmb.OnClick:=OKButtonClick;
-  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
-  AddChild(atmB);
-
-  atmB:=TBDButton.Create(
-    fLeft+(DITHERDIALOGWIDTH div 3*2-NORMALBUTTONWIDTH div 2),
-    fTop+114,
-    NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-    'CANCEL','CLOSE DIALOG');
-  atmb.OnClick:=CancelButtonClick;
-  atmb.ZIndex:=MODALDIALOG_ZINDEX+1;
-  AddChild(atmB);
-
-
+  inherited Create(489,144);
+  fName:='BDPDitherDialog';
+  fCaption:='CONFIGURE DITHER PARAMETERS';
+  OnShow:=Show;
   Visible:=false;
   MouseObjects.Add(Self);
+
+  ConfDitherSlider:=TBDHorizontalSlider.Create(fLeft+84,fTop+57,320,33);
+  with ConfDitherSlider do begin
+    ZIndex:=MODALDIALOG_ZINDEX+1;
+    Name:='ConfDitherSlider';
+    MinValue:=1;
+    MaxValue:=100;
+    Position:=Settings.DitherStrength;
+  end;
+  AddChild(ConfDitherSlider);
+
+  tmp:=TBDButton.Create(fLeft+113,fTop+99,127,27,'OK','APPLY VALUES');
+  tmp.OnClick:=ConfDitherOKButtonClick;
+  tmp.ZIndex:=MODALDIALOG_ZINDEX+1;
+  AddChild(tmp);
+
+  tmp:=TBDButton.Create(fLeft+249,fTop+99,127,27,'CANCEL','CLOSE DIALOG');
+  tmp.OnClick:=ConfDitherCancelButtonClick;
+  tmp.ZIndex:=MODALDIALOG_ZINDEX+1;
+  AddChild(tmp);
+
 end;
 
-procedure TBDDitherDialog.ReDraw;
+procedure TBDDitherDialog.Redraw;
 begin
   inherited ReDraw;
-  MM.Fonts['Black'].OutText(fImage,'DITHER STRENGTH',DITHERDIALOGWIDTH div 2,34,1);
+  MM.Fonts['Black'].OutText(fImage,'DITHER STRENGTH',244,30,1);
 end;
 
-procedure TBDDitherDialog.OKButtonClick(Sender:TObject; x,y,buttons:integer);
+procedure TBDDitherDialog.SaveSettings;
 begin
-  Settings.DitherStrength:=fSlider.Position;
-  Self.Hide;
+  Settings.DitherStrength:=ConfDitherSlider.Position;
 end;
 
-procedure TBDDitherDialog.CancelButtonClick(Sender:TObject; x,y,buttons:integer);
+procedure TBDDitherDialog.ConfDitherOKButtonClick(Sender:TObject;x,y,buttons:integer);
 begin
-  Self.Hide;
+  SaveSettings;
+  Hide;
+end;
+
+procedure TBDDitherDialog.ConfDitherCancelButtonClick(Sender:TObject;x,y,buttons:integer);
+begin
+  Hide;
+end;
+
+procedure TBDDitherDialog.Show(Sender:TObject);
+begin
+  ConfDitherSlider.Position:=Settings.DitherStrength;
 end;
 
 end.
-
