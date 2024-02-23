@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ See DefaultControlSizes.txt for constants.
+
+ In this first version all the controls are put under each other leaving
+ CONTROLSPACING pixel distance beetween them. Also MARGINS pixel is left
+ from the borders of the dialog.
+-->
+
+<Dialog>
+  <Head>
+    <Name>BDPConfigureTintDialog</Name>
+    <ClassName>TBDConfigureTintDialog</ClassName>
+    <Caption>Configure Tint parameters</Caption>
+  </Head>
+
+  <Controls>
+    <Label>
+      <Caption>Tint strength</Caption>
+    </Label>
+    <HorizontalSlider>
+      <Name>ConfTintSlider</Name>
+      <MinValue>0</MinValue>
+      <MaxValue>100</MaxValue>
+      <SettingField>TintStrength</SettingField>
+    </HorizontalSlider>
+    <CheckBox>
+      <Name>ConfTintCheckbox</Name>
+      <Caption>PutCEL use cel as mask</Caption>
+      <Hint>... not as color source</Hint>
+      <SettingField>TintCELAsMask</SettingField>
+    </CheckBox>
+    <Split direction="Horizontal">
+      <Button>
+        <Name>ConfTintOKButton</Name>
+        <Caption>OK</Caption>
+        <Hint>Apply values</Hint>
+        <Save>Y</Save>
+        <Close>Y</Close>
+      </Button>
+      <Button>
+        <Name>ConfTintCancelButton</Name>
+        <Caption>Cancel</Caption>
+        <Hint>Close dialog</Hint>
+        <Save>N</Save>
+        <Close>Y</Close>
+      </Button>
+    </Split>
+  </Controls>
+</Dialog>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ See DefaultControlSizes.txt for constants.
+
+ In this first version all the controls are put under each other leaving
+ CONTROLSPACING pixel distance beetween them. Also MARGINS pixel is left
+ from the borders of the dialog.
+-->
+
+<Dialog>
+  <Head>
+    <Name>BDPDitherDialog</Name>
+    <ClassName>TBDDitherDialog</ClassName>
+    <Caption>Configure Dither parameters</Caption>
+  </Head>
+
+  <Controls>
+    <Label>
+      <Caption>Dither strength</Caption>
+    </Label>
+    <HorizontalSlider>
+      <Name>ConfDitherSlider</Name>
+      <MinValue>1</MinValue>
+      <MaxValue>100</MaxValue>
+      <SettingField>DitherStrength</SettingField>
+    </HorizontalSlider>
+    <Split direction="Horizontal">
+      <Button>
+        <Name>ConfDitherOKButton</Name>
+        <Caption>OK</Caption>
+        <Hint>Apply values</Hint>
+        <Save>Y</Save>
+        <Close>Y</Close>
+      </Button>
+      <Button>
+        <Name>ConfDitherCancelButton</Name>
+        <Caption>Cancel</Caption>
+        <Hint>Close dialog</Hint>
+        <Save>N</Save>
+        <Close>Y</Close>
+      </Button>
+    </Split>
+  </Controls>
+</Dialog>
