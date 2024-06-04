@@ -5,7 +5,7 @@
 // You can freely distribute the sources.
 //
 // Written by Gilby/MKSZTSZ
-// Hungary, 2017-2023
+// Hungary, 2017-2024
 // ------------------------------------------------------------------
 
 // Version info:
@@ -112,6 +112,11 @@
 //     * Added clipping to PutPixel.
 //     * The split color Line now calls the uint32 color version.
 //     * Simplified FilledCircle.
+//   1.27 - Gilby - 2023.12.05
+//     + Added Resize, it changes changes the image resolution but keeps the image
+//       either cut to size (shrinking) or padded with empty space (enlarging).
+//   1.28 - Gilby - 2024.04.24
+//     * Changed MKToolBox.Replace to SysUtils.StringReplace.
 
 
 {$ifdef fpc}
@@ -273,6 +278,9 @@ type
     // not equal the given color.
     procedure Crop(r,g,b,a:integer);
 
+    // Resizes the image to the given size. Data outside the new dimensions is lost.
+    procedure Resize(pNewWidth,pNewHeight:integer);
+
     // Grayscales the image
     procedure Grayscale;
 
@@ -366,7 +374,7 @@ uses SysUtils, MKToolBox, Logger, MKStream;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.26';
+  Version='1.28';
   POSTPROCESSCOLOR=$00FF00FF;  // Fully transparent magenta is the magic color!
 
 var
@@ -1186,6 +1194,19 @@ begin
   fHeight:=h;
 end;
 
+procedure TARGBImage.Resize(pNewWidth,pNewHeight:integer);
+var tmp:pointer;i:integer;
+begin
+  tmp:=Getmem(pNewWidth*pNewHeight*4);
+  fillchar(tmp^,pNewWidth*pNewHeight*4,0);
+  for i:=0 to min(fHeight,pNewHeight)-1 do
+    Move((fRawdata+i*Width*4)^,(tmp+i*pNewWidth*4)^,min(Width,pNewWidth)*4);
+  Freemem(fRawdata);
+  fWidth:=pNewWidth;
+  fHeight:=pNewHeight;
+  fRawdata:=tmp;
+end;
+
 procedure TARGBImage.Grayscale;
 var y,gw:integer;s1:pointer;
 begin
@@ -1384,7 +1405,7 @@ begin
   Log.LogDebug('Starting...',Istr);
   Log.LogDebug('Transformation string: '+iTransform,Istr);
   d:=CountChar('D',iTransform);
-  iTransform:=replace(iTransform,'D','');
+  iTransform:=StringReplace(iTransform,'D','',[rfReplaceAll]);
   Log.LogDebug('Size: '+inttostr(fWidth)+'x'+inttostr(fHeight),Istr);
   if fAnimations.Count>0 then begin
     Log.LogWarning('Transforming animated images no longer supported.',Istr);

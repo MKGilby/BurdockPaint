@@ -97,7 +97,7 @@ begin
 end;
 
 procedure TBDToolLine.Draw;
-var d:integer;
+var d:integer;len:double;
 begin
   case fState of
     0:;
@@ -115,11 +115,18 @@ begin
             d:=180;
           end;
         end;
+        len:=sqrt(sqr(fsY-fY)+sqr(fsX-fX));
 
-        InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
+        InfoBar.ShowText(
+          Format('(%d,%d) WI=%d HE=%d (%d,%d) DEG=%d LEN=%.2f',[
+            fSX,fSY,abs(fSX-fX)+1,abs(fSY-fY)+1,fX,fY,d,len
+          ]));
+
+
+{        InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
           'WI='+inttostr(abs(fSX-fX)+1)+' HE='+inttostr(abs(fSY-fY)+1)+' '+
           '('+inttostr(fX)+','+inttostr(fY)+') '+
-          'DEG='+inttostr(d));
+          'DEG='+inttostr(d));}
       end;
   end;
 end;

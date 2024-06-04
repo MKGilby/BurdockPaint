@@ -149,6 +149,9 @@
 //   + Added HSLtoRGB and RGBtoHSL
 // V3.48a - 2023.09.05
 //   - Fix in HSLtoRGB
+// V3.49 - 2024.04.23
+//   + Added ExchangeSegments
+//   * Replace is deprecated, use StringReplace in SysUtils instead.
 
 unit MKToolbox;
 
@@ -172,7 +175,7 @@ uses Windows, SysUtils, Classes;
          function Ltrim(s:String):string;
 {V1.10}  function Win2Dos(s:String):string;
          function Dos2Win(s:String):string;
-{V1.12}  function Replace(s,src,trg:string):string;
+{V1.12}  //function Replace(s,src,trg:string):string; deprecated; // Use StringReplace in SysUtils instead!
 {V1.15}  function CountChar(c:char;s:String):byte;
 {V1.18}  function TrimBrackets(var s:string;brackets:string):boolean;
 {V2.01}  function IsNumeric(s:string;DecSep:char=#0):boolean;
@@ -197,6 +200,7 @@ uses Windows, SysUtils, Classes;
 {V3.41}  function Cp852ToUTF8(s:string):string;
          function Win1250ToUTF8(s:string):string;
 {V3.43}  function GetPassword(const InputMask: Char = '*'): string;
+{V3.49}  function ExchangeSegments(s:String;sep:char;n1,n2:integer):string;
 
 // -------------------------------------
 // File related functions and procedures
@@ -249,7 +253,7 @@ uses Logger;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='3.48a';
+  Version='3.49';
 
   HexChars='0123456789ABCDEF';
   DOSChars=#$a0#$b5#$82#$90#$a1#$d6#$a2#$e0#$94#$99#$8b#$8a#$a3#$e9#$81#$9a#$fb#$eb#$8e;
@@ -1142,6 +1146,14 @@ begin
   finally
     SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE), OldMode);
   end;
+end;
+
+function ExchangeSegments(s:String; sep:char; n1,n2:integer):string;
+var s2:string;
+begin
+  s2:=GetNthSegment(s,sep,n1);
+  Result:=ReplaceNthSegment(s,sep,n1,GetNthSegment(s,sep,n2));
+  Result:=ReplaceNthSegment(Result,sep,n2,s2);
 end;
 
 function CreateTimeStamp:string;

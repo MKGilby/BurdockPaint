@@ -22,12 +22,13 @@
 
   -[Description]-------------------------------------------------------
 
-  Set backup folder, folder max. size, retention time and add file to
-  backup anytime you want. The file will be copied to the set backup
-  folder, expanding its name with current date and time.
+  Set backup folder, folder max. size, max. retention time, file count
+  and add file to backup anytime you want. The file will be copied to
+  the set backup folder, expanding its name with current date and time.
   If folder maximum size is set, the folder size will be kept under
   this limit. If retention time set is, the files older that this time
-  will be deleted from backup.
+  will be deleted from backup. If file count set, the number of files
+  will never exceed this count.
 
   I used this unit in BurdockPaint to create backups of the project file.
 
@@ -42,8 +43,10 @@
 //     - Fix in BackupFile.
 //  V1.01: Gilby
 //     - Removed unneccessary private variables.
-//     - Added BackupOnlyWhenChanged:boolean property. Default: true
-//     - Added BackupFolderFileCount:integer property. Default: 0 (disabled)
+//     - Added BackupOnlyWhenChanged:boolean property. Default: true.
+//     - Added BackupFolderFileCount:integer property. Default: 0 (disabled).
+//  V1.02: Gilby
+//     - No longer using MKToolBox.Replace in timestamp creation.
 
 unit FileBackup;
 
@@ -129,7 +132,7 @@ uses MKToolBox, Logger;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.01';
+  Version='1.02';
 
 
 { TFileBackup }
@@ -145,7 +148,7 @@ begin
 end;
 
 procedure TFileBackup.BackupFile(pFilename:string);
-var s:string;needbackup:boolean;
+var s:string;needbackup:boolean;i:integer;
 begin
   if not fileexists(pFilename) then
     raise Exception.Create(Format('File not found! (%s)',[pFilename]));
@@ -162,7 +165,8 @@ begin
     if BackupFolderFileCount>0 then CheckBackupFileCount;
     if BackupFolderMaxSize>0 then CheckBackupFolderSize(SizeOfFile(pFilename));
     s:=copy(DateToStr(Date,FS)+TimeToStr(Time,FS),1,19);
-    s:=replace(replace(replace(s,'.',''),':',''),' ','');
+    for i:=length(s) downto 1 do
+      if s[i] in ['.',':',' '] then delete(s,i,1);
     s:='.'+copy(s,1,8)+'.'+copy(s,9,6);
     CopyFile(pFilename,fTargetPath+'\'+ChangeFileExt(ExtractFileName(pFilename),s+ExtractFileExt(pFilename)));
   end;

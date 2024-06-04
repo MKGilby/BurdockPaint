@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ See DefaultControlSizes.txt for constants.
+
+ In this first version all the controls are put under each other leaving
+ CONTROLSPACING pixel distance beetween them. Also MARGINS pixel is left
+ from the borders of the dialog.
+-->
+
+<Dialog>
+  <Head>
+    <Name>BDPConfigureSoftenDialog</Name>
+    <ClassName>TBDConfigureSoftenDialog</ClassName>
+    <Caption>Configure Soften parameters</Caption>
+  </Head>
+
+  <Controls>
+    <Label>
+      <Caption>Center pixel weight</Caption>
+    </Label>
+    <HorizontalSlider>
+      <Name>ConfSoftenSlider</Name>
+      <MinValue>1</MinValue>
+      <MaxValue>16</MaxValue>
+      <SettingField>SoftenCenterWeight</SettingField>
+    </HorizontalSlider>
+    <CheckBox>
+      <Name>ConfSoftenCheckbox</Name>
+      <Caption>Soften alpha channel too</Caption>
+      <Hint>... or not</Hint>
+      <SettingField>SoftenAlphaToo</SettingField>
+    </CheckBox>
+    <Split direction="Horizontal">
+      <Button>
+        <Name>ConfSoftenOKButton</Name>
+        <Caption>OK</Caption>
+        <Hint>Apply values</Hint>
+        <Save>Y</Save>
+        <Close>Y</Close>
+      </Button>
+      <Button>
+        <Name>ConfSoftenCancelButton</Name>
+        <Caption>Cancel</Caption>
+        <Hint>Close dialog</Hint>
+        <Save>N</Save>
+        <Close>Y</Close>
+      </Button>
+    </Split>
+  </Controls>
+</Dialog>

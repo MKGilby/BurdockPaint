@@ -168,6 +168,9 @@ const
   // GradientEditor response
   MSG_GRADIENTEDITORRESP=32;
 
+  // Open ConfigureSoftenDialog.
+  MSG_OPENCONFIGURESOFTENDIALOG=33;
+
 
   // ------- Menu Messages ------- Range: 200-299 -------
   {$i includes\menu.inc}

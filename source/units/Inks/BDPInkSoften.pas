@@ -21,6 +21,7 @@ type
     procedure InitializeArea(pX1,pY1,pX2,pY2:integer); override;
     function GetColorAt(pX,pY:integer):uint32; override;
     procedure PostProcess; override;
+    procedure Configure; override;
   private
     fTempImage:TBDRegion;
   end;
@@ -35,7 +36,7 @@ constructor TBDInkSoften.Create;
 begin
   inherited Create;
   fName:='SOFTEN';
-  fHint:='AVERAGES PIXEL COLORS WITH NEIGHBOURS.';
+  fHint:='AVERAGES PIXEL COLORS WITH NEIGHBOURS. '#132'SELECT '#133'CONFIGURE';
   fSupportsOnTheFly:=false;
 end;
 
@@ -59,7 +60,7 @@ begin
   pX-=fLeft;pY-=fTop;
   c:=Settings.SoftenCenterWeight;
   p:=fTempImage.GetPixel(px,py);
-  if not Settings.SoftenAlphaToo then Result:=(p and $FF000000)>>24;
+  if not Settings.SoftenAlphaToo then Result:=(p and $FF000000);
   a:=Settings.SoftenCenterWeight*(p and $FF000000)>>24;
   r:=Settings.SoftenCenterWeight*(p and $FF0000)>>16;
   g:=Settings.SoftenCenterWeight*(p and $FF00)>>8;
@@ -115,6 +116,11 @@ begin
       if Project.CurrentRegion.GetPixel(i,j)=POSTPROCESSCOLOR then
         Project.CurrentRegion.PutPixel(i,j,GetColorAt(i,j));
   if Assigned(fTempImage) then fTempImage.Free;
+end;
+
+procedure TBDInkSoften.Configure;
+begin
+  MessageQueue.AddMessage(MSG_OPENCONFIGURESOFTENDIALOG);
 end;
 
 end.

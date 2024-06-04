@@ -5,6 +5,7 @@ Todo:
 - Add setup dialogs to Tools:
   - Circle (center+radius vs. bounding box)
   - Sep. (boxed)
+  - Soften (center weight, soften alpha too)
 - Add Inks:
   - Darken
   - Brighten
@@ -25,6 +26,14 @@ Todo:
     - Color picking mode from any source where color can be selected.
       (harder to implement, but I think it would be a better solution.)
 
+
+2024.06.04 - Build 50
+- Bugfix in Soften. (Didn't work at all)
+- Added configure dialog to Soften. (Settings already were there.)
+   (Generated, of course!)
+
+2024.05.17 - Build 49
+- Line now displays the length of the line too.
 
 2024.02.23 - Build 48
 - Some dialog's source code are now generated from XML.
@@ -53,8 +62,6 @@ Todo:
 - BUGFIX: ColorEditor not refreshes when changing active image.
 - BUGFIX: ColorPalette2 not refreshes when changing palette in ColorEditor.
 
-
-
 2023.11.27 - Build 41
 - Added ConfigureTintDialog.
 - Tint now works with CELs too.
@@ -63,7 +70,7 @@ Todo:
 - DrawArea drawing is reworked, uses less memory and supports checkered alpha
   background when transparent pixels are used.
 - Sliders and main Controls use static texture.
-  Memory footprint is reduced to 40M.  
+  Memory footprint is reduced to 40M.
 
 2023.11.19
 - Infobar uses static texture.

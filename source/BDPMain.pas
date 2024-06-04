@@ -14,7 +14,7 @@ uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
   BDPControls, BDPDrawArea, BDPColorEditor, BDPMagnifyCELDialog,
   BDPRotateCELDialog, BDPAboutDialog, BDPMessageBox, BDPDitherDialog,
   BDPConfigureRGradDialog, BDPCoordinateBox, BDPGradientEditor, BDPColorPalette2,
-  BDPGradientSelector, BDPConfigureTintDialog;
+  BDPGradientSelector, BDPConfigureTintDialog, BDPConfigureSoftenDialog;
 
 type
 
@@ -41,6 +41,7 @@ type
     fColorPalette:TBDColorPalette2;
     fGradientSelector:TBDGradientSelector;
     fConfigureTintDialog:TBDConfigureTintDialog;
+    fConfigureSoftenDialog:TBDConfigureSoftenDialog;
 
     fBackup:TFileBackup;
     fOpenCELDialog,
@@ -106,7 +107,7 @@ begin
     SDL_WINDOWPOS_CENTERED,
     WINDOWWIDTH,
     WINDOWHEIGHT,
-    Format('Burdock Paint V%s (%s)',[iVersion,replace(iBuildDate,'/','.')]));
+    Format('Burdock Paint V%s (%s)',[iVersion,StringReplace(iBuildDate,'/','.',[rfReplaceAll])]));
 
   SetFPS(60);
 
@@ -168,6 +169,8 @@ begin
   Log.Trace('After GradientSelector: '+inttostr(GetHeapStatus.TotalAllocated));
   fConfigureTintDialog:=TBDConfigureTintDialog.Create;
   Log.Trace('After ConfigureTintDialog: '+inttostr(GetHeapStatus.TotalAllocated));
+  fConfigureSoftenDialog:=TBDConfigureSoftenDialog.Create;
+  Log.Trace('After ConfigureSoftenDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   MouseObjects.List;
 
   fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','All supported file|*.bdc;*.cel;*.png;*.tga;*.bmp|CEL files|*.bdc|Legacy CEL files|*.cel|PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
@@ -186,6 +189,7 @@ begin
   if Assigned(fSaveProjectDialog) then fSaveProjectDialog.Free;
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
   if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
+  fConfigureSoftenDialog.Free;
   if Assigned(fConfigureTintDialog) then fConfigureTintDialog.Free;
   if Assigned(fGradientSelector) then fGradientSelector.Free;
   if Assigned(fColorPalette) then fColorPalette.Free;
@@ -260,6 +264,7 @@ begin
         MSG_CONFIGRGRADCENTER:         ConfigRGradCenter;
         MSG_CONFIGRGRADCENTERRESP:     ConfigRGradCenterFinished;
         MSG_OPENCONFIGURETINTDIALOG:   fConfigureTintDialog.Show;
+        MSG_OPENCONFIGURESOFTENDIALOG: fConfigureSoftenDialog.Show;
         MSG_OPENPROJECT:               OpenProject;
         MSG_SAVEPROJECT:               SaveProject;
         MSG_SAVECLEARPROJECT:          SaveClearProject;

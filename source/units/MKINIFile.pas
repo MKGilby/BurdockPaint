@@ -57,6 +57,8 @@
 //       read-only.
 //  V2.18: Gilby - 2023.01.16
 //     + Added ReadUInt32 and WriteUInt32.
+//  V2.19: Gilby - 2024.04.23
+//     * Changed replace to StringReplace.
 
 {$ifdef fpc}
 //  {$smartlink on}
@@ -123,8 +125,8 @@ implementation
 uses SysUtils, MKToolBox, MKStream, Logger;
 
 const
-  Fstr='MKINIFile.pas, ';
-  Version='2.17';
+  Fstr={$I %FILE%}+', ';
+  Version='2.19';
 
 { Constructor - Destructor - Reading/Writing physical file }
 
@@ -280,7 +282,7 @@ begin
   Result:=Default;
   s := ReadString(Section, Ident, '', Section2);
   if s > '' then begin
-    Result:=strtofloat(replace(s,'.',FS.DecimalSeparator),FS);
+    Result:=strtofloat(StringReplace(s,'.',FS.DecimalSeparator,[rfReplaceAll]),FS);
   end;
 end;
 
@@ -420,7 +422,7 @@ end;
 
 procedure TIniFile.WriteFloat(Section, Ident: string; Value: extended);
 begin
-  WriteString(Section, Ident, replace(floattostr(Value,FS),FS.DecimalSeparator,'.'));
+  WriteString(Section, Ident, StringReplace(floattostr(Value,FS),FS.DecimalSeparator,'.',[rfReplaceAll]));
 end;
 
 procedure TIniFile.WriteBool(Section, Ident: string; Value: Boolean);

@@ -10,7 +10,7 @@
              under the GNU GPL Version 2.
 
   Written by Gilby/MKSZTSZ
-  Hungary, 2009-2022
+  Hungary, 2009-2024
 
   --------------------------------------------------
 
@@ -101,6 +101,8 @@
 //    * Stop using ZLib compression when CompressionLevel=0 passed
 //  V1.25: Gilby - 2022.05.16
 //    * BUGFIX: Global compressionlevel was not used.
+//  V1.26: Gilby - 2024.04.24
+//    * Stopped using MKToolBox.Replace since it's deprecated.
 
 {$ifdef fpc}
   {$mode delphi}
@@ -108,7 +110,6 @@
 {$endif}
 {$define disableadaptivehuffman}
 {define MyComp}
-
 
 unit CompressorUnit;
 
@@ -148,7 +149,7 @@ uses
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.25';
+  Version='1.26';
 
 constructor TCompressor.Create;
 begin
@@ -331,8 +332,11 @@ begin
           Xs:=BestStream;
           BestStream:=AfterC2;
           fLastCompressionMethod:=IC2*64+IC1*8+IPP;
-          fLastCompression:=replace(PPNames[ipp]+'+'+C1Names[ic1]+'+'+C2Names[ic2],'++','+');
-          if fLastCompression[1]='+' then delete(fLastCompression,1,1);
+          fLastCompression:='';
+          if ipp>0 then fLastCompression+=PPNames[ipp]+'+';
+          if ic1>0 then fLastCompression+=C1Names[ic1]+'+';
+          if ic2>0 then fLastCompression+=C2Names[ic1];
+
           if (length(fLastCompression)>0) and (fLastCompression[length(fLastCompression)]='+') then delete(fLastCompression,length(fLastCompression),1);
           if length(fLastCompression)=0 then fLastCompression:='None';
           AfterC2:=Xs;
