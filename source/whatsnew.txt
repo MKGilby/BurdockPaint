@@ -27,6 +27,10 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2024.08.02 - Build 51
+- Implemented Image/Open. (It was there but was not implemented)
+- Only one opendialog is created, the title and filter changes on the fly.
+
 2024.06.04 - Build 50
 - Bugfix in Soften. (Didn't work at all)
 - Added configure dialog to Soften. (Settings already were there.)

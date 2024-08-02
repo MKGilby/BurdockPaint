@@ -44,8 +44,7 @@ type
     fConfigureSoftenDialog:TBDConfigureSoftenDialog;
 
     fBackup:TFileBackup;
-    fOpenCELDialog,
-    fOpenProjectDialog:TOpenDialog;
+    fOpenDialog:TOpenDialog;
     fSaveCELDialog,
     fSaveProjectDialog,
     fSaveImageDialog:TSaveDialog;
@@ -61,6 +60,7 @@ type
     procedure SaveClearProject;
     procedure NewImage;
     procedure DuplicateImage;
+    procedure OpenImage;
     procedure SaveImage;
     procedure RemoveImage;
     procedure ClearImage;
@@ -84,7 +84,7 @@ implementation
 
 uses Classes, SDL2, BDPShared, MKToolbox, MKStream, MKMouse2, Logger,
   MAD4MidLevelUnit, ParametersUnit, BDPKeyMapping, BDPSettings, BDPRegion,
-  BDPProject;
+  BDPProject, ARGBImageUnit;
 
 
 { TMain }
@@ -173,8 +173,11 @@ begin
   Log.Trace('After ConfigureSoftenDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   MouseObjects.List;
 
-  fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','All supported file|*.bdc;*.cel;*.png;*.tga;*.bmp|CEL files|*.bdc|Legacy CEL files|*.cel|PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
-  fOpenProjectDialog:=CreateOpenDialog('OpenProjectDialog','Open Project','Project files|*.bpprj');
+  fOpenDialog:=TOpenDialog.Create(nil);
+  fOpenDialog.Name:='OpenDialog';
+  fOpenDialog.InitialDir:=PROJECTBASEPATH;
+//  fOpenCELDialog:=CreateOpenDialog('OpenCELDialog','Open CEL','All supported file|*.bdc;*.cel;*.png;*.tga;*.bmp|CEL files|*.bdc|Legacy CEL files|*.cel|PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
+//  fOpenProjectDialog:=CreateOpenDialog('OpenProjectDialog','Open Project','Project files|*.bpprj');
   fSaveCELDialog:=CreateSaveDialog('SaveCELDialog','Save CEL','PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
   fSaveProjectDialog:=CreateSaveDialog('SaveProjectDialog','Save Project','Project files|*.bpprj');
   fSaveImageDialog:=CreateSaveDialog('SaveImageDialog','Save Image','PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
@@ -185,10 +188,11 @@ end;
 destructor TMain.Destroy;
 begin
   if Assigned(fSaveImageDialog) then fSaveImageDialog.Free;
-  if Assigned(fOpenProjectDialog) then fOpenProjectDialog.Free;
+  if Assigned(fOpenDialog) then fOpenDialog.Free;
+//  if Assigned(fOpenProjectDialog) then fOpenProjectDialog.Free;
   if Assigned(fSaveProjectDialog) then fSaveProjectDialog.Free;
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
-  if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
+//  if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
   fConfigureSoftenDialog.Free;
   if Assigned(fConfigureTintDialog) then fConfigureTintDialog.Free;
   if Assigned(fGradientSelector) then fGradientSelector.Free;
@@ -270,6 +274,7 @@ begin
         MSG_SAVECLEARPROJECT:          SaveClearProject;
         MSG_NEWIMAGE:                  NewImage;
         MSG_DUPLICATEIMAGE:            DuplicateImage;
+        MSG_OPENIMAGE:                 OpenImage;
         MSG_SAVEIMAGE:                 SaveImage;
         MSG_REMOVEIMAGE:               RemoveImage;
         MSG_CLEARIMAGE:                ClearImage;
@@ -317,13 +322,15 @@ end;
 function TMain.CreateOpenDialog(pName,pTitle,pFilter:string):TOpenDialog;
 begin
   Result:=TOpenDialog.Create(nil);
-  with Result do begin
+  Result.Name:='OpenDialog';
+  Result.InitialDir:=PROJECTBASEPATH;
+{  with Result do begin
     Filter:=pFilter;
     FilterIndex:=0;
     Name:=pName;
     Title:=pTitle;
     InitialDir:=PROJECTBASEPATH;
-  end;
+  end;}
 end;
 
 function TMain.CreateSaveDialog(pName,pTitle,pFilter:string):TSaveDialog;
@@ -355,10 +362,13 @@ end;
 
 procedure TMain.OpenProject;
 begin
-  if fOpenProjectDialog.Execute then begin
+  fOpenDialog.Title:='Open Project';
+  fOpenDialog.Filter:='Project files|*.bpprj';
+  fOpenDialog.FilterIndex:=0;
+  if fOpenDialog.Execute then begin
     try
       Project.Free;
-      Project:=TBDProject.CreateFromFile(fOpenProjectDialog.FileName);
+      Project:=TBDProject.CreateFromFile(fOpenDialog.FileName);
       MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
     except
       on e:Exception do begin
@@ -446,6 +456,41 @@ begin
       Xs.Free;
     end;
     MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
+  end;
+end;
+
+procedure TMain.OpenImage;
+var i:integer;img:TBDImage;tmp:TARGBImage;
+begin
+  fOpenDialog.Filter:='All supported formats|*.png;*.tga;*.bmp;*.gif|PNG files|*.png|TGA files|*.tga|BMP files|*.bmp|GIF files|*.gif';
+  fOpenDialog.FilterIndex:=0;
+  fOpenDialog.Title:='Open Image';
+  if fOpenDialog.Execute then begin
+    i:=MessageBox('OPEN IMAGE','Where to place opened image?','First;Last;Insert;Cancel');
+    if i in [0..2] then begin
+      tmp:=TARGBImage.Create(fOpenDialog.FileName);
+      try
+        img:=TBDImage.Create(tmp.Width,tmp.Height);
+        img.Region.PutImage(0,0,tmp);
+      finally
+        tmp.Free;
+      end;
+
+      case i of
+        0:begin
+            Project.Images.Insert(0,img);
+            Project.CurrentImageIndex:=0;
+          end;
+        1:begin
+            Project.Images.Add(img);
+            Project.CurrentImageIndex:=Project.Images.Count-1;
+          end;
+        2:begin
+            Project.Images.Insert(Project.CurrentImageIndex,img);
+          end;
+      end;
+      MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
+    end;
   end;
 end;
 
@@ -554,12 +599,15 @@ end;
 
 procedure TMain.OpenCEL;
 begin
-  if fOpenCELDialog.Execute then begin
+  fOpenDialog.Filter:='All supported files|*.bdc;*.cel;*.png;*.tga;*.bmp|CEL files|*.bdc|Legacy CEL files|*.cel|PNG files|*.png|TGA files|*.tga|BMP files|*.bmp';
+  fOpenDialog.FilterIndex:=0;
+  fOpenDialog.Title:='Open CEL';
+  if fOpenDialog.Execute then begin
     if not assigned(Project.CELImage) then Project.CELImage:=TBDRegion.Create(16,16);
-    if UpperCase(ExtractFileExt(fOpenCELDialog.FileName))='.BDC' then
-      Project.CELImage.LoadFromFile(fOpenCELDialog.FileName)
+    if UpperCase(ExtractFileExt(fOpenDialog.FileName))='.BDC' then
+      Project.CELImage.LoadFromFile(fOpenDialog.FileName)
     else
-      Project.CELImage.ReadFile(fOpenCELDialog.FileName);
+      Project.CELImage.ReadFile(fOpenDialog.FileName);
     Project.CELImage.Left:=0;
     Project.CELImage.Top:=0;
     fMainMenu.EnableCELSubMenusWithActiveCEL;
