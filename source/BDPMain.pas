@@ -68,6 +68,7 @@ type
     procedure GetCEL;
     procedure GetCELFinished;
     procedure PutCEL;
+    procedure ClipCEL;
     procedure ShowCEL;
     procedure ToggleControls;
     procedure ReleaseCEL;
@@ -284,15 +285,16 @@ begin
         MSG_GETCEL:                    GetCEL;
         MSG_GETCELFINISHED:            GetCELFinished;
         MSG_PUTCEL:                    PutCEL;
+        MSG_CLIPCEL:                   ClipCEL;
         MSG_SHOWCEL:                   ShowCEL;
-        MSG_RESTORECONTROLS:           ShowMainControls;
-        MSG_TOGGLECONTROLS:            ToggleControls;
         MSG_RELEASECEL:                ReleaseCEL;
         MSG_OPENROTATECELDIALOG:       fRotateDialog.Show;
         MSG_FLIPCEL:                   FlipCEL(msg);
         MSG_OPENMAGNIFYCELDIALOG:      fMagnifyDialog.Show;
         MSG_OPENCEL:                   OpenCEL;
         MSG_SAVECEL:                   SaveCEL;
+        MSG_RESTORECONTROLS:           ShowMainControls;
+        MSG_TOGGLECONTROLS:            ToggleControls;
         MSG_OPENCOLOREDITOR:           fColorEditor.Show;
         MSG_COLOREDITORRESP:           ColorEditorResp(msg);
         MSG_SELECTCOLOR:               SelectColor;
@@ -558,6 +560,34 @@ begin
   ActiveTool.Move(fDrawArea.MouseXToFrame(mx),fDrawArea.MouseYToFrame(my));
 end;
 
+procedure TMain.ClipCEL;
+var i,j,x1,y1,x2,y2,w,h:integer;p:pointer;
+begin
+  if assigned(Project.CELImage) then Project.CELImage.Free;
+  x1:=Project.CurrentRegion.Width;
+  y1:=Project.CurrentRegion.Height;
+  x2:=0;
+  y2:=0;
+  p:=Project.CurrentRegion.Rawdata;
+  for j:=0 to Project.CurrentRegion.Height-1 do
+    for i:=0 to Project.CurrentRegion.Width-1 do begin
+      if (byte(p^)<>0) or (byte((p+1)^)<>0) or (byte((p+2)^)<>0) or (byte((p+3)^)<>255) then begin
+        if i<x1 then x1:=i;
+        if i>x2 then x2:=i;
+        if j<y1 then y1:=j;
+        if j>y2 then y2:=j;
+      end;
+      inc(p,4);
+    end;
+  w:=x2-x1+1;
+  h:=y2-y1+1;
+  Project.CELImage:=TBDRegion.Create(w,h);
+  Project.CELImage.Left:=x1;
+  Project.CELImage.Top:=y1;
+  Project.CELImage.PutImagePart(0,0,x1,y1,w,h,Project.CurrentRegion);
+  ShowCEL;
+end;
+
 procedure TMain.GetCELFinished;
 begin
   fMainMenu.EnableCELSubMenusWithActiveCEL;
@@ -569,15 +599,6 @@ begin
   HideMainControls;
   ActiveTool:=Tools.ItemByName['SHOWCEL'];
   ActiveTool.Initialize;
-end;
-
-procedure TMain.ToggleControls;
-begin
-//  if not fPaletteEditor.Visible then
-    if fControls.Visible then
-      HideMainControls
-    else
-      ShowMainControls;
 end;
 
 procedure TMain.ReleaseCEL;
@@ -629,6 +650,15 @@ begin
     end;
     MessageQueue.AddMessage(MSG_SHOWCEL);
   end;
+end;
+
+procedure TMain.ToggleControls;
+begin
+//  if not fPaletteEditor.Visible then
+    if fControls.Visible then
+      HideMainControls
+    else
+      ShowMainControls;
 end;
 
 procedure TMain.ColorEditorResp(msg: TMessage);

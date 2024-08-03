@@ -27,6 +27,10 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2024.08.03 - Build 52
+- Added CEL/Clip. It clips the smallest possible CEL from the current image
+  containing all pixels that are not opaque black.
+
 2024.08.02 - Build 51
 - Implemented Image/Open. (It was there but was not implemented)
 - Only one opendialog is created, the title and filter changes on the fly.

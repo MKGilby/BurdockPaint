@@ -72,6 +72,9 @@ CEL
   PUT
     PUTCEL
     Put CEL to the image.
+  CLIP
+    CLIPCEL
+    Get cropped image into CEL.
   RELEASE
     RELEASECEL
     Forget current CEL.
@@ -89,7 +92,7 @@ CEL
     Magnify CEL to 2x, 3x or 5x.
   OPEN
     OPENCEL
-    Open CEL from file. (Legacy CEL, PNG, TGA)
+    Open CEL from file. (Legacy CEL, PNG, TGA, BMP)
   SAVE
     SAVECEL
     Save CEL to file. (PNG, TGA)
