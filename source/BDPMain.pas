@@ -563,7 +563,6 @@ end;
 procedure TMain.ClipCEL;
 var i,j,x1,y1,x2,y2,w,h:integer;p:pointer;
 begin
-  if assigned(Project.CELImage) then Project.CELImage.Free;
   x1:=Project.CurrentRegion.Width;
   y1:=Project.CurrentRegion.Height;
   x2:=0;
@@ -581,11 +580,15 @@ begin
     end;
   w:=x2-x1+1;
   h:=y2-y1+1;
-  Project.CELImage:=TBDRegion.Create(w,h);
-  Project.CELImage.Left:=x1;
-  Project.CELImage.Top:=y1;
-  Project.CELImage.PutImagePart(0,0,x1,y1,w,h,Project.CurrentRegion);
-  ShowCEL;
+  if (w>0) and (h>0) then begin
+    if assigned(Project.CELImage) then Project.CELImage.Free;
+    Project.CELImage:=TBDRegion.Create(w,h);
+    Project.CELImage.Left:=x1;
+    Project.CELImage.Top:=y1;
+    Project.CELImage.PutImagePart(0,0,x1,y1,w,h,Project.CurrentRegion);
+    fMainMenu.EnableCELSubMenusWithActiveCEL;
+    ShowCEL;
+  end;
 end;
 
 procedure TMain.GetCELFinished;
