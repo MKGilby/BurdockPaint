@@ -1,70 +1,37 @@
 unit sdl2;
 
 {
+                                SDL2-for-Pascal
+                               =================
+          Pascal units for SDL2 - Simple Direct MediaLayer, Version 2
+
+  Copyright (C) 2020-2023 PGD Community
+  Maintainers: M. J. Molski and suve
+  Visit: https://github.com/PascalGameDevelopment/SDL2-for-Pascal
+
   Simple DirectMedia Layer
-  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Visit: http://libsdl.org
 
-  Pascal-Header-Conversion
-  Copyright (C) 2012-2020 Tim Blume aka End/EV1313
+  SDL2-for-Pascal is based upon:
 
-  SDL2-for-Pascal
-  Copyright (C) 2020-2021 PGD Community
+    Pascal-Header-Conversion
+    Copyright (C) 2012-2020 Tim Blume aka End/EV1313
 
-  SDL.pas is based on the files:
-  "sdl.h",
-  "sdl_audio.h",
-  "sdl_blendmode.h",
-  "sdl_clipboard.h",
-  "sdl_cpuinfo.h",
-  "sdl_events.h",
-  "sdl_error.h",
-  "sdl_filesystem.h",
-  "sdl_gamecontroller.h",
-  "sdl_gesture.h",
-  "sdl_haptic.h",
-  "sdl_hints.h",
-  "sdl_joystick.h",
-  "sdl_keyboard.h",
-  "sdl_keycode.h",
-  "sdl_loadso.h",
-  "sdl_log.h",
-  "sdl_pixels.h",
-  "sdl_power.h",
-  "sdl_main.h",
-  "sdl_messagebox.h",
-  "sdl_mouse.h",
-  "sdl_mutex.h",
-  "sdl_rect.h",
-  "sdl_render.h",
-  "sdl_rwops.h",
-  "sdl_scancode.h",
-  "sdl_shape.h",
-  "sdl_stdinc.h",
-  "sdl_surface.h",
-  "sdl_system.h",
-  "sdl_syswm.h",
-  "sdl_thread.h",
-  "sdl_timer.h",
-  "sdl_touch.h",
-  "sdl_version.h",
-  "sdl_video.h"
+    JEDI-SDL : Pascal units for SDL
+    Copyright (C) 2000 - 2004 Dominique Louis <Dominique@SavageSoftware.com.au>
 
-  I will not translate:
+  sdl2.pas is based on the C header files in the include folder
+  of the original Simple DirectMedia Layer repository.
+  See: https://github.com/libsdl-org/SDL
+
+  OpenGL header files are not translated:
   "sdl_opengl.h",
   "sdl_opengles.h"
   "sdl_opengles2.h"
 
-  cause there's a much better OpenGL-Header avaible at delphigl.com:
-
-  the dglopengl.pas
-
-  You'll find it nowadays here: https://github.com/SaschaWillems/dglOpenGL
-
-  Parts of the SDL.pas are from the SDL-1.2-Headerconversion from the JEDI-Team,
-  written by Domenique Louis and others.
-
-  I've changed the names of the dll for 32 & 64-Bit, so theres no conflict
-  between 32 & 64 bit Libraries.
+  There is a much better OpenGL-Header avaible at delphigl.com: dglopengl.pas
+  See: https://github.com/SaschaWillems/dglOpenGL
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no case will the authors be held liable for any damages
@@ -84,6 +51,7 @@ unit sdl2;
 
   Special Thanks to:
 
+   - Tim Blume and everyone else contributing to the "Pascal-Header-Conversion"
    - DelphiGL.com - Community
    - Domenique Louis and everyone else from the JEDI-Team
    - Sam Latinga and everyone else from the SDL-Team
@@ -126,11 +94,7 @@ interface
 const
 
   {$IFDEF WINDOWS}
-    {$IFDEF CPUx86_64}
-      SDL_LibName = 'SDL2_x64.dll';
-    {$else}
-      SDL_LibName = 'SDL2_x86.dll';
-    {$ENDIF}
+    SDL_LibName = 'SDL2.dll';
   {$ENDIF}
 
   {$IFDEF UNIX}
@@ -163,21 +127,20 @@ const
                                  {SDL2 version of the represented header file}
 {$I sdlstdinc.inc}
 {$I sdlversion.inc}              // 2.0.14
-{$I sdlerror_c.inc}              // 2.0.14
 {$I sdlerror.inc}                // 2.0.14
 {$I sdlplatform.inc}             // 2.0.14
 {$I sdlpower.inc}                // 2.0.14
-{$I sdlthread.inc}
+{$I sdlthread.inc}               // 2.30.2
 {$I sdlatomic.inc}               // 2.0.20
-{$I sdlmutex.inc}                // 2.0.14 WIP
+{$I sdlmutex.inc}                // 2.26.5
 {$I sdltimer.inc}                // 2.0.18
-{$I sdlpixels.inc}               // 2.0.14 WIP
+{$I sdlpixels.inc}               // 2.26.5
 {$I sdlrect.inc}                 // 2.24.0
 {$I sdlrwops.inc}                // 2.0.14
-{$I sdlaudio.inc}
+{$I sdlaudio.inc}                // 2.26.3
 {$I sdlblendmode.inc}            // 2.0.14
 {$I sdlsurface.inc}              // 2.0.14
-{$I sdlvideo.inc}                // 2.24.0
+{$I sdlvideo.inc}                // 2.28.0
 {$I sdlshape.inc}                // 2.24.0
 {$I sdlhints.inc}                // 2.26.0
 {$I sdlloadso.inc}               // 2.24.1
@@ -190,12 +153,12 @@ const
 {$I sdlguid.inc}                 // 2.24.0
 {$I sdljoystick.inc}             // 2.24.0
 {$I sdlsensor.inc}               // 2.26.0
-{$I sdlgamecontroller.inc}       // 2.24.0
+{$I sdlgamecontroller.inc}       // 2.30.0
 {$I sdlhaptic.inc}               // 2.26.2
 {$I sdlhidapi.inc}               // 2.0.18
 {$I sdltouch.inc}                // 2.24.0
 {$I sdlgesture.inc}              // 2.26.2
-{$I sdlsyswm.inc}
+{$I sdlsyswm.inc}                // 2.26.5
 {$I sdlevents.inc}               // 2.24.0
 {$I sdllocale.inc}               // 2.0.14
 {$I sdlclipboard.inc}            // 2.24.1
@@ -256,9 +219,18 @@ end;
 {$IFDEF WINDOWS}
 //from "sdl_thread.h"
 
-function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar; data: Pointer): PSDL_Thread; overload;
+function SDL_CreateThread(fn: TSDL_ThreadFunction; name: PAnsiChar;
+  data: Pointer): PSDL_Thread; overload;
 begin
   Result := SDL_CreateThread(fn,name,data,nil,nil);
+end;
+
+function SDL_CreateThreadWithStackSize(fn: TSDL_ThreadFunction;
+  name: PAnsiChar; const stacksize: csize_t; data: Pointer
+  ): PSDL_Thread; overload;
+begin
+  Result := SDL_CreateThreadWithStackSize(
+    fn,name,stacksize,data,nil,nil);
 end;
 
 {$ENDIF}
@@ -295,7 +267,6 @@ begin
   Result := (r = NIL) or (r^.w <= cfloat(0.0)) or (r^.h <= cfloat(0.0))
 end;
 
-{ FIXME: This the Pascal System.Abs() function, instead of the C SDL_fabsf() function. }
 function SDL_FRectEqualsEpsilon(const a, b: PSDL_FRect; const epsilon: cfloat): Boolean;
 begin
   Result :=
@@ -305,13 +276,13 @@ begin
       (a = b)
       or
       (
-        (Abs(a^.x - b^.x) <= epsilon)
+        (SDL_fabsf(a^.x - b^.x) <= epsilon)
         and
-        (Abs(a^.y - b^.y) <= epsilon)
+        (SDL_fabsf(a^.y - b^.y) <= epsilon)
         and
-        (Abs(a^.w - b^.w) <= epsilon)
+        (SDL_fabsf(a^.w - b^.w) <= epsilon)
         and
-        (Abs(a^.h - b^.h) <= epsilon)
+        (SDL_fabsf(a^.h - b^.h) <= epsilon)
       )
     )
 end;
@@ -348,9 +319,9 @@ end;
 
 //from "sdl_audio.h"
 
-function SDL_LoadWAV(_file: PAnsiChar; spec: PSDL_AudioSpec; audio_buf: ppcuint8; audio_len: pcuint32): PSDL_AudioSpec;
+function SDL_LoadWAV(file_: PAnsiChar; spec: PSDL_AudioSpec; audio_buf: ppcuint8; audio_len: pcuint32): PSDL_AudioSpec;
 begin
-  Result := SDL_LoadWAV_RW(SDL_RWFromFile(_file, 'rb'), 1, spec, audio_buf, audio_len);
+  Result := SDL_LoadWAV_RW(SDL_RWFromFile(file_, 'rb'), 1, spec, audio_buf, audio_len);
 end;
   
 function SDL_AUDIO_BITSIZE(x: Cardinal): Cardinal;
@@ -380,7 +351,7 @@ end;
 
 function SDL_AUDIO_ISLITTLEENDIAN(x: Cardinal): Cardinal;
 begin
-  Result := not SDL_AUDIO_ISLITTLEENDIAN(x);
+  Result := not SDL_AUDIO_ISBIGENDIAN(x);
 end;
 
 function SDL_AUDIO_ISUNSIGNED(x: Cardinal): Cardinal;
@@ -390,27 +361,27 @@ end;
 
 //from "sdl_pixels.h"
 
-function SDL_PIXELFLAG(X: Cardinal): Cardinal;
+function SDL_PIXELFLAG(X: cuint32): cuint32;
 begin
   Result := (X shr 28) and $0F;
 end;
 
-function SDL_PIXELTYPE(X: Cardinal): Cardinal;
+function SDL_PIXELTYPE(X: cuint32): cuint32;
 begin
   Result := (X shr 24) and $0F;
 end;
 
-function SDL_PIXELORDER(X: Cardinal): Cardinal;
+function SDL_PIXELORDER(X: cuint32): cuint32;
 begin
   Result := (X shr 20) and $0F;
 end;
 
-function SDL_PIXELLAYOUT(X: Cardinal): Cardinal;
+function SDL_PIXELLAYOUT(X: cuint32): cuint32;
 begin
   Result := (X shr 16) and $0F;
 end;
 
-function SDL_BITSPERPIXEL(X: Cardinal): Cardinal;
+function SDL_BITSPERPIXEL(X: cuint32): cuint32;
 begin
   Result := (X shr 8) and $FF;
 end;

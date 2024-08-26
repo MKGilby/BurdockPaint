@@ -10,7 +10,7 @@ unit BDPToolBase;
 interface
 
 uses
-  SysUtils, Lists;
+  SysUtils, Lists, BDPModalDialog;
 
 type
 
@@ -34,15 +34,19 @@ type
     function MouseUp(x,y,buttons:integer):boolean; virtual;
     // Mouse click occured over the draw area.
     function Click(x,y,buttons:integer):boolean; virtual;
+    // Right click occured. Show configuration dialog, if there's any.
+    procedure Configure; virtual;
   protected
     fState:integer;  // 0 - Waiting for first click, 1 - waiting for second click, etc.
     fX,fY:integer;  // Current position from Move
     fName,fHint:string;
     fPinnable:boolean;
+    fConfigureDialog:TBDModalDialog;
   public
     property Name:string read fName;
     property Hint:string read fHint;
     property Pinnable:boolean read fPinnable;
+    property ConfigureDialog:TBDModalDialog read fConfigureDialog write fConfigureDialog;
   end;
 
   { TBDTools }
@@ -65,6 +69,7 @@ constructor TBDTool.Create;
 begin
   fState:=0;
   fPinnable:=false;
+  fConfigureDialog:=nil;
 end;
 
 procedure TBDTool.Initialize;
@@ -108,6 +113,11 @@ end;
 function TBDTool.Click(x,y,buttons:integer):boolean;
 begin
   Result:=false;
+end;
+
+procedure TBDTool.Configure;
+begin
+  if Assigned(fConfigureDialog) then fConfigureDialog.Show;
 end;
 
 { TBDTools }

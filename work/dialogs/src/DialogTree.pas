@@ -29,10 +29,12 @@ type
     fTop,fLeft:integer;
     fWidth,fHeight:integer;
     fParentWidth,fParentHeight:integer;
+    fName:string;
   public
 //    property Items:TDialogItemList read fItems;
     property Width:integer read fWidth;
     property Height:integer read fHeight;
+    property Name:string read fName;
   end;
 
   { TDialog }
@@ -43,9 +45,8 @@ type
     procedure CalculatePositions(pTop,pLeft:integer;pParentWidth:integer=-1;pParentHeight:integer=-1); override;
     procedure AddItem(pItem:TDialogItem); override;
   private
-    fName,fCaption,fClassName:string;
+    fCaption,fClassName:string;
   public
-    property Name:string read fName;
     property Caption:string read fCaption;
     property Class_Name:string read fClassName;
   end;
@@ -65,10 +66,9 @@ type
     constructor Create(iName:string;iMinValue,iMaxValue:integer;iSettingField:string);
     procedure CalculatePositions(pTop,pLeft:integer;pParentWidth:integer=-1;pParentHeight:integer=-1); override;
   private
-    fName,fSettingField:string;
+    fSettingField:string;
     fMinValue,fMaxValue:integer;
   public
-    property Name:string read fName;
     property SettingField:string read fSettingField;
     property MinValue:integer read fMinValue;
     property MaxValue:integer read fMaxValue;
@@ -80,7 +80,7 @@ type
     constructor Create(iName,iCaption,iSettingField,iHint:string);
     procedure CalculatePositions(pTop,pLeft:integer;pParentWidth:integer=-1;pParentHeight:integer=-1); override;
   private
-    fName,fCaption,fSettingField,fHint:string;
+    fCaption,fSettingField,fHint:string;
   end;
 
   { THorizontalSplit }
@@ -104,16 +104,23 @@ type
   { TButton }
 
   TButton=class(TDialogItem)
-    constructor Create(iName,iCaption:string;iSave,iClose:boolean;iHint:string);
+    constructor Create(iName,iCaption:string;
+      iSave,iClose:boolean;
+      iHint,iSettingField:string;
+      iSettingValue,iGroup:integer);
     procedure CalculatePositions(pTop,pLeft:integer;pParentWidth:integer=-1;pParentHeight:integer=-1); override;
   private
-    fName,fCaption,fHint:string;
+    fCaption,fHint:string;
+    fSettingField:string;
+    fSettingValue,fGroup:integer;
     fSave,fClose:boolean;
+  public
+    property Group:integer read fGroup;
   end;
 
 implementation
 
-uses Lists, Logger, CodeGenerator;
+uses Lists, Logger, CodeGenerator, MKToolbox;
 
 const
   DEFSIZESFILENAME='DefaultControlSizes.txt';
@@ -121,6 +128,7 @@ const
 var
   DefaultSizes:TCounterList;
   CodeGenerator:TCodeGenerator;
+  GroupList:TStringList;
 
 { TDialogItemList }
 
@@ -400,24 +408,30 @@ end;
 
 { TButton }
 
-constructor TButton.Create(iName,iCaption:string; iSave,iClose:boolean;
-  iHint:string);
+constructor TButton.Create(iName, iCaption: string; iSave, iClose: boolean;
+  iHint, iSettingField: string; iSettingValue, iGroup: integer);
 begin
   fName:=iName;
   fCaption:=uppercase(iCaption);
   fSave:=iSave;
   fClose:=iClose;
   fHint:=uppercase(iHint);
+  fSettingField:=iSettingField;
+  fSettingValue:=iSettingValue;
+  fGroup:=iGroup;
+  if fGroup<>0 then GroupList.AddObject(inttostr(fGroup),Self);
   CodeGenerator.UsesList.Add('BDPButton');
   CodeGenerator.OnClicks.Add(fName);
-  CodeGenerator.CreateVar.Add('tmp:TBDButton;');
+  CodeGenerator.Privates.Add(Format('f%s:TBDButton;',[fName]));
+  if (fSettingField<>'') then
+    CodeGenerator.Privates.Add('f'+fSettingField+':integer;');
   fWidth:=DefaultSizes['BUTTONWIDTH'];
   fHeight:=DefaultSizes['BUTTONHEIGHT'];
 end;
 
 procedure TButton.CalculatePositions(pTop,pLeft:integer; pParentWidth:integer;
   pParentHeight:integer);
-var Left:integer;
+var Left,i:integer;
 begin
   fTop:=pTop;
   fLeft:=pLeft;
@@ -425,31 +439,39 @@ begin
   if fParentWidth=-1 then raise Exception.Create('ParentWidth shouldn''t be -1!');
   fParentHeight:=pParentHeight;
   Left:=fLeft+(fParentWidth-fWidth) div 2;
-  CodeGenerator.CreateCode.Add(Format('  tmp:=TBDButton.Create(fLeft+%d,fTop+%d,%d,%d,''%s'',''%s'');',
-    [Left,fTop,fWidth,fHeight,fCaption,fHint]));
-  CodeGenerator.CreateCode.Add(Format('  tmp.OnClick:=%sClick;',[fName]));
-  CodeGenerator.CreateCode.Add('  tmp.ZIndex:=MODALDIALOG_ZINDEX+1;');
-  CodeGenerator.CreateCode.Add('  AddChild(tmp);');
+  CodeGenerator.CreateCode.Add(Format('  f%s:=TBDButton.Create(fLeft+%d,fTop+%d,%d,%d,''%s'',''%s'');',
+    [fName,Left,fTop,fWidth,fHeight,fCaption,fHint]));
+  CodeGenerator.CreateCode.Add(Format('  f%s.OnClick:=%sClick;',[fName,fName]));
+  CodeGenerator.CreateCode.Add(Format('  f%s.Name:=''%s'';',[fName,fName]));
+  CodeGenerator.CreateCode.Add(Format('  f%s.ZIndex:=MODALDIALOG_ZINDEX+1;',[fName]));
+  CodeGenerator.CreateCode.Add(Format('  AddChild(f%s);',[fName]));
   CodeGenerator.CreateCode.Add('');
+  if (fSettingField<>'') then begin
+    CodeGenerator.OnClickProcs.Add(Format('%s=f%s:=%d;',[fName,fSettingField,fSettingValue]));
+    CodeGenerator.OnClickProcs.Add(Format('%s=f%s.Selected:=true;',[fName,fName]));
+    for i:=0 to GroupList.Count-1 do
+      if (GroupList[i]=inttostr(fGroup)) and (GroupList.Objects[i]<>Self) then
+        CodeGenerator.OnClickProcs.Add(Format('%s=f%s.Selected:=false;',[fName,TDialogItem(GroupList.Objects[i]).Name]));
+    CodeGenerator.ShowCode.Add(Format('  f%s.Selected:=(Settings.%s=%d);',[fName,fSettingField,fSettingValue]));
+    CodeGenerator.SaveCode.Add(Format('  Settings.%s:=f%s;',[fSettingField,fSettingField]));
+  end;
   if fSave then
     CodeGenerator.OnClickProcs.Add(fName+'=SaveSettings;');
   if fClose then
     CodeGenerator.OnClickProcs.Add(fName+'=Hide;');
-end;
 
+end;
 
 initialization
 begin
   DefaultSizes:=TCounterList.Create;
-  {$ifdef DEBUG}
-  if FileExists('..\'+DEFSIZESFILENAME) then DefaultSizes.LoadFromFile('..\'+DEFSIZESFILENAME);
-  {$else}
   if FileExists(DEFSIZESFILENAME) then DefaultSizes.LoadFromFile(DEFSIZESFILENAME);
-  {$endif}
+  GroupList:=TStringList.Create;
 end;
 
 finalization
 begin
+  GroupList.Free;
   DefaultSizes.Free
 end;
 

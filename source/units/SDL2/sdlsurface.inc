@@ -22,11 +22,8 @@ type
    *  This structure should be treated as read-only, except for \c pixels,
    *  which, if not NULL, contains the raw pixel data for the surface.
    *}
-
-  PSDL_BlitMap = ^TSDL_BlitMap;
-  TSDL_BlitMap = record
-    map: Pointer;
-  end;
+  PPSDL_BlitMap = ^PSDL_BlitMap;
+  PSDL_BlitMap = type Pointer;
 
   PPSDL_Surface = ^PSDL_Surface;
   PSDL_Surface = ^TSDL_Surface;
@@ -51,7 +48,7 @@ type
     clip_rect: TSDL_Rect;        {**< Read-only *}
 
     {** info for fast blit mapping to other surfaces *}
-    map: Pointer;                {**< Private *} // TODO: Check: Why Pointer and not PSDL_BlitMap used here?
+    map: PSDL_BlitMap;           {**< Private *}
 
     {** Reference count -- used when freeing surface *}
     refcount: cint;              {**< Read-mostly *}
@@ -64,6 +61,8 @@ type
   {**
    *  The type of function used for surface blitting functions.
    *}
+   PPSDL_Blit = ^PSDL_Blit;
+   PSDL_Blit = ^TSDL_Blit;
    TSDL_Blit = function(src: PSDL_Surface; srcrect: PSDL_Rect; dst: PSDL_Surface; dstrect: PSDL_Rect): cint;
 
 type

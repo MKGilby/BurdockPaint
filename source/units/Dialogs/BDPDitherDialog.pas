@@ -3,7 +3,7 @@
   See "copyright.txt" for details.
 }
 
-// Generated on 2024.06.04
+// Generated on 2024.08.26
 
 unit BDPDitherDialog;
 
@@ -23,6 +23,8 @@ type
     procedure ReDraw; override;
   private
     ConfDitherSlider:TBDHorizontalSlider;
+    fConfDitherCancelButton:TBDButton;
+    fConfDitherOKButton:TBDButton;
     procedure SaveSettings;
     procedure Show(Sender:TObject);
     procedure ConfDitherOKButtonClick(Sender:TObject;x,y,buttons:integer);
@@ -36,7 +38,6 @@ uses BDPShared, MKMouse2;
 { TBDDitherDialog }
 
 constructor TBDDitherDialog.Create;
-var tmp:TBDButton;
 begin
   inherited Create(489,144);
   fName:='BDPDitherDialog';
@@ -55,15 +56,17 @@ begin
   end;
   AddChild(ConfDitherSlider);
 
-  tmp:=TBDButton.Create(fLeft+113,fTop+99,127,27,'OK','APPLY VALUES');
-  tmp.OnClick:=ConfDitherOKButtonClick;
-  tmp.ZIndex:=MODALDIALOG_ZINDEX+1;
-  AddChild(tmp);
+  fConfDitherOKButton:=TBDButton.Create(fLeft+113,fTop+99,127,27,'OK','APPLY VALUES');
+  fConfDitherOKButton.OnClick:=ConfDitherOKButtonClick;
+  fConfDitherOKButton.Name:='ConfDitherOKButton';
+  fConfDitherOKButton.ZIndex:=MODALDIALOG_ZINDEX+1;
+  AddChild(fConfDitherOKButton);
 
-  tmp:=TBDButton.Create(fLeft+249,fTop+99,127,27,'CANCEL','CLOSE DIALOG');
-  tmp.OnClick:=ConfDitherCancelButtonClick;
-  tmp.ZIndex:=MODALDIALOG_ZINDEX+1;
-  AddChild(tmp);
+  fConfDitherCancelButton:=TBDButton.Create(fLeft+249,fTop+99,127,27,'CANCEL','CLOSE DIALOG');
+  fConfDitherCancelButton.OnClick:=ConfDitherCancelButtonClick;
+  fConfDitherCancelButton.Name:='ConfDitherCancelButton';
+  fConfDitherCancelButton.ZIndex:=MODALDIALOG_ZINDEX+1;
+  AddChild(fConfDitherCancelButton);
 
 end;
 

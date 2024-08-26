@@ -8,7 +8,7 @@
       <Unit>
         <Filename Value="BurdockPaint.lpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="22" Y="18"/>
+        <CursorPos Y="44"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -16,8 +16,8 @@
         <Filename Value="BDPMain.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="263"/>
-        <CursorPos X="67" Y="267"/>
+        <TopLine Value="268"/>
+        <CursorPos X="56" Y="278"/>
         <UsageCount Value="204"/>
         <Loaded Value="True"/>
       </Unit>
@@ -25,8 +25,8 @@
         <Filename Value="BDPShared.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="11"/>
-        <TopLine Value="135"/>
-        <CursorPos X="26" Y="171"/>
+        <TopLine Value="133"/>
+        <CursorPos X="36" Y="175"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -34,17 +34,17 @@
         <Filename Value="BDPControls.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="309"/>
-        <CursorPos X="66" Y="331"/>
+        <TopLine Value="288"/>
+        <CursorPos X="53" Y="308"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPPalette.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="8"/>
-        <TopLine Value="477"/>
-        <CursorPos Y="521"/>
+        <EditorIndex Value="12"/>
+        <TopLine Value="121"/>
+        <CursorPos X="36" Y="150"/>
         <UsageCount Value="203"/>
         <Loaded Value="True"/>
       </Unit>
@@ -54,24 +54,24 @@
         <EditorIndex Value="-1"/>
         <CursorPos Y="5"/>
         <UsageCount Value="200"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="BDPDrawArea.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="9"/>
-        <TopLine Value="114"/>
-        <CursorPos X="3" Y="133"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="85"/>
+        <CursorPos Y="116"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPSettings.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="168"/>
-        <CursorPos Y="182"/>
+        <EditorIndex Value="10"/>
+        <TopLine Value="117"/>
+        <CursorPos Y="131"/>
         <UsageCount Value="203"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPMessage.pas"/>
@@ -118,9 +118,10 @@
       <Unit>
         <Filename Value="BDPProject.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="10"/>
+        <CursorPos X="3" Y="20"/>
         <UsageCount Value="200"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="BDPInfoBar.pas"/>
@@ -141,11 +142,10 @@
       <Unit>
         <Filename Value="units\Dialogs\BDPColorEditor.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="32"/>
         <CursorPos X="17" Y="37"/>
         <UsageCount Value="200"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="units\Controls\BDPButton.pas"/>
@@ -246,28 +246,29 @@
       <Unit>
         <Filename Value="units\Tools\BDPToolBase.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="91"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="56"/>
+        <CursorPos X="24" Y="71"/>
         <UsageCount Value="201"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="units\Tools\BDPToolBox.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="108"/>
-        <CursorPos X="9" Y="131"/>
+        <EditorIndex Value="9"/>
+        <TopLine Value="16"/>
+        <CursorPos X="6" Y="39"/>
         <UsageCount Value="201"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="units\Tools\BDPToolCircle.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="92"/>
-        <CursorPos X="9" Y="131"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="191"/>
+        <CursorPos Y="193"/>
         <UsageCount Value="201"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="units\Tools\BDPToolDraw.pas"/>
@@ -442,12 +443,10 @@
       <Unit>
         <Filename Value="units\Inks\BDPInkSoften.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="22"/>
-        <CursorPos X="78" Y="39"/>
+        <CursorPos X="22" Y="41"/>
         <UsageCount Value="200"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="units\Inks\BDPInkRGrad.pas"/>
@@ -462,7 +461,7 @@
         <Filename Value="units\Controls\BDPColorPalette.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="193"/>
+        <UsageCount Value="200"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -471,7 +470,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="24"/>
         <CursorPos X="15" Y="46"/>
-        <UsageCount Value="186"/>
+        <UsageCount Value="194"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -480,7 +479,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="131"/>
         <CursorPos Y="175"/>
-        <UsageCount Value="185"/>
+        <UsageCount Value="193"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -489,7 +488,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="28"/>
         <CursorPos X="16" Y="63"/>
-        <UsageCount Value="184"/>
+        <UsageCount Value="192"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -497,7 +496,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="5"/>
-        <UsageCount Value="176"/>
+        <UsageCount Value="184"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -505,24 +504,23 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="5"/>
-        <UsageCount Value="164"/>
+        <UsageCount Value="172"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="units\Dialogs\BDPGradientEditor.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="51"/>
         <CursorPos X="26" Y="65"/>
-        <UsageCount Value="163"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="171"/>
       </Unit>
       <Unit>
         <Filename Value="units\Controls\BDPSimpleGradient.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="5"/>
-        <UsageCount Value="161"/>
+        <UsageCount Value="169"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -531,14 +529,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="101"/>
         <CursorPos X="44" Y="113"/>
-        <UsageCount Value="158"/>
+        <UsageCount Value="166"/>
       </Unit>
       <Unit>
         <Filename Value="units\Controls\BDPSlider2.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="5"/>
-        <UsageCount Value="136"/>
+        <UsageCount Value="144"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -547,28 +545,27 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="145"/>
         <CursorPos Y="177"/>
-        <UsageCount Value="131"/>
+        <UsageCount Value="139"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="units\Controls\BDPColorPalette2.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="125"/>
+        <UsageCount Value="133"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="units\Dialogs\BDPGradientSelector.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="6"/>
-        <UsageCount Value="114"/>
-        <Loaded Value="True"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="122"/>
       </Unit>
       <Unit>
         <Filename Value="units\Undo\BDPGradientSelectorUndo.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="104"/>
+        <UsageCount Value="112"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -577,18 +574,16 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="16"/>
         <CursorPos Y="5"/>
-        <UsageCount Value="92"/>
+        <UsageCount Value="100"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="units\Inks\BDPInkTint.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="27"/>
         <CursorPos X="69" Y="37"/>
-        <UsageCount Value="71"/>
-        <Loaded Value="True"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
+        <UsageCount Value="79"/>
       </Unit>
       <Unit>
         <Filename Value="units\Dialogs\BDPConfigureTintDialog.pas"/>
@@ -596,7 +591,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="18" Y="18"/>
-        <UsageCount Value="47"/>
+        <UsageCount Value="55"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -817,18 +812,16 @@
       <Unit>
         <Filename Value="units\mk_sdl2.pas"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="340"/>
-        <CursorPos Y="363"/>
+        <TopLine Value="334"/>
+        <CursorPos X="26" Y="354"/>
         <UsageCount Value="11"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="units\ARGBImageUnit.pas"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="89"/>
-        <CursorPos Y="129"/>
+        <TopLine Value="1033"/>
+        <CursorPos Y="1165"/>
         <UsageCount Value="10"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="units\GFXManagerUnit.pas"/>
@@ -855,11 +848,11 @@
       </Unit>
       <Unit>
         <Filename Value="units\MKMouse2.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="80"/>
-        <CursorPos Y="104"/>
-        <UsageCount Value="15"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="177"/>
+        <CursorPos X="16" Y="192"/>
+        <UsageCount Value="17"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="units\vcc2_Container.pas"/>
@@ -935,9 +928,9 @@
       <Unit>
         <Filename Value="C:\lazarus\fpc\3.2.2\source\rtl\objpas\fgl.pp"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="56"/>
-        <CursorPos X="15" Y="77"/>
-        <UsageCount Value="9"/>
+        <TopLine Value="1054"/>
+        <CursorPos Y="1079"/>
+        <UsageCount Value="10"/>
       </Unit>
       <Unit>
         <Filename Value="units\MKStream.pas"/>
@@ -1010,12 +1003,11 @@
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
-        <Filename Value="units\SDL2\sdl2.pas"/>
+        <Filename Value="units\sdl2\sdl2.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="115"/>
-        <CursorPos X="30" Y="130"/>
+        <CursorPos X="26" Y="130"/>
         <UsageCount Value="10"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
         <Filename Value="units\MAD4LowLevelUnit.pas"/>
@@ -1139,11 +1131,11 @@
       </Unit>
       <Unit>
         <Filename Value="units\vcc2_VisibleControlStatic.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="64"/>
-        <CursorPos Y="86"/>
-        <UsageCount Value="9"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="108"/>
+        <CursorPos Y="135"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="units\vcc2_ButtonStatic.pas"/>
@@ -1169,94 +1161,143 @@
         <UsageCount Value="11"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
+      <Unit>
+        <Filename Value="units\sdl2\sdlrenderer.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="356"/>
+        <CursorPos X="101" Y="379"/>
+        <UsageCount Value="10"/>
+      </Unit>
+      <Unit>
+        <Filename Value="units\Dialogs\BDPConfigureCircleDialog.pas"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="44"/>
+        <CursorPos Y="65"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
     </Units>
-    <JumpHistory HistoryIndex="21">
+    <JumpHistory HistoryIndex="29">
+      <Position>
+        <Filename Value="BDPDrawArea.pas"/>
+        <Caret Line="109" TopLine="85"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPDrawArea.pas"/>
+        <Caret Line="114" TopLine="85"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPDrawArea.pas"/>
+        <Caret Line="115" TopLine="85"/>
+      </Position>
+      <Position>
+        <Filename Value="BurdockPaint.lpr"/>
+        <Caret Line="44"/>
+      </Position>
       <Position>
         <Filename Value="BDPMain.pas"/>
-        <Caret Line="63" Column="7" TopLine="37"/>
+        <Caret Line="234" TopLine="211"/>
       </Position>
       <Position>
-        <Filename Value="units\Dialogs\BDPColorEditor.pas"/>
-        <Caret Line="81" Column="62" TopLine="52"/>
+        <Filename Value="units\MKMouse2.pas"/>
+        <Caret Line="341" Column="23" TopLine="86"/>
       </Position>
       <Position>
-        <Filename Value="units\Dialogs\BDPColorEditor.pas"/>
-        <Caret Line="371" TopLine="329"/>
+        <Filename Value="BDPMain.pas"/>
+        <Caret Line="234" TopLine="91"/>
       </Position>
       <Position>
-        <Filename Value="units\Dialogs\BDPGradientSelector.pas"/>
-        <Caret Line="234" TopLine="212"/>
+        <Filename Value="units\Tools\BDPToolCircle.pas"/>
+        <Caret Line="146" TopLine="123"/>
       </Position>
       <Position>
-        <Filename Value="units\Dialogs\BDPGradientSelector.pas"/>
-        <Caret Line="222" Column="21" TopLine="35"/>
+        <Filename Value="units\Tools\BDPToolCircle.pas"/>
+        <Caret Line="161" Column="74" TopLine="124"/>
       </Position>
       <Position>
-        <Filename Value="units\Dialogs\BDPGradientSelector.pas"/>
-        <Caret Line="121" Column="31"/>
+        <Filename Value="BDPShared.pas"/>
+        <Caret Line="198" Column="18" TopLine="176"/>
       </Position>
       <Position>
-        <Filename Value="units\Dialogs\BDPGradientSelector.pas"/>
-        <Caret Line="220" Column="24"/>
+        <Filename Value="BDPPalette.pas"/>
+        <Caret Line="21" Column="10"/>
       </Position>
       <Position>
-        <Filename Value="units\Dialogs\BDPGradientSelector.pas"/>
-        <Caret Line="221" Column="24" TopLine="177"/>
+        <Filename Value="units\Tools\BDPToolCircle.pas"/>
+        <Caret Line="163" Column="3" TopLine="124"/>
       </Position>
       <Position>
-        <Filename Value="units\Dialogs\BDPGradientSelector.pas"/>
-        <Caret Line="40" Column="7"/>
+        <Filename Value="units\Tools\BDPToolBase.pas"/>
+        <Caret Line="38" Column="34" TopLine="16"/>
       </Position>
       <Position>
-        <Filename Value="units\Dialogs\BDPGradientSelector.pas"/>
-        <Caret Line="199" Column="20" TopLine="183"/>
+        <Filename Value="units\Tools\BDPToolBase.pas"/>
+        <Caret Line="50" TopLine="16"/>
+      </Position>
+      <Position>
+        <Filename Value="units\Tools\BDPToolBase.pas"/>
+        <Caret Line="13" Column="34"/>
+      </Position>
+      <Position>
+        <Filename Value="units\Tools\BDPToolBase.pas"/>
+        <Caret Line="38" Column="9" TopLine="16"/>
+      </Position>
+      <Position>
+        <Filename Value="units\Tools\BDPToolCircle.pas"/>
+        <Caret Line="35" Column="50"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPMain.pas"/>
+        <Caret Line="178" Column="3" TopLine="158"/>
+      </Position>
+      <Position>
+        <Filename Value="units\MKMouse2.pas"/>
+        <Caret Line="175" Column="6" TopLine="138"/>
+      </Position>
+      <Position>
+        <Filename Value="units\MKMouse2.pas"/>
+        <Caret Line="220" Column="15" TopLine="212"/>
+      </Position>
+      <Position>
+        <Filename Value="units\Dialogs\BDPConfigureCircleDialog.pas"/>
+        <Caret Line="52" TopLine="38"/>
+      </Position>
+      <Position>
+        <Filename Value="units\Dialogs\BDPConfigureCircleDialog.pas"/>
+        <Caret Line="107" Column="70" TopLine="66"/>
+      </Position>
+      <Position>
+        <Filename Value="units\Dialogs\BDPConfigureCircleDialog.pas"/>
+        <Caret Line="109" Column="3" TopLine="67"/>
+      </Position>
+      <Position>
+        <Filename Value="units\Tools\BDPToolCircle.pas"/>
+        <Caret Line="153" TopLine="132"/>
+      </Position>
+      <Position>
+        <Filename Value="units\Tools\BDPToolCircle.pas"/>
+        <Caret Line="263" TopLine="219"/>
+      </Position>
+      <Position>
+        <Filename Value="units\Tools\BDPToolCircle.pas"/>
+        <Caret Line="25" Column="7"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPShared.pas"/>
+        <Caret Line="357" Column="49" TopLine="332"/>
       </Position>
       <Position>
         <Filename Value="BDPControls.pas"/>
-        <Caret Line="50" Column="57" TopLine="29"/>
+        <Caret Line="308" Column="53" TopLine="288"/>
       </Position>
       <Position>
-        <Filename Value="BDPControls.pas"/>
-        <Caret Line="331" Column="66" TopLine="309"/>
+        <Filename Value="units\Dialogs\BDPConfigureCircleDialog.pas"/>
+        <Caret Line="107" TopLine="66"/>
       </Position>
       <Position>
-        <Filename Value="units\Dialogs\BDPColorEditor.pas"/>
-        <Caret Line="37" Column="17" TopLine="32"/>
-      </Position>
-      <Position>
-        <Filename Value="units\Dialogs\BDPGradientSelector.pas"/>
-        <Caret Line="250" Column="32" TopLine="141"/>
-      </Position>
-      <Position>
-        <Filename Value="units\Dialogs\BDPGradientSelector.pas"/>
-      </Position>
-      <Position>
-        <Filename Value="units\Dialogs\BDPGradientSelector.pas"/>
-        <Caret Line="29" TopLine="17"/>
-      </Position>
-      <Position>
-        <Filename Value="units\Dialogs\BDPGradientSelector.pas"/>
-        <Caret Line="117" TopLine="74"/>
-      </Position>
-      <Position>
-        <Filename Value="units\Dialogs\BDPGradientEditor.pas"/>
-        <Caret Line="65" Column="26" TopLine="51"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPMain.pas"/>
-        <Caret Line="108" TopLine="87"/>
-      </Position>
-      <Position>
-        <Filename Value="units\Inks\BDPInkSoften.pas"/>
-        <Caret Line="24" Column="7" TopLine="17"/>
-      </Position>
-      <Position>
-        <Filename Value="units\Inks\BDPInkTint.pas"/>
-        <Caret Line="23"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPMain.pas"/>
-        <Caret Line="44" Column="45" TopLine="37"/>
+        <Filename Value="units\vcc2_VisibleControlStatic.pas"/>
+        <Caret Line="135" TopLine="108"/>
       </Position>
     </JumpHistory>
     <RunParams>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ See DefaultControlSizes.txt for constants.
+
+ In this first version all the controls are put under each other leaving
+ CONTROLSPACING pixel distance beetween them. Also MARGINS pixel is left
+ from the borders of the dialog.
+-->
+
+<Dialog>
+  <Head>
+    <Name>BDPConfigureCircleDialog</Name>
+    <ClassName>TBDConfigureCircleDialog</ClassName>
+    <Caption>Configure Circle parameters</Caption>
+  </Head>
+
+  <Controls>
+    <Label>
+      <Caption>Draw mode</Caption>
+    </Label>
+    <Split direction="Horizontal">
+      <Button>
+        <Name>ConfCircleCRButton</Name>
+        <Caption>Center</Caption>
+        <Hint>Click on center then click to set radius</Hint>
+        <Group>1</Group>
+        <SettingField>CircleMode</SettingField>
+        <SettingValue>0</SettingValue>
+      </Button>
+      <Button>
+        <Name>ConfCircleBXButton</Name>
+        <Caption>Boxed</Caption>
+        <Hint>Draw bounding box</Hint>
+        <Group>1</Group>
+        <SettingField>CircleMode</SettingField>
+        <SettingValue>1</SettingValue>
+      </Button>
+    </Split>
+    <Split direction="Horizontal">
+      <Button>
+        <Name>ConfCircleOKButton</Name>
+        <Caption>OK</Caption>
+        <Hint>Apply values</Hint>
+        <Save>Y</Save>
+        <Close>Y</Close>
+      </Button>
+      <Button>
+        <Name>ConfCircleCancelButton</Name>
+        <Caption>Cancel</Caption>
+        <Hint>Close dialog</Hint>
+        <Save>N</Save>
+        <Close>Y</Close>
+      </Button>
+    </Split>
+  </Controls>
+</Dialog>

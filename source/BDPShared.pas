@@ -171,6 +171,9 @@ const
   // Open ConfigureSoftenDialog.
   MSG_OPENCONFIGURESOFTENDIALOG=33;
 
+  // Open ConfigureCircleDialog.
+  MSG_OPENCONFIGURECIRCLEDIALOG=34;
+
 
   // ------- Menu Messages ------- Range: 200-299 -------
   {$i includes\menu.inc}

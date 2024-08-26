@@ -50,7 +50,10 @@
 //      + Added Bar with Texture instead of color. (Draws bar tiled with texture.)
 //   V1.14a - 2023.11.17
 //      * Fixed Bar with Texture. Sometimes it missed the last column.
-
+//   V1.15 - 2024.03.18
+//      * Removed the hack to SDL_LockTexture. Using ctypes instead.
+//   V1.15a - 2024.08.26
+//      * Really removed the hack to SDL_LockTexture. :)
 
 {$ifdef fpc}
   {$mode delphi}
@@ -185,11 +188,11 @@ var
 
 implementation
 
-uses SysUtils, Logger;
+uses SysUtils, Logger, ctypes;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.14a';
+  Version='1.15a';
 
 type
   TEventHandlers=array of TEventHandlerProc;
@@ -340,13 +343,19 @@ begin
 end;
 
 procedure TStreamingTexture.Update;
-var p:pointer;pitch:integer;
+var p:ppointer;pitch:pcint;
 begin
 //  SDL_UpdateTexture(fTexture, nil, fARGBImage.Rawdata, fWidth * sizeof (Uint32));
-  SDL_LockTexture(fTexture, nil, p, pitch);
-  move(fARGBImage.Rawdata^,p^,fWidth*fHeight*sizeof(UInt32));
-  SDL_UnLockTexture(fTexture);
-//  SDL_RenderCopy(fRenderer,fTexture,nil,nil);
+  new(p);
+  new(pitch);
+  try
+    SDL_LockTexture(fTexture, nil, p{%H-}, pitch{%H-});
+    move(fARGBImage.Rawdata^,p^^,fWidth*fHeight*sizeof(UInt32));
+    SDL_UnLockTexture(fTexture);
+  finally
+    dispose(pitch);
+    dispose(p);
+  end;
 end;
 
 destructor TStreamingTexture.Destroy;

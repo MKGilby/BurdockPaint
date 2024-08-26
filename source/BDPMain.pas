@@ -14,7 +14,8 @@ uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
   BDPControls, BDPDrawArea, BDPColorEditor, BDPMagnifyCELDialog,
   BDPRotateCELDialog, BDPAboutDialog, BDPMessageBox, BDPDitherDialog,
   BDPConfigureRGradDialog, BDPCoordinateBox, BDPGradientEditor, BDPColorPalette2,
-  BDPGradientSelector, BDPConfigureTintDialog, BDPConfigureSoftenDialog;
+  BDPGradientSelector, BDPConfigureTintDialog, BDPConfigureSoftenDialog,
+  BDPConfigureCircleDialog;
 
 type
 
@@ -42,6 +43,7 @@ type
     fGradientSelector:TBDGradientSelector;
     fConfigureTintDialog:TBDConfigureTintDialog;
     fConfigureSoftenDialog:TBDConfigureSoftenDialog;
+    fConfigureCircleDialog:TBDConfigureCircleDialog;
 
     fBackup:TFileBackup;
     fOpenDialog:TOpenDialog;
@@ -172,6 +174,8 @@ begin
   Log.Trace('After ConfigureTintDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   fConfigureSoftenDialog:=TBDConfigureSoftenDialog.Create;
   Log.Trace('After ConfigureSoftenDialog: '+inttostr(GetHeapStatus.TotalAllocated));
+  fConfigureCircleDialog:=TBDConfigureCircleDialog.Create;
+  Log.Trace('After ConfigureCircleDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   MouseObjects.List;
 
   fOpenDialog:=TOpenDialog.Create(nil);
@@ -194,6 +198,7 @@ begin
   if Assigned(fSaveProjectDialog) then fSaveProjectDialog.Free;
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
 //  if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
+  fConfigureCircleDialog.Free;
   fConfigureSoftenDialog.Free;
   if Assigned(fConfigureTintDialog) then fConfigureTintDialog.Free;
   if Assigned(fGradientSelector) then fGradientSelector.Free;
@@ -270,6 +275,7 @@ begin
         MSG_CONFIGRGRADCENTERRESP:     ConfigRGradCenterFinished;
         MSG_OPENCONFIGURETINTDIALOG:   fConfigureTintDialog.Show;
         MSG_OPENCONFIGURESOFTENDIALOG: fConfigureSoftenDialog.Show;
+        MSG_OPENCONFIGURECIRCLEDIALOG: fConfigureCircleDialog.Show;
         MSG_OPENPROJECT:               OpenProject;
         MSG_SAVEPROJECT:               SaveProject;
         MSG_SAVECLEARPROJECT:          SaveClearProject;

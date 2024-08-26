@@ -18,6 +18,7 @@ type
   TBDVibroColors=class
     constructor Create(iColor1,iColor2:uint32);
     function GetColor:uint32;
+    function GetHelperColor:uint32;
   private
     R1,G1,B1,A1,R2,G2,B2,A2:integer;
   end;
@@ -138,6 +139,18 @@ begin
     ((R1+(R2-R1)*i div 500) and $FF)<<16+
     ((G1+(G2-G1)*i div 500) and $FF)<<8+
     ((B1+(B2-B1)*i div 500) and $FF);
+end;
+
+function TBDVibroColors.GetHelperColor:uint32;
+var i:integer;
+begin
+  i:=GetTickCount64 mod 1000;
+  if i>500 then i:=1000-i;
+  Result:=
+    ((A1+(A2-A1)*i div 500) and $FF)<<24+
+    ((R1+(R2-R1)*i div 500) and $FE)<<15+
+    ((G1+(G2-G1)*i div 500) and $FE)<<7+
+    ((B1+(B2-B1)*i div 500) and $FE)>>1;
 end;
 
 

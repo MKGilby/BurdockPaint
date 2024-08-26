@@ -302,7 +302,10 @@ end;
 procedure TBDControls.ToolButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   if Sender is TBDButton then
-    ActivateToolButton((Sender as TBDButton).Tag);
+    if buttons=SDL_BUTTON_LEFT then
+      ActivateToolButton((Sender as TBDButton).Tag)
+    else if buttons=SDL_BUTTON_RIGHT then
+      TBDTool((Sender as TBDButton).AssignedObject).Configure;
   ActiveTool.Move(DrawAreaX,DrawAreaY);
 end;
 

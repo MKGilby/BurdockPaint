@@ -62,6 +62,7 @@ type
     TintCELAsMask:boolean;
     SoftenCenterWeight:integer;
     SoftenAlphaToo:boolean;
+    CircleMode:integer; // 0 - Center+radius, 1 - BoundingBox
     property Zoom:integer read fZoom write fSetZoom;
     property SelectedTools[index:integer]:string read fGetSelectedTool write fSetSelectedTool;
     property ActiveTool:integer read fActiveTool write fActiveTool;
@@ -121,6 +122,7 @@ begin
   BackupFolderMaxFileCount:=0;
   SoftenCenterWeight:=1;
   SoftenAlphaToo:=false;
+  CircleMode:=0;
 end;
 
 procedure TSettings.LoadFromFile(pFilename:String);
@@ -128,108 +130,118 @@ var INI:TIniFile;
 begin
   if not FileExists(pFilename) then exit;
   INI:=TIniFile.Create(pFilename);
-  // DrawArea state
-  fZoom:=INI.ReadInteger('DrawArea','Zoom',2);
-  ZoomLeft:=INI.ReadInteger('DrawArea','ZoomLeft',0);
-  ZoomTop:=INI.ReadInteger('DrawArea','ZoomTop',0);
-  ShowGrid:=INI.ReadBool('DrawArea','ShowGrid',false);
-  // Controls state
-  fSelectedTools[0]:=INI.ReadString('BasicControls','Tool0','DRAW');
-  fSelectedTools[1]:=INI.ReadString('BasicControls','Tool1','BOX');
-  fSelectedTools[2]:=INI.ReadString('BasicControls','Tool2','LINE');
-  fSelectedTools[3]:=INI.ReadString('BasicControls','Tool3','CIRCLE');
-  fSelectedTools[4]:=INI.ReadString('BasicControls','Tool4','SEP.');
-  fSelectedTools[5]:=INI.ReadString('BasicControls','Tool5','FILL');
-  fActiveTool:=INI.ReadInteger('BasicControls','ActiveTool',0);
-  if (fActiveTool<0) or (fActiveTool>5) then fActiveTool:=0;
-  fSelectedInks[0]:=INI.ReadString('BasicControls','Ink0','OPAQUE');
-  fSelectedInks[1]:=INI.ReadString('BasicControls','Ink1','H GRAD');
-  fSelectedInks[2]:=INI.ReadString('BasicControls','Ink2','V GRAD');
-  fSelectedInks[3]:=INI.ReadString('BasicControls','Ink3','SOFTEN');
-  fSelectedInks[4]:=INI.ReadString('BasicControls','Ink4','L GRAD');
-  fSelectedInks[5]:=INI.ReadString('BasicControls','Ink5','C GRAD');
-  fActiveInk:=INI.ReadInteger('BasicControls','ActiveInk',0);
-  if (fActiveInk<0) or (fActiveInk>5) then fActiveInk:=0;
-  FillShapes:=INI.ReadBool('BasicControls','FillShapes',false);
-  ClearKeyColor:=INI.ReadBool('BasicControls','ClearKeyColor',false);
-  // System settings
-  fShowSplash:=INI.ReadBool('Settings','ShowSplash',false);
-  UndoLimit:=INI.ReadInteger('Settings','UndoLimit',16);
-  BackupIntervalTicks:=INI.ReadInteger('Settings','BackupInterval',60)*1000;
-  BackupFolderMaxSize:=INI.ReadInteger('Settings','BackupFolderMaxSize',16*1024*1024);
-  BackupFolderRetentionTime:=INI.ReadInteger('Settings','BackupFolderRetentionTime',0);
-  BackupFolderMaxFileCount:=INI.ReadInteger('Settings','BackupFolderMaxFileCount',0);
-  // Keymap
-  LoadKeyMap(INI);
-  // Colors selector state
-  ColorSelectorMainColor:=INI.ReadUInt32('Colors','Main',$FFFF0000);
-  ColorSelectorLeftColor:=INI.ReadUInt32('Colors','Left',$FF000000);
-  ColorSelectorRightColor:=INI.ReadUInt32('Colors','Right',$FFFFFFFF);
-  fActiveColor:=INI.ReadUInt32('Colors','ActiveColor',$FFFF0000);
-  // Inks' settings
-  DitherGradients:=INI.ReadBool('Inks','DitherGradients',false);
-  DitherStrength:=INI.ReadInteger('Inks','DitherStrength',10);
-  TintStrength:=INI.ReadInteger('Inks','TintStrength',10);
-  TintCELAsMask:=INI.ReadBool('Inks','TintCELAsMask',true);
-  CGradCenterX:=INI.ReadInteger('Inks','CGradCenterX',0);
-  CGradCenterY:=INI.ReadInteger('Inks','CGradCenterY',0);
-  CGradRadius:=INI.ReadInteger('Inks','CGradRadius',32);
-  RGradCenterX:=INI.ReadInteger('Inks','RGradCenterX',0);
-  RGradCenterY:=INI.ReadInteger('Inks','RGradCenterY',0);
-  RGradRepetitions:=INI.ReadInteger('Inks','RGradRepetitions',1);
-  RGradRotation:=INI.ReadInteger('Inks','RGradRotation',0);
-  SoftenCenterWeight:=INI.ReadInteger('Inks','SoftenCenterWeight',1);
-  SoftenAlphaToo:=INI.ReadBool('Inks','SoftenAlphaToo',false);
-  FreeAndNil(INI);
+  try
+    // DrawArea state
+    fZoom:=INI.ReadInteger('DrawArea','Zoom',2);
+    ZoomLeft:=INI.ReadInteger('DrawArea','ZoomLeft',0);
+    ZoomTop:=INI.ReadInteger('DrawArea','ZoomTop',0);
+    ShowGrid:=INI.ReadBool('DrawArea','ShowGrid',false);
+    // Controls state
+    fSelectedTools[0]:=INI.ReadString('BasicControls','Tool0','DRAW');
+    fSelectedTools[1]:=INI.ReadString('BasicControls','Tool1','BOX');
+    fSelectedTools[2]:=INI.ReadString('BasicControls','Tool2','LINE');
+    fSelectedTools[3]:=INI.ReadString('BasicControls','Tool3','CIRCLE');
+    fSelectedTools[4]:=INI.ReadString('BasicControls','Tool4','SEP.');
+    fSelectedTools[5]:=INI.ReadString('BasicControls','Tool5','FILL');
+    fActiveTool:=INI.ReadInteger('BasicControls','ActiveTool',0);
+    if (fActiveTool<0) or (fActiveTool>5) then fActiveTool:=0;
+    fSelectedInks[0]:=INI.ReadString('BasicControls','Ink0','OPAQUE');
+    fSelectedInks[1]:=INI.ReadString('BasicControls','Ink1','H GRAD');
+    fSelectedInks[2]:=INI.ReadString('BasicControls','Ink2','V GRAD');
+    fSelectedInks[3]:=INI.ReadString('BasicControls','Ink3','SOFTEN');
+    fSelectedInks[4]:=INI.ReadString('BasicControls','Ink4','L GRAD');
+    fSelectedInks[5]:=INI.ReadString('BasicControls','Ink5','C GRAD');
+    fActiveInk:=INI.ReadInteger('BasicControls','ActiveInk',0);
+    if (fActiveInk<0) or (fActiveInk>5) then fActiveInk:=0;
+    FillShapes:=INI.ReadBool('BasicControls','FillShapes',false);
+    ClearKeyColor:=INI.ReadBool('BasicControls','ClearKeyColor',false);
+    // System settings
+    fShowSplash:=INI.ReadBool('Settings','ShowSplash',false);
+    UndoLimit:=INI.ReadInteger('Settings','UndoLimit',16);
+    BackupIntervalTicks:=INI.ReadInteger('Settings','BackupInterval',60)*1000;
+    BackupFolderMaxSize:=INI.ReadInteger('Settings','BackupFolderMaxSize',16*1024*1024);
+    BackupFolderRetentionTime:=INI.ReadInteger('Settings','BackupFolderRetentionTime',0);
+    BackupFolderMaxFileCount:=INI.ReadInteger('Settings','BackupFolderMaxFileCount',0);
+    // Keymap
+    LoadKeyMap(INI);
+    // Colors selector state
+    ColorSelectorMainColor:=INI.ReadUInt32('Colors','Main',$FFFF0000);
+    ColorSelectorLeftColor:=INI.ReadUInt32('Colors','Left',$FF000000);
+    ColorSelectorRightColor:=INI.ReadUInt32('Colors','Right',$FFFFFFFF);
+    fActiveColor:=INI.ReadUInt32('Colors','ActiveColor',$FFFF0000);
+    // Inks' settings
+    DitherGradients:=INI.ReadBool('Inks','DitherGradients',false);
+    DitherStrength:=INI.ReadInteger('Inks','DitherStrength',10);
+    TintStrength:=INI.ReadInteger('Inks','TintStrength',10);
+    TintCELAsMask:=INI.ReadBool('Inks','TintCELAsMask',true);
+    CGradCenterX:=INI.ReadInteger('Inks','CGradCenterX',0);
+    CGradCenterY:=INI.ReadInteger('Inks','CGradCenterY',0);
+    CGradRadius:=INI.ReadInteger('Inks','CGradRadius',32);
+    RGradCenterX:=INI.ReadInteger('Inks','RGradCenterX',0);
+    RGradCenterY:=INI.ReadInteger('Inks','RGradCenterY',0);
+    RGradRepetitions:=INI.ReadInteger('Inks','RGradRepetitions',1);
+    RGradRotation:=INI.ReadInteger('Inks','RGradRotation',0);
+    SoftenCenterWeight:=INI.ReadInteger('Inks','SoftenCenterWeight',1);
+    SoftenAlphaToo:=INI.ReadBool('Inks','SoftenAlphaToo',false);
+    // Tools' settings
+    CircleMode:=INI.ReadInteger('Tools','CircleMode',0);
+  finally
+    INI.Free;
+  end;
 end;
 
 procedure TSettings.SaveToFile(pFilename:String);
 var INI:TIniFile;i:integer;
 begin
   INI:=TIniFile.Create(pFilename,false);
-  // DrawArea state
-  INI.WriteInteger('DrawArea','Zoom',fZoom);
-  INI.WriteInteger('DrawArea','ZoomLeft',ZoomLeft);
-  INI.WriteInteger('DrawArea','ZoomTop',ZoomTop);
-  INI.WriteBool('DrawArea','ShowGrid',ShowGrid);
-  // Controls state
-  for i:=0 to 5 do
-    INI.WriteString('BasicControls','Tool'+inttostr(i),fSelectedTools[i]);
-  INI.WriteInteger('BasicControls','ActiveTool',fActiveTool);
-  for i:=0 to 5 do
-    INI.WriteString('BasicControls','Ink'+inttostr(i),fSelectedInks[i]);
-  INI.WriteInteger('BasicControls','ActiveInk',fActiveInk);
-  INI.WriteBool('BasicControls','FillShapes',FillShapes);
-  INI.WriteBool('BasicControls','ClearKeyColor',ClearKeyColor);
-  // System settings
-  INI.WriteBool('Settings','ShowSplash',fShowSplash);
-  INI.WriteInteger('Settings','UndoLimit',UndoLimit);
-  INI.WriteInteger('Settings','BackupInterval',BackupIntervalTicks div 1000);
-  INI.WriteInteger('Settings','BackupFolderMaxSize',BackupFolderMaxSize);
-  INI.WriteInteger('Settings','BackupFolderRetentionTime',BackupFolderRetentionTime);
-  INI.WriteInteger('Settings','BackupFolderMaxFileCount',BackupFolderMaxFileCount);
-  // Keymap
-  SaveKeyMap(INI);
-  // Color selector state
-  INI.WriteUInt32('Colors','Main',ColorSelectorMainColor);
-  INI.WriteUInt32('Colors','Left',ColorSelectorLeftColor);
-  INI.WriteUInt32('Colors','Right',ColorSelectorRightColor);
-  INI.WriteUInt32('Colors','ActiveColor',fActiveColor);
-  // Inks' settings
-  INI.WriteBool('Inks','DitherGradients',DitherGradients);
-  INI.WriteInteger('Inks','DitherStrength',fDitherStrength);
-  INI.WriteInteger('Inks','TintStrength',fTintStrength);
-  INI.WriteBool('Inks','TintCELAsMask',TintCELAsMask);
-  INI.WriteInteger('Inks','CGradCenterX',CGradCenterX);
-  INI.WriteInteger('Inks','CGradCenterY',CGradCenterY);
-  INI.WriteInteger('Inks','CGradRadius',CGradRadius);
-  INI.WriteInteger('Inks','RGradCenterX',RGradCenterX);
-  INI.WriteInteger('Inks','RGradCenterY',RGradCenterY);
-  INI.WriteInteger('Inks','RGradRepetitions',RGradRepetitions);
-  INI.WriteInteger('Inks','RGradRotation',RGradRotation);
-  INI.WriteInteger('Inks','SoftenCenterWeight',SoftenCenterWeight);
-  INI.WriteBool('Inks','SoftenAlphaToo',SoftenAlphaToo);
-  FreeAndNil(INI);
+  try
+    // DrawArea state
+    INI.WriteInteger('DrawArea','Zoom',fZoom);
+    INI.WriteInteger('DrawArea','ZoomLeft',ZoomLeft);
+    INI.WriteInteger('DrawArea','ZoomTop',ZoomTop);
+    INI.WriteBool('DrawArea','ShowGrid',ShowGrid);
+    // Controls state
+    for i:=0 to 5 do
+      INI.WriteString('BasicControls','Tool'+inttostr(i),fSelectedTools[i]);
+    INI.WriteInteger('BasicControls','ActiveTool',fActiveTool);
+    for i:=0 to 5 do
+      INI.WriteString('BasicControls','Ink'+inttostr(i),fSelectedInks[i]);
+    INI.WriteInteger('BasicControls','ActiveInk',fActiveInk);
+    INI.WriteBool('BasicControls','FillShapes',FillShapes);
+    INI.WriteBool('BasicControls','ClearKeyColor',ClearKeyColor);
+    // System settings
+    INI.WriteBool('Settings','ShowSplash',fShowSplash);
+    INI.WriteInteger('Settings','UndoLimit',UndoLimit);
+    INI.WriteInteger('Settings','BackupInterval',BackupIntervalTicks div 1000);
+    INI.WriteInteger('Settings','BackupFolderMaxSize',BackupFolderMaxSize);
+    INI.WriteInteger('Settings','BackupFolderRetentionTime',BackupFolderRetentionTime);
+    INI.WriteInteger('Settings','BackupFolderMaxFileCount',BackupFolderMaxFileCount);
+    // Keymap
+    SaveKeyMap(INI);
+    // Color selector state
+    INI.WriteUInt32('Colors','Main',ColorSelectorMainColor);
+    INI.WriteUInt32('Colors','Left',ColorSelectorLeftColor);
+    INI.WriteUInt32('Colors','Right',ColorSelectorRightColor);
+    INI.WriteUInt32('Colors','ActiveColor',fActiveColor);
+    // Inks' settings
+    INI.WriteBool('Inks','DitherGradients',DitherGradients);
+    INI.WriteInteger('Inks','DitherStrength',fDitherStrength);
+    INI.WriteInteger('Inks','TintStrength',fTintStrength);
+    INI.WriteBool('Inks','TintCELAsMask',TintCELAsMask);
+    INI.WriteInteger('Inks','CGradCenterX',CGradCenterX);
+    INI.WriteInteger('Inks','CGradCenterY',CGradCenterY);
+    INI.WriteInteger('Inks','CGradRadius',CGradRadius);
+    INI.WriteInteger('Inks','RGradCenterX',RGradCenterX);
+    INI.WriteInteger('Inks','RGradCenterY',RGradCenterY);
+    INI.WriteInteger('Inks','RGradRepetitions',RGradRepetitions);
+    INI.WriteInteger('Inks','RGradRotation',RGradRotation);
+    INI.WriteInteger('Inks','SoftenCenterWeight',SoftenCenterWeight);
+    INI.WriteBool('Inks','SoftenAlphaToo',SoftenAlphaToo);
+    // Tools' settings
+    INI.WriteInteger('Tools','CircleMode',CircleMode);
+  finally
+    INI.Free;
+  end;
 end;
 
 function TSettings.fGetSelectedTool(index:integer):string;

@@ -10,7 +10,7 @@ unit BDPToolCircle;
 interface
 
 uses
-  SysUtils, BDPToolBase;
+  SysUtils, BDPToolBase, BDPConfigureCircleDialog;
 
 type
 
@@ -22,6 +22,7 @@ type
     function MouseUp(x,y,button:integer):boolean; override;
     procedure Draw; override;
     procedure Clear; override;
+    procedure Configure; override;
   private
     fSX,fSY:integer;
     procedure DrawCircleWithInk(cx,cy,r:integer);
@@ -43,7 +44,7 @@ begin
 end;
 
 function TBDToolCircle.Click(x,y,button:integer):boolean;
-var r:integer;
+var r,cx,cy,wi,he:integer;
 begin
   if button=SDL_BUTTON_LEFT then begin
     case fState of
@@ -54,25 +55,60 @@ begin
           fState:=1;
         end;
       1:begin
-          r:=round(sqrt(sqr(fSX-x)+sqr(fSY-y)));
-          Project.CurrentImage.RegionUndo.AddImageUndo(fSX-r,fSY-r,r*2+1,r*2+1);
-          ActiveInk.InitializeArea(fSX-r,fSY-r,fSX+r,fSY+r);
-          if ActiveInk.SupportsOnTheFly then begin
-            if Settings.FillShapes then
-              DrawFilledCircleWithInk(fSX,fSY,r)
-            else
-              DrawCircleWithInk(fSX,fSY,r)
-          end else begin
-            if Settings.FillShapes then
-              Project.CurrentRegion.FilledCircle(fSX,fSY,r,POSTPROCESSCOLOR)
-            else
-              Project.CurrentRegion.Circle(fSX,fSY,r,POSTPROCESSCOLOR);
-            ActiveInk.PostProcess;
+          case Settings.CircleMode of
+            0:begin
+                r:=round(sqrt(sqr(fSX-x)+sqr(fSY-y)));
+                Project.CurrentImage.RegionUndo.AddImageUndo(fSX-r,fSY-r,r*2+1,r*2+1);
+                ActiveInk.InitializeArea(fSX-r,fSY-r,fSX+r,fSY+r);
+                if ActiveInk.SupportsOnTheFly then begin
+                  if Settings.FillShapes then
+                    DrawFilledCircleWithInk(fSX,fSY,r)
+                  else
+                    DrawCircleWithInk(fSX,fSY,r)
+                end else begin
+                  if Settings.FillShapes then
+                    Project.CurrentRegion.FilledCircle(fSX,fSY,r,POSTPROCESSCOLOR)
+                  else
+                    Project.CurrentRegion.Circle(fSX,fSY,r,POSTPROCESSCOLOR);
+                  ActiveInk.PostProcess;
+                end;
+                Project.CurrentImage.RegionUndo.AddImageRedoToLastUndo(fSX-r,fSY-r,r*2+1,r*2+1);
+                InfoBar.ShowText('');
+                Result:=true;
+                fState:=0;
+              end;
+            1:begin
+                if fSX>x then begin r:=x;x:=fSX;fSX:=r;end;
+                if fSY>y then begin r:=y;y:=fSY;fSY:=r;end;
+                wi:=fX-fSX+1;
+                he:=fY-fSY+1;
+                Project.CurrentImage.RegionUndo.AddImageUndo(fSX,fSY,wi,he);
+                cx:=(fSX+fX+1) div 2;
+                cy:=(fSY+fY+1) div 2;
+                if (wi<he) then
+                  r:=wi div 2
+                else
+                  r:=he div 2;
+                if r>0 then dec(r);
+                ActiveInk.InitializeArea(fSX,fSY,x,y);
+                if ActiveInk.SupportsOnTheFly then begin
+                  if Settings.FillShapes then
+                    DrawFilledCircleWithInk(cx,cy,r)
+                  else
+                    DrawCircleWithInk(cx,cy,r)
+                end else begin
+                  if Settings.FillShapes then
+                    Project.CurrentRegion.FilledCircle(cx,cy,r,POSTPROCESSCOLOR)
+                  else
+                    Project.CurrentRegion.Circle(cx,cy,r,POSTPROCESSCOLOR);
+                  ActiveInk.PostProcess;
+                end;
+                Project.CurrentImage.RegionUndo.AddImageRedoToLastUndo(fSX,fSY,x-fSX+1,y-fSY+1);
+                InfoBar.ShowText('');
+                Result:=true;
+                fState:=0;
+              end;
           end;
-          Project.CurrentImage.RegionUndo.AddImageRedoToLastUndo(fSX-r,fSY-r,r*2+1,r*2+1);
-          InfoBar.ShowText('');
-          Result:=true;
-          fState:=0;
         end;
     end;
   end
@@ -91,31 +127,70 @@ begin
 end;
 
 procedure TBDToolCircle.Draw;
-var r:integer;
+var r,cx,cy,wi,he:integer;
 begin
   case fState of
     0:;
     1:begin
-        r:=round(sqrt(sqr(fSX-fX)+sqr(fSY-fY)));
-        OverlayImage.Circle(fSX,fSY,r,VibroColors.GetColor);
+        case Settings.CircleMode of
+          0:begin
+              r:=round(sqrt(sqr(fSX-fX)+sqr(fSY-fY)));
+              OverlayImage.Circle(fSX,fSY,r,VibroColors.GetColor);
 
-        InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
-          'RADIUS='+inttostr(r)+' '+
-          '('+inttostr(fX)+','+inttostr(fY)+') ');
+              InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
+                'RADIUS='+inttostr(r)+' '+
+                '('+inttostr(fX)+','+inttostr(fY)+') ');
+
+            end;
+          1:begin
+              wi:=abs(fSX-fX)+1;
+              he:=abs(fSY-fY)+1;
+              cx:=(fSX+fX+1) div 2;
+              cy:=(fSY+fY+1) div 2;
+              if (wi<he) then
+                r:=wi div 2
+              else
+                r:=he div 2;
+              if r>0 then dec(r);
+              OverlayImage.RectangleXY(fSX,fSY,fX,fY,VibroColors.GetHelperColor);
+              if r>0 then
+                OverlayImage.Circle(cx,cy,r,VibroColors.GetColor);
+
+              InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
+                'RADIUS='+inttostr(r)+' '+
+                'WI='+inttostr(abs(fSX-fX)+1)+' HE='+inttostr(abs(fSY-fY)+1)+' '+
+                '('+inttostr(fX)+','+inttostr(fY)+') ');
+            end;
+        end;
       end;
   end;
 end;
 
 procedure TBDToolCircle.Clear;
-var r:integer;
+var r,sx,sy,x,y:integer;
 begin
   case fState of
     0:;
     1:begin
-        r:=round(sqrt(sqr(fSX-fX)+sqr(fSY-fY)));
-        OverlayImage.Circle(fSX,fSY,r,0);
+        case Settings.CircleMode of
+          0:begin
+              r:=round(sqrt(sqr(fSX-fX)+sqr(fSY-fY)));
+              OverlayImage.Circle(fSX,fSY,r,0);
+            end;
+          1:begin
+              sx:=fSX; sy:=fSY; x:=fX; y:=fY;
+              if sx>x then begin r:=x;x:=sx;sx:=r;end;
+              if sy>y then begin r:=y;y:=sy;sy:=r;end;
+              OverlayImage.Bar(sx,sy,x-sx+1,y-sy+1,0);
+            end;
+        end;
       end;
   end;
+end;
+
+procedure TBDToolCircle.Configure;
+begin
+  MessageQueue.AddMessage(MSG_OPENCONFIGURECIRCLEDIALOG);
 end;
 
 // Taken from https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/

@@ -9,8 +9,8 @@
  *  for sensors, and load appropriate drivers.
  *}
 type
-	TSDL_Sensor = record end;
-	PSDL_Sensor = ^TSDL_Sensor;
+	PPSDL_Sensor = ^PSDL_Sensor;
+	PSDL_Sensor = type Pointer;
 
 {**
  * This is a unique ID for a sensor for the time it is connected to the system,
@@ -19,6 +19,8 @@ type
  * The ID value starts at 0 and increments from there. The value -1 is an invalid ID.
  *}
 type
+	PPSDL_SensorID = ^PSDL_SensorID;
+	PSDL_SensorID = ^TSDL_SensorID;
 	TSDL_SensorID = type cint32;
 
 {**
@@ -30,6 +32,8 @@ type
  * https://developer.android.com/reference/android/hardware/SensorEvent.html#values
  *}
 type
+	PPSDL_SensorType = ^PSDL_SensorType;
+	PSDL_SensorType = ^TSDL_SensorType;
 	TSDL_SensorType = type cint;
 
 const

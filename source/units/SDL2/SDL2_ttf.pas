@@ -174,8 +174,8 @@ procedure TTF_ByteSwappedUNICODE(swapped: TSDL_bool); cdecl;
 
 {* The internal structure containing font information *}
 type
-  PTTF_Font = ^TTTF_Font;
-  TTTF_Font = record  end; //todo?
+  PPTTF_Font = ^PTTF_Font;
+  PTTF_Font = type Pointer;
 
 {*
  * Initialize SDL_ttf.
@@ -2277,6 +2277,7 @@ function TTF_GetError: PAnsiChar; cdecl;
  * \sa TTF_SetFontDirection
   }
 type
+  PPTTF_Direction = ^PTTF_Direction;
   PTTF_Direction = ^TTTF_Direction;
   TTTF_Direction =  type Integer;
 

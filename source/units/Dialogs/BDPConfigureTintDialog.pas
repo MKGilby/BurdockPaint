@@ -3,7 +3,7 @@
   See "copyright.txt" for details.
 }
 
-// Generated on 2024.06.04
+// Generated on 2024.08.26
 
 unit BDPConfigureTintDialog;
 
@@ -22,8 +22,10 @@ type
     constructor Create;
     procedure ReDraw; override;
   private
-    ConfTintSlider:TBDHorizontalSlider;
     ConfTintCheckbox:TBDCheckBox;
+    ConfTintSlider:TBDHorizontalSlider;
+    fConfTintCancelButton:TBDButton;
+    fConfTintOKButton:TBDButton;
     procedure SaveSettings;
     procedure Show(Sender:TObject);
     procedure ConfTintOKButtonClick(Sender:TObject;x,y,buttons:integer);
@@ -37,7 +39,6 @@ uses BDPShared, MKMouse2;
 { TBDConfigureTintDialog }
 
 constructor TBDConfigureTintDialog.Create;
-var tmp:TBDButton;
 begin
   inherited Create(453,180);
   fName:='BDPConfigureTintDialog';
@@ -63,15 +64,17 @@ begin
   end;
   AddChild(ConfTintCheckbox);
 
-  tmp:=TBDButton.Create(fLeft+95,fTop+135,127,27,'OK','APPLY VALUES');
-  tmp.OnClick:=ConfTintOKButtonClick;
-  tmp.ZIndex:=MODALDIALOG_ZINDEX+1;
-  AddChild(tmp);
+  fConfTintOKButton:=TBDButton.Create(fLeft+95,fTop+135,127,27,'OK','APPLY VALUES');
+  fConfTintOKButton.OnClick:=ConfTintOKButtonClick;
+  fConfTintOKButton.Name:='ConfTintOKButton';
+  fConfTintOKButton.ZIndex:=MODALDIALOG_ZINDEX+1;
+  AddChild(fConfTintOKButton);
 
-  tmp:=TBDButton.Create(fLeft+231,fTop+135,127,27,'CANCEL','CLOSE DIALOG');
-  tmp.OnClick:=ConfTintCancelButtonClick;
-  tmp.ZIndex:=MODALDIALOG_ZINDEX+1;
-  AddChild(tmp);
+  fConfTintCancelButton:=TBDButton.Create(fLeft+231,fTop+135,127,27,'CANCEL','CLOSE DIALOG');
+  fConfTintCancelButton.OnClick:=ConfTintCancelButtonClick;
+  fConfTintCancelButton.Name:='ConfTintCancelButton';
+  fConfTintCancelButton.ZIndex:=MODALDIALOG_ZINDEX+1;
+  AddChild(fConfTintCancelButton);
 
 end;
 
@@ -83,8 +86,8 @@ end;
 
 procedure TBDConfigureTintDialog.SaveSettings;
 begin
-  Settings.TintStrength:=ConfTintSlider.Position;
   Settings.TintCELAsMask:=ConfTintCheckbox.Selected;
+  Settings.TintStrength:=ConfTintSlider.Position;
 end;
 
 procedure TBDConfigureTintDialog.ConfTintOKButtonClick(Sender:TObject;x,y,buttons:integer);
@@ -100,8 +103,8 @@ end;
 
 procedure TBDConfigureTintDialog.Show(Sender:TObject);
 begin
-  ConfTintSlider.Position:=Settings.TintStrength;
   ConfTintCheckbox.Selected:=Settings.TintCELAsMask;
+  ConfTintSlider.Position:=Settings.TintStrength;
 end;
 
 end.

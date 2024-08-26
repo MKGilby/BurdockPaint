@@ -54,13 +54,20 @@ begin
   fOnClicks:=TStringList.Create;
   fOnClickProcs:=TStringList.Create;
   fPrivates:=TStringList.Create;
+  fPrivates.Sorted:=true;
+  fPrivates.Duplicates:=dupIgnore;
   fCreateVar:=TStringList.Create;
   fCreateVar.Sorted:=true;
   fCreateVar.Duplicates:=dupIgnore;
   fCreateCode:=TStringList.Create;
   fRedrawCode:=TStringList.Create;
+  fRedrawCode.Duplicates:=dupIgnore;
   fSaveCode:=TStringList.Create;
+  fSaveCode.Sorted:=true;
+  fSaveCode.Duplicates:=dupIgnore;
   fShowCode:=TStringList.Create;
+  fShowCode.Sorted:=true;
+  fShowCode.Duplicates:=dupIgnore;
 end;
 
 destructor TCodeGenerator.Destroy;
@@ -80,20 +87,20 @@ end;
 procedure TCodeGenerator.Save(pFilename:String);
 var t,t2:textfile;i,j:integer;s:String;
 begin
-  {$ifdef debug}
-  assignfile(t,'..\'+pFilename);
-  {$else}
+  {ifdef debug}
+//  assignfile(t,'..\'+pFilename);
+  {else}
   assignfile(t,pFilename);
-  {$endif}
+  {endif}
   rewrite(t);
 
   try
 
-    {$ifdef debug}
-    assignfile(t2,'..\..\base_copyright_notice.txt');
-    {$else}
+    {ifdef debug}
+//    assignfile(t2,'..\..\base_copyright_notice.txt');
+    {else}
     assignfile(t2,'..\base_copyright_notice.txt');
-    {$endif}
+    {endif}
     reset(t2);
     try
       while not eof(t2) do begin

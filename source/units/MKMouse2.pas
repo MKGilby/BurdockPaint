@@ -83,6 +83,8 @@
 //     * Only mouse and keyup keydown events are consumed.
 //   V1.16 - 2024.01.19 - Gilby
 //     * Added TValueChangeEvent.
+//   V1.17 - 2024.08.26 - Gilby
+//     * Added MouseObjects.ItemByName property.
 
 {$ifdef fpc}
   {$mode delphi}
@@ -172,8 +174,10 @@ type
     fLastOverIndex,
     fLastMouseDownIndex:integer;
     function MouseObjectCompare(index:integer;Item:pointer):Integer;
+    function fGetItemByName(index:string):TMouseObject;
   public
     property LastOverIndex:integer read fLastOverIndex;
+    property ItemByName[index:string]:TMouseObject read fGetItemByName;
   end;
 
 var
@@ -185,7 +189,7 @@ uses SysUtils, Logger, MK_SDL2;
 
 const 
   Fstr={$I %FILE%}+', ';
-  Version='1.16';
+  Version='1.17';
 
 constructor TMouseObjects.Create;
 begin
@@ -205,6 +209,17 @@ end;
 function TMouseObjects.MouseObjectCompare(index:integer;Item:pointer):Integer;
 begin
   Result:=TMouseObject(Item).ZIndex-Self[index].ZIndex;
+end;
+
+function TMouseObjects.fGetItemByName(index:string):TMouseObject;
+var i:integer;
+begin
+  for i:=0 to Count-1 do
+    if Items[i].Name=index then begin
+      Result:=Items[i];
+      exit;
+    end;
+  Result:=nil;
 end;
 
 procedure TMouseObjects.Add(Item:TMouseObject);
@@ -352,7 +367,8 @@ var i:integer;
 begin
   for i:=fTop to Count-1 do begin
     if Assigned(Self[i]) then begin
-      if Self[i].Visible then Self[i].Draw;
+      if Self[i].Visible then
+        Self[i].Draw;
     end;
   end;
 end;

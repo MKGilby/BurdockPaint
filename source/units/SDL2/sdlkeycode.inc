@@ -12,6 +12,7 @@
    *  always map to SDLK_0...SDLK_9, regardless of layout.
    *}
 type
+  PPSDL_KeyCode = ^PSDL_KeyCode;
   PSDL_KeyCode = ^TSDL_KeyCode;
   TSDL_KeyCode = type cint32;
 
@@ -33,7 +34,7 @@ const
   SDLK_PERCENT = TSDL_KeyCode('%');
   SDLK_DOLLAR = TSDL_KeyCode('$');
   SDLK_AMPERSAND = TSDL_KeyCode('&');
-  SDLK_QUOTE = TSDL_KeyCode('\');
+  SDLK_QUOTE = TSDL_KeyCode('''');
   SDLK_LEFTPAREN = TSDL_KeyCode('(');
   SDLK_RIGHTPAREN = TSDL_KeyCode(')');
   SDLK_ASTERISK = TSDL_KeyCode('*');
@@ -292,6 +293,7 @@ const
    *  Enumeration of valid key mods (possibly OR'd together).
    *}
 type
+  PPSDL_KeyMod = ^PSDL_KeyMod;
   PSDL_KeyMod = ^TSDL_KeyMod;
   TSDL_KeyMod = type cint;
 

@@ -14,9 +14,11 @@
 
 {* The gamecontroller structure used to identify an SDL game controller *}
 type
-  PSDL_GameController = ^TSDL_GameController;
-  TSDL_GameController = record end;
+  PPSDL_GameController = ^PSDL_GameController;
+  PSDL_GameController = type Pointer;
 
+  PPSDL_GameControllerType = ^PSDL_GameControllerType;
+  PSDL_GameControllerType = ^TSDL_GameControllerType;
   TSDL_GameControllerType = type cint;
 const
   SDL_CONTROLLER_TYPE_UNKNOWN                      = TSDL_GameControllerType(0);
@@ -35,6 +37,8 @@ const
   SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_PAIR  = TSDL_GameControllerType(13);
 
 type
+  PPSDL_GameControllerBindType = ^PSDL_GameControllerBindType;
+  PSDL_GameControllerBindType = ^TSDL_GameControllerBindType;
   TSDL_GameControllerBindType = type cint;
 const
   SDL_CONTROLLER_BINDTYPE_NONE   = TSDL_GameControllerBindType(0);
@@ -51,6 +55,8 @@ type
     hat_mask: cint;
   end;
 
+  PPSDL_GameControllerButtonBind = ^PSDL_GameControllerButtonBind;
+  PSDL_GameControllerButtonBind = ^TSDL_GameControllerButtonBind;
   TSDL_GameControllerButtonBind = record
     bindType: TSDL_GameControllerBindType;
     case cint of
@@ -304,6 +310,20 @@ function SDL_GameControllerGetFirmwareVersion(gamecontroller: PSDL_GameControlle
 function SDL_GameControllerGetSerial(gamecontroller: PSDL_GameController): PAnsiChar; cdecl;
   external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GameControllerGetSerial' {$ENDIF} {$ENDIF};
 
+{**
+ * Get the Steam Input handle of an opened controller, if available.
+ *
+ * Returns an InputHandle_t for the controller that can be used with Steam Input API:
+ * https://partner.steamgames.com/doc/api/ISteamInput
+ *
+ * \param gamecontroller the game controller object to query.
+ * \returns the gamepad handle, or 0 if unavailable.
+ *
+ * \since This function is available since SDL 2.30.0.
+ *}
+function SDL_GameControllerGetSteamHandle(gamecontroller: PSDL_GameController): cuint64; cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GameControllerGetSteamHandle' {$ENDIF} {$ENDIF};
+
   {**
    *  Returns SDL_TRUE if the controller has been opened and currently connected,
    *  or SDL_FALSE if it has not.
@@ -339,6 +359,7 @@ procedure SDL_GameControllerUpdate() cdecl; external SDL_LibName {$IFDEF DELPHI}
    *}
 
 type
+  PPSDL_GameControllerAxis = ^PSDL_GameControllerAxis;
   PSDL_GameControllerAxis = ^TSDL_GameControllerAxis;
   TSDL_GameControllerAxis = type cint;
 const
@@ -388,6 +409,7 @@ function SDL_GameControllerGetAxis(gamecontroller: PSDL_GameController; axis: TS
    *  The list of buttons available from a controller
    *}
 type
+  PPSDL_GameControllerButton = ^PSDL_GameControllerButton;
   PSDL_GameControllerButton = ^TSDL_GameControllerButton;
   TSDL_GameControllerButton = type cint;
 const
@@ -504,6 +526,32 @@ function SDL_GameControllerGetSensorDataRate(gamecontroller: PSDL_GameController
  *}
 function SDL_GameControllerGetSensorData(gamecontroller: PSDL_GameController; senstype: TSDL_SensorType; data: pcfloat; num_values: cint): cint; cdecl;
   external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GameControllerGetSensorData' {$ENDIF} {$ENDIF};
+
+{**
+ * Get the current state of a game controller sensor with the timestamp of the
+ * last update.
+ *
+ * The number of values and interpretation of the data is sensor dependent.
+ * See SDL_sensor.h for the details for each type of sensor.
+ *
+ * \param gamecontroller The controller to query
+ * \param type The type of sensor to query
+ * \param timestamp A pointer filled with the timestamp in microseconds of the
+ *                  current sensor reading if available, or 0 if not
+ * \param data A pointer filled with the current sensor state
+ * \param num_values The number of values to write to data
+ * \return 0 or -1 if an error occurred.
+ *
+ * \since This function is available since SDL 2.26.0.
+ *}
+function SDL_GameControllerGetSensorDataWithTimestamp(
+  gamecontroller: PSDL_GameController;
+  senstype: TSDL_SensorType;
+  timestamp: pcuint64;
+  data: pcfloat;
+  num_values: cint
+): cint; cdecl;
+  external SDL_LibName {$IFDEF DELPHI} {$IFDEF MACOS} name '_SDL_GameControllerGetSensorDataWithTimestamp' {$ENDIF} {$ENDIF};
 
 {**
  * Query whether a game controller has rumble support.

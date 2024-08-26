@@ -3,7 +3,7 @@
   See "copyright.txt" for details.
 }
 
-// Generated on 2024.06.04
+// Generated on 2024.08.26
 
 unit BDPConfigureSoftenDialog;
 
@@ -22,8 +22,10 @@ type
     constructor Create;
     procedure ReDraw; override;
   private
-    ConfSoftenSlider:TBDHorizontalSlider;
     ConfSoftenCheckbox:TBDCheckBox;
+    ConfSoftenSlider:TBDHorizontalSlider;
+    fConfSoftenCancelButton:TBDButton;
+    fConfSoftenOKButton:TBDButton;
     procedure SaveSettings;
     procedure Show(Sender:TObject);
     procedure ConfSoftenOKButtonClick(Sender:TObject;x,y,buttons:integer);
@@ -37,7 +39,6 @@ uses BDPShared, MKMouse2;
 { TBDConfigureSoftenDialog }
 
 constructor TBDConfigureSoftenDialog.Create;
-var tmp:TBDButton;
 begin
   inherited Create(489,180);
   fName:='BDPConfigureSoftenDialog';
@@ -63,15 +64,17 @@ begin
   end;
   AddChild(ConfSoftenCheckbox);
 
-  tmp:=TBDButton.Create(fLeft+113,fTop+135,127,27,'OK','APPLY VALUES');
-  tmp.OnClick:=ConfSoftenOKButtonClick;
-  tmp.ZIndex:=MODALDIALOG_ZINDEX+1;
-  AddChild(tmp);
+  fConfSoftenOKButton:=TBDButton.Create(fLeft+113,fTop+135,127,27,'OK','APPLY VALUES');
+  fConfSoftenOKButton.OnClick:=ConfSoftenOKButtonClick;
+  fConfSoftenOKButton.Name:='ConfSoftenOKButton';
+  fConfSoftenOKButton.ZIndex:=MODALDIALOG_ZINDEX+1;
+  AddChild(fConfSoftenOKButton);
 
-  tmp:=TBDButton.Create(fLeft+249,fTop+135,127,27,'CANCEL','CLOSE DIALOG');
-  tmp.OnClick:=ConfSoftenCancelButtonClick;
-  tmp.ZIndex:=MODALDIALOG_ZINDEX+1;
-  AddChild(tmp);
+  fConfSoftenCancelButton:=TBDButton.Create(fLeft+249,fTop+135,127,27,'CANCEL','CLOSE DIALOG');
+  fConfSoftenCancelButton.OnClick:=ConfSoftenCancelButtonClick;
+  fConfSoftenCancelButton.Name:='ConfSoftenCancelButton';
+  fConfSoftenCancelButton.ZIndex:=MODALDIALOG_ZINDEX+1;
+  AddChild(fConfSoftenCancelButton);
 
 end;
 
@@ -83,8 +86,8 @@ end;
 
 procedure TBDConfigureSoftenDialog.SaveSettings;
 begin
-  Settings.SoftenCenterWeight:=ConfSoftenSlider.Position;
   Settings.SoftenAlphaToo:=ConfSoftenCheckbox.Selected;
+  Settings.SoftenCenterWeight:=ConfSoftenSlider.Position;
 end;
 
 procedure TBDConfigureSoftenDialog.ConfSoftenOKButtonClick(Sender:TObject;x,y,buttons:integer);
@@ -100,8 +103,8 @@ end;
 
 procedure TBDConfigureSoftenDialog.Show(Sender:TObject);
 begin
-  ConfSoftenSlider.Position:=Settings.SoftenCenterWeight;
   ConfSoftenCheckbox.Selected:=Settings.SoftenAlphaToo;
+  ConfSoftenSlider.Position:=Settings.SoftenCenterWeight;
 end;
 
 end.

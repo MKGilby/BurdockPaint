@@ -157,8 +157,13 @@ begin
 end;
 
 procedure TMain.ProcessButton(pNode: TDOMNode; pParent: TDialogItem);
-var i:integer;Name,Caption,Hint:string;Save,Close:boolean;
+var i:integer;Name,Caption,Hint,SettingField:string;Save,Close:boolean;SettingValue,Group:integer;
 begin
+  Save:=false;
+  Close:=false;
+  SettingField:='';
+  SettingValue:=0;
+  Group:=0;
   with pNode.ChildNodes do try
     for i:=0 to Count-1 do begin
       if uppercase(Item[i].NodeName)='NAME' then Name:=String(Item[i].TextContent)
@@ -166,9 +171,12 @@ begin
       else if uppercase(Item[i].NodeName)='SAVE' then Save:=String(Item[i].TextContent)='Y'
       else if uppercase(Item[i].NodeName)='CLOSE' then Close:=String(Item[i].TextContent)='Y'
       else if uppercase(Item[i].NodeName)='HINT' then Hint:=String(Item[i].TextContent)
+      else if uppercase(Item[i].NodeName)='SETTINGFIELD' then SettingField:=String(Item[i].TextContent)
+      else if uppercase(Item[i].NodeName)='SETTINGVALUE' then SettingValue:=strtoint(String(Item[i].TextContent))
+      else if uppercase(Item[i].NodeName)='GROUP' then Group:=strtoint(String(Item[i].TextContent))
       else raise Exception.Create(Format('Unknown field inside BUTTON! (%s)',[Item[i].NodeName]));
     end;
-    pParent.AddItem(TButton.Create(Name,Caption,Save,Close,Hint));
+    pParent.AddItem(TButton.Create(Name,Caption,Save,Close,Hint,SettingField,SettingValue,Group));
   finally
     Free;
   end;
