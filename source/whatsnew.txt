@@ -3,9 +3,7 @@ Todo:
 - Check and warn if current project is modified on opening project.
 - Check and warn if current project is modified on new project.
 - Add setup dialogs to Tools:
-  - Circle (center+radius vs. bounding box)
   - Sep. (boxed)
-  - Soften (center weight, soften alpha too)
 - Add Inks:
   - Darken
   - Brighten
@@ -26,6 +24,9 @@ Todo:
     - Color picking mode from any source where color can be selected.
       (harder to implement, but I think it would be a better solution.)
 
+
+2024.08.28 - Build 54
+- Circle drawn by bounding box now have the largest possible radius.
 
 2024.08.26 - Build 53
 - Added Circle configuration dialog.

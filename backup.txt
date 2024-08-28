@@ -1,7 +1,8 @@
-.\_release
+.\_release_x64
+.\_release_x86
 .\source
 .\work
 .\aat
 .\*.bat
+.\*.txt
 .\readme.md
-.\gpl-3.0.txt

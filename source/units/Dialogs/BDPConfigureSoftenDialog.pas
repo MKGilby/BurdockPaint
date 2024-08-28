@@ -3,7 +3,7 @@
   See "copyright.txt" for details.
 }
 
-// Generated on 2024.08.26
+// Generated on 2024.08.27
 
 unit BDPConfigureSoftenDialog;
 
@@ -75,7 +75,6 @@ begin
   fConfSoftenCancelButton.Name:='ConfSoftenCancelButton';
   fConfSoftenCancelButton.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(fConfSoftenCancelButton);
-
 end;
 
 procedure TBDConfigureSoftenDialog.Redraw;

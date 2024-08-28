@@ -3,7 +3,7 @@
   See "copyright.txt" for details.
 }
 
-// Generated on 2024.08.26
+// Generated on 2024.08.27
 
 unit BDPConfigureCircleDialog;
 
@@ -73,7 +73,6 @@ begin
   fConfCircleCancelButton.Name:='ConfCircleCancelButton';
   fConfCircleCancelButton.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(fConfCircleCancelButton);
-
 end;
 
 procedure TBDConfigureCircleDialog.Redraw;

@@ -25,8 +25,8 @@ type
     procedure Configure; override;
   private
     fSX,fSY:integer;
-    procedure DrawCircleWithInk(cx,cy,r:integer);
-    procedure DrawFilledCircleWithInk(cx,cy,r:integer);
+    procedure DrawCircleWithInk(cx,cy,r:integer;even:boolean=false);
+    procedure DrawFilledCircleWithInk(cx,cy,r:integer;even:boolean=false);
   end;
 
 implementation
@@ -44,7 +44,7 @@ begin
 end;
 
 function TBDToolCircle.Click(x,y,button:integer):boolean;
-var r,cx,cy,wi,he:integer;
+var r,cx,cy,wi,he:integer;hack:boolean;
 begin
   if button=SDL_BUTTON_LEFT then begin
     case fState of
@@ -85,22 +85,25 @@ begin
                 Project.CurrentImage.RegionUndo.AddImageUndo(fSX,fSY,wi,he);
                 cx:=(fSX+fX+1) div 2;
                 cy:=(fSY+fY+1) div 2;
-                if (wi<he) then
-                  r:=wi div 2
-                else
-                  r:=he div 2;
+                if (wi<he) then begin
+                  r:=(wi+1) div 2;
+                  hack:=(wi mod 2)=0;
+                end else begin
+                  r:=(he+1) div 2;
+                  hack:=(he mod 2)=0;
+                end;
                 if r>0 then dec(r);
                 ActiveInk.InitializeArea(fSX,fSY,x,y);
                 if ActiveInk.SupportsOnTheFly then begin
                   if Settings.FillShapes then
-                    DrawFilledCircleWithInk(cx,cy,r)
+                    DrawFilledCircleWithInk(cx,cy,r,hack)
                   else
-                    DrawCircleWithInk(cx,cy,r)
+                    DrawCircleWithInk(cx,cy,r,hack)
                 end else begin
                   if Settings.FillShapes then
-                    Project.CurrentRegion.FilledCircle(cx,cy,r,POSTPROCESSCOLOR)
+                    Project.CurrentRegion.FilledCircle(cx,cy,r,POSTPROCESSCOLOR,hack)
                   else
-                    Project.CurrentRegion.Circle(cx,cy,r,POSTPROCESSCOLOR);
+                    Project.CurrentRegion.Circle(cx,cy,r,POSTPROCESSCOLOR,hack);
                   ActiveInk.PostProcess;
                 end;
                 Project.CurrentImage.RegionUndo.AddImageRedoToLastUndo(fSX,fSY,x-fSX+1,y-fSY+1);
@@ -127,7 +130,7 @@ begin
 end;
 
 procedure TBDToolCircle.Draw;
-var r,cx,cy,wi,he:integer;
+var r,cx,cy,wi,he:integer;hack:boolean;
 begin
   case fState of
     0:;
@@ -147,18 +150,21 @@ begin
               he:=abs(fSY-fY)+1;
               cx:=(fSX+fX+1) div 2;
               cy:=(fSY+fY+1) div 2;
-              if (wi<he) then
-                r:=wi div 2
-              else
-                r:=he div 2;
+              if (wi<he) then begin
+                r:=(wi+1) div 2;
+                hack:=(wi mod 2)=0;
+              end else begin
+                r:=(he+1) div 2;
+                hack:=(he mod 2)=0;
+              end;
               if r>0 then dec(r);
               OverlayImage.RectangleXY(fSX,fSY,fX,fY,VibroColors.GetHelperColor);
               if r>0 then
-                OverlayImage.Circle(cx,cy,r,VibroColors.GetColor);
+                OverlayImage.Circle(cx,cy,r,VibroColors.GetColor,hack);
 
               InfoBar.ShowText('('+inttostr(fSX)+','+inttostr(fSY)+') '+
                 'RADIUS='+inttostr(r)+' '+
-                'WI='+inttostr(abs(fSX-fX)+1)+' HE='+inttostr(abs(fSY-fY)+1)+' '+
+                'WI='+inttostr(wi)+' HE='+inttostr(he)+' '+
                 '('+inttostr(fX)+','+inttostr(fY)+') ');
             end;
         end;
@@ -194,7 +200,7 @@ begin
 end;
 
 // Taken from https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
-procedure TBDToolCircle.DrawCircleWithInk(cx,cy,r:integer);
+procedure TBDToolCircle.DrawCircleWithInk(cx,cy,r:integer; even:boolean);
 
   procedure PutPixel8(x,y:integer);
   begin
@@ -208,13 +214,25 @@ procedure TBDToolCircle.DrawCircleWithInk(cx,cy,r:integer);
     Project.CurrentRegion.PutPixel(cx-y, cy-x, ActiveInk.GetColorAt(cx-y, cy-x));
   end;
 
+  procedure PutPixel8_even(x,y:integer);
+  begin
+    Project.CurrentRegion.PutPixel(cx+x  , cy+y  , ActiveInk.GetColorAt(cx+x  , cy+y  ));
+    Project.CurrentRegion.PutPixel(cx-x-1, cy+y  , ActiveInk.GetColorAt(cx-x-1, cy+y  ));
+    Project.CurrentRegion.PutPixel(cx+x  , cy-y-1, ActiveInk.GetColorAt(cx+x  , cy-y-1));
+    Project.CurrentRegion.PutPixel(cx-x-1, cy-y-1, ActiveInk.GetColorAt(cx-x-1, cy-y-1));
+    Project.CurrentRegion.PutPixel(cx+y  , cy+x  , ActiveInk.GetColorAt(cx+y  , cy+x  ));
+    Project.CurrentRegion.PutPixel(cx-y-1, cy+x  , ActiveInk.GetColorAt(cx-y-1, cy+x  ));
+    Project.CurrentRegion.PutPixel(cx+y  , cy-x-1, ActiveInk.GetColorAt(cx+y  , cy-x-1));
+    Project.CurrentRegion.PutPixel(cx-y-1, cy-x-1, ActiveInk.GetColorAt(cx-y-1, cy-x-1));
+  end;
+
 var x,y,d:integer;
 
 begin
   x:=0;
   y:=r;
   d:=3-2*r;
-  PutPixel8(x,y);
+  if not even then PutPixel8(x,y) else PutPixel8_even(x,y);
   while (y>=x) do begin
     inc(x);
 
@@ -224,13 +242,13 @@ begin
       d:=d+4*(x-y)+10;
     end else
       d:=d+4*x+6;
-    PutPixel8(x,y);
+    if not even then PutPixel8(x,y) else PutPixel8_even(x,y);
   end;
 end;
 
 // Taken from https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
 // Modified to draw filled circle
-procedure TBDToolCircle.DrawFilledCircleWithInk(cx,cy,r:integer);
+procedure TBDToolCircle.DrawFilledCircleWithInk(cx,cy,r:integer; even:boolean);
 
   procedure HLine(x,y:integer);
   var i:integer;
@@ -245,13 +263,26 @@ procedure TBDToolCircle.DrawFilledCircleWithInk(cx,cy,r:integer);
     end;
   end;
 
+  procedure HLine_even(x,y:integer);
+  var i:integer;
+  begin
+    for i:=-x-1 to +x do begin
+      Project.CurrentRegion.PutPixel(cx+i,cy+y  ,ActiveInk.GetColorAt(cx+i,cy+y  ));
+      Project.CurrentRegion.PutPixel(cx+i,cy-y-1,ActiveInk.GetColorAt(cx+i,cy-y-1));
+    end;
+    for i:=-y-1 to +y do begin
+      Project.CurrentRegion.PutPixel(cx+i,cy+x  ,ActiveInk.GetColorAt(cx+i,cy+x  ));
+      Project.CurrentRegion.PutPixel(cx+i,cy-x-1,ActiveInk.GetColorAt(cx+i,cy-x-1));
+    end;
+  end;
+
 var x,y,d:integer;
 
 begin
   x:=0;
   y:=r;
   d:=3-2*r;
-  HLine(x,y);
+  if not even then HLine(x,y) else HLine_even(x,y);
   while (y>=x) do begin
     inc(x);
 
@@ -261,7 +292,7 @@ begin
       d:=d+4*(x-y)+10;
     end else
       d:=d+4*x+6;
-    HLine(x,y);
+    if not even then HLine(x,y) else HLine_even(x,y);
   end;
 end;
 

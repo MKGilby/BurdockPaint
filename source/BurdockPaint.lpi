@@ -19,7 +19,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="9"/>
-      <BuildNr Value="53"/>
+      <BuildNr Value="54"/>
       <Attributes pvaPreRelease="True"/>
       <StringTable CompanyName="MKSZTSZ" LegalCopyright="GPL3" ProductName="BurdockPaint"/>
     </VersionInfo>

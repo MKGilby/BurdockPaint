@@ -3,7 +3,7 @@
   See "copyright.txt" for details.
 }
 
-// Generated on 2024.08.26
+// Generated on 2024.08.27
 
 unit BDPConfigureTintDialog;
 
@@ -75,7 +75,6 @@ begin
   fConfTintCancelButton.Name:='ConfTintCancelButton';
   fConfTintCancelButton.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(fConfTintCancelButton);
-
 end;
 
 procedure TBDConfigureTintDialog.Redraw;

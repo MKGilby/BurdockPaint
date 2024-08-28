@@ -117,6 +117,10 @@
 //       either cut to size (shrinking) or padded with empty space (enlarging).
 //   1.28 - Gilby - 2024.04.24
 //     * Changed MKToolBox.Replace to SysUtils.StringReplace.
+//   1.29 - Gilby - 2024.08.28
+//     * Added even parameter to Circle and FilledCircle.
+//       If it is set to true, circle will be 1 pixel wider and taller to occupy
+//       an even*even area.
 
 
 {$ifdef fpc}
@@ -264,12 +268,14 @@ type
     // Draws a circle. (Using Bresenham's circle drawing algorithm.)
     // Fills all channels with given pixel data.
     // Taken from https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
-    procedure Circle(cx,cy,r:integer;color32:uint32);
+    // Set hack to true if you want the circle's width and height to be an even number.
+    procedure Circle(cx,cy,r:integer;color32:uint32;even:boolean=false);
 
     // Draws a filled circle. (Using Bresenham's circle drawing algorithm.)
     // Fills all channels with given pixel data.
     // Taken from https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
-    procedure FilledCircle(cx,cy,r:integer;color32:uint32);
+    // Set hack to true if you want the circle's width and height to be an even number.
+    procedure FilledCircle(cx,cy,r:integer;color32:uint32;even:boolean=false);
 
     // Replaces a continuous color patch starting at the selected pixel.
     procedure FloodFill(x,y:integer;color32:uint32);
@@ -374,7 +380,7 @@ uses SysUtils, MKToolBox, Logger, MKStream;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.28';
+  Version='1.29';
   POSTPROCESSCOLOR=$00FF00FF;  // Fully transparent magenta is the magic color!
 
 var
@@ -1028,7 +1034,7 @@ begin
 end;
 
 // Taken from https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
-procedure TARGBImage.Circle(cx,cy,r:integer; color32:uint32);
+procedure TARGBImage.Circle(cx,cy,r:integer; color32:uint32; even:boolean);
 
   procedure PutPixel8(x,y:integer);
   begin
@@ -1042,13 +1048,25 @@ procedure TARGBImage.Circle(cx,cy,r:integer; color32:uint32);
     PutPixel(cx-y, cy-x, color32);
   end;
 
+  procedure PutPixel8_even(x,y:integer);
+  begin
+    PutPixel(cx+x,   cy+y,   color32);
+    PutPixel(cx-x-1, cy+y,   color32);
+    PutPixel(cx+x,   cy-y-1, color32);
+    PutPixel(cx-x-1, cy-y-1, color32);
+    PutPixel(cx+y,   cy+x,   color32);
+    PutPixel(cx-y-1, cy+x,   color32);
+    PutPixel(cx+y,   cy-x-1, color32);
+    PutPixel(cx-y-1, cy-x-1, color32);
+  end;
+
 var x,y,d:integer;
 
 begin
   x:=0;
   y:=r;
   d:=3-2*r;
-  PutPixel8(x,y);
+  if not even then PutPixel8(x,y) else PutPixel8_even(x,y);
   while (y>=x) do begin
     inc(x);
     // check for decision parameter and correspondingly update d, x, y
@@ -1057,11 +1075,11 @@ begin
       d:=d+4*(x-y)+10;
     end else
       d:=d+4*x+6;
-    PutPixel8(x,y);
+    if not even then PutPixel8(x,y) else PutPixel8_even(x,y);
   end;
 end;
 
-procedure TARGBImage.FilledCircle(cx,cy,r:integer; color32:uint32);
+procedure TARGBImage.FilledCircle(cx,cy,r:integer; color32:uint32; even:boolean);
 
   procedure CHLine(x,y:integer);
   begin
@@ -1069,14 +1087,14 @@ procedure TARGBImage.FilledCircle(cx,cy,r:integer; color32:uint32);
     HLine(cx-x,cy-y,2*x+1,color32);
     HLine(cx-y,cy+x,2*y+1,color32);
     HLine(cx-y,cy-x,2*y+1,color32);
-{    for i:=-x to +x do begin
-      PutPixel(cx+i,cy+y,color32);
-      PutPixel(cx+i,cy-y,color32);
-    end;
-    for i:=-y to +y do begin
-      PutPixel(cx+i,cy+x,color32);
-      PutPixel(cx+i,cy-x,color32);
-    end;}
+  end;
+
+  procedure CHLine_even(x,y:integer);
+  begin
+    HLine(cx-x-1,cy+y  ,2*x+2,color32);
+    HLine(cx-x-1,cy-y-1,2*x+2,color32);
+    HLine(cx-y-1,cy+x  ,2*y+2,color32);
+    HLine(cx-y-1,cy-x-1,2*y+2,color32);
   end;
 
 var x,y,d:integer;
@@ -1085,7 +1103,7 @@ begin
   x:=0;
   y:=r;
   d:=3-2*r;
-  CHLine(x,y);
+  if not even then CHLine(x,y) else CHLine_even(x,y);
   while (y>=x) do begin
     inc(x);
     // check for decision parameter and correspondingly update d, x, y
@@ -1094,7 +1112,7 @@ begin
       d:=d+4*(x-y)+10;
     end else
       d:=d+4*x+6;
-    CHLine(x,y);
+    if not even then CHLine(x,y) else CHLine_even(x,y);
   end;
 end;
 

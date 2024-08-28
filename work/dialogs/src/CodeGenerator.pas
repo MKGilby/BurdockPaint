@@ -162,6 +162,7 @@ begin
       writeln(t);
     end;
     writeln(t,'begin');
+    if fCreateCode[fCreateCode.Count-1]='' then fCreateCode.Delete(fCreateCode.Count-1);
     for i:=0 to fCreateCode.Count-1 do writeln(t,fCreateCode[i]);
     writeln(t,'end;');
     writeln(t);

@@ -3,7 +3,7 @@
   See "copyright.txt" for details.
 }
 
-// Generated on 2024.08.26
+// Generated on 2024.08.27
 
 unit BDPDitherDialog;
 
@@ -67,7 +67,6 @@ begin
   fConfDitherCancelButton.Name:='ConfDitherCancelButton';
   fConfDitherCancelButton.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(fConfDitherCancelButton);
-
 end;
 
 procedure TBDDitherDialog.Redraw;
