@@ -18,6 +18,7 @@ type
     procedure ProcessCheckbox(pNode:TDOMNode;pParent:TDialogItem);
     procedure ProcessSplit(pNode:TDOMNode;pParent:TDialogItem);
     procedure ProcessButton(pNode:TDOMNode;pParent:TDialogItem);
+    procedure ProcessDivider(pNode:TDOMNode;pParent:TDialogItem);
   end;
 
 { TMain }
@@ -89,6 +90,7 @@ begin
       else if uppercase(Item[i].NodeName)='CHECKBOX' then ProcessCheckbox(Item[i],pParent)
       else if uppercase(Item[i].NodeName)='SPLIT' then ProcessSplit(Item[i],pParent)
       else if uppercase(Item[i].NodeName)='BUTTON' then ProcessButton(Item[i],pParent)
+      else if uppercase(Item[i].NodeName)='DIVIDER' then ProcessDivider(Item[i],pParent)
       else raise Exception.Create(Format('Unknown block inside HEAD! (%s)',[Item[i].NodeName]));
     end;
   finally
@@ -180,6 +182,11 @@ begin
   finally
     Free;
   end;
+end;
+
+procedure TMain.ProcessDivider(pNode: TDOMNode; pParent: TDialogItem);
+begin
+  pParent.AddItem(TDivider.Create);
 end;
 
 begin

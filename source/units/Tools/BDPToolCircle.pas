@@ -10,7 +10,7 @@ unit BDPToolCircle;
 interface
 
 uses
-  SysUtils, BDPToolBase, BDPConfigureCircleDialog;
+  SysUtils, BDPToolBase;
 
 type
 

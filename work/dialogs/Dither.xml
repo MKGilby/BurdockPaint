@@ -15,15 +15,38 @@
   </Head>
 
   <Controls>
+    <CheckBox>
+      <Name>ConfDitherUseDitherCheckbox</Name>
+      <Caption>Dither gradients</Caption>
+      <Hint>... or not</Hint>
+      <SettingField>DitherGradients</SettingField>
+    </CheckBox>
     <Label>
       <Caption>Dither strength</Caption>
     </Label>
     <HorizontalSlider>
       <Name>ConfDitherSlider</Name>
-      <MinValue>1</MinValue>
+      <MinValue>0</MinValue>
       <MaxValue>100</MaxValue>
       <SettingField>DitherStrength</SettingField>
     </HorizontalSlider>
+    <Divider/>
+    <CheckBox>
+      <Name>ConfDitherBandCheckbox</Name>
+      <Caption>Use color banding</Caption>
+      <Hint>... or not</Hint>
+      <SettingField>DitherColorBanding</SettingField>
+    </CheckBox>
+    <Label>
+      <Caption>Color band count</Caption>
+    </Label>
+    <HorizontalSlider>
+      <Name>ConfDitherBandSlider</Name>
+      <MinValue>2</MinValue>
+      <MaxValue>64</MaxValue>
+      <SettingField>DitherColorBandCount</SettingField>
+    </HorizontalSlider>
+    <Divider/>
     <Split direction="Horizontal">
       <Button>
         <Name>ConfDitherOKButton</Name>

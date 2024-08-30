@@ -25,6 +25,10 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2024.08.30 - Build 55
+- Added color banding to dithering. You can configure it in the dithering
+  configuration dialog.
+
 2024.08.28 - Build 54
 - Circle drawn by bounding box now have the largest possible radius.
 

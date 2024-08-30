@@ -63,6 +63,8 @@ type
     SoftenCenterWeight:integer;
     SoftenAlphaToo:boolean;
     CircleMode:integer; // 0 - Center+radius, 1 - BoundingBox
+    DitherColorBanding:boolean;
+    DitherColorBandCount:integer;
     property Zoom:integer read fZoom write fSetZoom;
     property SelectedTools[index:integer]:string read fGetSelectedTool write fSetSelectedTool;
     property ActiveTool:integer read fActiveTool write fActiveTool;
@@ -123,6 +125,8 @@ begin
   SoftenCenterWeight:=1;
   SoftenAlphaToo:=false;
   CircleMode:=0;
+  DitherColorBanding:=false;
+  DitherColorBandCount:=4;
 end;
 
 procedure TSettings.LoadFromFile(pFilename:String);
@@ -172,6 +176,8 @@ begin
     // Inks' settings
     DitherGradients:=INI.ReadBool('Inks','DitherGradients',false);
     DitherStrength:=INI.ReadInteger('Inks','DitherStrength',10);
+    DitherColorBanding:=INI.ReadBool('Inks','DitherColorBanding',false);
+    DitherColorBandCount:=INI.ReadInteger('Inks','DitherColorBandCount',4);
     TintStrength:=INI.ReadInteger('Inks','TintStrength',10);
     TintCELAsMask:=INI.ReadBool('Inks','TintCELAsMask',true);
     CGradCenterX:=INI.ReadInteger('Inks','CGradCenterX',0);
@@ -226,6 +232,8 @@ begin
     // Inks' settings
     INI.WriteBool('Inks','DitherGradients',DitherGradients);
     INI.WriteInteger('Inks','DitherStrength',fDitherStrength);
+    INI.WriteBool('Inks','DitherColorBanding',DitherColorBanding);
+    INI.WriteInteger('Inks','DitherColorBandCount',DitherColorBandCount);
     INI.WriteInteger('Inks','TintStrength',fTintStrength);
     INI.WriteBool('Inks','TintCELAsMask',TintCELAsMask);
     INI.WriteInteger('Inks','CGradCenterX',CGradCenterX);

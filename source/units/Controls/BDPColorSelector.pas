@@ -143,7 +143,7 @@ begin
     fRightGradient.Colors[1]:=Settings.ColorSelectorMainColor;
     fRightGradient.Colors[2]:=Settings.ColorSelectorRightColor;
     for i:=0 to fLeftGradientWidth-1 do begin
-      c:=fLeftGradient.GetColorAt(i/fLeftGradientWidth);
+      c:=fLeftGradient.GetColorAtRaw(i/fLeftGradientWidth);
       VLine(fLeftGradientLeft+i,3,Height-6,c);
       if Settings.ActiveColor=c then begin
         VLine(fLeftGradientLeft+i,Height div 2-3,3,SystemPalette[SYSTEMCOLORLIGHT]);
@@ -151,7 +151,7 @@ begin
       end;
     end;
     for i:=0 to fRightGradientWidth-1 do begin
-      c:=fRightGradient.GetColorAt(i/fRightGradientWidth);
+      c:=fRightGradient.GetColorAtRaw(i/fRightGradientWidth);
       VLine(fRightGradientLeft+i,3,Height-6,c);
       if Settings.ActiveColor=c then begin
         VLine(fRightGradientLeft+i,Height div 2-3,3,SystemPalette[SYSTEMCOLORLIGHT]);

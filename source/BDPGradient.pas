@@ -179,6 +179,8 @@ begin
     if pValue>1 then pValue:=2-pValue;
   end;
   if fReversed then pValue:=1-pValue;
+  if Settings.DitherColorBanding then
+    pValue:=round(pValue*Settings.DitherColorBandCount)/Settings.DitherColorBandCount;
   Result:=0;
   for i:=0 to length(fOrder)-2 do
     if (pValue>=fColorPositions[fOrder[i]]) and

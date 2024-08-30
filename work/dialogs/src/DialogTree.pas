@@ -118,6 +118,13 @@ type
     property Group:integer read fGroup;
   end;
 
+  { TDivider }
+
+  TDivider=class(TDialogItem)
+    constructor Create;
+    procedure CalculatePositions(pTop,pLeft:integer;pParentWidth:integer=-1;pParentHeight:integer=-1); override;
+  end;
+
 implementation
 
 uses Lists, Logger, CodeGenerator, MKToolbox;
@@ -460,6 +467,24 @@ begin
   if fClose then
     CodeGenerator.OnClickProcs.Add(fName+'=Hide;');
 
+end;
+
+{ TDivider }
+
+constructor TDivider.Create;
+begin
+  fWidth:=0;
+  fHeight:=DefaultSizes['ControlSpacing'];
+end;
+
+procedure TDivider.CalculatePositions(pTop, pLeft: integer; pParentWidth: integer;
+  pParentHeight: integer);
+begin
+  fTop:=pTop;
+  fLeft:=pLeft;
+  fParentWidth:=pParentWidth;
+  if fParentWidth=-1 then raise Exception.Create('ParentWidth shouldn''t be -1!');
+  fParentHeight:=pParentHeight;
 end;
 
 initialization
