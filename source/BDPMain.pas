@@ -15,7 +15,7 @@ uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
   BDPRotateCELDialog, BDPAboutDialog, BDPMessageBox, BDPDitherDialog,
   BDPConfigureRGradDialog, BDPCoordinateBox, BDPGradientEditor, BDPColorPalette2,
   BDPGradientSelector, BDPConfigureTintDialog, BDPConfigureSoftenDialog,
-  BDPConfigureCircleDialog;
+  BDPConfigureCircleDialog, BDPImageResizeDialog;
 
 type
 
@@ -44,6 +44,7 @@ type
     fConfigureTintDialog:TBDConfigureTintDialog;
     fConfigureSoftenDialog:TBDConfigureSoftenDialog;
     fConfigureCircleDialog:TBDConfigureCircleDialog;
+    fImageResizeDialog:TBDImageResizeDialog;
 
     fBackup:TFileBackup;
     fOpenDialog:TOpenDialog;
@@ -67,6 +68,8 @@ type
     procedure RemoveImage;
     procedure ClearImage;
     procedure CropImage;
+    procedure ResizeImage;
+    procedure ResizeImageFinished;
     procedure GetCEL;
     procedure GetCELFinished;
     procedure PutCEL;
@@ -176,6 +179,8 @@ begin
   Log.Trace('After ConfigureSoftenDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   fConfigureCircleDialog:=TBDConfigureCircleDialog.Create;
   Log.Trace('After ConfigureCircleDialog: '+inttostr(GetHeapStatus.TotalAllocated));
+  fImageResizeDialog:=TBDImageResizeDialog.Create;
+  Log.Trace('After ImageResizeDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   MouseObjects.List;
 
   fOpenDialog:=TOpenDialog.Create(nil);
@@ -198,6 +203,7 @@ begin
   if Assigned(fSaveProjectDialog) then fSaveProjectDialog.Free;
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
 //  if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
+  fImageResizeDialog.Free;
   fConfigureCircleDialog.Free;
   fConfigureSoftenDialog.Free;
   if Assigned(fConfigureTintDialog) then fConfigureTintDialog.Free;
@@ -286,6 +292,8 @@ begin
         MSG_REMOVEIMAGE:               RemoveImage;
         MSG_CLEARIMAGE:                ClearImage;
         MSG_CROPIMAGE:                 CropImage;
+        MSG_RESIZEIMAGE:               ResizeImage;
+        MSG_RESIZEIMAGECLOSED:         ResizeImageFinished;
         MSG_SETTOOLSMENU:              fMainMenu.SetToolsMenuStates;
         MSG_SETINKSMENU:               fMainMenu.SetInksMenuStates;
         MSG_GETCEL:                    GetCEL;
@@ -544,6 +552,23 @@ begin
     Project.CurrentImage.RegionUndo.AddResizeRedo;
     MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED);
   end;
+end;
+
+procedure TMain.ResizeImage;
+begin
+  Settings.TempInt01:=Project.CurrentRegion.Width;
+  Settings.TempInt02:=Project.CurrentRegion.Height;
+  fImageResizeDialog.Show;
+end;
+
+procedure TMain.ResizeImageFinished;
+begin
+  // Do a backup since this operation is not undoable
+  Project.SaveToFile(TEMPPROJECTFILE);
+  fBackup.BackupFile(TEMPPROJECTFILE);
+  Project.CurrentRegion.Resize(Settings.TempInt01,Settings.TempInt02);
+  Project.CurrentImage.ClearUndoData;
+  MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED);
 end;
 
 procedure TMain.GetCEL;

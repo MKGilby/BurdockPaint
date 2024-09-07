@@ -56,3 +56,5 @@ work/font/smallerfont.png
 work/font/smallfont.png
 *.res
 work/dialogs/PreProcessDialogs.exe
+*.ps1
+*.zip

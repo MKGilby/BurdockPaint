@@ -25,6 +25,10 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2024.09.07 - Build 56
+- Implemented Image/Resize.
+- Updated PreProcessDialog tool.
+
 2024.08.30 - Build 55
 - Added color banding to dithering. You can configure it in the dithering
   configuration dialog.

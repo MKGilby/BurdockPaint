@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ See DefaultControlSizes.txt for constants.
+
+ In this first version all the controls are put under each other leaving
+ CONTROLSPACING pixel distance beetween them. Also MARGINS pixel is left
+ from the borders of the dialog.
+-->
+
+<Dialog>
+  <Head>
+    <Name>BDPImageResizeDialog</Name>
+    <ClassName>TBDImageResizeDialog</ClassName>
+    <Caption>Resize image</Caption>
+  </Head>
+
+  <Controls>
+    <Label>
+      <Caption>New width</Caption>
+    </Label>
+    <HorizontalSlider>
+      <Name>ImageResizeWidthSlider</Name>
+      <MinValue>32</MinValue>
+      <MaxValue>2048</MaxValue>
+      <SettingField>TempInt01</SettingField>
+    </HorizontalSlider>
+    <Label>
+      <Caption>New height</Caption>
+    </Label>
+    <HorizontalSlider>
+      <Name>ImageResizeHeightSlider</Name>
+      <MinValue>32</MinValue>
+      <MaxValue>2048</MaxValue>
+      <SettingField>TempInt02</SettingField>
+    </HorizontalSlider>
+    <Divider/>
+    <Split direction="Horizontal">
+      <Button>
+        <Name>ImageResizeOKButton</Name>
+        <Caption>OK</Caption>
+        <Hint>Resize image. Parts outside new size will be lost!</Hint>
+        <Save>Y</Save>
+        <Close>Y</Close>
+        <Message>MSG_RESIZEIMAGECLOSED</Message>
+      </Button>
+      <Button>
+        <Name>ImageResizeCancelButton</Name>
+        <Caption>Cancel</Caption>
+        <Hint>Don't resize image</Hint>
+        <Save>N</Save>
+        <Close>Y</Close>
+      </Button>
+    </Split>
+  </Controls>
+</Dialog>

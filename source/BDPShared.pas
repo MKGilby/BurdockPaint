@@ -174,6 +174,9 @@ const
   // Open ConfigureCircleDialog.
   MSG_OPENCONFIGURECIRCLEDIALOG=34;
 
+  // ImageResizeDialog is closed with OK
+  MSG_RESIZEIMAGECLOSED=35;
+
 
   // ------- Menu Messages ------- Range: 200-299 -------
   {$i includes\menu.inc}

@@ -65,6 +65,7 @@ type
     CircleMode:integer; // 0 - Center+radius, 1 - BoundingBox
     DitherColorBanding:boolean;
     DitherColorBandCount:integer;
+    TempInt01,TempInt02:integer;  // Used in dialogs when values don't have to be saved.
     property Zoom:integer read fZoom write fSetZoom;
     property SelectedTools[index:integer]:string read fGetSelectedTool write fSetSelectedTool;
     property ActiveTool:integer read fActiveTool write fActiveTool;

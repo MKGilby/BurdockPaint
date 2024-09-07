@@ -159,7 +159,10 @@ begin
 end;
 
 procedure TMain.ProcessButton(pNode: TDOMNode; pParent: TDialogItem);
-var i:integer;Name,Caption,Hint,SettingField:string;Save,Close:boolean;SettingValue,Group:integer;
+var
+  Name,Caption,Hint,SettingField,Message:string;
+  Save,Close:boolean;
+  i,SettingValue,Group:integer;
 begin
   Save:=false;
   Close:=false;
@@ -176,9 +179,10 @@ begin
       else if uppercase(Item[i].NodeName)='SETTINGFIELD' then SettingField:=String(Item[i].TextContent)
       else if uppercase(Item[i].NodeName)='SETTINGVALUE' then SettingValue:=strtoint(String(Item[i].TextContent))
       else if uppercase(Item[i].NodeName)='GROUP' then Group:=strtoint(String(Item[i].TextContent))
+      else if uppercase(Item[i].NodeName)='MESSAGE' then Message:=String(Item[i].TextContent)
       else raise Exception.Create(Format('Unknown field inside BUTTON! (%s)',[Item[i].NodeName]));
     end;
-    pParent.AddItem(TButton.Create(Name,Caption,Save,Close,Hint,SettingField,SettingValue,Group));
+    pParent.AddItem(TButton.Create(Name,Caption,Save,Close,Hint,SettingField,Message,SettingValue,Group));
   finally
     Free;
   end;

@@ -106,12 +106,12 @@ type
   TButton=class(TDialogItem)
     constructor Create(iName,iCaption:string;
       iSave,iClose:boolean;
-      iHint,iSettingField:string;
+      iHint,iSettingField,iMessage:string;
       iSettingValue,iGroup:integer);
     procedure CalculatePositions(pTop,pLeft:integer;pParentWidth:integer=-1;pParentHeight:integer=-1); override;
   private
     fCaption,fHint:string;
-    fSettingField:string;
+    fSettingField,fMessage:string;
     fSettingValue,fGroup:integer;
     fSave,fClose:boolean;
   public
@@ -136,6 +136,16 @@ var
   DefaultSizes:TCounterList;
   CodeGenerator:TCodeGenerator;
   GroupList:TStringList;
+
+function PrepareStringLiteral(s:String):string;
+var i:integer;
+begin
+  Result:='';
+  for i:=1 to length(s) do begin
+    Result+=s[i];
+    if s[i]=#39 then Result+=s[i];
+  end;
+end;
 
 { TDialogItemList }
 
@@ -182,8 +192,8 @@ end;
 constructor TDialog.Create(iName,iCaption,iClassName:string);
 begin
   fItems:=TDialogItemList.Create;
-  fName:=iName;
-  fCaption:=uppercase(iCaption);
+  fName:=PrepareStringLiteral(iName);
+  fCaption:=uppercase(PrepareStringLiteral(iCaption));
   fClassName:=iClassName;
   CodeGenerator:=TCodeGenerator.Create(Self);
   fLeft:=-1;
@@ -236,7 +246,7 @@ end;
 
 constructor TLabel.Create(iCaption: string);
 begin
-  fCaption:=uppercase(iCaption);
+  fCaption:=uppercase(PrepareStringLiteral(iCaption));
   fWidth:=length(fCaption)*18-3;
   fHeight:=18;
 end;
@@ -303,9 +313,9 @@ end;
 constructor TCheckBox.Create(iName,iCaption,iSettingField,iHint:string);
 begin
   fName:=iName;
-  fCaption:=uppercase(iCaption);
+  fCaption:=uppercase(PrepareStringLiteral(iCaption));
   fSettingField:=iSettingField;
-  fHint:=uppercase(iHint);
+  fHint:=uppercase(PrepareStringLiteral(iHint));
   CodeGenerator.UsesList.Add('BDPCheckBox');
   CodeGenerator.Privates.Add(fName+':TBDCheckBox;');
   fWidth:=DefaultSizes['CHECKBOXBOXWIDTH']+DefaultSizes['CONTROLSPACING']+length(fCaption)*18-3;
@@ -323,7 +333,7 @@ begin
   fParentHeight:=pParentHeight;
   Left:=fLeft+(fParentWidth-fWidth) div 2;
   CodeGenerator.CreateCode.Add(Format('  %s:=TBDCheckBox.Create(fLeft+%d,fTop+%d,%d,%d,''%s'',''%s'');',
-    [fName,Left,fTop,fWidth,fHeight,uppercase(fCaption),uppercase(fHint)]));
+    [fName,Left,fTop,fWidth,fHeight,fCaption,fHint]));
   CodeGenerator.CreateCode.Add(Format('  with %s do begin',[fName]));
   CodeGenerator.CreateCode.Add('    ZIndex:=MODALDIALOG_ZINDEX+1;');
   CodeGenerator.CreateCode.Add(Format('    Name:=''%s'';',[fName]));
@@ -416,13 +426,14 @@ end;
 { TButton }
 
 constructor TButton.Create(iName, iCaption: string; iSave, iClose: boolean;
-  iHint, iSettingField: string; iSettingValue, iGroup: integer);
+  iHint, iSettingField, iMessage: string; iSettingValue, iGroup: integer);
 begin
   fName:=iName;
-  fCaption:=uppercase(iCaption);
+  fCaption:=uppercase(PrepareStringLiteral(iCaption));
+  fMessage:=iMessage;
   fSave:=iSave;
   fClose:=iClose;
-  fHint:=uppercase(iHint);
+  fHint:=uppercase(PrepareStringLiteral(iHint));
   fSettingField:=iSettingField;
   fSettingValue:=iSettingValue;
   fGroup:=iGroup;
@@ -464,6 +475,8 @@ begin
   end;
   if fSave then
     CodeGenerator.OnClickProcs.Add(fName+'=SaveSettings;');
+  if fMessage<>'' then
+    CodeGenerator.OnClickProcs.Add(Format(fName+'=MessageQueue.AddMessage(%s);',[fMessage]));
   if fClose then
     CodeGenerator.OnClickProcs.Add(fName+'=Hide;');
 
