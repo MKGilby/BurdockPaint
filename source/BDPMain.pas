@@ -78,6 +78,7 @@ type
     procedure ToggleControls;
     procedure ReleaseCEL;
     procedure FlipCEL(msg:TMessage);
+    procedure GrayscaleCEL;
     procedure OpenCEL;
     procedure SaveCEL;
     procedure ColorEditorResp(msg:TMessage);
@@ -302,9 +303,10 @@ begin
         MSG_CLIPCEL:                   ClipCEL;
         MSG_SHOWCEL:                   ShowCEL;
         MSG_RELEASECEL:                ReleaseCEL;
-        MSG_OPENROTATECELDIALOG:       fRotateDialog.Show;
+        MSG_OPENROTATECELDIALOG:       if Assigned(Project.CELImage) then fRotateDialog.Show;
         MSG_FLIPCEL:                   FlipCEL(msg);
-        MSG_OPENMAGNIFYCELDIALOG:      fMagnifyDialog.Show;
+        MSG_OPENMAGNIFYCELDIALOG:      if Assigned(Project.CELImage) then fMagnifyDialog.Show;
+        MSG_GRAYSCALECEL:              GrayscaleCEL;
         MSG_OPENCEL:                   OpenCEL;
         MSG_SAVECEL:                   SaveCEL;
         MSG_RESTORECONTROLS:           ShowMainControls;
@@ -650,6 +652,14 @@ begin
   else if msg.DataInt=1 then Project.CelImage.FlipH
   else raise Exception.Create('Invalid FLIPCEL message parameter!');
   MessageQueue.AddMessage(MSG_SHOWCEL);
+end;
+
+procedure TMain.GrayscaleCEL;
+begin
+  if Assigned(Project.CELImage) then begin
+    Project.CELImage.Grayscale;
+    MessageQueue.AddMessage(MSG_SHOWCEL);
+  end;
 end;
 
 procedure TMain.OpenCEL;

@@ -18,8 +18,8 @@
         <IsPartOfProject Value="True"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="546"/>
-        <CursorPos X="24" Y="563"/>
+        <TopLine Value="655"/>
+        <CursorPos Y="662"/>
         <UsageCount Value="204"/>
         <Loaded Value="True"/>
       </Unit>
@@ -1184,7 +1184,7 @@
         <Loaded Value="True"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="10">
+    <JumpHistory HistoryIndex="15">
       <Position>
         <Filename Value="BDPMain.pas"/>
         <Caret Line="278" Column="56" TopLine="66"/>
@@ -1228,6 +1228,26 @@
       <Position>
         <Filename Value="BDPMain.pas"/>
         <Caret Line="567" TopLine="546"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPMain.pas"/>
+        <Caret Line="308" Column="52" TopLine="277"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPMain.pas"/>
+        <Caret Line="81" Column="7" TopLine="61"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPMain.pas"/>
+        <Caret Line="659" TopLine="640"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPMain.pas"/>
+        <Caret Line="309" Column="50" TopLine="283"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPMain.pas"/>
+        <Caret Line="81" Column="16" TopLine="40"/>
       </Position>
     </JumpHistory>
     <RunParams>
