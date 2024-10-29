@@ -34,6 +34,7 @@ type
     fRealDitherStrength:double;
     fTintStrength:integer;
     fRealTintStrength:double;
+    fWindowWidth,fWindowHeight:integer;
     procedure fSetZoom(value:integer);
     function fGetSelectedTool(index:integer):string;
     procedure fSetSelectedTool(index:integer;value:string);
@@ -42,6 +43,8 @@ type
     procedure fSetActiveColor(value:uint32);
     procedure fSetDitherStrength(value:integer);
     procedure fSetTintStrength(value:integer);
+    procedure fSetWindowWidth(value:integer);
+    procedure fSetWindowHeight(value:integer);
   public
     ColorSelectorMainColor:uint32;
     ColorSelectorLeftColor:uint32;
@@ -76,6 +79,8 @@ type
     property RealDitherStrength:double read fRealDitherStrength;
     property TintStrength:integer read fTintStrength write fSetTintStrength;
     property RealTintStrength:double read fRealTintStrength;
+    property WindowWidth:integer read fWindowWidth write fSetWindowWidth;
+    property WindowHeight:integer read fWindowHeight write fSetWindowHeight;
   end;
 
 
@@ -128,6 +133,8 @@ begin
   CircleMode:=0;
   DitherColorBanding:=false;
   DitherColorBandCount:=4;
+  fWindowWidth:=MINIMUMWINDOWWIDTH;
+  fWindowHeight:=MINIMUMWINDOWHEIGHT;
 end;
 
 procedure TSettings.LoadFromFile(pFilename:String);
@@ -161,6 +168,8 @@ begin
     FillShapes:=INI.ReadBool('BasicControls','FillShapes',false);
     ClearKeyColor:=INI.ReadBool('BasicControls','ClearKeyColor',false);
     // System settings
+    WindowWidth:=INI.ReadInteger('Settings','WindowWidth',MINIMUMWINDOWWIDTH);
+    WindowHeight:=INI.ReadInteger('Settings','WindowHeight',MINIMUMWINDOWHEIGHT);
     fShowSplash:=INI.ReadBool('Settings','ShowSplash',false);
     UndoLimit:=INI.ReadInteger('Settings','UndoLimit',16);
     BackupIntervalTicks:=INI.ReadInteger('Settings','BackupInterval',60)*1000;
@@ -217,6 +226,8 @@ begin
     INI.WriteBool('BasicControls','FillShapes',FillShapes);
     INI.WriteBool('BasicControls','ClearKeyColor',ClearKeyColor);
     // System settings
+    INI.WriteInteger('Settings','WindowWidth',fWindowWidth);
+    INI.WriteInteger('Settings','WindowHeight',fWindowHeight);
     INI.WriteBool('Settings','ShowSplash',fShowSplash);
     INI.WriteInteger('Settings','UndoLimit',UndoLimit);
     INI.WriteInteger('Settings','BackupInterval',BackupIntervalTicks div 1000);
@@ -301,6 +312,18 @@ begin
   else if value>100 then value:=100;
   fTintStrength:=value;
   fRealTintStrength:=value/100;
+end;
+
+procedure TSettings.fSetWindowWidth(value: integer);
+begin
+  if (value<>fWindowWidth) and (value>=MINIMUMWINDOWWIDTH) then
+    fWindowWidth:=value;
+end;
+
+procedure TSettings.fSetWindowHeight(value: integer);
+begin
+  if (value<>fWindowHeight) and (value>=MINIMUMWINDOWHEIGHT) then
+    fWindowHeight:=value;
 end;
 
 procedure TSettings.fSetZoom(value:integer);

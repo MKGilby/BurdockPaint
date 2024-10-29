@@ -61,7 +61,7 @@ uses BDPShared, sdl2, BDPKeyMapping, BDPRegion, Logger;
 constructor TBDDrawArea.Create;
 begin
   inherited Create;
-  SetBoundsWH(0,0,WINDOWWIDTH,WINDOWHEIGHT);
+  SetBoundsWH(0,0,Settings.WindowWidth,Settings.WindowHeight);
   fZoomLevel:=Settings.Zoom;
   fZoomTimes:=1<<(fZoomLevel-1);
   fZoomLeft:=Settings.ZoomLeft;
@@ -99,8 +99,8 @@ end;
 procedure TBDDrawArea.CenterImage;
 begin
   if not(fZoomLevel in [1..MAXZOOMLEVEL]) then exit;
-  fZoomLeft:=((Project.CurrentRegion.Width*fZoomTimes)-WindowWidth) div 2 div fZoomTimes;
-  fZoomTop:=((Project.CurrentRegion.Height*fZoomTimes)-WindowHeight) div 2 div fZoomTimes;
+  fZoomLeft:=((Project.CurrentRegion.Width*fZoomTimes)-Settings.WindowWidth) div 2 div fZoomTimes;
+  fZoomTop:=((Project.CurrentRegion.Height*fZoomTimes)-Settings.WindowHeight) div 2 div fZoomTimes;
 end;
 
 procedure TBDDrawArea.Draw;
@@ -122,12 +122,12 @@ begin
   if (fZoomLeft>0) then begin rsx:=fZoomLeft;rw-=rsx;rtx:=0;end
                    else begin rtx:=-fZoomLeft;rsx:=0;end;
   // Image sticks out on the right?
-  if (rtx+rw>WINDOWWIDTH div fZoomTimes) then rw:=WINDOWWIDTH div fZoomTimes-rtx;
+  if (rtx+rw>Settings.WindowWidth div fZoomTimes) then rw:=Settings.WindowWidth div fZoomTimes-rtx;
   // Image sticks out on the top?
   if (fZoomTop>0) then begin rsy:=fZoomTop;rh-=rsy;rty:=0;end
                   else begin rty:=-fZoomTop;rsy:=0;end;
   // Image sticks out on the bottom?
-  if (rty+rh>WINDOWHEIGHT div fZoomTimes) then rh:=WINDOWHEIGHT div fZoomTimes-rty;
+  if (rty+rh>Settings.WindowHeight div fZoomTimes) then rh:=Settings.WindowHeight div fZoomTimes-rty;
 
 //  Log.Trace(Format('Zoom: %d,%d  Level: %d  Times: %d',[fZoomLeft,fZoomTop,fZoomLevel,fZoomTimes]));
 //  Log.Trace(Format('Rs: %d,%d  Dim: %d,%d  Rt: %d,%d',[rsx,rsy,rw,rh,rtx,rty]));

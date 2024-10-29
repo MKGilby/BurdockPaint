@@ -6,7 +6,7 @@
 unit BDPMain;
 
 {$mode Delphi}{$H+}
-{$define LimitFPS}
+{define LimitFPS}
 
 interface
 
@@ -108,20 +108,20 @@ begin
 
   MKStreamOpener.AddDirectory('.',0);
   SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, '1');
-
-  fMainWindow:=TWindow.Create(
-    SDL_WINDOWPOS_CENTERED,
-    SDL_WINDOWPOS_CENTERED,
-    WINDOWWIDTH,
-    WINDOWHEIGHT,
-    Format('Burdock Paint V%s (%s)',[iVersion,StringReplace(iBuildDate,'/','.',[rfReplaceAll])]));
-
-  SetFPS(60);
+  SDL_SetHint(SDL_HINT_RENDER_VSYNC, '1');
 
   Log.LogStatus('Loading settings...');
   Settings:=TSettings.Create;
   Settings.LoadFromFile(SETTINGSFILE);
 
+  fMainWindow:=TWindow.Create(
+    SDL_WINDOWPOS_CENTERED,
+    SDL_WINDOWPOS_CENTERED,
+    Settings.WindowWidth,
+    Settings.WindowHeight,
+    Format('Burdock Paint V%s (%s)',[iVersion,StringReplace(iBuildDate,'/','.',[rfReplaceAll])]));
+
+  SetFPS(60);
 
   if (Parameters.Count=2) and (FileExists(Parameters[1])) then begin
     TEMPPROJECTFILE:=Parameters[1];
@@ -166,11 +166,11 @@ begin
   fConfigureRGradDialog:=TBDConfigureRGradDialog.Create;
   Log.Trace('After ConfigureRGradDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   fCoordinateBox:=TBDCoordinateBox.Create(
-    WINDOWWIDTH-COORDINATEBOXWIDTH-24,WINDOWHEIGHT-COORDINATEBOXHEIGHT,COORDINATEBOXWIDTH+24,COORDINATEBOXHEIGHT);
+    Settings.WindowWidth-COORDINATEBOXWIDTH-24,Settings.WindowHeight-COORDINATEBOXHEIGHT,COORDINATEBOXWIDTH+24,COORDINATEBOXHEIGHT);
   Log.Trace('After CoordinateBox: '+inttostr(GetHeapStatus.TotalAllocated));
   fGradientEditor:=TBDGradientEditor.Create;
   Log.Trace('After GradientEditor: '+inttostr(GetHeapStatus.TotalAllocated));
-  fColorPalette:=TBDColorPalette2.Create(WINDOWWIDTH-70,TOPMENUHEIGHT,70,WINDOWHEIGHT-TOPMENUHEIGHT-CONTROLSHEIGHT);
+  fColorPalette:=TBDColorPalette2.Create(Settings.WindowWidth-70,TOPMENUHEIGHT,70,Settings.WindowHeight-TOPMENUHEIGHT-CONTROLSHEIGHT);
   Log.Trace('After ColorPalette: '+inttostr(GetHeapStatus.TotalAllocated));
   fGradientSelector:=TBDGradientSelector.Create;
   Log.Trace('After GradientSelector: '+inttostr(GetHeapStatus.TotalAllocated));
@@ -245,7 +245,7 @@ begin
 
     MouseObjects.Draw;
     InfoBar.Draw;
-    MM.Fonts['DarkRed'].OutText('FPS: '+st(fps,3,'0'),WINDOWWIDTH-141,3,0);
+    MM.Fonts['DarkRed'].OutText('FPS: '+st(fps,3,'0'),Settings.WindowWidth-141,3,0);
     {$ifndef LimitFPS} FlipNoLimit; {$else} Flip; {$endif}
     HandleMessages;
     ProcessMessages;
@@ -334,7 +334,7 @@ procedure TMain.ShowMainControls;
 begin
   fControls.Show;
   fMainMenu.Show;
-  InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
+  InfoBar.Top:=Settings.WindowHeight-CONTROLSHEIGHT-INFOBARHEIGHT;
 end;
 
 function TMain.CreateOpenDialog(pName,pTitle,pFilter:string):TOpenDialog;
@@ -720,7 +720,7 @@ begin
       fGradientEditor.Show;
     end;
   end;
-  InfoBar.Top:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
+  InfoBar.Top:=Settings.WindowHeight-CONTROLSHEIGHT-INFOBARHEIGHT;
 end;
 
 procedure TMain.SelectColor;

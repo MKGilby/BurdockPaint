@@ -25,8 +25,12 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2024.10.29 - Build 58
+- You can set window size in INI file (Settings/WindowWidth and WindowHeight).
+- You can not set it below 1280x720.
+
 2024.09.18 - Build 57
-- Added CEL/Grayscale. 
+- Added CEL/Grayscale.
 
 2024.09.07 - Build 56
 - Implemented Image/Resize.

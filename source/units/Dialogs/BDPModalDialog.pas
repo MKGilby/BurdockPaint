@@ -50,7 +50,7 @@ uses BDPShared, ARGBImageUnit;
 constructor TBDModalOverlay.Create;
 begin
   inherited Create;
-  SetBounds(0,0,WINDOWWIDTH,WINDOWHEIGHT);
+  SetBounds(0,0,Settings.WindowWidth,Settings.WindowHeight);
   ZIndex:=MODALDIALOG_ZINDEX-1;
   fName:='ModalOverlay';
   DarkBar:=MM.Textures.ItemByName['DarkBar'];
@@ -59,7 +59,7 @@ end;
 
 procedure TBDModalOverlay.Draw;
 begin
-  bar(0,0,WINDOWWIDTH,WINDOWHEIGHT,DarkBar);
+  bar(0,0,Settings.WindowWidth,Settings.WindowHeight,DarkBar);
 end;
 
 { TBDModalDialog }
@@ -67,8 +67,8 @@ end;
 constructor TBDModalDialog.Create(iWidth,iHeight:integer);
 begin
   inherited Create;
-  fLeft:=(WINDOWWIDTH-iWidth) div 2;
-  fTop:=(WINDOWHEIGHT-iHeight) div 2;
+  fLeft:=(Settings.WindowWidth-iWidth) div 2;
+  fTop:=(Settings.WindowHeight-iHeight) div 2;
   Width:=iWidth;
   Height:=iHeight;
   OnKeyDown:=KeyDown;

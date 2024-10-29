@@ -70,8 +70,8 @@ var
 begin
   inherited Create;
   fLeft:=0;
-  fTop:=WINDOWHEIGHT-CONTROLSHEIGHT;
-  Width:=WINDOWWIDTH-112;
+  fTop:=Settings.WindowHeight-CONTROLSHEIGHT;
+  Width:=Settings.WindowWidth-112;
   Height:=CONTROLSHEIGHT;
   fVisible:=true;
   OnMouseEnter:=MouseEnter;
@@ -441,7 +441,7 @@ end;
 procedure TBDControls.ReDraw;
 begin
   fImage.Bar(0,0,fImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
-  fImage.Bar(0,3,COORDSLEFT,fImage.Height-3,SystemPalette[SYSTEMCOLORMID]);
+  fImage.Bar(0,3,fImage.Width,fImage.Height-3,SystemPalette[SYSTEMCOLORMID]);
 end;
 
 end.

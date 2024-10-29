@@ -54,8 +54,8 @@ constructor TBDInk.Create;
 begin
   fLeft:=0;
   fTop:=0;
-  fWidth:=WINDOWWIDTH;
-  fHeight:=WINDOWHEIGHT;
+  fWidth:=Settings.WindowWidth;
+  fHeight:=Settings.WindowHeight;
   fConfigureDialog:=nil;
 end;
 

@@ -37,9 +37,9 @@ uses BDPShared, mk_sdl2, Font2Unit;
 constructor TBDInfoBar.Create;
 begin
   inherited Create;
-  Width:=WINDOWWIDTH;
+  Width:=Settings.WindowWidth;
   Height:=INFOBARHEIGHT;
-  fTop:=WINDOWHEIGHT-CONTROLSHEIGHT-INFOBARHEIGHT;
+  fTop:=Settings.WindowHeight-CONTROLSHEIGHT-INFOBARHEIGHT;
   fText:='';
   if fTop=0 then fTextTop:=3 else fTextTop:=6;
   fNeedRedraw:=true;
@@ -72,7 +72,7 @@ procedure TBDInfoBar.fSetTop(aValue:integer);
 begin
   fTop:=aValue;
   if fTop<0 then fTop:=0
-  else if fTop>WINDOWHEIGHT-INFOBARHEIGHT then fTop:=WINDOWHEIGHT-INFOBARHEIGHT;
+  else if fTop>Settings.WindowHeight-INFOBARHEIGHT then fTop:=Settings.WindowHeight-INFOBARHEIGHT;
   if fTop=0 then fTextTop:=3 else fTextTop:=6;
 end;
 

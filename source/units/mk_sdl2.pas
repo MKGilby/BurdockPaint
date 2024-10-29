@@ -54,6 +54,9 @@
 //      * Removed the hack to SDL_LockTexture. Using ctypes instead.
 //   V1.15a - 2024.08.26
 //      * Really removed the hack to SDL_LockTexture. :)
+//   V1.16 - 2024.10.29
+//      * Added Resizable flag to TWindow.Create. When a resizable window created,
+//        you must react to
 
 {$ifdef fpc}
   {$mode delphi}
@@ -80,7 +83,7 @@ type
   { TWindow }
 
   TWindow=class
-    constructor Create(Left,Top,Width,Height:integer;Title:string);
+    constructor Create(Left,Top,Width,Height:integer;Title:string;Resizable:boolean=false);
     constructor CreateDoubleSized(Left,Top,Width,Height:integer;Title:string);
     constructor CreateFullScreenBordered(Width,Height:integer;Title:string);
     constructor CreateCustomSized(Left,Top,Width,Height,LogicalWidth,LogicalHeight:integer;Title:string);
@@ -207,9 +210,13 @@ var
 
 // ------------------------------------------------------------ [ TWindow ] ---
 
-constructor TWindow.Create(Left,Top,Width,Height:integer;Title:string);
+constructor TWindow.Create(Left, Top, Width, Height: integer; Title: string;
+  Resizable: boolean);
+var Flags:TSDL_WindowFlags;
 begin
-  fWindow:=SDL_CreateWindow(PChar(Title), Left, Top, Width, Height, {SDL_WINDOW_OPENGL}0);
+  Flags:=0;
+  if Resizable then Flags:=Flags or SDL_WINDOW_RESIZABLE;
+  fWindow:=SDL_CreateWindow(PChar(Title), Left, Top, Width, Height, Flags);
   if fWindow=nil then raise Exception.Create('Could not create window!');
   fRenderer:=SDL_CreateRenderer(fWindow, -1, 0);
   if fRenderer=nil then raise Exception.Create('Could not create renderer!');
@@ -223,7 +230,7 @@ end;
 
 constructor TWindow.CreateDoubleSized(Left,Top,Width,Height:integer;Title:string);
 begin
-  fWindow:=SDL_CreateWindow(PChar(Title), Left, Top, Width*2, Height*2, SDL_WINDOW_OPENGL);
+  fWindow:=SDL_CreateWindow(PChar(Title), Left, Top, Width*2, Height*2, {SDL_WINDOW_OPENGL}0);
   if fWindow=nil then raise Exception.Create('Could not create window!');
   fRenderer:=SDL_CreateRenderer(fWindow, -1, 0);
   if fRenderer=nil then raise Exception.Create('Could not create renderer!');
@@ -243,7 +250,7 @@ begin
     SDL_WINDOWPOS_UNDEFINED,
     SDL_WINDOWPOS_UNDEFINED,
     0, 0,
-    SDL_WINDOW_FULLSCREEN_DESKTOP or SDL_WINDOW_OPENGL);
+    SDL_WINDOW_FULLSCREEN_DESKTOP{ or SDL_WINDOW_OPENGL});
   if fWindow=nil then raise Exception.Create('Could not create window!');
   fRenderer:=SDL_CreateRenderer(fWindow, -1, 0);
   if fRenderer=nil then raise Exception.Create('Could not create renderer!');

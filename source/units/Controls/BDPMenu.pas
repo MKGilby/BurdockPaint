@@ -283,7 +283,7 @@ var atm:TSubMenu;x,menucount,submenucount:integer;msg:TMessage;Xs:TStream;
 begin
   Left:=0;
   Top:=0;
-  Width:=WINDOWWIDTH;
+  Width:=Settings.WindowWidth;
   Height:=TOPMENUHEIGHT;
   Name:='MainMenu';
   SetLength(fItems,0);
