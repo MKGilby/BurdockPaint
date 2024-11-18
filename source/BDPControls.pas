@@ -11,14 +11,14 @@ interface
 
 uses
   SysUtils, mk_sdl2, vcc2_ContainerStatic, BDPMessage, BDPGradientControl, BDPToolBase,
-  BDPInkBase, BDPColorSelector, BDPButton, BDPSliders;
+  BDPInkBase, BDPColorSelector, BDPButton, BDPSliders, MKMouse2;
 
 type
 
   { TBDControls }
 
   TBDControls=class(TContainerStatic)
-    constructor Create;
+    constructor Create(iLeft,iTop,iWidth,iHeight:integer);
     procedure ActivateToolButton(index:integer);
     procedure ActivateInkButton(index:integer);
     function ProcessMessage(msg:TMessage):boolean;
@@ -28,12 +28,26 @@ type
   protected
     procedure ReDraw; override;
   private
-    fToolButtons:array[0..5] of TBDButton;
-    fInkButtons:array[0..5] of TBDButton;
+    fToolButtons:array of TBDButton;
+    fInkButtons:array of TBDButton;
     fUndoButton,fRedoButton:TBDButton;
     fColorSelector:TBDColorSelector;
     fGradient:TBDGradient;
     fImageCountSlider:TBDHorizontalSlider;
+    procedure CreateBaseLayout;
+    procedure CreateExtendedLayout;
+    procedure CreateUndoButtonGroup(var x:integer;y:integer);
+    procedure CreateToolButtons(var x:integer;y,rowcount,colcount:integer);
+    procedure CreateColorSelector(var x:integer;y:integer);
+    procedure CreateImageCountSlider(var x:integer;y:integer);
+    procedure CreateInkButtons(var x:integer;y,rowcount,colcount:integer);
+    procedure CreateGradient(var x:integer;y:integer);
+    procedure CreateToggleButtons2x2(var x:integer;y:integer);
+    procedure CreateToggleButtons4x1(var x:integer;y:integer);
+    procedure CreateButton(pX,pY,pWidth,pHeight:integer;
+                           pCaption,pHint:string;pSelected:boolean;
+                           pClick:TMouseButtonEvent;
+                           pKeyDown:TKeyEvent);
     procedure MouseEnter(Sender:TObject);
     procedure ControlsShow(Sender:TObject);
     function ControlsKeyDown(Sender:TObject;key:integer):boolean;
@@ -52,27 +66,18 @@ type
 
 implementation
 
-uses SDL2, BDPShared, MKMouse2, BDPKeyMapping;
+uses SDL2, BDPShared, BDPKeyMapping;
 
-const
-  GRADIENTLEFT=720;
-  GRADIENTWIDTH=320;
-  GRADIENTHEIGHT=36;
 
 { TBDControls }
 
-constructor TBDControls.Create;
-var
-  i:integer;
-  atmT:TBDTool;
-  atmI:TBDInk;
-  atmB:TBDButton;
+constructor TBDControls.Create(iLeft, iTop, iWidth, iHeight: integer);
 begin
   inherited Create;
-  fLeft:=0;
-  fTop:=Settings.WindowHeight-CONTROLSHEIGHT;
-  Width:=Settings.WindowWidth-112;
-  Height:=CONTROLSHEIGHT;
+  fLeft:=iLeft;
+  fTop:=iTop;
+  Width:=iWidth;
+  Height:=iHeight;
   fVisible:=true;
   OnMouseEnter:=MouseEnter;
   OnShow:=ControlsShow;
@@ -80,115 +85,13 @@ begin
   ZIndex:=LEVEL1CONTROLS_ZINDEX;
   fName:='Controls';
 
-  // Tool buttons
-  for i:=0 to 5 do begin
-    atmT:=Tools.ItemByName[Settings.SelectedTools[i]];
-    if atmT=nil then raise Exception.Create('Tool not found! ('+Settings.SelectedTools[i]+')');
-    fToolButtons[i]:=TBDButton.Create(
-      fLeft+TOOLBUTTONSLEFT+i mod 2*130,
-      fTop+TOOLBUTTONSTOP+i div 2*30,
-      NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-      atmT.Name,
-      atmT.Hint,
-      atmT);
-    fToolButtons[i].ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-    fToolButtons[i].Tag:=i;
-    fToolButtons[i].OnClick:=Self.ToolButtonClick;
-    AddChild(fToolButtons[i]);
-  end;
+  if Width>1168+NORMALBUTTONWIDTH+3 then
+    CreateExtendedLayout
+  else
+    CreateBaseLayout;
+
   ActivateToolButton(Settings.ActiveTool);
-
-  // Ink buttons
-  for i:=0 to 5 do begin
-    atmi:=Inks.ItemByName[Settings.SelectedInks[i]];
-    if atmi=nil then raise Exception.Create('Ink not found! ('+Settings.SelectedInks[i]+')');
-    fInkButtons[i]:=TBDButton.Create(
-      fLeft+InkButtonsLeft+i mod 3*130,
-      fTop+InkButtonsTop+i div 3*30,
-      NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
-      atmI.Name,
-      atmI.Hint,
-      atmI);
-    fInkButtons[i].ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-    fInkButtons[i].Tag:=i;
-    fInkButtons[i].OnClick:=Self.InkButtonClick;
-    AddChild(fInkButtons[i]);
-  end;
   ActivateInkButton(Settings.ActiveInk);
-
-  // Undo/redo buttons
-  fUndoButton:=TBDButton.Create(fLeft+CONTROLUNDOBUTTONSLEFT, fTop+CONTROLUNDOBUTTONSTOP,
-    CONTROLUNDOBUTTONWIDTH, NORMALBUTTONHEIGHT, 'UNDO', 'UNDO LAST OPERATION.');
-  fUndoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-  fUndoButton.OnClick:=UndoButtonClick;
-  AddChild(fUndoButton);
-
-  fRedoButton:=TBDButton.Create(fLeft+CONTROLUNDOBUTTONSLEFT, fTop+CONTROLUNDOBUTTONSTOP+30,
-    CONTROLUNDOBUTTONWIDTH, NORMALBUTTONHEIGHT, 'REDO', 'REDO LAST UNDOED OPERATION.');
-  fRedoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-  fRedoButton.OnClick:=RedoButtonClick;
-  AddChild(fRedoButton);
-
-  // Toggle buttons
-  atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+30,
-    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'F', 'FILL SHAPES.');
-  atmB.Selected:=Settings.FillShapes;
-  atmB.OnClick:=FilledButtonClick;
-  atmB.OnKeyDown:=FilledButtonKeyDown;
-  atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-  AddChild(atmB);
-
-  atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT+SMALLBUTTONWIDTH+3, fTop+TOGGLEBUTTONSTOP+30,
-    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'K', 'CLEAR KEY COLOR.');
-  atmB.Selected:=Settings.ClearKeyColor;
-  atmB.OnClick:=ClearKeyColorButtonClick;
-  atmB.OnKeyDown:=ClearKeyColorButtonKeyDown;
-  atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-  AddChild(atmB);
-
-  atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT, fTop+TOGGLEBUTTONSTOP+60,
-    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'D', 'DITHER GRADIENTS. '#132'TOGGLE '#133'CONFIGURE');
-  atmB.Selected:=Settings.DitherGradients;
-  atmB.OnClick:=DitherButtonClick;
-  atmB.OnKeyDown:=DitherButtonKeyDown;
-  atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-  AddChild(atmB);
-
-  atmB:=TBDButton.Create(fLeft+TOGGLEBUTTONSLEFT+SMALLBUTTONWIDTH+3, fTop+TOGGLEBUTTONSTOP+60,
-    SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT, 'G', 'SHOW GRID. '#132'TOGGLE '#133'CONFIGURE');
-  atmB.Selected:=Settings.ShowGrid;
-//  atmB.OnClick:=DitherButtonClick;
-//  atmB.OnKeyDown:=DitherButtonKeyDown;
-  atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-  AddChild(atmB);
-
-  // Color selector
-  fColorSelector:=TBDColorSelector.Create(fLeft+CONTROLCOLORSELECTORLEFT, fTop+CONTROLCOLORSELECTORTOP,
-    279,36);
-  fColorSelector.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-  fColorSelector.Name:='ColorSelector';
-  AddChild(fColorSelector);
-
-  // Imagecount slider
-  fImageCountSlider:=TBDHorizontalSlider.Create(
-    fLeft+IMAGECOUNTSLIDERLEFT, fTop+IMAGECOUNTSLIDERTOP, IMAGECOUNTSLIDERWIDTH, IMAGECOUNTSLIDERHEIGHT);
-  fImageCountSlider.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-  fImageCountSlider.Name:='ImagesSlider';
-  fImageCountSlider.MinValue:=1;
-  fImageCountSlider.MaxValue:=Project.Images.Count;
-  fImageCountSlider.Position:=Project.CurrentImageIndex+1;
-  fImageCountSlider.MaxValue:=1;
-  fImageCountSlider.Position:=1;
-  fImageCountSlider.OnChange:=ActiveImageChange;
-  AddChild(fImageCountSlider);
-
-  // Gradient
-  fGradient:=TBDGradient.Create(fLeft+INKBUTTONSLEFT,fTop+6,GRADIENTWIDTH,GRADIENTHEIGHT,Project.CurrentGradientList.ActiveGradient);
-  fGradient.Height:=NORMALBUTTONHEIGHT;
-  fGradient.Width:=CONTROLGRADIENTWIDTH;
-  fGradient.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
-  fGradient.Name:='Gradient (Controls)';
-  AddChild(fGradient);
 
   MouseObjects.Add(Self);
   fNeedRedraw:=true;
@@ -197,7 +100,7 @@ end;
 procedure TBDControls.ActivateToolButton(index:integer);
 var i:integer;
 begin
-  if (index>=0) and (index<6) then begin
+  if (index>=0) and (index<length(fToolButtons)) then begin
     // Select the specified button and fill ActiveTool accordingly.
     Settings.ActiveTool:=index;
     for i:=0 to length(fToolButtons)-1 do
@@ -220,7 +123,7 @@ end;
 procedure TBDControls.ActivateInkButton(index:integer);
 var i:integer;
 begin
-  if (index>=0) and (index<6) then begin
+  if (index>=0) and (index<length(fInkButtons)) then begin
     Settings.ActiveInk:=index;
     for i:=0 to length(fInkButtons)-1 do
       if i<>index then begin
@@ -442,6 +345,186 @@ procedure TBDControls.ReDraw;
 begin
   fImage.Bar(0,0,fImage.Width,3,SystemPalette[SYSTEMCOLORDARK]);
   fImage.Bar(0,3,fImage.Width,fImage.Height-3,SystemPalette[SYSTEMCOLORMID]);
+end;
+
+procedure TBDControls.CreateBaseLayout;
+var x,y,savedx:integer;
+begin
+  x:=fLeft+3;y:=fTop+6;
+  CreateUndoButtonGroup(x,y);
+  CreateToolButtons(x,y,3,2);
+  savedx:=x;
+  CreateColorSelector(savedx,y);
+  CreateImageCountSlider(x,y+CONTROLSHEIGHT-IMAGECOUNTSLIDERHEIGHT-9);
+  savedx:=x;
+  CreateGradient(savedx,y);
+  CreateInkButtons(x,y+NORMALBUTTONHEIGHT+3,2,3);
+  CreateToggleButtons2x2(x,y+NORMALBUTTONHEIGHT+3);
+end;
+
+procedure TBDControls.CreateExtendedLayout;
+var x,y,savedx:integer;
+begin
+  x:=fLeft+3;y:=fTop+6;
+  CreateUndoButtonGroup(x,y);
+  CreateToolButtons(x,y,3,3);
+  savedx:=x;
+  CreateColorSelector(savedx,y);
+  CreateImageCountSlider(x,y+CONTROLSHEIGHT-IMAGECOUNTSLIDERHEIGHT-9);
+  savedx:=x;
+  CreateGradient(savedx,y);
+  CreateInkButtons(x,y+NORMALBUTTONHEIGHT+3,2,4);
+  CreateToggleButtons4x1(savedx,y);
+end;
+
+procedure TBDControls.CreateUndoButtonGroup(var x:integer; y:integer);
+begin
+  fUndoButton:=TBDButton.Create(x, y+NORMALBUTTONHEIGHT+3,
+    CONTROLUNDOBUTTONWIDTH, NORMALBUTTONHEIGHT, 'UNDO', 'UNDO LAST OPERATION.');
+  fUndoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fUndoButton.OnClick:=UndoButtonClick;
+  AddChild(fUndoButton);
+
+  fRedoButton:=TBDButton.Create(x, y+(NORMALBUTTONHEIGHT+3)*2,
+    CONTROLUNDOBUTTONWIDTH, NORMALBUTTONHEIGHT, 'REDO', 'REDO LAST UNDOED OPERATION.');
+  fRedoButton.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fRedoButton.OnClick:=RedoButtonClick;
+  AddChild(fRedoButton);
+
+  x+=CONTROLUNDOBUTTONWIDTH+3;
+end;
+
+procedure TBDControls.CreateToolButtons(var x:integer;y,rowcount,colcount:integer);
+var i,j:integer;atmT:TBDTool;
+begin
+  j:=rowcount*colcount;
+  if j>8 then j:=8;
+  SetLength(fToolButtons,j);
+  for i:=0 to j-1 do begin
+    atmT:=Tools.ItemByName[Settings.SelectedTools[i]];
+    if atmT=nil then raise Exception.Create('Tool not found! ('+Settings.SelectedTools[i]+')');
+    fToolButtons[i]:=TBDButton.Create(
+      x+i div rowcount*(NORMALBUTTONWIDTH+3),
+      y+i mod rowcount*(NORMALBUTTONHEIGHT+3),
+      NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
+      atmT.Name,
+      atmT.Hint,
+      atmT);
+    fToolButtons[i].ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+    fToolButtons[i].Tag:=i;
+    fToolButtons[i].OnClick:=Self.ToolButtonClick;
+    AddChild(fToolButtons[i]);
+  end;
+  x+=colcount*(NORMALBUTTONWIDTH+3);
+end;
+
+procedure TBDControls.CreateColorSelector(var x:integer; y:integer);
+begin
+  fColorSelector:=TBDColorSelector.Create(x, y, 279,36);
+  fColorSelector.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fColorSelector.Name:='ColorSelector';
+  AddChild(fColorSelector);
+  x+=IMAGECOUNTSLIDERWIDTH+3;
+end;
+
+procedure TBDControls.CreateImageCountSlider(var x:integer; y:integer);
+begin
+  fImageCountSlider:=TBDHorizontalSlider.Create(
+    x, y, IMAGECOUNTSLIDERWIDTH, IMAGECOUNTSLIDERHEIGHT);
+  fImageCountSlider.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fImageCountSlider.Name:='ImagesSlider';
+  fImageCountSlider.MinValue:=1;
+  fImageCountSlider.MaxValue:=Project.Images.Count;
+  fImageCountSlider.Position:=Project.CurrentImageIndex+1;
+  fImageCountSlider.MaxValue:=1;
+  fImageCountSlider.Position:=1;
+  fImageCountSlider.OnChange:=ActiveImageChange;
+  AddChild(fImageCountSlider);
+  x+=IMAGECOUNTSLIDERWIDTH+3;
+end;
+
+procedure TBDControls.CreateInkButtons(var x:integer;y,rowcount,colcount:integer);
+var i:integer;atmi:TBDInk;
+begin
+  SetLength(fInkButtons,rowcount*colcount);
+  for i:=0 to rowcount*colcount-1 do begin
+    atmi:=Inks.ItemByName[Settings.SelectedInks[i]];
+    if atmi=nil then raise Exception.Create('Ink not found! ('+Settings.SelectedInks[i]+')');
+    fInkButtons[i]:=TBDButton.Create(
+    x+i div rowcount*(NORMALBUTTONWIDTH+3),
+    y+i mod rowcount*(NORMALBUTTONHEIGHT+3),
+      NORMALBUTTONWIDTH,NORMALBUTTONHEIGHT,
+      atmI.Name,
+      atmI.Hint,
+      atmI);
+    fInkButtons[i].ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+    fInkButtons[i].Tag:=i;
+    fInkButtons[i].OnClick:=Self.InkButtonClick;
+    AddChild(fInkButtons[i]);
+  end;
+  x+=colcount*(NORMALBUTTONWIDTH+3);
+end;
+
+procedure TBDControls.CreateGradient(var x:integer; y:integer);
+begin
+  fGradient:=TBDGradient.Create(x,y,CONTROLGRADIENTWIDTH,NORMALBUTTONHEIGHT,Project.CurrentGradientList.ActiveGradient);
+  fGradient.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  fGradient.Name:='Gradient (Controls)';
+  AddChild(fGradient);
+  x+=CONTROLGRADIENTWIDTH+3;
+end;
+
+procedure TBDControls.CreateToggleButtons2x2(var x:integer; y:integer);
+begin
+  CreateButton(x, y, SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT,
+    'F', 'FILL SHAPES.',
+    Settings.FillShapes, FilledButtonClick, FilledButtonKeyDown);
+
+  CreateButton(x+SMALLBUTTONWIDTH+3, y, SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT,
+    'K', 'CLEAR KEY COLOR.',
+    Settings.ClearKeyColor, ClearKeyColorButtonClick, ClearKeyColorButtonKeyDown);
+
+  CreateButton(x, y+NORMALBUTTONHEIGHT+3, SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT,
+    'D', 'DITHER GRADIENTS. '#132'TOGGLE '#133'CONFIGURE',
+    Settings.DitherGradients, DitherButtonClick, DitherButtonKeyDown);
+
+  CreateButton(x+SMALLBUTTONWIDTH+3, y+NORMALBUTTONHEIGHT+3, SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT,
+    'G', 'SHOW GRID. '#132'TOGGLE '#133'CONFIGURE',
+    Settings.ShowGrid, nil, nil);
+  x+=2*(SMALLBUTTONWIDTH+3);
+end;
+
+procedure TBDControls.CreateToggleButtons4x1(var x:integer; y:integer);
+begin
+  CreateButton(x, y, SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT,
+    'F', 'FILL SHAPES.',
+    Settings.FillShapes, FilledButtonClick, FilledButtonKeyDown);
+
+  CreateButton(x+SMALLBUTTONWIDTH+3, y, SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT,
+    'K', 'CLEAR KEY COLOR.',
+    Settings.ClearKeyColor, ClearKeyColorButtonClick, ClearKeyColorButtonKeyDown);
+
+  CreateButton(x+(SMALLBUTTONWIDTH+3)*2, y, SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT,
+    'D', 'DITHER GRADIENTS. '#132'TOGGLE '#133'CONFIGURE',
+    Settings.DitherGradients, DitherButtonClick, DitherButtonKeyDown);
+
+  CreateButton(x+(SMALLBUTTONWIDTH+3)*3, y, SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT,
+    'G', 'SHOW GRID. '#132'TOGGLE '#133'CONFIGURE',
+    Settings.ShowGrid, nil, nil);
+  x+=4*(SMALLBUTTONWIDTH+3);
+end;
+
+procedure TBDControls.CreateButton(pX,pY,pWidth,pHeight:integer;
+  pCaption,pHint:string; pSelected:boolean; pClick:TMouseButtonEvent;
+  pKeyDown:TKeyEvent);
+var atmB:TBDButton;
+begin
+  atmB:=TBDButton.Create(pX, pY, pWidth, pHeight, pCaption, pHint);
+  atmB.Selected:=pSelected;
+  atmB.OnClick:=pClick;
+  atmB.OnKeyDown:=pKeyDown;
+  atmB.ZIndex:=LEVEL1CONTROLS_ZINDEX+1;
+  AddChild(atmB);
 end;
 
 end.

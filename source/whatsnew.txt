@@ -25,6 +25,10 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2024.10.29 - Build 59
+- Better creation of TControl.
+- If the window is wide enough, there are 8 tool buttons and 8 ink buttons.
+
 2024.10.29 - Build 58
 - You can set window size in INI file (Settings/WindowWidth and WindowHeight).
 - You can not set it below 1280x720.

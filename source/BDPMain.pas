@@ -148,7 +148,7 @@ begin
   Log.Trace('After MainMenu: '+inttostr(GetHeapStatus.TotalAllocated));
   fAboutDialog:=TBDAboutDialog.Create;
   Log.Trace('After AboutDialog: '+inttostr(GetHeapStatus.TotalAllocated));
-  fControls:=TBDControls.Create;
+  fControls:=TBDControls.Create(0,Settings.WindowHeight-CONTROLSHEIGHT,Settings.WindowWidth-COORDINATEBOXWIDTH,CONTROLSHEIGHT);
   Log.Trace('After Controls: '+inttostr(GetHeapStatus.TotalAllocated));
   fDrawArea:=TBDDrawArea.Create;
   Log.Trace('After DrawArea: '+inttostr(GetHeapStatus.TotalAllocated));

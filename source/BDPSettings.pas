@@ -13,7 +13,7 @@ uses
   Classes, SysUtils;
 
 type
-  TStringArray6=array[0..5] of string;
+  TStringArray8=array[0..7] of string;
 
   { TSettings }
 
@@ -25,9 +25,9 @@ type
   private
     fShowSplash:Boolean;
     fZoom:integer;
-    fSelectedTools:TStringArray6;
+    fSelectedTools:TStringArray8;
     fActiveTool:integer;  // within fSelectedTools
-    fSelectedInks:TStringArray6;
+    fSelectedInks:TStringArray8;
     fActiveInk:integer;  // within fSelectedInks
     fActiveColor:uint32;
     fDitherStrength:integer;
@@ -101,6 +101,8 @@ begin
   fSelectedTools[3]:='CIRCLE';
   fSelectedTools[4]:='SEP.';
   fSelectedTools[5]:='FILL';
+  fSelectedTools[6]:='EDGE';
+  fSelectedTools[7]:='FILLTO';
   fActiveTool:=0;
   fSelectedInks[0]:='OPAQUE';
   fSelectedInks[1]:='H GRAD';
@@ -108,6 +110,8 @@ begin
   fSelectedInks[3]:='SOFTEN';
   fSelectedInks[4]:='L GRAD';
   fSelectedInks[5]:='C GRAD';
+  fSelectedInks[6]:='R GRAD';
+  fSelectedInks[7]:='RANDOM';
   fActiveInk:=0;
   ColorSelectorMainColor:=$FFFF0000;
   ColorSelectorLeftColor:=$FF000000;
@@ -155,6 +159,8 @@ begin
     fSelectedTools[3]:=INI.ReadString('BasicControls','Tool3','CIRCLE');
     fSelectedTools[4]:=INI.ReadString('BasicControls','Tool4','SEP.');
     fSelectedTools[5]:=INI.ReadString('BasicControls','Tool5','FILL');
+    fSelectedTools[6]:=INI.ReadString('BasicControls','Tool4','EDGE');
+    fSelectedTools[7]:=INI.ReadString('BasicControls','Tool5','FILLTO');
     fActiveTool:=INI.ReadInteger('BasicControls','ActiveTool',0);
     if (fActiveTool<0) or (fActiveTool>5) then fActiveTool:=0;
     fSelectedInks[0]:=INI.ReadString('BasicControls','Ink0','OPAQUE');
@@ -163,6 +169,8 @@ begin
     fSelectedInks[3]:=INI.ReadString('BasicControls','Ink3','SOFTEN');
     fSelectedInks[4]:=INI.ReadString('BasicControls','Ink4','L GRAD');
     fSelectedInks[5]:=INI.ReadString('BasicControls','Ink5','C GRAD');
+    fSelectedInks[6]:=INI.ReadString('BasicControls','Ink4','R GRAD');
+    fSelectedInks[7]:=INI.ReadString('BasicControls','Ink5','RANDOM');
     fActiveInk:=INI.ReadInteger('BasicControls','ActiveInk',0);
     if (fActiveInk<0) or (fActiveInk>5) then fActiveInk:=0;
     FillShapes:=INI.ReadBool('BasicControls','FillShapes',false);
@@ -266,28 +274,28 @@ end;
 
 function TSettings.fGetSelectedTool(index:integer):string;
 begin
-  if (index>=0) and (index<6) then
+  if (index>=0) and (index<8) then
     Result:=fSelectedTools[index]
   else raise Exception.Create(Format('fGetSelectedTool: Index out of range! (%d)',[index]));
 end;
 
 procedure TSettings.fSetSelectedTool(index:integer; value:string);
 begin
-  if (index>=0) and (index<6) then
+  if (index>=0) and (index<8) then
     fSelectedTools[index]:=value
   else raise Exception.Create(Format('fSetSelectedTool: Index out of range! (%d)',[index]));
 end;
 
 function TSettings.fGetSelectedInk(index:integer):string;
 begin
-  if (index>=0) and (index<6) then
+  if (index>=0) and (index<8) then
     Result:=fSelectedInks[index]
   else raise Exception.Create(Format('fGetSelectedInk: Index out of range! (%d)',[index]));
 end;
 
 procedure TSettings.fSetSelectedInk(index:integer; value:string);
 begin
-  if (index>=0) and (index<6) then
+  if (index>=0) and (index<8) then
     fSelectedInks[index]:=value
   else raise Exception.Create(Format('fSetSelectedInk: Index out of range! (%d)',[index]));
 end;
