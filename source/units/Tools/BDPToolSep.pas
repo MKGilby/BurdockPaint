@@ -19,6 +19,7 @@ type
   TBDToolSep=class(TBDTool)
     constructor Create; override;
     function Click(x,y,button:integer):boolean; override;
+    procedure Configure; override;
   end;
 
 implementation
@@ -31,7 +32,7 @@ constructor TBDToolSep.Create;
 begin
   inherited ;
   fName:='SEP.';
-  fHint:=uppercase('Change the clicked color to ink color.');
+  fHint:=uppercase('Change the clicked color to ink color. '#132'SELECT '#133'CONFIGURE');
   fPinnable:=true;
 end;
 
@@ -64,6 +65,11 @@ begin
     Project.CurrentImage.RegionUndo.AddImageRedoToLastUndo(fLeft,fTop,fRight-fLeft+1,fBottom-fTop+1);
     Result:=true;
   end else Result:=false;
+end;
+
+procedure TBDToolSep.Configure;
+begin
+  MessageQueue.AddMessage(MSG_OPENCONFIGURESEPDIALOG);
 end;
 
 end.

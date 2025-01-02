@@ -25,7 +25,11 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
-2024.10.29 - Build 59
+2025.01.02 - Build 60
+- Fix in saving 7th and 8th tool and ink buttons.
+- Added SEP. configure dialog. The setting is not working yet.
+
+2024.11.18 - Build 59
 - Better creation of TControl.
 - If the window is wide enough, there are 8 tool buttons and 8 ink buttons.
 

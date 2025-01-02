@@ -15,7 +15,7 @@ uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
   BDPRotateCELDialog, BDPAboutDialog, BDPMessageBox, BDPDitherDialog,
   BDPConfigureRGradDialog, BDPCoordinateBox, BDPGradientEditor, BDPColorPalette2,
   BDPGradientSelector, BDPConfigureTintDialog, BDPConfigureSoftenDialog,
-  BDPConfigureCircleDialog, BDPImageResizeDialog;
+  BDPConfigureCircleDialog, BDPImageResizeDialog, BDPConfigureSepDialog;
 
 type
 
@@ -45,6 +45,7 @@ type
     fConfigureSoftenDialog:TBDConfigureSoftenDialog;
     fConfigureCircleDialog:TBDConfigureCircleDialog;
     fImageResizeDialog:TBDImageResizeDialog;
+    fConfigureSepDialog:TBDConfigureSepDialog;
 
     fBackup:TFileBackup;
     fOpenDialog:TOpenDialog;
@@ -182,6 +183,8 @@ begin
   Log.Trace('After ConfigureCircleDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   fImageResizeDialog:=TBDImageResizeDialog.Create;
   Log.Trace('After ImageResizeDialog: '+inttostr(GetHeapStatus.TotalAllocated));
+  fConfigureSepDialog:=TBDConfigureSepDialog.Create;
+  Log.Trace('After ConfigureSepDialog: '+inttostr(GetHeapStatus.TotalAllocated));
   MouseObjects.List;
 
   fOpenDialog:=TOpenDialog.Create(nil);
@@ -204,6 +207,7 @@ begin
   if Assigned(fSaveProjectDialog) then fSaveProjectDialog.Free;
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
 //  if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
+  fConfigureSepDialog.Free;
   fImageResizeDialog.Free;
   fConfigureCircleDialog.Free;
   fConfigureSoftenDialog.Free;
@@ -283,6 +287,7 @@ begin
         MSG_OPENCONFIGURETINTDIALOG:   fConfigureTintDialog.Show;
         MSG_OPENCONFIGURESOFTENDIALOG: fConfigureSoftenDialog.Show;
         MSG_OPENCONFIGURECIRCLEDIALOG: fConfigureCircleDialog.Show;
+        MSG_OPENCONFIGURESEPDIALOG:    fConfigureSepDialog.Show;
         MSG_OPENPROJECT:               OpenProject;
         MSG_SAVEPROJECT:               SaveProject;
         MSG_SAVECLEARPROJECT:          SaveClearProject;

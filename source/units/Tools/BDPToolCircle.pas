@@ -39,7 +39,7 @@ constructor TBDToolCircle.Create;
 begin
   inherited ;
   fName:='CIRCLE';
-  fHint:=uppercase('Draw a circle. Right click to select method.');
+  fHint:=uppercase('Draw a circle. '#132'SELECT '#133'CONFIGURE DRAWING METHOD');
   fPinnable:=true;
 end;
 

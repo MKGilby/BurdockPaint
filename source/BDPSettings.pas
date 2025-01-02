@@ -68,6 +68,7 @@ type
     CircleMode:integer; // 0 - Center+radius, 1 - BoundingBox
     DitherColorBanding:boolean;
     DitherColorBandCount:integer;
+    SepBoxed:boolean;
     TempInt01,TempInt02:integer;  // Used in dialogs when values don't have to be saved.
     property Zoom:integer read fZoom write fSetZoom;
     property SelectedTools[index:integer]:string read fGetSelectedTool write fSetSelectedTool;
@@ -159,8 +160,8 @@ begin
     fSelectedTools[3]:=INI.ReadString('BasicControls','Tool3','CIRCLE');
     fSelectedTools[4]:=INI.ReadString('BasicControls','Tool4','SEP.');
     fSelectedTools[5]:=INI.ReadString('BasicControls','Tool5','FILL');
-    fSelectedTools[6]:=INI.ReadString('BasicControls','Tool4','EDGE');
-    fSelectedTools[7]:=INI.ReadString('BasicControls','Tool5','FILLTO');
+    fSelectedTools[6]:=INI.ReadString('BasicControls','Tool6','EDGE');
+    fSelectedTools[7]:=INI.ReadString('BasicControls','Tool7','FILLTO');
     fActiveTool:=INI.ReadInteger('BasicControls','ActiveTool',0);
     if (fActiveTool<0) or (fActiveTool>5) then fActiveTool:=0;
     fSelectedInks[0]:=INI.ReadString('BasicControls','Ink0','OPAQUE');
@@ -169,8 +170,8 @@ begin
     fSelectedInks[3]:=INI.ReadString('BasicControls','Ink3','SOFTEN');
     fSelectedInks[4]:=INI.ReadString('BasicControls','Ink4','L GRAD');
     fSelectedInks[5]:=INI.ReadString('BasicControls','Ink5','C GRAD');
-    fSelectedInks[6]:=INI.ReadString('BasicControls','Ink4','R GRAD');
-    fSelectedInks[7]:=INI.ReadString('BasicControls','Ink5','RANDOM');
+    fSelectedInks[6]:=INI.ReadString('BasicControls','Ink6','R GRAD');
+    fSelectedInks[7]:=INI.ReadString('BasicControls','Ink7','RANDOM');
     fActiveInk:=INI.ReadInteger('BasicControls','ActiveInk',0);
     if (fActiveInk<0) or (fActiveInk>5) then fActiveInk:=0;
     FillShapes:=INI.ReadBool('BasicControls','FillShapes',false);
@@ -209,6 +210,7 @@ begin
     SoftenAlphaToo:=INI.ReadBool('Inks','SoftenAlphaToo',false);
     // Tools' settings
     CircleMode:=INI.ReadInteger('Tools','CircleMode',0);
+    SepBoxed:=INI.ReadBool('Tools','SepBoxed',false);
   finally
     INI.Free;
   end;
@@ -225,10 +227,10 @@ begin
     INI.WriteInteger('DrawArea','ZoomTop',ZoomTop);
     INI.WriteBool('DrawArea','ShowGrid',ShowGrid);
     // Controls state
-    for i:=0 to 5 do
+    for i:=0 to length(fSelectedTools)-1 do
       INI.WriteString('BasicControls','Tool'+inttostr(i),fSelectedTools[i]);
     INI.WriteInteger('BasicControls','ActiveTool',fActiveTool);
-    for i:=0 to 5 do
+    for i:=0 to length(fSelectedInks)-1 do
       INI.WriteString('BasicControls','Ink'+inttostr(i),fSelectedInks[i]);
     INI.WriteInteger('BasicControls','ActiveInk',fActiveInk);
     INI.WriteBool('BasicControls','FillShapes',FillShapes);
@@ -267,6 +269,7 @@ begin
     INI.WriteBool('Inks','SoftenAlphaToo',SoftenAlphaToo);
     // Tools' settings
     INI.WriteInteger('Tools','CircleMode',CircleMode);
+    INI.WriteBool('Tools','SepBoxed',SepBoxed);
   finally
     INI.Free;
   end;

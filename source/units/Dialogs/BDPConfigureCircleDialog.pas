@@ -3,7 +3,7 @@
   See "copyright.txt" for details.
 }
 
-// Generated on 2024.09.07
+// Generated on 2025.01.02
 
 unit BDPConfigureCircleDialog;
 
@@ -43,7 +43,7 @@ uses BDPShared, MKMouse2;
 
 constructor TBDConfigureCircleDialog.Create;
 begin
-  inherited Create(489,138);
+  inherited Create(489,156);
   fName:='BDPConfigureCircleDialog';
   fCaption:='CONFIGURE CIRCLE PARAMETERS';
   OnShow:=Show;
@@ -62,13 +62,13 @@ begin
   fConfCircleBXButton.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(fConfCircleBXButton);
 
-  fConfCircleOKButton:=TBDButton.Create(fLeft+113,fTop+93,127,27,'OK','APPLY VALUES');
+  fConfCircleOKButton:=TBDButton.Create(fLeft+113,fTop+111,127,27,'OK','APPLY VALUES');
   fConfCircleOKButton.OnClick:=ConfCircleOKButtonClick;
   fConfCircleOKButton.Name:='ConfCircleOKButton';
   fConfCircleOKButton.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(fConfCircleOKButton);
 
-  fConfCircleCancelButton:=TBDButton.Create(fLeft+249,fTop+93,127,27,'CANCEL','CLOSE DIALOG');
+  fConfCircleCancelButton:=TBDButton.Create(fLeft+249,fTop+111,127,27,'CANCEL','CLOSE DIALOG');
   fConfCircleCancelButton.OnClick:=ConfCircleCancelButtonClick;
   fConfCircleCancelButton.Name:='ConfCircleCancelButton';
   fConfCircleCancelButton.ZIndex:=MODALDIALOG_ZINDEX+1;

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ See DefaultControlSizes.txt for constants.
+
+ In this first version all the controls are put under each other leaving
+ CONTROLSPACING pixel distance beetween them. Also MARGINS pixel is left
+ from the borders of the dialog.
+-->
+
+<Dialog>
+  <Head>
+    <Name>BDPConfigureSepDialog</Name>
+    <ClassName>TBDConfigureSepDialog</ClassName>
+    <Caption>Configure Separate colors parameters</Caption>
+  </Head>
+
+  <Controls>
+    <Label>
+      <Caption>Draw mode</Caption>
+    </Label>
+    <CheckBox>
+      <Name>ConfSepBoxedCheckbox</Name>
+      <Caption>Boxed</Caption>
+      <Hint>Draw a box first and apply sep only inside.</Hint>
+      <SettingField>SepBoxed</SettingField>
+    </CheckBox>
+    <Divider/>
+    <Split direction="Horizontal">
+      <Button>
+        <Name>ConfSepOKButton</Name>
+        <Caption>OK</Caption>
+        <Hint>Apply values</Hint>
+        <Save>Y</Save>
+        <Close>Y</Close>
+      </Button>
+      <Button>
+        <Name>ConfSepCancelButton</Name>
+        <Caption>Cancel</Caption>
+        <Hint>Close dialog</Hint>
+        <Save>N</Save>
+        <Close>Y</Close>
+      </Button>
+    </Split>
+  </Controls>
+</Dialog>

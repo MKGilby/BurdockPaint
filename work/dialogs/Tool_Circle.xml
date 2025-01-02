@@ -36,6 +36,7 @@
         <SettingValue>1</SettingValue>
       </Button>
     </Split>
+    <Divider/>
     <Split direction="Horizontal">
       <Button>
         <Name>ConfCircleOKButton</Name>

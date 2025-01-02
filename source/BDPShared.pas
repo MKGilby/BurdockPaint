@@ -162,6 +162,9 @@ const
   // ImageResizeDialog is closed with OK
   MSG_RESIZEIMAGECLOSED=35;
 
+  // Open ConfigureSepDialog.
+  MSG_OPENCONFIGURESEPDIALOG=36;
+
 
   // ------- Menu Messages ------- Range: 200-299 -------
   {$i includes\menu.inc}
