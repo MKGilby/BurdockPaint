@@ -3,7 +3,7 @@
 // You can freely distribute the sources
 //
 // Written by Gilby/MKSZTSZ
-// Hungary, 2020
+// Hungary, 2020-2024
 // ------------------------------------------------------------------
 
 // Version info:
@@ -27,6 +27,13 @@
 //     * Bugfix with writing unnamed animations.
 //   1.08 - Gilby - 2023.07.17
 //     * Bugfix with writing colormode 3 images with odd width and 4, 2 or 1 bitdepth.
+//   1.09 - Gilby - 2023.12.14
+//     * Following changes in AnimationDataUnit.
+//     * Added new format for ANIM and ANMZ chunks.
+//   1.10 - Gilby - 2024.08.16
+//     * Following changes in FontDataUnit.
+//   1.11 - Gilby - 2024.12.04
+//     * Removing unused variables.
 
 unit ARGBImagePNGWriterUnit;
 
@@ -50,7 +57,7 @@ uses Classes, SysUtils, ARGBImageUnit, CRC32Unit, FastPaletteUnit,
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.08';
+  Version='1.10';
 
   HEADER=#137#80#78#71#13#10#26#10;
   IHDR:uint32=$52444849; //  #82#68#72#73;
@@ -131,42 +138,21 @@ begin
 end;
 
 procedure WriteAnimations(pTarget:TStream;pAnimations:TAnimationDatas);
-var Xs,ch:TMemoryStream;i,j,f:integer;s:string;
+var Xs,ch:TMemoryStream;i,j:integer;b:byte;
 begin
   Xs:=TMemoryStream.Create;
   ch:=TMemoryStream.Create;
   try
+    j:=0;
+    Xs.Write(j,2);  // To indicate new format animation data
+    b:=1;
+    Xs.Write(b,1);
     j:=pAnimations.Count;
     Xs.Write(j,2);
-    for i:=0 to pAnimations.Count-1 do begin
-      s:=pAnimations[i].Name;
-      f:=length(s);
-      Xs.Write(f,1);
-      if f>0 then Xs.Write(s[1],length(s));
-      Xs.Write(pAnimations[i].Width,2);
-      Xs.Write(pAnimations[i].Height,2);
-      Xs.Write(pAnimations[i].FrameCount,2);
-      Xs.Write(pAnimations[i].FrameDelay,2);
-      Xs.Write(pAnimations[i].LoopDelay,2);
-      Xs.Write(pAnimations[i].StartFrame,2);
-      f:=0;
-      if pAnimations[i].Looped then f:=f or AF_LOOPED;
-      if pAnimations[i].RandomStart then f:=f or AF_RANDOMSTART;
-      if pAnimations[i].Paused then f:=f or AF_PAUSED;
-      if pAnimations[i].PingPong then f:=f or AF_PINGPONG;
-      if pAnimations[i].ReverseAnim then f:=f or AF_REVERSEANIM;
-      Xs.Write(f,1);
-      for j:=0 to pAnimations[i].FrameCount-1 do begin
-        Xs.Write(pAnimations[i].Frames[j].x,2);
-        Xs.Write(pAnimations[i].Frames[j].y,2);
-      end;
-    end;
-//    Xs.Position:=0;
-//    Xs.SaveToFile('anmz_add.dat');
+    for i:=0 to pAnimations.Count-1 do pAnimations[i].SavetoStream(Xs);
     Xs.Position:=0;
     ch.Write(anMZ,4);
     CompressStream(Xs,ch,Xs.Size);
-//    Writeln(Format('Compressed: %d, Uncompressed: %d',[ch.size,13+pAnimationData.FrameCount*4+4]));
     if ch.Size>=Xs.Size then begin
       ch.Clear;
       ch.Write(anIM,4);
@@ -175,8 +161,8 @@ begin
     end;
     AddChunk(pTarget,ch);
   finally
-    FreeAndNil(ch);
-    FreeAndNil(Xs);
+    ch.Free;
+    Xs.Free;
   end;
 end;
 
@@ -192,12 +178,12 @@ begin
     for i:=0 to 31 do byte((p+i)^):=0;
     j:=0;
     for i:=0 to 255 do
-      if pFontData.Charboxes[i].w>0 then begin
+      if pFontData.Charboxes[i].Width>0 then begin
         byte((p+i div 8)^):=byte((p+i div 8)^) or ad2[i mod 8];
-        word((p+32+j*8+0)^):=pFontData.CharBoxes[i].x;
-        word((p+32+j*8+2)^):=pFontData.CharBoxes[i].y;
-        word((p+32+j*8+4)^):=pFontData.CharBoxes[i].w;
-        word((p+32+j*8+6)^):=pFontData.CharBoxes[i].h;
+        word((p+32+j*8+0)^):=pFontData.CharBoxes[i].Left;
+        word((p+32+j*8+2)^):=pFontData.CharBoxes[i].Top;
+        word((p+32+j*8+4)^):=pFontData.CharBoxes[i].Width;
+        word((p+32+j*8+6)^):=pFontData.CharBoxes[i].Height;
         inc(j);
       end;
     compress(p^,ch,32+j*8);

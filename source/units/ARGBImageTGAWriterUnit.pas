@@ -13,6 +13,8 @@
 //     * Following changes in ARGBImageUnit
 //   1.02 - Gilby - 2020.04.01
 //     * Following changes in ARGBImageUnit (TAnimationData -> TAnimationDatas)
+//   1.03 - Gilby - 2024.12.04
+//     * Following changes in AnimationDataUnit and FontDataUnit
 
 {$ifdef fpc}
   {$mode delphi}
@@ -28,11 +30,11 @@ interface
 implementation
 
 uses Classes, SysUtils, ARGBImageUnit, MKToolBox, Logger, FastPaletteUnit,
-  AnimationDataUnit, FontDataUnit, SDL2;
+  AnimationDataUnit, FontDataUnit;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.02';
+  Version='1.03';
 
 procedure RearrangeAnimationH2V(src,trg:pointer;wi,he,framecount:integer);
 var x,y,fwi:integer;
@@ -61,7 +63,8 @@ var s:string;extralength,i,j,lwi,lhe:integer;pp,pr:pointer;
     Grayscaled:boolean;
     pal,palettedimage:pointer;
     extra:array[0..31] of byte;
-    atm:TSDL_Rect;
+    atm:TCharRect;
+    anim:TFrameBasedAnimationData;
 begin
   if (pWidth<1) or (pHeight<1) then raise Exception.Create('Empty picture!');
 
@@ -70,26 +73,27 @@ begin
   lhe:=pHeight;
   for i:=0 to 31 do extra[i]:=0;
   extralength:=0;
-  if pAnimations.Count>0 then begin;
-    if (pAnimations[0].FrameDelay>0) or (pAnimations[0].LoopDelay>0) then begin
+  if (pAnimations.Count>0) and (pAnimations[0] is TFrameBasedAnimationData) then begin
+    anim:=TFrameBasedAnimationData(pAnimations[0]);
+    if (anim.FrameDelay>0) or (anim.LoopDelay>0) then begin
       extralength:=16;
-      extra[2]:=pAnimations[0].FrameDelay;
-      extra[3]:=pAnimations[0].LoopDelay;
-      extra[4]:=pAnimations[0].StartFrame and $ff;
-      extra[5]:=(pAnimations[0].StartFrame>>8) and $ff;
+      extra[2]:=anim.FrameDelay;
+      extra[3]:=anim.LoopDelay;
+      extra[4]:=anim.StartFrame and $ff;
+      extra[5]:=(anim.StartFrame>>8) and $ff;
     end else
       extralength:=2;
-    j:=pAnimations[0].FrameCount;
-    if pAnimations[0].Looped then j+=(1<<12);
-    if pAnimations[0].RandomStart then j+=(2<<12);
-    if pAnimations[0].Paused then j+=(4<<12);
+    j:=anim.FrameCount;
+    if anim.Looped then j+=(1<<12);
+    if anim.RandomStart then j+=(2<<12);
+    if anim.Paused then j+=(4<<12);
     extra[0]:=j and 255;
     extra[1]:=(j>>8) and 255;
   end;
   if Assigned(pFontData) then begin
     extralength:=32;
     for i:=0 to 255 do
-      if pFontData.Charboxes[i].w>0 then
+      if pFontData.Charboxes[i].Width>0 then
         extra[i div 8]:=extra[i div 8] or ad2[i mod 8];
   end;
 
@@ -142,13 +146,13 @@ begin
   end;
   if extralength=32 then begin  // Write font chars data
     for i:=0 to 255 do
-      if pFontData.Charboxes[i].w>0 then begin
+      if pFontData.Charboxes[i].Width>0 then begin
         atm:=pFontData.CharBoxes[i];
-        pTarget.Write(atm.x,2);
-        pTarget.Write(atm.y,2);
-        j:=atm.x+atm.w-1;
+        pTarget.Write(atm.Left,2);
+        pTarget.Write(atm.Top,2);
+        j:=atm.Left+atm.Width-1;
         pTarget.Write(j,2);
-        j:=atm.y+atm.h-1;
+        j:=atm.Top+atm.Height-1;
         pTarget.Write(j,2);
       end;
   end;

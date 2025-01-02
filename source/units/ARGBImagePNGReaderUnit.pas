@@ -1,10 +1,21 @@
-// PNG reader for TARGBImage
-// ------------------------------------------------------------------
-// You can freely distribute the sources
-//
-// Written by Gilby/MKSZTSZ
-// Hungary, 2020
-// ------------------------------------------------------------------
+{ -[Name]-------------------------------------------
+
+              PNG reader for TARGBImage
+
+  -[Disclaimer]-------------------------------------
+
+    See copyright.txt in project sources.
+
+    Written by Gilby/MKSZTSZ     Hungary, 2020-2024
+
+  -[Description]------------------------------------
+
+    PNG Reader add-on for ARGBImage unit.
+    Simply put this unit into uses to extend
+    TARGBImage with ability to read PNG images.
+
+  --------------------------------------------------
+}
 
 // Version info:
 //   1.00 - Gilby - 2020.03.11
@@ -25,6 +36,15 @@
 //     * Following changes in AnimationDataUnit
 //   1.06: Gilby - 2022.07.19
 //     + Reading ReverseAnim flag
+//   1.07: Gilby - 2023.11.29
+//     * Fix in reading unnamed animations.
+//   1.08: Gilby - 2023.12.13
+//     * Following changes in AnimationDataUnit.
+//     * Ability to read time-based animation data.
+//   1.09: Gilby - 2024.03.14
+//     * Added loading V3 and V4 animation data.
+//   1.10: Gilby - 2024.05.03
+//     * Added loading V5 animation data.
 
 unit ARGBImagePNGReaderUnit;
 
@@ -42,7 +62,7 @@ uses Classes, SysUtils, ARGBImageUnit, CRC32Unit, MyZStreamUnit, Logger,
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.06';
+  Version='1.10';
 
   HEADER=#137#80#78#71#13#10#26#10;
 
@@ -228,44 +248,50 @@ begin
   end;
 end;
 
-procedure ReadANIM(pSource:TStream;pAnimations:TAnimationDatas);
-var cnt,w,h,fc:integer;atm:TAnimationData;s:string;
+procedure ReadANIMV1(pSource:TStream;pAnimations:TAnimationDatas);
+var cnt:integer;b,b2:byte;atm:TBaseAnimationData;
 begin
   cnt:=0;
   pSource.Read(cnt,2);
-  s:='';
+  b:=0;b2:=0;
   while cnt>0 do begin
-    w:=0;h:=0;fc:=0;
-    pSource.Read(w,1);
-    SetLength(s,w);
-    pSource.Read(s[1],w);
-    pSource.Read(w,2);
-    pSource.Read(h,2);
-    pSource.Read(fc,2);
-    atm:=TAnimationData.Create(w,h);
-    atm.Name:=s;
-    pSource.Read(w,2);
-    atm.FrameDelay:=w;
-    pSource.Read(w,2);
-    atm.LoopDelay:=w;
-    pSource.Read(w,2);
-    atm.StartFrame:=w;
-    w:=0;
-    pSource.Read(w,1);
-    atm.Looped:=(w and AF_LOOPED)>0;
-    atm.RandomStart:=(w and AF_RANDOMSTART)>0;
-    atm.Paused:=(w and AF_PAUSED)>0;
-    atm.PingPong:=(w and AF_PINGPONG)>0;
-    atm.ReverseAnim:=(w and AF_REVERSEANIM)>0;
-    w:=0;h:=0;
-    while fc>0 do begin
-      pSource.Read(w,2);
-      pSource.Read(h,2);
-      atm.AddFrame(w,h);
-      dec(fc);
+    pSource.Read(b,1);
+    case b of
+      1:atm:=TFrameBasedAnimationData.CreateFromStreamLegacy(pSource);
+      2:atm:=TTimeBasedAnimationData.CreateFromStreamV2(pSource);
+      3:atm:=TFrameBasedAnimationData.CreateFromStreamV3(pSource);
+      4:atm:=TTimeBasedAnimationData.CreateFromStreamV4(pSource);
+      5:begin
+          pSource.Read(b2,1);
+          pSource.Seek(-1,soFromCurrent);
+          if b2 and AF_TIMEBASED=0 then
+            atm:=TFrameBasedAnimationData.CreateFromStreamV5(pSource)
+          else
+            atm:=TTimeBasedAnimationData.CreateFromStreamV5(pSource);
+        end
+      else raise Exception.Create(Format('Unknown animation data version! (%d)',[b]));
     end;
     pAnimations.AddObject(atm.name,atm);
     dec(cnt);
+  end;
+end;
+
+procedure ReadANIM(pSource:TStream;pAnimations:TAnimationDatas);
+var b:Byte;cnt:integer;atm:TBaseAnimationData;
+begin
+  cnt:=0;
+  pSource.Read(cnt,2);
+  if cnt>0 then begin  // Legacy format, only frame-based animations
+    while cnt>0 do begin
+      atm:=TFrameBasedAnimationData.CreateFromStreamLegacy(pSource);
+      pAnimations.AddObject(atm.name,atm);
+      dec(cnt);
+    end;
+  end else begin
+    b:=0;
+    pSource.Read(b,1);
+    if b=1 then ReadANIMV1(pSource,pAnimations)
+    else raise Exception.Create(Format('Unknown version of ANIM chunk! (%d)',[b]));
   end;
 end;
 

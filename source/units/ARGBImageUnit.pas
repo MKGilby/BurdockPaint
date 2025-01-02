@@ -118,9 +118,14 @@
 //   1.28 - Gilby - 2024.04.24
 //     * Changed MKToolBox.Replace to SysUtils.StringReplace.
 //   1.29 - Gilby - 2024.08.28
-//     * Added even parameter to Circle and FilledCircle.
+//     + Added even parameter to Circle and FilledCircle.
 //       If it is set to true, circle will be 1 pixel wider and taller to occupy
 //       an even*even area.
+//   1.30 - Gilby - 2024.09.13
+//     * Bugfix in GetClipBox.
+//     * GetClipBox is now a class static function.
+//   1.31 - Gilby - 2024.09.18
+//     * Bugfix in WeightedMatrix.
 
 
 {$ifdef fpc}
@@ -182,7 +187,7 @@ type
     // Checks if the two rectangle (1 and 2) overlaps. If yes, gives back the
     // overlapping area in the TClipBox record. If not, gives back -1 in x1
     // of the result.
-    function GetClipBox(x1,y1,w1,h1,x2,y2,w2,h2:integer):TClipBox;
+    class function GetClipBox(x1,y1,w1,h1,x2,y2,w2,h2:integer):TClipBox; static;
 
     // Delete pixels from image where iMask has black (0,0,0) pixels
     // iMask must have the same size as image.
@@ -380,7 +385,7 @@ uses SysUtils, MKToolBox, Logger, MKStream;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.29';
+  Version='1.31';
   POSTPROCESSCOLOR=$00FF00FF;  // Fully transparent magenta is the magic color!
 
 var
@@ -434,7 +439,7 @@ begin
   inherited;
 end;
 
-function TARGBImage.GetClipBox(x1,y1,w1,h1,x2,y2,w2,h2:integer):TClipBox;
+class function TARGBImage.GetClipBox(x1,y1,w1,h1,x2,y2,w2,h2:integer):TClipBox;
 begin
   if x1<x2 then begin
     if x1+w1<x2 then begin
@@ -453,7 +458,7 @@ begin
       Result.x1:=0;
       Result.x2:=x1-x2;
       if x1+w1<=x2+w2 then begin
-        Result.wi:=w2;
+        Result.wi:=w1;
       end else begin
         Result.wi:=x2+w2-x1;
       end;
@@ -478,7 +483,7 @@ begin
       Result.y1:=0;
       Result.y2:=y1-y2;
       if y1+h1<=y2+h2 then begin
-        Result.he:=h2;
+        Result.he:=h1;
       end else begin
         Result.he:=y2+h2-y1;
       end;
@@ -727,17 +732,18 @@ begin
       for j:=-1 to 1 do
         for i:=-1 to 1 do
           if (y+j>=0) and (y+j<fHeight) and (x+i>=0) and (x+i<fWidth) then begin
-            r+=byte((s1+(j*fWidth+i)*4)^)*Matrix[i,j];
+            b+=byte((s1+(j*fWidth+i)*4)^)*Matrix[i,j];
             g+=byte((s1+(j*fWidth+i)*4+1)^)*Matrix[i,j];
-            b+=byte((s1+(j*fWidth+i)*4+2)^)*Matrix[i,j];
+            r+=byte((s1+(j*fWidth+i)*4+2)^)*Matrix[i,j];
             w+=Matrix[i,j];
           end;
-      r:=r div w;
-      g:=g div w;
       b:=b div w;
-      byte(s2^):=r;
+      g:=g div w;
+      r:=r div w;
+      byte(s2^):=b;
       byte((s2+1)^):=g;
-      byte((s2+2)^):=b;
+      byte((s2+2)^):=r;
+      byte((s2+3)^):=255;
       inc(s1,4);
       inc(s2,4);
     end;

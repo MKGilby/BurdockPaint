@@ -6,7 +6,7 @@
 
      You can freely distribute it.
 
-     Written by Gilby/MKSZTSZ   Hungary, 2020-
+     Written by Gilby/MKSZTSZ   Hungary, 2023-
 
   -[Description]------------------------------------
 
@@ -15,7 +15,7 @@
       - Textures   (images prepared for use with SDL2)
       - Animations (from PNG)
       - Masks      (from PNG)
-      - Fonts      (from TGA and PNG)
+      - Fonts      (from TGA, PNG and MKR)
 
   --------------------------------------------------
 }
@@ -28,7 +28,11 @@
 //     * Added MM_DONTKEEPIMAGE flag.
 //     * Added MM_CREATETEXTUREONLY flag, which is a combination of
 //       MM_CREATETEXTUREWHENNOANIMATIONDATA and MM_DONTKEEPIMAGE.
-//     * Added
+//     * Added MM_DONTCREATETEXTUREFROMFONT.
+//  V1.02: Gilby - 2024.03.18
+//     * Following changes in AnimationDataUnit and Animation2Unit.
+//  V1.03: Gilby - 2024.03.27
+//     * Added MKR font support.
 
 unit GFXManagerUnit;
 
@@ -58,14 +62,14 @@ type
   { TAnimationDataWithTexture }
 
   TAnimationDataWithTexture=class
-    constructor Create(iAnimationData:TAnimationData;iTexture:TTexture;iSourceImage:TARGBImage=nil);
+    constructor Create(iAnimationData:TBaseAnimationData;iTexture:TTexture;iSourceImage:TARGBImage=nil);
     function SpawnAnimation:TAnimation;
   private
-    fAnimationData:TAnimationData;
+    fAnimationData:TBaseAnimationData;
     fTexture:TTexture;
     fARGBImage:TARGBImage;
   public
-    property Animation:TAnimationData read fAnimationData;
+    property Animation:TBaseAnimationData read fAnimationData;
     property Image:TARGBImage read fARGBImage;
   end;
 
@@ -107,11 +111,11 @@ uses SysUtils, Logger, Font2Unit, MKToolbox;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.00';
+  Version='1.03';
 
 { TAnimationDataWithTexture }
 
-constructor TAnimationDataWithTexture.Create(iAnimationData: TAnimationData;
+constructor TAnimationDataWithTexture.Create(iAnimationData: TBaseAnimationData;
   iTexture: TTexture; iSourceImage: TARGBImage=nil);
 begin
   fAnimationData:=iAnimationData;
@@ -156,7 +160,7 @@ var ext:string;i:integer;
 begin
   ext:=uppercase(ExtractFileExt(pFilename));
   if length(ext)>1 then delete(ext,1,1);
-  i:=strtoint(decode(ext,'PNG,1,TGA,1,BMP,1,CEL,1,GSD,1,0'));
+  i:=strtoint(decode(ext,'PNG,1,TGA,1,BMP,1,CEL,1,GSD,1,MKR,1,0'));
   case i of
     1:LoadImage(pFilename,pName,pFlags);
     else raise Exception.Create(Format('GFXManager: Unknown file extension! (%s)',[pFilename]));
@@ -189,7 +193,12 @@ begin
         for j:=0 to atmA.Animation.FrameCount-1 do begin
           fMasks.AddObject(
             Format('%s%d',[atmA.Animation.Name,j]),
-            TMask.CreateFromImagePart(pImage,atmA.Animation.Frames[j].x,atmA.Animation.Frames[j].y,atmA.Animation.Frames[j].w,atmA.Animation.Frames[j].h)
+            TMask.CreateFromImagePart(
+              pImage,
+              atmA.Animation.Frames[j].Left,
+              atmA.Animation.Frames[j].Top,
+              atmA.Animation.Frames[j].Width,
+              atmA.Animation.Frames[j].Height)
           );
 //          fMasks[fMasks.Count-1].DebugMask;
         end;

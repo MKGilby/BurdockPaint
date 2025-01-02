@@ -19,6 +19,7 @@ uses
   ARGBImagePNGWriterUnit,
   ARGBImageTGAReaderUnit,
   ARGBImageTGAWriterUnit,
+  ARGBImageGIFReaderUnit,
   FileInfo,
   winpeimagereader;
 

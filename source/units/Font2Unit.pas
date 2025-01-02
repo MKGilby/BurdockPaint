@@ -46,6 +46,8 @@
 //      * You can specify chars to exclude from recoloring.
 //   V1.09: Gilby - 2023.11.16
 //      * You can specify if you want ARGBImage and/or Texture font.
+//   V1.10: Gilby - 2024.08.21
+//      * Following changes in FontDataUnit.
 
 {$ifdef fpc}
   {$mode delphi}
@@ -126,7 +128,7 @@ uses SDL2, Logger, MKToolBox, SysUtils;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.09';
+  Version='1.10';
 
 // --------------------------------------------------------------- [ TFont ]---
 
@@ -154,10 +156,10 @@ begin
   iImage.Copy(0,0,iImage.Width,iImage.Height,fOriginalImage);
   if Assigned(iImage.FontData) then begin
     for i:=0 to 255 do begin
-      fOrigDefs[i].Left:=iImage.FontData.CharBoxes[i].x;
-      fOrigDefs[i].Top:=iImage.FontData.CharBoxes[i].y;
-      fOrigDefs[i].Width:=iImage.FontData.CharBoxes[i].w;
-      fOrigDefs[i].Height:=iImage.FontData.CharBoxes[i].h;
+      fOrigDefs[i].Left:=iImage.FontData.CharBoxes[i].Left;
+      fOrigDefs[i].Top:=iImage.FontData.CharBoxes[i].Top;
+      fOrigDefs[i].Width:=iImage.FontData.CharBoxes[i].Width;
+      fOrigDefs[i].Height:=iImage.FontData.CharBoxes[i].Height;
       fDefs[i].Left:=fOrigDefs[i].Left;
       fDefs[i].Top:=fOrigDefs[i].Top;
       fDefs[i].Width:=fOrigDefs[i].Width;
