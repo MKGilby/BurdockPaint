@@ -163,7 +163,7 @@ begin
     fSelectedTools[6]:=INI.ReadString('BasicControls','Tool6','EDGE');
     fSelectedTools[7]:=INI.ReadString('BasicControls','Tool7','FILLTO');
     fActiveTool:=INI.ReadInteger('BasicControls','ActiveTool',0);
-    if (fActiveTool<0) or (fActiveTool>5) then fActiveTool:=0;
+    if (fActiveTool<0) or (fActiveTool>7) then fActiveTool:=0;
     fSelectedInks[0]:=INI.ReadString('BasicControls','Ink0','OPAQUE');
     fSelectedInks[1]:=INI.ReadString('BasicControls','Ink1','H GRAD');
     fSelectedInks[2]:=INI.ReadString('BasicControls','Ink2','V GRAD');
@@ -173,7 +173,7 @@ begin
     fSelectedInks[6]:=INI.ReadString('BasicControls','Ink6','R GRAD');
     fSelectedInks[7]:=INI.ReadString('BasicControls','Ink7','RANDOM');
     fActiveInk:=INI.ReadInteger('BasicControls','ActiveInk',0);
-    if (fActiveInk<0) or (fActiveInk>5) then fActiveInk:=0;
+    if (fActiveInk<0) or (fActiveInk>7) then fActiveInk:=0;
     FillShapes:=INI.ReadBool('BasicControls','FillShapes',false);
     ClearKeyColor:=INI.ReadBool('BasicControls','ClearKeyColor',false);
     // System settings

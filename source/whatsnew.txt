@@ -25,6 +25,11 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2025.01.04 - Build 62
+- New image, opened image and duplicated image now can be placed after current image.
+- Fix in loading selected tool or ink in settings when tool or ink index was above 5.
+- Sep. now works in boxed mode too.
+
 2025.01.02 - Build 61
 - Updated used units.
 - Fixed GIF reading.

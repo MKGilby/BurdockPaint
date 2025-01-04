@@ -434,30 +434,39 @@ begin
 end;
 
 procedure TMain.NewImage;
+var i:integer;
 begin
-  case MessageBox('NEW IMAGE','Where to place new image?','First;Last;Insert;Cancel') of
-    0:begin
-        Project.Images.Insert(0,TBDImage.Create);
-        Project.CurrentImageIndex:=0;
-        MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
-      end;
-    1:begin
-        Project.Images.Add(TBDImage.Create);
-        Project.CurrentImageIndex:=Project.Images.Count-1;
-        MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
-      end;
-    2:begin
-        Project.Images.Insert(Project.CurrentImageIndex,TBDImage.Create);
-        MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
-      end;
+  i:=MessageBox('NEW IMAGE','Where to place new image?','First;Last;Before;After;Cancel');
+  if i in [0..3] then begin
+    case i of
+      0:begin
+          Project.Images.Insert(0,TBDImage.Create);
+          Project.CurrentImageIndex:=0;
+        end;
+      1:begin
+          Project.Images.Add(TBDImage.Create);
+          Project.CurrentImageIndex:=Project.Images.Count-1;
+        end;
+      2:Project.Images.Insert(Project.CurrentImageIndex,TBDImage.Create);
+      3:begin
+          if Project.CurrentImageIndex=Project.Images.Count-1 then begin
+            Project.Images.Add(TBDImage.Create);
+            Project.CurrentImageIndex:=Project.Images.Count-1;
+          end else begin
+            Project.Images.Insert(Project.CurrentImageIndex+1,TBDImage.Create);
+            Project.CurrentImageIndex:=Project.CurrentImageIndex+1;
+          end;
+        end;
+    end;
+    MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
   end;
 end;
 
 procedure TMain.DuplicateImage;
 var i:integer;Xs:TMemoryStream;
 begin
-  i:=MessageBox('DUPLICATE IMAGE','Where to place duplicated image?','First;Last;Insert;Cancel');
-  if i in [0..2] then begin
+  i:=MessageBox('DUPLICATE IMAGE','Where to place duplicated image?','First;Last;Before;After;Cancel');
+  if i in [0..3] then begin
     Xs:=TMemoryStream.Create;
     try
       Project.CurrentImage.SaveToStream(Xs);
@@ -471,8 +480,15 @@ begin
             Project.Images.Add(TBDImage.CreateFromStream(Xs));
             Project.CurrentImageIndex:=Project.Images.Count-1;
           end;
-        2:begin
-            Project.Images.Insert(Project.CurrentImageIndex,TBDImage.CreateFromStream(Xs));
+        2:Project.Images.Insert(Project.CurrentImageIndex,TBDImage.CreateFromStream(Xs));
+        3:begin
+            if Project.CurrentImageIndex=Project.Images.Count-1 then begin
+              Project.Images.Add(TBDImage.CreateFromStream(Xs));
+              Project.CurrentImageIndex:=Project.Images.Count-1;
+            end else begin
+              Project.Images.Insert(Project.CurrentImageIndex+1,TBDImage.CreateFromStream(Xs));
+              Project.CurrentImageIndex:=Project.CurrentImageIndex+1;
+            end;
           end;
       end;
     finally
@@ -489,8 +505,8 @@ begin
   fOpenDialog.FilterIndex:=0;
   fOpenDialog.Title:='Open Image';
   if fOpenDialog.Execute then begin
-    i:=MessageBox('OPEN IMAGE','Where to place opened image?','First;Last;Insert;Cancel');
-    if i in [0..2] then begin
+    i:=MessageBox('OPEN IMAGE','Where to place opened image?','First;Last;Before;After;Cancel');
+    if i in [0..3] then begin
       tmp:=TARGBImage.Create(fOpenDialog.FileName);
       try
         img:=TBDImage.Create(tmp.Width,tmp.Height);
@@ -508,8 +524,15 @@ begin
             Project.Images.Add(img);
             Project.CurrentImageIndex:=Project.Images.Count-1;
           end;
-        2:begin
-            Project.Images.Insert(Project.CurrentImageIndex,img);
+        2:Project.Images.Insert(Project.CurrentImageIndex,img);
+        3:begin
+            if Project.CurrentImageIndex=Project.Images.Count-1 then begin
+              Project.Images.Add(img);
+              Project.CurrentImageIndex:=Project.Images.Count-1;
+            end else begin
+              Project.Images.Insert(Project.CurrentImageIndex+1,img);
+              Project.CurrentImageIndex:=Project.CurrentImageIndex+1;
+            end;
           end;
       end;
       MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
