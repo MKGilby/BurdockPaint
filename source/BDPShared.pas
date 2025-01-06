@@ -57,7 +57,7 @@ const
 
   MAXZOOMLEVEL=5;
 
-  TEMPPROJECTFILE:string='temp.bpprj';
+  TEMPPROJECTFILENAME='temp.bpprj';
   PROJECTBASEPATH:string='.\';
   SETTINGSFILE='BurdockPaint.ini';
 
@@ -202,6 +202,7 @@ var
   ActiveInk:TBDInk;  // This is the selected ink
 
   Project:TBDProject;  // The project we are working on
+  ProjectFilename:string;
   GradientEditorGradient:TGradient;
 
   OverlayImage:TBDRegion;  // The image to draw tools' helper lines, etc.
@@ -425,9 +426,9 @@ begin
   Log.LogStatus('  Creating GradientEditor helper...');
   GradientEditorGradient:=TGradient.Create($ff000000,$ffffffff);
   Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
-  if FileExists(TEMPPROJECTFILE) then begin
-    Log.LogStatus(Format('Loading previous project (%s)...',[TEMPPROJECTFILE]));
-    Project:=TBDProject.CreateFromFile(TEMPPROJECTFILE)
+  if FileExists(ProjectFilename) then begin
+    Log.LogStatus(Format('Loading previous project (%s)...',[ProjectFilename]));
+    Project:=TBDProject.CreateFromFile(ProjectFilename)
   end else begin
     Log.LogStatus('Creating new project...');
     Project:=TBDProject.Create;
@@ -441,7 +442,7 @@ end;
 procedure FreeAssets;
 begin
   if Assigned(Project) then begin
-    Project.SaveToFile(TEMPPROJECTFILE);
+    Project.SaveToFile(ProjectFilename);
     Project.Free;
   end;
   if Assigned(GradientEditorGradient) then GradientEditorGradient.Free;

@@ -26,6 +26,7 @@ type
     destructor Destroy; override;
     procedure Run;
   private
+    fWindowBaseTitle:string;
     fQuit:boolean;
     fMainWindow:TWindow;
     fMainMenu:TMainMenu;
@@ -60,8 +61,9 @@ type
     procedure ConfigRGradCenter;
     procedure ConfigRGradCenterFinished;
     procedure OpenProject;
+    procedure SaveProjectAs;
     procedure SaveProject;
-    procedure SaveClearProject;
+    procedure CleanProject;
     procedure NewImage;
     procedure DuplicateImage;
     procedure OpenImage;
@@ -114,31 +116,34 @@ begin
   Log.LogStatus('Loading settings...');
   Settings:=TSettings.Create;
   Settings.LoadFromFile(SETTINGSFILE);
+  fWindowBaseTitle:=Format('Burdock Paint V%s (%s) - ',[iVersion,StringReplace(iBuildDate,'/','.',[rfReplaceAll])]);
 
   fMainWindow:=TWindow.Create(
     SDL_WINDOWPOS_CENTERED,
     SDL_WINDOWPOS_CENTERED,
     Settings.WindowWidth,
     Settings.WindowHeight,
-    Format('Burdock Paint V%s (%s)',[iVersion,StringReplace(iBuildDate,'/','.',[rfReplaceAll])]));
+    fWindowBaseTitle);
 
   SetFPS(60);
 
   if (Parameters.Count=2) and (FileExists(Parameters[1])) then begin
-    TEMPPROJECTFILE:=Parameters[1];
-    PROJECTBASEPATH:=ExtractFileDir(TEMPPROJECTFILE);
+    ProjectFilename:=Parameters[1];
+    PROJECTBASEPATH:=ExtractFileDir(ProjectFilename);
     fBackup:=TFileBackup.Create(PROJECTBASEPATH+'\backups');
     fBackup.BackupFolderMaxSize:=Settings.BackupFolderMaxSize;
     fBackup.BackupFolderRetentionTime:=Settings.BackupFolderRetentionTime;
     fBackup.BackupFolderFileCount:=Settings.BackupFolderMaxFileCount;
-    fBackup.BackupFile(TEMPPROJECTFILE);
+    fBackup.BackupFile(ProjectFilename);
   end else begin
+    ProjectFilename:=TEMPPROJECTFILENAME;
     PROJECTBASEPATH:=ExtractFileDir(Parameters[0]);
     fBackup:=TFileBackup.Create(PROJECTBASEPATH+'\backups');
     fBackup.BackupFolderMaxSize:=Settings.BackupFolderMaxSize;
     fBackup.BackupFolderRetentionTime:=Settings.BackupFolderRetentionTime;
     fBackup.BackupFolderFileCount:=Settings.BackupFolderMaxFileCount;
   end;
+  fMainWindow.Title:=fWindowBaseTitle+ExtractFileName(ProjectFilename);
 
   Log.Trace('Before assets: '+inttostr(GetHeapStatus.TotalAllocated));
 
@@ -259,8 +264,8 @@ begin
       fQuit:=MessageBox('CONFIRM','EXIT BURDOCK PAINT?','^YES;^NO')=0
     end;
     if GetTickCount64-PrevBackupTick>Settings.BackupIntervalTicks then begin
-      Project.SaveToFile(TEMPPROJECTFILE);
-      fBackup.BackupFile(TEMPPROJECTFILE);
+      Project.SaveToFile(ProjectFilename);
+      fBackup.BackupFile(ProjectFilename);
       PrevBackupTick:=GetTickCount64;
     end;
   until fQuit;
@@ -290,7 +295,8 @@ begin
         MSG_OPENCONFIGURESEPDIALOG:    fConfigureSepDialog.Show;
         MSG_OPENPROJECT:               OpenProject;
         MSG_SAVEPROJECT:               SaveProject;
-        MSG_SAVECLEARPROJECT:          SaveClearProject;
+        MSG_SAVEPROJECTAS:             SaveProjectAs;
+        MSG_CLEANPROJECT:              CleanProject;
         MSG_NEWIMAGE:                  NewImage;
         MSG_DUPLICATEIMAGE:            DuplicateImage;
         MSG_OPENIMAGE:                 OpenImage;
@@ -391,8 +397,27 @@ begin
   if fOpenDialog.Execute then begin
     try
       Project.Free;
-      Project:=TBDProject.CreateFromFile(fOpenDialog.FileName);
+      ProjectFilename:=fOpenDialog.FileName;
+      fMainWindow.Title:=fWindowBaseTitle+ExtractFileName(ProjectFilename);
+      Project:=TBDProject.CreateFromFile(ProjectFilename);
       MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
+    except
+      on e:Exception do begin
+        Log.LogError(e.message);
+        MessageBox('ERROR',e.Message);
+      end;
+    end;
+  end;
+end;
+
+procedure TMain.SaveProjectAs;
+begin
+  if fSaveProjectDialog.Execute then begin
+    try
+      ProjectFilename:=fSaveProjectDialog.FileName;
+      fMainWindow.Title:=fWindowBaseTitle+ExtractFileName(ProjectFilename);
+      Project.SaveToFile(ProjectFilename);
+      MessageBox('INFORMATION','Project saved successfully.');
     except
       on e:Exception do begin
         Log.LogError(e.message);
@@ -404,10 +429,11 @@ end;
 
 procedure TMain.SaveProject;
 begin
-  if fSaveProjectDialog.Execute then begin
+  if ProjectFilename=TEMPPROJECTFILENAME then
+    SaveProjectAs
+  else begin
     try
-      Project.SaveToFile(fSaveProjectDialog.FileName);
-      MessageBox('INFORMATION','Project saved successfully.');
+      Project.SaveToFile(ProjectFilename);
     except
       on e:Exception do begin
         Log.LogError(e.message);
@@ -417,19 +443,12 @@ begin
   end;
 end;
 
-procedure TMain.SaveClearProject;
+procedure TMain.CleanProject;
 begin
-  if fSaveProjectDialog.Execute then begin
-    try
-      Project.Clean;
-      Project.SaveToFile(fSaveProjectDialog.FileName);
-      MessageBox('INFORMATION','Project saved successfully.');
-    except
-      on e:Exception do begin
-        Log.LogError(e.message);
-        MessageBox('ERROR',e.Message);
-      end;
-    end;
+  if MessageBox('CLEAN PROJECT','Really want to remove undo and CEL data?','Yes;No')=0 then begin
+   Project.Clean;
+   MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED);
+   fMainMenu.DisableCELSubMenusWithActiveCEL;
   end;
 end;
 
@@ -594,8 +613,8 @@ end;
 procedure TMain.ResizeImageFinished;
 begin
   // Do a backup since this operation is not undoable
-  Project.SaveToFile(TEMPPROJECTFILE);
-  fBackup.BackupFile(TEMPPROJECTFILE);
+  Project.SaveToFile(ProjectFilename);
+  fBackup.BackupFile(ProjectFilename);
   Project.CurrentRegion.Resize(Settings.TempInt01,Settings.TempInt02);
   Project.CurrentImage.ClearUndoData;
   MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED);

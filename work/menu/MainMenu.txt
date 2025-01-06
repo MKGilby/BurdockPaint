@@ -29,10 +29,13 @@ Project
     Open project from file.
   Save
     SAVEPROJECT
-    Save project to file.
-  Save clear
-    SAVECLEARPROJECT
-    Clear Undo data, release CEL then save project to file.
+    Save project to current file.
+  Save as
+    SAVEPROJECTAS
+    Save project to another file.
+  Clean
+    CLEANPROJECT
+    Reduce project file size. (Clears Undo data and releases CEL.)
   Quit
     QUIT,1
     Save work state and quit program.

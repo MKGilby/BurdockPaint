@@ -25,6 +25,13 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2025.01.06 - Build 63
+- Project/Save Clear menu is renamed to Clean. It won't save project just remove
+  undo and CEL data after asked if really wanted to.
+- Project/Save now saves file into current project file (except when the file
+  name is temp.bpprj, then asks for project file name)
+- Project file name is included in window caption.   
+
 2025.01.04 - Build 62
 - New image, opened image and duplicated image now can be placed after current image.
 - Fix in loading selected tool or ink in settings when tool or ink index was above 5.

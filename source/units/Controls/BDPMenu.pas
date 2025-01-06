@@ -350,6 +350,7 @@ begin
     submenu.EnableItem('FLIP V');
     submenu.EnableItem('FLIP H');
     submenu.EnableItem('MAGNIFY');
+    submenu.EnableItem('GRAYSCALE');
     submenu.EnableItem('SAVE');
     submenu.EnableItem('EXPORT');
   end;
@@ -366,6 +367,7 @@ begin
     submenu.DisableItem('FLIP V');
     submenu.DisableItem('FLIP H');
     submenu.DisableItem('MAGNIFY');
+    submenu.DisableItem('GRAYSCALE');
     submenu.DisableItem('SAVE');
     submenu.DisableItem('EXPORT');
   end;
@@ -377,7 +379,7 @@ begin
   submenu:=fSubMenus.ItemByName('TOOLS');
   if Assigned(submenu) then begin
     submenu.EnableAllItems;
-    for i:=0 to 5 do submenu.DisableItem(Settings.SelectedTools[i]);
+    for i:=0 to 7 do submenu.DisableItem(Settings.SelectedTools[i]);
   end;
 end;
 
@@ -387,7 +389,7 @@ begin
   submenu:=fSubMenus.ItemByName('INKS');
   if Assigned(submenu) then begin
     submenu.EnableAllItems;
-    for i:=0 to 5 do submenu.DisableItem(Settings.SelectedInks[i]);
+    for i:=0 to 7 do submenu.DisableItem(Settings.SelectedInks[i]);
   end;
 end;
 
