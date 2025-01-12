@@ -42,6 +42,7 @@ source/state.bps
 _release/
 _release_x64/
 _release_x86/
+release/
 source/BurdockPaint.data
 *.obj
 *.bdc
