@@ -62,6 +62,7 @@ type
     procedure UndoButtonClick(Sender:TObject;x,y,buttons: integer);
     procedure RedoButtonClick(Sender:TObject;x,y,buttons: integer);
     procedure ActiveImageChange(Sender:TObject;oldvalue,newvalue:integer);
+    procedure UpdateUndoRedoButtons;
   end;
 
 implementation
@@ -240,6 +241,12 @@ begin
   MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED);
 end;
 
+procedure TBDControls.UpdateUndoRedoButtons;
+begin
+  fUndoButton.Enabled:=Project.CurrentImage.RegionUndo.CanUndo;
+  fRedoButton.Enabled:=Project.CurrentImage.RegionUndo.CanRedo;
+end;
+
 function TBDControls.ProcessMessage(msg: TMessage): boolean;
 begin
   Result:=false;
@@ -248,8 +255,7 @@ begin
       fImageCountSlider.MaxValue:=Project.Images.Count;
       fImageCountSlider.Position:=Project.CurrentImageIndex+1;
       fGradient.Gradient:=Project.CurrentGradientList.ActiveGradient;
-      fUndoButton.Enabled:=Project.CurrentImage.RegionUndo.CanUndo;
-      fRedoButton.Enabled:=Project.CurrentImage.RegionUndo.CanRedo;
+      UpdateUndoRedoButtons;
       Result:=false;  // Not true, let the others also know about the count change!
     end;
     MSG_ACTIVECOLORCHANGED:begin
@@ -284,6 +290,7 @@ begin
   ActivateToolButton(-1);
   InfoBar.ShowText('');
   fGradient.Gradient:=Project.CurrentGradientList.ActiveGradient;
+  UpdateUndoRedoButtons;
 end;
 
 function TBDControls.ControlsKeyDown(Sender:TObject; key:integer):boolean;

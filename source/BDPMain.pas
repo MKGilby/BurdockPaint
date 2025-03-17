@@ -248,6 +248,7 @@ begin
   ProcessMessages;
 //  fQuitWindow.Visible:=true;
 //  MouseObjects.List;
+  fControls.Show;
   repeat
     SDL_SetRenderDrawColor(PrimaryWindow.Renderer,48,12,24,255);
     SDL_RenderClear(fMainWindow.Renderer);

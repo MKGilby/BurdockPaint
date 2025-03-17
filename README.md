@@ -2,8 +2,13 @@
 My AAT tribute
 
 Compiled binaries from current build with DLLs:
-[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.63.zip "Download x64 version") or
-[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.63.zip "Download x86 version").
+[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.64.zip "Download x64 version") or
+[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.64.zip "Download x86 version").
+
+## 2025.03.17 - Build 64
+- Draw tool now works with inks those don't support OnTheFly drawing.
+- Undo/Redo buttons are refreshed after starting program.
+- Undo/Redo buttons are refreshed correctly after drawing with any tool.  
 
 ## 2025.01.06 - Build 63
 - Project/Save Clear menu is renamed to Clean. It won't save project just remove

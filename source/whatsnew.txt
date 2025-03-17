@@ -2,8 +2,6 @@ Todo:
 - Add "Project"/"New" dialog.
 - Check and warn if current project is modified on opening project.
 - Check and warn if current project is modified on new project.
-- Add setup dialogs to Tools:
-  - Sep. (boxed)
 - Add Inks:
   - Darken
   - Brighten
@@ -25,12 +23,17 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2025.03.17 - Build 64
+- Draw tool now works with inks those don't support OnTheFly drawing.
+- Undo/Redo buttons are refreshed after starting program.
+- Undo/Redo buttons are refreshed correctly after drawing with any tool.  
+
 2025.01.06 - Build 63
 - Project/Save Clear menu is renamed to Clean. It won't save project just remove
   undo and CEL data after asked if really wanted to.
 - Project/Save now saves file into current project file (except when the file
   name is temp.bpprj, then asks for project file name)
-- Project file name is included in window caption.   
+- Project file name is included in window caption.
 
 2025.01.04 - Build 62
 - New image, opened image and duplicated image now can be placed after current image.

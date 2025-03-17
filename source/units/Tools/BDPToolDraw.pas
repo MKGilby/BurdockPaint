@@ -46,7 +46,13 @@ begin
   if button=SDL_BUTTON_LEFT then begin
     fTempImage:=TBDRegion.Create(Project.CurrentRegion.Width,Project.CurrentRegion.Height);
     fTempImage.PutImage(0,0,Project.CurrentRegion);
-    Project.CurrentRegion.PutPixel(x,y,ActiveInk.GetColorAt(x,y));
+    if ActiveInk.SupportsOnTheFly then
+      Project.CurrentRegion.PutPixel(x,y,ActiveInk.GetColorAt(x,y))
+    else begin
+      ActiveInk.InitializeAreaWH(x,y,1,1);
+      Project.CurrentRegion.PutPixel(x,y,POSTPROCESSCOLOR);
+      ActiveInk.PostProcess;
+    end;
     Result:=true;
     fLeft:=x;
     fTop:=y;
@@ -73,7 +79,13 @@ end;
 function TBDToolDraw.MouseMove(x,y,button:integer):boolean;
 begin
   if fDown then begin
-    Project.CurrentRegion.PutPixel(x,y,ActiveInk.GetColorAt(x,y));
+    if ActiveInk.SupportsOnTheFly then
+      Project.CurrentRegion.PutPixel(x,y,ActiveInk.GetColorAt(x,y))
+    else begin
+      ActiveInk.InitializeAreaWH(x,y,1,1);
+      Project.CurrentRegion.PutPixel(x,y,POSTPROCESSCOLOR);
+      ActiveInk.PostProcess;
+    end;
     if fLeft>x then fLeft:=x;
     if fTop>y then fTop:=y;
     if fRight<x then fRight:=x;

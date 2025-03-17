@@ -158,8 +158,10 @@ end;
 
 procedure TBDDrawArea.Click(Sender:TObject; x,y,buttons:integer);
 begin
-  if fMousePanning<>mpFinished then  // Only call tools click on appropiate panning states
+  if fMousePanning<>mpFinished then begin // Only call tools click on appropiate panning states
     ActiveTool.Click(MouseXToFrame(x),MouseYToFrame(y),buttons);
+    MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.CurrentImageIndex);
+  end;
 end;
 
 procedure TBDDrawArea.MouseDown(Sender:TObject; x,y,buttons:integer);
