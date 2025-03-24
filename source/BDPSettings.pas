@@ -178,7 +178,9 @@ begin
     ClearKeyColor:=INI.ReadBool('BasicControls','ClearKeyColor',false);
     // System settings
     WindowWidth:=INI.ReadInteger('Settings','WindowWidth',MINIMUMWINDOWWIDTH);
+    if WindowWidth<MINIMUMWINDOWWIDTH then WindowWidth:=MINIMUMWINDOWWIDTH;
     WindowHeight:=INI.ReadInteger('Settings','WindowHeight',MINIMUMWINDOWHEIGHT);
+    if WindowHeight<MINIMUMWINDOWHEIGHT then WindowHeight:=MINIMUMWINDOWHEIGHT;
     fShowSplash:=INI.ReadBool('Settings','ShowSplash',false);
     UndoLimit:=INI.ReadInteger('Settings','UndoLimit',16);
     BackupIntervalTicks:=INI.ReadInteger('Settings','BackupInterval',60)*1000;

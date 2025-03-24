@@ -6,6 +6,7 @@
 unit BDPMain;
 
 {$mode Delphi}{$H+}
+{define LogMem}
 {define LimitFPS}
 
 interface
@@ -100,6 +101,7 @@ uses Classes, SDL2, BDPShared, MKToolbox, MKStream, MKMouse2, Logger,
 { TMain }
 
 constructor TMain.Create(iVersion,iBuildDate:string);
+var sdm:TSDL_DisplayMode;i:integer;
 begin
 {$IFDEF DEBUG}
   // Set logging level
@@ -116,8 +118,18 @@ begin
   Log.LogStatus('Loading settings...');
   Settings:=TSettings.Create;
   Settings.LoadFromFile(SETTINGSFILE);
+  Log.LogStatus('Initializing video subsytem...');
+  SDL_Init(SDL_INIT_VIDEO);
+  Log.LogStatus('Detecting desktop resolution...');
+  i:=SDL_GetDesktopDisplayMode(0,@sdm);
+  if i<0 then raise Exception.Create(SDL_GetError());
+  if (sdm.w<MINIMUMWINDOWWIDTH) or (sdm.h<MINIMUMWINDOWHEIGHT) then
+    raise Exception.Create(Format('The minimum resolution'#10'to run this program'#10'is %dx%d pixels!',[MINIMUMWINDOWWIDTH,MINIMUMWINDOWHEIGHT]));
+  if (Settings.WindowWidth>sdm.w) then Settings.WindowWidth:=sdm.w-32;
+  if (Settings.WindowHeight>sdm.h) then Settings.WindowHeight:=sdm.h-104;
   fWindowBaseTitle:=Format('Burdock Paint V%s (%s) - ',[iVersion,StringReplace(iBuildDate,'/','.',[rfReplaceAll])]);
 
+  Log.LogStatus(Format('Creating window (%dx%d)...',[Settings.WindowWidth,Settings.WindowHeight]));
   fMainWindow:=TWindow.Create(
     SDL_WINDOWPOS_CENTERED,
     SDL_WINDOWPOS_CENTERED,
@@ -145,53 +157,56 @@ begin
   end;
   fMainWindow.Title:=fWindowBaseTitle+ExtractFileName(ProjectFilename);
 
-  Log.Trace('Before assets: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('Before assets: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
 
   LoadAssets;
 
-  Log.Trace('After assets: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After assets: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
+
+  Log.LogStatus('Creating UI...');
   fMainMenu:=TMainMenu.Create(MenuBin);
-  Log.Trace('After MainMenu: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After MainMenu: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fAboutDialog:=TBDAboutDialog.Create;
-  Log.Trace('After AboutDialog: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After AboutDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fControls:=TBDControls.Create(0,Settings.WindowHeight-CONTROLSHEIGHT,Settings.WindowWidth-COORDINATEBOXWIDTH,CONTROLSHEIGHT);
-  Log.Trace('After Controls: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After Controls: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fDrawArea:=TBDDrawArea.Create;
-  Log.Trace('After DrawArea: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After DrawArea: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fColorEditor:=TBDColorEditor.Create;
-  Log.Trace('After ColorEditor: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After ColorEditor: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   if not Assigned(Project.CELImage) then fMainMenu.DisableCELSubMenusWithActiveCEL;
   // To enable/disable Image/Remove menuitem and set Controls image slider
   MessageQueue.AddMessage(MSG_ACTIVEIMAGECHANGED,Project.Images.Count);
   fMagnifyDialog:=TBDMagnifyCELDialog.Create;
-  Log.Trace('After MagnifyDialog: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After MagnifyDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fRotateDialog:=TBDRotateCELDialog.Create;
-  Log.Trace('After RotateDialog: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After RotateDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fDitherDialog:=TBDDitherDialog.Create;
-  Log.Trace('After DitherDialog: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After DitherDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fConfigureRGradDialog:=TBDConfigureRGradDialog.Create;
-  Log.Trace('After ConfigureRGradDialog: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After ConfigureRGradDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fCoordinateBox:=TBDCoordinateBox.Create(
     Settings.WindowWidth-COORDINATEBOXWIDTH-24,Settings.WindowHeight-COORDINATEBOXHEIGHT,COORDINATEBOXWIDTH+24,COORDINATEBOXHEIGHT);
-  Log.Trace('After CoordinateBox: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After CoordinateBox: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fGradientEditor:=TBDGradientEditor.Create;
-  Log.Trace('After GradientEditor: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After GradientEditor: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fColorPalette:=TBDColorPalette2.Create(Settings.WindowWidth-70,TOPMENUHEIGHT,70,Settings.WindowHeight-TOPMENUHEIGHT-CONTROLSHEIGHT);
-  Log.Trace('After ColorPalette: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After ColorPalette: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fGradientSelector:=TBDGradientSelector.Create;
-  Log.Trace('After GradientSelector: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After GradientSelector: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fConfigureTintDialog:=TBDConfigureTintDialog.Create;
-  Log.Trace('After ConfigureTintDialog: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After ConfigureTintDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fConfigureSoftenDialog:=TBDConfigureSoftenDialog.Create;
-  Log.Trace('After ConfigureSoftenDialog: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After ConfigureSoftenDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fConfigureCircleDialog:=TBDConfigureCircleDialog.Create;
-  Log.Trace('After ConfigureCircleDialog: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After ConfigureCircleDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fImageResizeDialog:=TBDImageResizeDialog.Create;
-  Log.Trace('After ImageResizeDialog: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After ImageResizeDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fConfigureSepDialog:=TBDConfigureSepDialog.Create;
-  Log.Trace('After ConfigureSepDialog: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After ConfigureSepDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   MouseObjects.List;
 
+  Log.LogStatus('Creating FCL dialogs...');
   fOpenDialog:=TOpenDialog.Create(nil);
   fOpenDialog.Name:='OpenDialog';
   fOpenDialog.InitialDir:=PROJECTBASEPATH;
@@ -200,7 +215,7 @@ begin
   fSaveCELDialog:=CreateSaveDialog('SaveCELDialog','Save CEL','PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
   fSaveProjectDialog:=CreateSaveDialog('SaveProjectDialog','Save Project','Project files|*.bpprj');
   fSaveImageDialog:=CreateSaveDialog('SaveImageDialog','Save Image','PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
-  Log.Trace('After FCL dialogs: '+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem} Log.Trace('After FCL dialogs: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fQuit:=false;
 end;
 
@@ -244,6 +259,7 @@ procedure TMain.Run;
 var
   PrevBackupTick:uint64;
 begin
+  Log.LogStatus('Entering main loop...');
   PrevBackupTick:=0;
   ProcessMessages;
 //  fQuitWindow.Visible:=true;
@@ -270,6 +286,7 @@ begin
       PrevBackupTick:=GetTickCount64;
     end;
   until fQuit;
+  Log.LogStatus('Leaving main loop...');
 end;
 
 procedure TMain.ProcessMessages;

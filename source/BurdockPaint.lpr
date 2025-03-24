@@ -21,7 +21,7 @@ uses
   ARGBImageTGAWriterUnit,
   ARGBImageGIFReaderUnit,
   FileInfo,
-  winpeimagereader;
+  winpeimagereader, BPDError;
 
 const
   BDATE={$i %DATE%};
@@ -47,8 +47,14 @@ begin
       Free;
     end;
   except
-    on e:exception do
+    on e:exception do begin
       Log.LogError(e.Message);
+      with TBDError.Create(e.Message) do try
+        Run
+      finally
+        Free;
+      end;
+    end;
   end;
 end.
 

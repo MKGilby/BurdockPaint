@@ -407,9 +407,9 @@ begin
       fOrder[j]:=i;
     end;
   end;
-  Log.Trace('Order:');
-  for i:=0 to length(fOrder)-1 do
-    Log.Trace(Format('  %d. %d',[i+1,fOrder[i]]));
+//  Log.Trace('Order:');
+//  for i:=0 to length(fOrder)-1 do
+//    Log.Trace(Format('  %d. %d',[i+1,fOrder[i]]));
 end;
 
 procedure TGradient.LoadFromStreamV1(pStream:TStream);

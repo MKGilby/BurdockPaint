@@ -23,6 +23,14 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2025.03.24 - Build 65
+- Added checking if desktop resolution is big enough for minimum window size.
+  If not, a small error window appears and the program terminates.
+- Added checking if desktop resolution is big enough for window size stored in settings.
+  If not, the stored window size is set to fit to desktop with a small margin,
+  and the program starts with the new size.
+- Added compiler directive to enable heap usage logging.   
+
 2025.03.17 - Build 64
 - Draw tool now works with inks those don't support OnTheFly drawing.
 - Undo/Redo buttons are refreshed after starting program.

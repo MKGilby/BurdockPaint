@@ -6,10 +6,11 @@
 unit BDPShared;
 
 {$mode Delphi}{$H+}
+{define LogMem}
 
 interface
 
-uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, PNGFont2Unit, MKMouse2,
+uses GFXManagerUnit, mk_sdl2, ARGBImageUnit, PNGFont2Unit, MKMouse2, Font2Unit,
   BDPInfoBar, BDPPalette, BDPMessage, BDPCursor, BDPSettings, BDPToolBase,
   BDPInkBase, BDPRegion, BDPProject, BDPModalDialog, BDPGradient;
 
@@ -216,9 +217,12 @@ var
   // Free assets and shared objects
   procedure FreeAssets;
 
+  // Load system font for external usage
+  function LoadSystemFontEx(pR,pG,pB:integer;pFlags:integer):TFont;
+
 implementation
 
-uses Classes, SysUtils, MKRFont2Unit, Logger, MKStream, MKToolbox, Font2Unit;
+uses Classes, SysUtils, MKRFont2Unit, Logger, MKStream, MKToolbox;
 
 {$i includes\fonts.inc}
 {$i includes\burdock.inc}
@@ -302,6 +306,22 @@ begin
   MM.AddImage(tmpI,'Knob');
 end;
 
+function LoadSystemFontEx(pR,pG,pB:integer;pFlags:integer):TFont;
+var Xs:TStream;
+begin
+  Xs:=TStringStream.Create(bdpfont);
+  try
+    Result:=TPNGFont.Create(Xs,pFlags);
+    Result.LetterSpace:=3;
+    Result.SpaceSpace:=15;
+    Result.SetRecolorExcludeChars(#132#133);
+    Result.SetColorKey(0,0,0);
+    Result.SetColor(pR,pG,pB);
+  finally
+    Xs.Free;
+  end;
+end;
+
 procedure LoadSystemFont(pR,pG,pB:integer;pName:string;pFlags:integer);
 var Xs:TStream;
 begin
@@ -371,7 +391,7 @@ procedure LoadAssets;
 begin
   Log.LogStatus('Loading and creating assets...');
   MM:=TGFXManager.Create;
-  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem}Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   Log.LogStatus('  Loading fonts...');
   LoadSystemFont(4,4,4,'Black',FONT_CREATE_BOTH);
   LoadSmallFont(4,4,4,'SmallBlack',FONT_CREATE_BOTH);
@@ -384,10 +404,10 @@ begin
   MM.Fonts['LogoFont'].SetColorkey(0,0,0);
   LoadImage(BurdockPNG,'Burdock');
   MM.Images.ItemByName['Burdock'].Resize2x;
-  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem}Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   Log.LogStatus('  Creating message queue...');
   MessageQueue:=TMessageQueue.Create(32);
-  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem}Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   Log.LogStatus('  Creating overlay palette...');
   SystemPalette:=TBDPalette.Create(16);
   SystemPalette.Colors[SYSTEMCOLORTRANSPARENT]:=$00000000;
@@ -397,35 +417,31 @@ begin
   SystemPalette.Colors[SYSTEMCOLORLIGHT]:=$ffc7c7c7;
   SystemPalette.Colors[SYSTEMCOLORHIGHLIGHT]:=$ffc70404;
   OverlayImage:=nil;
-  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem}Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   Log.LogStatus('  Creating information bar...');
   InfoBar:=TBDInfoBar.Create;
-  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem}Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   Log.LogStatus('  Creating UI gfx...');
   CreateArches;
-  Log.Trace('Arches...'+inttostr(GetHeapStatus.TotalAllocated));
   CreateKnob;
-  Log.Trace('Knob...'+inttostr(GetHeapStatus.TotalAllocated));
   CreateDarkBar;
-  Log.Trace('DarkBar...'+inttostr(GetHeapStatus.TotalAllocated));
   CreateAlphaBack;
-  Log.Trace('Checkered back...'+inttostr(GetHeapStatus.TotalAllocated));
   ModalOverlay:=TBDModalOverlay.Create;
   MouseObjects.Add(ModalOverlay);
-  Log.Trace('ModalOverlay...'+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem}Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   Log.LogStatus('  Creating cursor...');
   Cursor:=TBDCursor.Create;
   VibroColors:=TBDVibroColors.Create($FF202020,$FFD0D0D0);
-  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem}Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   Log.LogStatus('  Creating inks...');
   Inks:=TBDInks.Create;
-  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem}Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   Log.LogStatus('  Creating tools...');
   Tools:=TBDTools.Create;
-  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem}Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   Log.LogStatus('  Creating GradientEditor helper...');
   GradientEditorGradient:=TGradient.Create($ff000000,$ffffffff);
-  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem}Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   if FileExists(ProjectFilename) then begin
     Log.LogStatus(Format('Loading previous project (%s)...',[ProjectFilename]));
     Project:=TBDProject.CreateFromFile(ProjectFilename)
@@ -433,7 +449,7 @@ begin
     Log.LogStatus('Creating new project...');
     Project:=TBDProject.Create;
   end;
-  Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));
+  {$ifdef LogMem}Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));{$endif}
 //  MessageQueue.AddMessage(MSG_SETIMAGEUNDOREDOBUTTON);
 //  MessageQueue.AddMessage(MSG_SETPALETTEUNDOREDOBUTTON);
 

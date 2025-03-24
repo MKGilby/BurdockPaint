@@ -5,6 +5,14 @@ Compiled binaries from current build with DLLs:
 [x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.64.zip "Download x64 version") or
 [x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.64.zip "Download x86 version").
 
+## 2025.03.24 - Build 65
+- Added checking if desktop resolution is big enough for minimum window size.
+  If not, a small error window appears and the program terminates.
+- Added checking if desktop resolution is big enough for window size stored in settings.
+  If not, the stored window size is set to fit to desktop with a small margin,
+  and the program starts with the new size.
+- Added compiler directive to enable heap usage logging.   
+  
 ## 2025.03.17 - Build 64
 - Draw tool now works with inks those don't support OnTheFly drawing.
 - Undo/Redo buttons are refreshed after starting program.
