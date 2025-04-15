@@ -1,5 +1,4 @@
-.\_release_x64
-.\_release_x86
+.\release
 .\source
 .\work
 .\aat

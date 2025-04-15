@@ -112,12 +112,21 @@ begin
 {$ENDIF}
 
   MKStreamOpener.AddDirectory('.',0);
+  MKStreamOpener.AddDirectory('',1);
   SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, '1');
   SDL_SetHint(SDL_HINT_RENDER_VSYNC, '1');
 
+  Log.LogStatus('Determining project path...');
+  if (Parameters.Count=2) and (FileExists(Parameters[1])) then begin
+    ProjectFilename:=Parameters[1];
+    PROJECTBASEPATH:=ExtractFileDir(ProjectFilename);
+  end else begin
+    ProjectFilename:=TEMPPROJECTFILENAME;
+    PROJECTBASEPATH:=ExtractFileDir(Parameters[0]);
+  end;
   Log.LogStatus('Loading settings...');
   Settings:=TSettings.Create;
-  Settings.LoadFromFile(SETTINGSFILE);
+  Settings.LoadFromFile(PROJECTBASEPATH+'\'+SETTINGSFILE);
   Log.LogStatus('Initializing video subsytem...');
   SDL_Init(SDL_INIT_VIDEO);
   Log.LogStatus('Detecting desktop resolution...');
@@ -139,21 +148,13 @@ begin
 
   SetFPS(60);
 
+  Log.LogStatus('Creating project backup...');
+  fBackup:=TFileBackup.Create(PROJECTBASEPATH+'\'+WORKFOLDERPATH);
+  fBackup.BackupMaxSize:=Settings.BackupFolderMaxSize;
+  fBackup.BackupRetentionDays:=Settings.BackupFolderRetentionTime;
+  fBackup.BackupMaxFileCount:=Settings.BackupFolderMaxFileCount;
   if (Parameters.Count=2) and (FileExists(Parameters[1])) then begin
-    ProjectFilename:=Parameters[1];
-    PROJECTBASEPATH:=ExtractFileDir(ProjectFilename);
-    fBackup:=TFileBackup.Create(PROJECTBASEPATH+'\backups');
-    fBackup.BackupFolderMaxSize:=Settings.BackupFolderMaxSize;
-    fBackup.BackupFolderRetentionTime:=Settings.BackupFolderRetentionTime;
-    fBackup.BackupFolderFileCount:=Settings.BackupFolderMaxFileCount;
     fBackup.BackupFile(ProjectFilename);
-  end else begin
-    ProjectFilename:=TEMPPROJECTFILENAME;
-    PROJECTBASEPATH:=ExtractFileDir(Parameters[0]);
-    fBackup:=TFileBackup.Create(PROJECTBASEPATH+'\backups');
-    fBackup.BackupFolderMaxSize:=Settings.BackupFolderMaxSize;
-    fBackup.BackupFolderRetentionTime:=Settings.BackupFolderRetentionTime;
-    fBackup.BackupFolderFileCount:=Settings.BackupFolderMaxFileCount;
   end;
   fMainWindow.Title:=fWindowBaseTitle+ExtractFileName(ProjectFilename);
 

@@ -23,6 +23,11 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2025.04.15 - Build 66
+- Project backup folder name is changed to ".burdockpaint".
+- The settings .ini file is renamed to settings.ini and placed inside the 
+  project backup folder to prevent littering in project folder.
+
 2025.03.24 - Build 65
 - Added checking if desktop resolution is big enough for minimum window size.
   If not, a small error window appears and the program terminates.

@@ -60,7 +60,8 @@ const
 
   TEMPPROJECTFILENAME='temp.bpprj';
   PROJECTBASEPATH:string='.\';
-  SETTINGSFILE='BurdockPaint.ini';
+  WORKFOLDERPATH='.burdockpaint\';
+  SETTINGSFILE=WORKFOLDERPATH+'settings.ini';
 
   // Message typeID constants
 

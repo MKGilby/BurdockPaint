@@ -2,8 +2,13 @@
 My AAT tribute
 
 Compiled binaries from current build with DLLs:
-[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.64.zip "Download x64 version") or
-[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.64.zip "Download x86 version").
+[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.66.zip "Download x64 version") or
+[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.66.zip "Download x86 version").
+
+## 2025.04.15 - Build 66
+- Project backup folder name is changed to ".burdockpaint".
+- The settings .ini file is renamed to settings.ini and placed inside the 
+  project backup folder to prevent littering in project folder.
 
 ## 2025.03.24 - Build 65
 - Added checking if desktop resolution is big enough for minimum window size.
