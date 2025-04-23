@@ -23,6 +23,11 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2025.04.23 - Build 67
+- Alpha is visible in colorboxes. (Color selector, gradient editor)
+- Alpha is visible in side palette.
+- Alpha is visible in cursor color.
+
 2025.04.15 - Build 66
 - Project backup folder name is changed to ".burdockpaint".
 - The settings .ini file is renamed to settings.ini and placed inside the 

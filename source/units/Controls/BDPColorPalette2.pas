@@ -9,7 +9,7 @@ unit BDPColorPalette2;
 
 interface
 
-uses SysUtils, vcc2_ContainerStatic;
+uses SysUtils, vcc2_ContainerStatic, mk_sdl2;
 
 // This is the colorpalette tool at the right side of the window.
 
@@ -19,12 +19,14 @@ type
 
   TBDColorPalette2=class(TContainerStatic)
     constructor Create(iLeft,iTop,iWidth,iHeight:integer);
+    procedure Draw; override;
   protected
     procedure ReDraw; override;
     procedure fSetHeight(value:integer); override;
   private
     fEntryHeight:integer;
     fPage:integer;
+    fCheckered:TTexture;
     procedure Click(Sender:TObject;x,y,button:integer);
     procedure MouseWheel(Sender:TObject;x,y,wheelx,wheely:integer);
     procedure MouseMove(Sender:TObject;x,y:integer);
@@ -56,6 +58,13 @@ begin
   MouseObjects.Add(Self);
   fEntryHeight:=(fHeight-(12+22+3)) div 16;
   fPage:=0;
+  fCheckered:=MM.Textures.ItemByName['AlphaBack'];
+end;
+
+procedure TBDColorPalette2.Draw;
+begin
+  bar(fLeft,fTop,fWidth,fHeight,fCheckered);
+  inherited Draw;
 end;
 
 procedure TBDColorPalette2.ReDraw;

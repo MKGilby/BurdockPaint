@@ -145,7 +145,7 @@ begin
     Settings.WindowWidth,
     Settings.WindowHeight,
     fWindowBaseTitle);
-
+  SDL_SetRenderDrawBlendMode(fMainWindow.Renderer,SDL_BLENDMODE_BLEND);
   SetFPS(60);
 
   Log.LogStatus('Creating project backup...');

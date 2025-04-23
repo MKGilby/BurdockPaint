@@ -32,7 +32,7 @@ begin
           SystemPalette.ColorR[SYSTEMCOLORMID],
           SystemPalette.ColorG[SYSTEMCOLORMID],
           SystemPalette.ColorB[SYSTEMCOLORMID],
-          255);
+          SDL_ALPHA_OPAQUE);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x-4,y);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x-3,y);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x,y-4);
@@ -45,7 +45,7 @@ begin
           SystemPalette.ColorR[SYSTEMCOLORBLACK],
           SystemPalette.ColorG[SYSTEMCOLORBLACK],
           SystemPalette.ColorB[SYSTEMCOLORBLACK],
-          255);
+          SDL_ALPHA_OPAQUE);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x-2,y);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x,y-2);
         SDL_RenderDrawPoint(PrimaryWindow.Renderer,x+2,y);
@@ -65,7 +65,7 @@ begin
           SystemPalette.ColorR[SYSTEMCOLORMID],
           SystemPalette.ColorG[SYSTEMCOLORMID],
           SystemPalette.ColorB[SYSTEMCOLORMID],
-          255);
+          SDL_ALPHA_OPAQUE);
         r.x:=x-8;r.y:=y;r.w:=4;r.h:=2;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.x:=x+6;
@@ -78,7 +78,7 @@ begin
           SystemPalette.ColorR[SYSTEMCOLORBLACK],
           SystemPalette.ColorG[SYSTEMCOLORBLACK],
           SystemPalette.ColorB[SYSTEMCOLORBLACK],
-          255);
+          SDL_ALPHA_OPAQUE);
         r.x:=x-4;r.y:=y;r.w:=2;r.h:=2;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.x:=x+4;
@@ -87,11 +87,13 @@ begin
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.y:=y+4;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
-        Bar(x,y,2,2,
+        r.x:=x;r.y:=y;
+        SDL_SetRenderDrawColor(PrimaryWindow.Renderer,
           (Settings.ActiveColor and $FF0000)>>16,
           (Settings.ActiveColor and $FF00)>>8,
           (Settings.ActiveColor and $FF),
           (Settings.ActiveColor and $FF000000)>>24);
+        SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
       end;
     3:begin
         x-=x mod 4;
@@ -100,7 +102,7 @@ begin
           SystemPalette.ColorR[SYSTEMCOLORMID],
           SystemPalette.ColorG[SYSTEMCOLORMID],
           SystemPalette.ColorB[SYSTEMCOLORMID],
-          255);
+          SDL_ALPHA_OPAQUE);
         r.x:=x-16;r.y:=y;r.w:=8;r.h:=4;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.x:=x+12;
@@ -113,7 +115,7 @@ begin
           SystemPalette.ColorR[SYSTEMCOLORBLACK],
           SystemPalette.ColorG[SYSTEMCOLORBLACK],
           SystemPalette.ColorB[SYSTEMCOLORBLACK],
-          255);
+          SDL_ALPHA_OPAQUE);
         r.x:=x-8;r.y:=y;r.w:=4;r.h:=4;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.x:=x+8;
@@ -122,11 +124,13 @@ begin
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.y:=y+8;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
-        Bar(x,y,4,4,
+        r.x:=x;r.y:=y;
+        SDL_SetRenderDrawColor(PrimaryWindow.Renderer,
           (Settings.ActiveColor and $FF0000)>>16,
           (Settings.ActiveColor and $FF00)>>8,
           (Settings.ActiveColor and $FF),
           (Settings.ActiveColor and $FF000000)>>24);
+        SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
       end;
     4:begin
         x-=x mod 8;
@@ -135,7 +139,7 @@ begin
           SystemPalette.ColorR[SYSTEMCOLORMID],
           SystemPalette.ColorG[SYSTEMCOLORMID],
           SystemPalette.ColorB[SYSTEMCOLORMID],
-          255);
+          SDL_ALPHA_OPAQUE);
         r.x:=x-32;r.y:=y;r.w:=16;r.h:=8;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.x:=x+24;
@@ -148,7 +152,7 @@ begin
           SystemPalette.ColorR[SYSTEMCOLORBLACK],
           SystemPalette.ColorG[SYSTEMCOLORBLACK],
           SystemPalette.ColorB[SYSTEMCOLORBLACK],
-          255);
+          SDL_ALPHA_OPAQUE);
         r.x:=x-16;r.y:=y;r.w:=8;r.h:=8;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.x:=x+16;
@@ -157,11 +161,13 @@ begin
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.y:=y+16;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
-        Bar(x,y,8,8,
+        r.x:=x;r.y:=y;
+        SDL_SetRenderDrawColor(PrimaryWindow.Renderer,
           (Settings.ActiveColor and $FF0000)>>16,
           (Settings.ActiveColor and $FF00)>>8,
           (Settings.ActiveColor and $FF),
           (Settings.ActiveColor and $FF000000)>>24);
+        SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
       end;
     5:begin
         x-=x mod 16;
@@ -170,7 +176,7 @@ begin
           SystemPalette.ColorR[SYSTEMCOLORMID],
           SystemPalette.ColorG[SYSTEMCOLORMID],
           SystemPalette.ColorB[SYSTEMCOLORMID],
-          255);
+          SDL_ALPHA_OPAQUE);
         r.x:=x-64;r.y:=y;r.w:=32;r.h:=16;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.x:=x+48;
@@ -183,7 +189,7 @@ begin
           SystemPalette.ColorR[SYSTEMCOLORBLACK],
           SystemPalette.ColorG[SYSTEMCOLORBLACK],
           SystemPalette.ColorB[SYSTEMCOLORBLACK],
-          255);
+          SDL_ALPHA_OPAQUE);
         r.x:=x-32;r.y:=y;r.w:=16;r.h:=16;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.x:=x+32;
@@ -192,11 +198,13 @@ begin
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
         r.y:=y+32;
         SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
-        Bar(x,y,16,16,
+        r.x:=x;r.y:=y;
+        SDL_SetRenderDrawColor(PrimaryWindow.Renderer,
           (Settings.ActiveColor and $FF0000)>>16,
           (Settings.ActiveColor and $FF00)>>8,
           (Settings.ActiveColor and $FF),
           (Settings.ActiveColor and $FF000000)>>24);
+        SDL_RenderFillRect(PrimaryWindow.Renderer,@r);
       end;
   end;
 end;

@@ -136,6 +136,8 @@
 //       (Suitable for textureatlases)
 //   1.35 - Gilby - 2025.04.09
 //     * Following changes in Lists unit.
+//   1.36 - Gilby - 2025.04.23
+//     * Added FillImagePart. It fills a part of the image with another image.
 
 
 {$ifdef fpc}
@@ -337,6 +339,9 @@ type
     // Tilefills the image with another image
     procedure FillImage(pSource:TARGBImage);
 
+    // Tilefills a part of the image with another image
+    procedure FillImagePart(pLeft,pTop,pWidth,pHeight:integer;pSource:TARGBImage);
+
     // Adds padding between frames to avoid artifacts with fullscreen scaling
     procedure AddPadding(pHorizontalFrameCount,pVerticalFrameCount:integer;pR:integer=0;pG:integer=0;pB:integer=0;pA:integer=255);
 
@@ -403,7 +408,7 @@ uses SysUtils, MKToolBox, Logger, MKStream;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.35';
+  Version='1.36';
   POSTPROCESSCOLOR=$00FF00FF;  // Fully transparent magenta is the magic color!
 
 var
@@ -1500,6 +1505,51 @@ begin
       pSource.CopyTo(0,0,pSource.Width,Height mod pSource.Height,i*pSource.Width,Height div pSource.Height*pSource.Height,Self);
     if Width mod pSource.Width>0 then
       pSource.CopyTo(0,0,Width mod pSource.Width,Height mod pSource.Height,Width div pSource.Width*pSource.Width,Height div pSource.Height*pSource.Height,Self);
+  end;
+end;
+
+procedure TARGBImage.FillImagePart(pLeft,pTop,pWidth,pHeight:integer;pSource:TARGBImage);
+var i,j:integer;
+begin
+  for j:=0 to (pHeight div pSource.Height)-1 do begin
+    for i:=0 to (pWidth div pSource.Width)-1 do
+      PutImage(
+        pLeft+i*pSource.Width,
+        pTop+j*pSource.Height,
+        pSource);
+//      pSource.CopyTo(0,0,pSource.Width,pSource.Height,pLeft+i*pSource.Width,pTop+j*pSource.Height,Self);
+    if pWidth mod pSource.Width>0 then
+      PutImagePart(
+        pLeft+pWidth div pSource.Width*pSource.Width,
+        pTop+j*pSource.Height,
+        0,
+        0,
+        pWidth mod pSource.Width,
+        pSource.Height,
+        pSource);
+//      pSource.CopyTo(0,0,pWidth mod pSource.Width,pSource.Height,pLeft+pWidth div pSource.Width*pSource.Width,pTop+j*pSource.Height,Self);
+  end;
+  if pHeight mod pSource.Height>0 then begin
+    for i:=0 to (pWidth div pSource.Width)-1 do
+      PutImagePart(
+        pLeft+i*pSource.Width,
+        pTop+pHeight div pSource.Height*pSource.Height,
+        0,
+        0,
+        pSource.Width,
+        pHeight mod pSource.Height,
+        pSource);
+//      pSource.CopyTo(0,0,pSource.Width,pHeight mod pSource.Height,pLeft+i*pSource.Width,pTop+pHeight div pSource.Height*pSource.Height,Self);
+    if pWidth mod pSource.Width>0 then
+      PutImagePart(
+        pLeft+pWidth div pSource.Width*pSource.Width,
+        pTop+pHeight div pSource.Height*pSource.Height,
+        0,
+        0,
+        pWidth mod pSource.Width,
+        pHeight mod pSource.Height,
+        pSource);
+//      pSource.CopyTo(0,0,pWidth mod pSource.Width,pHeight mod pSource.Height,pLeft+pWidth div pSource.Width*pSource.Width,pTop+pHeight div pSource.Height*pSource.Height,Self);
   end;
 end;
 

@@ -2,8 +2,13 @@
 My AAT tribute
 
 Compiled binaries from current build with DLLs:
-[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.66.zip "Download x64 version") or
-[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.66.zip "Download x86 version").
+[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.67.zip "Download x64 version") or
+[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.67.zip "Download x86 version").
+
+## 2025.04.23 - Build 67
+- Alpha is visible in colorboxes. (Color selector, gradient editor)
+- Alpha is visible in side palette.
+- Alpha is visible in cursor color.
 
 ## 2025.04.15 - Build 66
 - Project backup folder name is changed to ".burdockpaint".

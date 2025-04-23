@@ -9,7 +9,7 @@ unit BDPColorBox;
 
 interface
 
-uses SysUtils, ARGBImageUnit, vcc2_VisibleControlStatic;
+uses SysUtils, ARGBImageUnit, vcc2_VisibleControlStatic, mk_sdl2;
 
 type
 
@@ -18,11 +18,13 @@ type
   TBDColorBox=class(TVisibleControlStatic)
     constructor Create(iLeft,iTop,iWidth,iHeight:integer);
     procedure ColorChanged;
+    procedure Draw; override;
   protected
     procedure ReDraw; override;
   private
     fColor:uint32;
     fTLImage,fTRImage,fBLImage,fBRImage:TARGBImage;
+    fCheckered:TTexture;
     procedure fSetColor(value:uint32);
   public
     property Color:uint32 read fColor write fSetColor;
@@ -30,7 +32,7 @@ type
 
 implementation
 
-uses BDPShared, mk_sdl2;
+uses BDPShared;
 
 { TBDColorBox }
 
@@ -47,6 +49,7 @@ begin
   fBRImage:=MM.Images.ItemByName['ArchBottomRight'];
   fColor:=$FF000000;
   fVisible:=true;
+  fCheckered:=MM.Textures.ItemByName['AlphaBack'];
 
   fNeedRedraw:=true;
 end;
@@ -54,6 +57,12 @@ end;
 procedure TBDColorBox.ColorChanged;
 begin
   fNeedRedraw:=true;
+end;
+
+procedure TBDColorBox.Draw;
+begin
+  Bar(fLeft,fTop,fWidth,fHeight,fCheckered);
+  inherited Draw;
 end;
 
 procedure TBDColorBox.ReDraw;
