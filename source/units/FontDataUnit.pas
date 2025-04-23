@@ -25,6 +25,8 @@
 //      - Initial creation from Font2Unit
 //   V1.01: Gilby - 2024.08.15
 //      - Get rid of sdl2 TRect.
+//   V1.02: Gilby - 2025.02.10
+//      - Added Assign method.
 
 {$ifdef fpc}
   {$mode delphi}
@@ -40,8 +42,11 @@ type
     Left,Top,Width,Height:integer;
   end;
 
+  { TFontData }
+
   TFontData=class
     constructor Create;
+    procedure Assign(pFontData:TFontData);
     procedure SetCharBox(c,x,y,w,h:integer);
   protected
     // Character box for each char. Set width to 0 if the char is not present in font.
@@ -57,7 +62,7 @@ uses sysutils, Logger;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.01';
+  Version='1.02';
 
 // ----------------------------------------------------------- [ TFontData ]---
 
@@ -66,6 +71,13 @@ var i:integer;
 begin
   for i:=0 to 255 do
     fCharBoxes[i].Width:=0;
+end;
+
+procedure TFontData.Assign(pFontData: TFontData);
+var i:integer;
+begin
+  for i:=0 to 255 do
+    fCharBoxes[i]:=pFontData.CharBoxes[i];
 end;
 
 procedure TFontData.SetCharBox(c,x,y,w,h:integer);

@@ -91,6 +91,10 @@
 //   - TCallBackStringList removed, TStringList already have a ForEach callback.
 // V3.18 - Gilby - 2022.10.06
 //   - Removed TGenericList, use fgl unit instead.
+// V3.19 - Gilby - 2024.03.22
+//   - Fix in TDoubleValueList.
+// V3.20 - Gilby - 2025.04.09
+//   - TNamedList's default property is ItemByName now.
 
 {$ifdef fpc}
   {$smartlink on}
@@ -137,6 +141,8 @@ type
     property Sorted:boolean read fSorted write fSetSorted;
   end;
   
+  { TDoubleValueList }
+
   TDoubleValueList=class(TStringList)
   private
     function GetValue1(name:string):string;
@@ -146,6 +152,8 @@ type
   public
     property Values1[name:string]:string read GetValue1 write SetValue1;
     property Values2[name:string]:string read GetValue2 write SetValue2;
+    function Value1FromIndex(index:integer):string;
+    function Value2FromIndex(index:integer):string;
   end;
 
 {$ifdef fpc}
@@ -159,8 +167,8 @@ type
     function fGetItemS(index:string):T;
     procedure fSetItemS(index:string;item:T);
   public
-    property Items[index:integer]:T read fGetItem write fSetItem; default;
-    property ItemByName[index:string]:T read fGetItemS write fSetItemS;
+    property Items[index:integer]:T read fGetItem write fSetItem;
+    property ItemByName[index:string]:T read fGetItemS write fSetItemS; default;
   end;
 {$endif}
 
@@ -180,7 +188,7 @@ uses SysUtils, Logger, QuickSortUnit;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='3.18';
+  Version='3.20';
 
 constructor TFileSearchList.Create(iPath:string;iAttr:integer);
 begin
@@ -359,8 +367,28 @@ begin
   s:=Values[name];
   if s<>'' then begin
     if pos(';',s)>0 then Values[name]:=copy(s,1,pos(';',s))+value
-                    else Values[name]:=';'+value;
+                    else Values[name]:=Values[name]+';'+value;
   end else Values[name]:=';'+value;
+end;
+
+function TDoubleValueList.Value1FromIndex(index:integer):string;
+var s:string;
+begin
+  s:=ValueFromIndex[index];
+  if s<>'' then begin
+    if pos(';',s)>0 then Result:=copy(s,1,pos(';',s)-1)
+                    else Result:=s;
+  end else Result:='';
+end;
+
+function TDoubleValueList.Value2FromIndex(index:integer):string;
+var s:string;
+begin
+  s:=ValueFromIndex[index];
+  if s<>'' then begin
+    if pos(';',s)>0 then Result:=copy(s,pos(';',s)+1,length(s)-pos(';',s))
+                    else Result:='';
+  end else Result:='';
 end;
 
 {$ifdef fpc}

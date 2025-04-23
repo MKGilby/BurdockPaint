@@ -34,6 +34,8 @@
 //     * Following changes in FontDataUnit.
 //   1.11 - Gilby - 2024.12.04
 //     * Removing unused variables.
+//   1.12 - Gilby - 2025.04.11
+//     * Following changes in used units.
 
 unit ARGBImagePNGWriterUnit;
 
@@ -57,7 +59,7 @@ uses Classes, SysUtils, ARGBImageUnit, CRC32Unit, FastPaletteUnit,
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.10';
+  Version='1.12';
 
   HEADER=#137#80#78#71#13#10#26#10;
   IHDR:uint32=$52444849; //  #82#68#72#73;
@@ -149,7 +151,7 @@ begin
     Xs.Write(b,1);
     j:=pAnimations.Count;
     Xs.Write(j,2);
-    for i:=0 to pAnimations.Count-1 do pAnimations[i].SavetoStream(Xs);
+    for i:=0 to pAnimations.Count-1 do pAnimations.Items[i].SavetoStream(Xs);
     Xs.Position:=0;
     ch.Write(anMZ,4);
     CompressStream(Xs,ch,Xs.Size);

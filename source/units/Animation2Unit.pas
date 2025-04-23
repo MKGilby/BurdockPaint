@@ -38,6 +38,10 @@
 //     * Adopting time based animations.
 //  V1.07a: Gilby - 2023.12.14
 //     * PutFrame now uses HotPoint coordinates.
+//  V1.08: Gilby - 2025.01.17
+//     * AnimationData name is copied to animation name.
+//  V1.09: Gilby - 2025.04.09
+//     * Following changes in Lists unit.
 
 {$mode delphi}
 
@@ -81,7 +85,7 @@ uses SysUtils, MKStream, Logger;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.07a';
+  Version='1.08';
 
 // -----------------------------------------------------------[ TAnimation ]---
 
@@ -92,6 +96,7 @@ begin
     fAnimationTimer:=TFrameBasedAnimationTimer.Create(TFrameBasedAnimationData(iAnimationData))
   else if iAnimationData is TTimeBasedAnimationData then
     fAnimationTimer:=TTimeBasedAnimationTimer.Create(TTimeBasedAnimationData(iAnimationData));
+  Name:=iAnimationData.Name;
 end;
 
 destructor TAnimation.Destroy;
@@ -141,7 +146,7 @@ end;
 procedure TAnimations.AnimateAll(pTimeUsed:double);
 var i:integer;
 begin
-  for i:=0 to Count-1 do Self[i].Animate(pTimeUsed);
+  for i:=0 to Count-1 do Self.Items[i].Animate(pTimeUsed);
 end;
 
 initialization

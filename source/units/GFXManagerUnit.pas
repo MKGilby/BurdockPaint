@@ -33,6 +33,10 @@
 //     * Following changes in AnimationDataUnit and Animation2Unit.
 //  V1.03: Gilby - 2024.03.27
 //     * Added MKR font support.
+//  V1.04: Gilby - 2025.03.31
+//     * BUGFIX when using MM_DONTKEEPIMAGE. Animations were freed with the image.
+//  V1.05: Gilby - 2025.04.09
+//     * Following changes in used units.
 
 unit GFXManagerUnit;
 
@@ -63,6 +67,7 @@ type
 
   TAnimationDataWithTexture=class
     constructor Create(iAnimationData:TBaseAnimationData;iTexture:TTexture;iSourceImage:TARGBImage=nil);
+    destructor Destroy; override;
     function SpawnAnimation:TAnimation;
   private
     fAnimationData:TBaseAnimationData;
@@ -111,16 +116,25 @@ uses SysUtils, Logger, Font2Unit, MKToolbox;
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.03';
+  Version='1.05';
 
 { TAnimationDataWithTexture }
 
 constructor TAnimationDataWithTexture.Create(iAnimationData: TBaseAnimationData;
   iTexture: TTexture; iSourceImage: TARGBImage=nil);
 begin
-  fAnimationData:=iAnimationData;
+  if iAnimationData is TFrameBasedAnimationData then
+    fAnimationData:=TFrameBasedAnimationData(iAnimationData).Clone
+  else if iAnimationData is TTimeBasedAnimationData then
+    fAnimationData:=TTimeBasedAnimationData(iAnimationData).Clone;
   fTexture:=iTexture;
   fARGBImage:=iSourceImage;
+end;
+
+destructor TAnimationDataWithTexture.Destroy;
+begin
+  fAnimationData.Free;
+  inherited Destroy;
 end;
 
 function TAnimationDataWithTexture.SpawnAnimation: TAnimation;
@@ -186,7 +200,7 @@ begin
     atmT:=TStaticTexture.Create(pImage);
     fTextures.AddObject(pImageName,atmT);
     for i:=0 to pImage.Animations.Count-1 do begin
-      atmA:=TAnimationDataWithTexture.Create(pImage.Animations[i],atmT,pImage);
+      atmA:=TAnimationDataWithTexture.Create(pImage.Animations.Items[i],atmT,pImage);
 //      atmA.Animation.LogData;
       fAnimationDWTs.AddObject(atmA.Animation.Name,atmA);
       if pFlags and MM_CREATEMASKFORANIMATIONFRAMES<>0 then

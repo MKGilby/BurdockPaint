@@ -15,13 +15,13 @@
 //     * Following changes in ARGBImageUnit (TAnimationData -> TAnimationDatas)
 //   1.03 - Gilby - 2024.12.04
 //     * Following changes in AnimationDataUnit and FontDataUnit
+//   1.04 - Gilby - 2025.04.23
+//     * Following changes in used units
 
 {$ifdef fpc}
   {$mode delphi}
   {$smartlink on}
 {$endif}
-
-{define Mator}
 
 unit ARGBImageTGAWriterUnit;
 
@@ -34,7 +34,7 @@ uses Classes, SysUtils, ARGBImageUnit, MKToolBox, Logger, FastPaletteUnit,
 
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.03';
+  Version='1.04';
 
 procedure RearrangeAnimationH2V(src,trg:pointer;wi,he,framecount:integer);
 var x,y,fwi:integer;
@@ -73,8 +73,8 @@ begin
   lhe:=pHeight;
   for i:=0 to 31 do extra[i]:=0;
   extralength:=0;
-  if (pAnimations.Count>0) and (pAnimations[0] is TFrameBasedAnimationData) then begin
-    anim:=TFrameBasedAnimationData(pAnimations[0]);
+  if (pAnimations.Count>0) and (pAnimations.Items[0] is TFrameBasedAnimationData) then begin
+    anim:=TFrameBasedAnimationData(pAnimations.Items[0]);
     if (anim.FrameDelay>0) or (anim.LoopDelay>0) then begin
       extralength:=16;
       extra[2]:=anim.FrameDelay;

@@ -56,7 +56,8 @@
 //      * Really removed the hack to SDL_LockTexture. :)
 //   V1.16 - 2024.10.29
 //      * Added Resizable flag to TWindow.Create. When a resizable window created,
-//        you must react to
+//        you must react to resize events! (Not yet implemented, so don't create
+//        resizable windows. :) )
 
 {$ifdef fpc}
   {$mode delphi}

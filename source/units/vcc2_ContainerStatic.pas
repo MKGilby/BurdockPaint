@@ -12,7 +12,7 @@
              under the GNU GPL Version 2.
 
   Written by Gilby/MKSZTSZ
-  Hungary, 2023
+  Hungary, 2023-2025
 
   --------------------------------------------------
 
@@ -44,6 +44,8 @@
 //
 //  V1.00: Gilby - 2023.11.17
 //    * Initial creation from vcc2_Container.
+//  V1.01: Gilby - 2025.04.23
+//    * Following changes in used units.
 
 {$mode delphi}{$H+}
 
@@ -77,7 +79,7 @@ uses SysUtils, Logger;
      
 const
   Fstr={$I %FILE%}+', ';
-  Version='1.00';
+  Version='1.01';
 
 constructor TContainerStatic.Create;
 begin
@@ -107,7 +109,7 @@ var i,j:integer;
 begin
   if Assigned(fChildren) then begin
     for i:=0 to fChildren.Count-1 do begin
-      j:=MouseObjects.IndexOf(fChildren[i]);
+      j:=MouseObjects.IndexOf(fChildren.Items[i]);
       if j>-1 then MouseObjects.Delete(j);
     end;
     fChildren.Free;
@@ -127,7 +129,7 @@ var i,j:integer;
 begin
   i:=fChildren.IndexOfObject(pObject);
   if i>0 then begin
-    j:=MouseObjects.IndexOf(fChildren[i]);
+    j:=MouseObjects.IndexOf(fChildren.Items[i]);
     if j>0 then MouseObjects.Delete(i);
     fChildren.Delete(i);
   end;
@@ -138,7 +140,7 @@ var i,j:integer;
 begin
   i:=fChildren.IndexOf(pName);
   if i>0 then begin
-    j:=MouseObjects.IndexOf(fChildren[i]);
+    j:=MouseObjects.IndexOf(fChildren.Items[i]);
     if j>0 then MouseObjects.Delete(i);
     fChildren.Delete(i);
   end;
@@ -148,7 +150,7 @@ procedure TContainerStatic.ClearChildren;
 var i,j:integer;
 begin
   for i:=0 to fChildren.Count-1 do begin
-    j:=MouseObjects.IndexOf(fChildren[i]);
+    j:=MouseObjects.IndexOf(fChildren.Items[i]);
     Log.Trace('ClearChildren '+inttostr(i)+'. '+inttostr(j));
     if j>-1 then MouseObjects.Delete(j);
   end;
@@ -160,7 +162,7 @@ var i:integer;
 begin
   inherited ;
   for i:=0 to fChildren.Count-1 do
-    fChildren[i].Visible:=pValue;
+    fChildren.Items[i].Visible:=pValue;
 
   fVisible:=pValue;
 end;

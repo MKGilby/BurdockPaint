@@ -113,15 +113,15 @@ begin
 
   CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*4+12,
     'DELETE','DELETE SELECTED GRADIENT.','GDS Delete',DeleteClick);
-  fDeleteButton:=TBDButton(fChildren[fChildren.Count-1]);
+  fDeleteButton:=TBDButton(fChildren.Items[fChildren.Count-1]);
 
   CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*5+18,
     'UNDO','UNDO LAST GRADIENT OPERATION.','GDS Undo',UndoClick);
-  fUndoButton:=TBDButton(fChildren[fChildren.Count-1]);
+  fUndoButton:=TBDButton(fChildren.Items[fChildren.Count-1]);
 
   CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*6+18,
     'REDO','REDO LAST GRADIENT OPERATION.','GDS Redo',RedoClick);
-  fRedoButton:=TBDButton(fChildren[fChildren.Count-1]);
+  fRedoButton:=TBDButton(fChildren.Items[fChildren.Count-1]);
 
   for i:=0 to min(Project.CurrentGradientList.Count-1,7) do
     CreateGradient(i,fLeft+3+9,fTop+GRADIENTSTOP+(GRADIENTHEIGHT+3)*i,Project.CurrentGradientList[i]);
