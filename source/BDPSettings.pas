@@ -30,8 +30,6 @@ type
     fSelectedInks:TStringArray8;
     fActiveInk:integer;  // within fSelectedInks
     fActiveColor:uint32;
-    fDitherStrength:integer;
-    fRealDitherStrength:double;
     fTintStrength:integer;
     fRealTintStrength:double;
     fWindowWidth,fWindowHeight:integer;
@@ -41,7 +39,6 @@ type
     function fGetSelectedInk(index:integer):string;
     procedure fSetSelectedInk(index:integer;value:string);
     procedure fSetActiveColor(value:uint32);
-    procedure fSetDitherStrength(value:integer);
     procedure fSetTintStrength(value:integer);
     procedure fSetWindowWidth(value:integer);
     procedure fSetWindowHeight(value:integer);
@@ -51,7 +48,6 @@ type
     ColorSelectorRightColor:uint32;
     FillShapes:boolean;
     ClearKeyColor:boolean;
-    DitherGradients:boolean;
     ShowGrid:boolean;
     ZoomLeft,ZoomTop:integer;
     UndoLimit:uint32;
@@ -66,18 +62,15 @@ type
     SoftenCenterWeight:integer;
     SoftenAlphaToo:boolean;
     CircleMode:integer; // 0 - Center+radius, 1 - BoundingBox
-    DitherColorBanding:boolean;
-    DitherColorBandCount:integer;
     SepBoxed:boolean;
     TempInt01,TempInt02:integer;  // Used in dialogs when values don't have to be saved.
+    TempBool01:boolean;
     property Zoom:integer read fZoom write fSetZoom;
     property SelectedTools[index:integer]:string read fGetSelectedTool write fSetSelectedTool;
     property ActiveTool:integer read fActiveTool write fActiveTool;
     property SelectedInks[index:integer]:string read fGetSelectedInk write fSetSelectedInk;
     property ActiveInk:integer read fActiveInk write fActiveInk;
     property ActiveColor:uint32 read fActiveColor write fSetActiveColor;
-    property DitherStrength:integer read fDitherStrength write fSetDitherStrength;
-    property RealDitherStrength:double read fRealDitherStrength;
     property TintStrength:integer read fTintStrength write fSetTintStrength;
     property RealTintStrength:double read fRealTintStrength;
     property WindowWidth:integer read fWindowWidth write fSetWindowWidth;
@@ -119,7 +112,6 @@ begin
   ColorSelectorRightColor:=$FFFFFFFF;
   fActiveColor:=$FFFF0000;
   UndoLimit:=16;
-  DitherStrength:=10;
   TintStrength:=10;
   TintCELAsMask:=true;
   CGradCenterX:=0;
@@ -136,8 +128,6 @@ begin
   SoftenCenterWeight:=1;
   SoftenAlphaToo:=false;
   CircleMode:=0;
-  DitherColorBanding:=false;
-  DitherColorBandCount:=4;
   fWindowWidth:=MINIMUMWINDOWWIDTH;
   fWindowHeight:=MINIMUMWINDOWHEIGHT;
 end;
@@ -195,10 +185,6 @@ begin
     ColorSelectorRightColor:=INI.ReadUInt32('Colors','Right',$FFFFFFFF);
     fActiveColor:=INI.ReadUInt32('Colors','ActiveColor',$FFFF0000);
     // Inks' settings
-    DitherGradients:=INI.ReadBool('Inks','DitherGradients',false);
-    DitherStrength:=INI.ReadInteger('Inks','DitherStrength',10);
-    DitherColorBanding:=INI.ReadBool('Inks','DitherColorBanding',false);
-    DitherColorBandCount:=INI.ReadInteger('Inks','DitherColorBandCount',4);
     TintStrength:=INI.ReadInteger('Inks','TintStrength',10);
     TintCELAsMask:=INI.ReadBool('Inks','TintCELAsMask',true);
     CGradCenterX:=INI.ReadInteger('Inks','CGradCenterX',0);
@@ -254,10 +240,6 @@ begin
     INI.WriteUInt32('Colors','Right',ColorSelectorRightColor);
     INI.WriteUInt32('Colors','ActiveColor',fActiveColor);
     // Inks' settings
-    INI.WriteBool('Inks','DitherGradients',DitherGradients);
-    INI.WriteInteger('Inks','DitherStrength',fDitherStrength);
-    INI.WriteBool('Inks','DitherColorBanding',DitherColorBanding);
-    INI.WriteInteger('Inks','DitherColorBandCount',DitherColorBandCount);
     INI.WriteInteger('Inks','TintStrength',fTintStrength);
     INI.WriteBool('Inks','TintCELAsMask',TintCELAsMask);
     INI.WriteInteger('Inks','CGradCenterX',CGradCenterX);
@@ -309,14 +291,6 @@ procedure TSettings.fSetActiveColor(value:uint32);
 begin
   fActiveColor:=value;
   MessageQueue.AddMessage(MSG_ACTIVECOLORCHANGED,0,fActiveColor);
-end;
-
-procedure TSettings.fSetDitherStrength(value:integer);
-begin
-  if value<0 then value:=0
-  else if value>255 then value:=255;
-  fDitherStrength:=value;
-  fRealDitherStrength:=value/255;
 end;
 
 procedure TSettings.fSetTintStrength(value: integer);

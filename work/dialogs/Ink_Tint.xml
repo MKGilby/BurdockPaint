@@ -22,13 +22,13 @@
       <Name>ConfTintSlider</Name>
       <MinValue>0</MinValue>
       <MaxValue>100</MaxValue>
-      <SettingField>TintStrength</SettingField>
+      <SettingField>Settings.TintStrength</SettingField>
     </HorizontalSlider>
     <CheckBox>
       <Name>ConfTintCheckbox</Name>
       <Caption>PutCEL use cel as mask</Caption>
       <Hint>... not as color source</Hint>
-      <SettingField>TintCELAsMask</SettingField>
+      <SettingField>Settings.TintCELAsMask</SettingField>
     </CheckBox>
     <Split direction="Horizontal">
       <Button>

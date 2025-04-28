@@ -3,7 +3,7 @@
   See "copyright.txt" for details.
 }
 
-// Generated on 2025.01.02
+// Generated on 2025.04.28
 
 unit BDPConfigureCircleDialog;
 
@@ -22,11 +22,11 @@ type
     constructor Create;
     procedure ReDraw; override;
   private
-    fCircleMode:integer;
     fConfCircleBXButton:TBDButton;
     fConfCircleCancelButton:TBDButton;
     fConfCircleCRButton:TBDButton;
     fConfCircleOKButton:TBDButton;
+    fTemp01:integer;
     procedure SaveSettings;
     procedure Show(Sender:TObject);
     procedure ConfCircleCRButtonClick(Sender:TObject;x,y,buttons:integer);
@@ -83,19 +83,19 @@ end;
 
 procedure TBDConfigureCircleDialog.SaveSettings;
 begin
-  Settings.CircleMode:=fCircleMode;
+  Settings.CircleMode:=fTemp01;
 end;
 
 procedure TBDConfigureCircleDialog.ConfCircleCRButtonClick(Sender:TObject;x,y,buttons:integer);
 begin
-  fCircleMode:=0;
+  fTemp01:=0;
   fConfCircleCRButton.Selected:=true;
   fConfCircleBXButton.Selected:=false;
 end;
 
 procedure TBDConfigureCircleDialog.ConfCircleBXButtonClick(Sender:TObject;x,y,buttons:integer);
 begin
-  fCircleMode:=1;
+  fTemp01:=1;
   fConfCircleBXButton.Selected:=true;
   fConfCircleCRButton.Selected:=false;
 end;

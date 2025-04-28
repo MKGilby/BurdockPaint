@@ -297,13 +297,13 @@ begin
   CodeGenerator.CreateCode.Add(Format('    Name:=''%s'';',[fName]));
   CodeGenerator.CreateCode.Add(Format('    MinValue:=%d;',[fMinValue]));
   CodeGenerator.CreateCode.Add(Format('    MaxValue:=%d;',[fMaxValue]));
-  CodeGenerator.CreateCode.Add(Format('    Position:=Settings.%s;',[fSettingField]));
+  CodeGenerator.CreateCode.Add(Format('    Position:=%s;',[fSettingField]));
   CodeGenerator.CreateCode.Add('  end;');
   CodeGenerator.CreateCode.Add(Format('  AddChild(%s);',[fName]));
   CodeGenerator.CreateCode.Add('');
   if fSettingField<>'' then begin
-    CodeGenerator.SaveCode.Add(Format('  Settings.%s:=%s.Position;',[fSettingField,fName]));
-    CodeGenerator.ShowCode.Add(Format('  %s.Position:=Settings.%s;',[fName,fSettingField]));
+    CodeGenerator.SaveCode.Add(Format('  %s:=%s.Position;',[fSettingField,fName]));
+    CodeGenerator.ShowCode.Add(Format('  %s.Position:=%s;',[fName,fSettingField]));
   end;
 end;
 
@@ -341,8 +341,8 @@ begin
   CodeGenerator.CreateCode.Add(Format('  AddChild(%s);',[fName]));
   CodeGenerator.CreateCode.Add('');
   if fSettingField<>'' then begin
-    CodeGenerator.SaveCode.Add(Format('  Settings.%s:=%s.Selected;',[fSettingField,fName]));
-    CodeGenerator.ShowCode.Add(Format('  %s.Selected:=Settings.%s;',[fName,fSettingField]));
+    CodeGenerator.SaveCode.Add(Format('  %s:=%s.Selected;',[fSettingField,fName]));
+    CodeGenerator.ShowCode.Add(Format('  %s.Selected:=%s;',[fName,fSettingField]));
   end;
 end;
 
@@ -441,8 +441,13 @@ begin
   CodeGenerator.UsesList.Add('BDPButton');
   CodeGenerator.OnClicks.Add(fName);
   CodeGenerator.Privates.Add(Format('f%s:TBDButton;',[fName]));
-  if (fSettingField<>'') then
-    CodeGenerator.Privates.Add('f'+fSettingField+':integer;');
+//  *** Csinálj valami okosságot, hogy bonyolult settingsfield esetén is működjön!
+  if (fSettingField<>'') then begin
+    if CodeGenerator.TempVars.Values[fSettingField]='' then begin
+      CodeGenerator.TempVars.Add(Format('%s=fTemp%.2d',[fSettingField,CodeGenerator.TempVars.Count+1]));
+      CodeGenerator.Privates.Add(Format('fTemp%.2d:integer;',[CodeGenerator.TempVars.Count]));
+    end;
+  end;
   fWidth:=DefaultSizes['BUTTONWIDTH'];
   fHeight:=DefaultSizes['BUTTONHEIGHT'];
 end;
@@ -465,13 +470,13 @@ begin
   CodeGenerator.CreateCode.Add(Format('  AddChild(f%s);',[fName]));
   CodeGenerator.CreateCode.Add('');
   if (fSettingField<>'') then begin
-    CodeGenerator.OnClickProcs.Add(Format('%s=f%s:=%d;',[fName,fSettingField,fSettingValue]));
+    CodeGenerator.OnClickProcs.Add(Format('%s=%s:=%d;',[fName,CodeGenerator.TempVars.Values[fSettingField],fSettingValue]));
     CodeGenerator.OnClickProcs.Add(Format('%s=f%s.Selected:=true;',[fName,fName]));
     for i:=0 to GroupList.Count-1 do
       if (GroupList[i]=inttostr(fGroup)) and (GroupList.Objects[i]<>Self) then
         CodeGenerator.OnClickProcs.Add(Format('%s=f%s.Selected:=false;',[fName,TDialogItem(GroupList.Objects[i]).Name]));
-    CodeGenerator.ShowCode.Add(Format('  f%s.Selected:=(Settings.%s=%d);',[fName,fSettingField,fSettingValue]));
-    CodeGenerator.SaveCode.Add(Format('  Settings.%s:=f%s;',[fSettingField,fSettingField]));
+    CodeGenerator.ShowCode.Add(Format('  f%s.Selected:=(%s=%d);',[fName,fSettingField,fSettingValue]));
+    CodeGenerator.SaveCode.Add(Format('  %s:=%s;',[fSettingField,CodeGenerator.TempVars.Values[fSettingField]]));
   end;
   if fSave then
     CodeGenerator.OnClickProcs.Add(fName+'=SaveSettings;');

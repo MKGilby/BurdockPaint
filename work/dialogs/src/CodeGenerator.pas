@@ -27,6 +27,7 @@ type
     fRedrawCode:TStringList;
     fSaveCode:TStringList;
     fShowCode:TStringList;
+    fTempVars:TStringList;
   public
     property UsesList:TStringList read fUses;
     property OnClicks:TStringList read fOnClicks;
@@ -37,6 +38,7 @@ type
     property RedrawCode:TStringList read fRedrawCode;
     property SaveCode:TStringList read fSaveCode;
     property ShowCode:TStringList read fShowCode;
+    property TempVars:TStringList read fTempVars;
   end;
 
 implementation
@@ -68,10 +70,14 @@ begin
   fShowCode:=TStringList.Create;
   fShowCode.Sorted:=true;
   fShowCode.Duplicates:=dupIgnore;
+  fTempVars:=TStringList.Create;
+  fTempVars.Sorted:=true;
+  fTempVars.Duplicates:=dupIgnore;
 end;
 
 destructor TCodeGenerator.Destroy;
 begin
+  fTempVars.Free;
   fShowCode.Free;
   fSaveCode.Free;
   fRedrawCode.Free;

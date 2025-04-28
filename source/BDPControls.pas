@@ -55,8 +55,8 @@ type
     function FilledButtonKeyDown(Sender:TObject;key:integer):boolean;
     procedure ClearKeyColorButtonClick(Sender:TObject;x,y,buttons: integer);
     function ClearKeyColorButtonKeyDown(Sender:TObject;key:integer):boolean;
-    procedure DitherButtonClick(Sender:TObject;x,y,buttons: integer);
-    function DitherButtonKeyDown(Sender:TObject;key:integer):boolean;
+//    procedure DitherButtonClick(Sender:TObject;x,y,buttons: integer);
+//    function DitherButtonKeyDown(Sender:TObject;key:integer):boolean;
     procedure ToolButtonClick(Sender:TObject;x,y,buttons: integer);
     procedure InkButtonClick(Sender:TObject;x,y,buttons: integer);
     procedure UndoButtonClick(Sender:TObject;x,y,buttons: integer);
@@ -180,7 +180,7 @@ begin
   end else Result:=false;
 end;
 
-procedure TBDControls.DitherButtonClick(Sender:TObject; x,y,buttons:integer);
+{procedure TBDControls.DitherButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
   if buttons=SDL_BUTTON_LEFT then begin
     if Sender is TBDButton then with Sender as TBDButton do begin
@@ -201,7 +201,7 @@ begin
     end;
     Result:=true;
   end else Result:=false;
-end;
+end;}
 
 procedure TBDControls.ToolButtonClick(Sender:TObject; x,y,buttons:integer);
 begin
@@ -491,9 +491,9 @@ begin
     'K', 'CLEAR KEY COLOR.',
     Settings.ClearKeyColor, ClearKeyColorButtonClick, ClearKeyColorButtonKeyDown);
 
-  CreateButton(x, y+NORMALBUTTONHEIGHT+3, SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT,
+{  CreateButton(x, y+NORMALBUTTONHEIGHT+3, SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT,
     'D', 'DITHER GRADIENTS. '#132'TOGGLE '#133'CONFIGURE',
-    Settings.DitherGradients, DitherButtonClick, DitherButtonKeyDown);
+    Settings.DitherGradients, DitherButtonClick, DitherButtonKeyDown);}
 
   CreateButton(x+SMALLBUTTONWIDTH+3, y+NORMALBUTTONHEIGHT+3, SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT,
     'G', 'SHOW GRID. '#132'TOGGLE '#133'CONFIGURE',
@@ -511,11 +511,11 @@ begin
     'K', 'CLEAR KEY COLOR.',
     Settings.ClearKeyColor, ClearKeyColorButtonClick, ClearKeyColorButtonKeyDown);
 
-  CreateButton(x+(SMALLBUTTONWIDTH+3)*2, y, SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT,
+{  CreateButton(x+(SMALLBUTTONWIDTH+3)*2, y, SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT,
     'D', 'DITHER GRADIENTS. '#132'TOGGLE '#133'CONFIGURE',
-    Settings.DitherGradients, DitherButtonClick, DitherButtonKeyDown);
+    Settings.DitherGradients, DitherButtonClick, DitherButtonKeyDown);}
 
-  CreateButton(x+(SMALLBUTTONWIDTH+3)*3, y, SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT,
+  CreateButton(x+(SMALLBUTTONWIDTH+3)*2, y, SMALLBUTTONWIDTH, NORMALBUTTONHEIGHT,
     'G', 'SHOW GRID. '#132'TOGGLE '#133'CONFIGURE',
     Settings.ShowGrid, nil, nil);
   x+=4*(SMALLBUTTONWIDTH+3);

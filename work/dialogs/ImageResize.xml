@@ -22,7 +22,7 @@
       <Name>ImageResizeWidthSlider</Name>
       <MinValue>32</MinValue>
       <MaxValue>2048</MaxValue>
-      <SettingField>TempInt01</SettingField>
+      <SettingField>Settings.TempInt01</SettingField>
     </HorizontalSlider>
     <Label>
       <Caption>New height</Caption>
@@ -31,7 +31,7 @@
       <Name>ImageResizeHeightSlider</Name>
       <MinValue>32</MinValue>
       <MaxValue>2048</MaxValue>
-      <SettingField>TempInt02</SettingField>
+      <SettingField>Settings.TempInt02</SettingField>
     </HorizontalSlider>
     <Divider/>
     <Split direction="Horizontal">

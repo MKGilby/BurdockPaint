@@ -41,7 +41,7 @@ var r:integer;
 begin
   if Settings.CGradRadius>1 then begin
     r:=trunc(Sqrt(sqr(px-Settings.CGradCenterX)+sqr(py-Settings.CGradCenterY))) mod Settings.CGradRadius;
-    if Settings.DitherGradients then
+    if Project.CurrentGradientList.ActiveGradient.Dithered then
       Result:=Project.CurrentGradientList.ActiveGradient.
         GetColorAtDithered(r/Settings.CGradRadius)
     else

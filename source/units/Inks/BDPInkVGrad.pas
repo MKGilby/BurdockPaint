@@ -38,7 +38,7 @@ end;
 function TBDInkVGrad.GetColorAt(pX,pY:integer):uint32;
 begin
   if fHeight>1 then begin
-    if Settings.DitherGradients then
+    if Project.CurrentGradientList.ActiveGradient.Dithered then
       Result:=Project.CurrentGradientList.ActiveGradient.GetColorAtDithered((pY-fTop)/(fHeight-1))
     else
       Result:=Project.CurrentGradientList.ActiveGradient.GetColorAt((pY-fTop)/(fHeight-1))

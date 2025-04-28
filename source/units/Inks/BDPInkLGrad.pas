@@ -48,7 +48,7 @@ begin
   Result:=SegmentRight-i-1;
   dec(SegmentRight);
   if Result>0 then begin
-    if Settings.DitherGradients then begin
+    if Project.CurrentGradientList.ActiveGradient.Dithered then begin
       while i<SegmentRight+1 do begin
         Project.CurrentRegion.PutPixel(i,j,Project.CurrentGradientList.ActiveGradient.GetColorAtDithered((i-SegmentLeft)/(Result+1)));
         inc(i);

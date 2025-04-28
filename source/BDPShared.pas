@@ -167,6 +167,9 @@ const
   // Open ConfigureSepDialog.
   MSG_OPENCONFIGURESEPDIALOG=36;
 
+  // Open ConfigureBandingDialog
+  MSG_OPENCONFIGUREBANDINGDIALOG=37;
+
 
   // ------- Menu Messages ------- Range: 200-299 -------
   {$i includes\menu.inc}

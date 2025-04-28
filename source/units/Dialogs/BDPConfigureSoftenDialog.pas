@@ -3,7 +3,7 @@
   See "copyright.txt" for details.
 }
 
-// Generated on 2024.09.07
+// Generated on 2025.04.28
 
 unit BDPConfigureSoftenDialog;
 

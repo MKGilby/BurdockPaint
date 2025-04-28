@@ -16,7 +16,8 @@ uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
   BDPRotateCELDialog, BDPAboutDialog, BDPMessageBox, BDPDitherDialog,
   BDPConfigureRGradDialog, BDPCoordinateBox, BDPGradientEditor, BDPColorPalette2,
   BDPGradientSelector, BDPConfigureTintDialog, BDPConfigureSoftenDialog,
-  BDPConfigureCircleDialog, BDPImageResizeDialog, BDPConfigureSepDialog;
+  BDPConfigureCircleDialog, BDPImageResizeDialog, BDPConfigureSepDialog,
+  BDPBandingDialog;
 
 type
 
@@ -36,13 +37,14 @@ type
     fDrawArea:TBDDrawArea;
     fMagnifyDialog:TBDMagnifyCELDialog;
     fRotateDialog:TBDRotateCELDialog;
-    fDitherDialog:TBDDitherDialog;
     fConfigureRGradDialog:TBDConfigureRGradDialog;
     fCoordinateBox:TBDCoordinateBox;
     fColorEditor:TBDColorEditor;
     fGradientEditor:TBDGradientEditor;
     fColorPalette:TBDColorPalette2;
     fGradientSelector:TBDGradientSelector;
+    fDitherDialog:TBDDitherDialog;
+    fBandingDialog:TBDBandingDialog;
     fConfigureTintDialog:TBDConfigureTintDialog;
     fConfigureSoftenDialog:TBDConfigureSoftenDialog;
     fConfigureCircleDialog:TBDConfigureCircleDialog;
@@ -88,7 +90,6 @@ type
     procedure ColorEditorResp(msg:TMessage);
     procedure SelectColor;
     procedure GradientEditorResp(msg:TMessage);
-
   end;
 
 implementation
@@ -182,8 +183,6 @@ begin
   {$ifdef LogMem} Log.Trace('After MagnifyDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fRotateDialog:=TBDRotateCELDialog.Create;
   {$ifdef LogMem} Log.Trace('After RotateDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
-  fDitherDialog:=TBDDitherDialog.Create;
-  {$ifdef LogMem} Log.Trace('After DitherDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fConfigureRGradDialog:=TBDConfigureRGradDialog.Create;
   {$ifdef LogMem} Log.Trace('After ConfigureRGradDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fCoordinateBox:=TBDCoordinateBox.Create(
@@ -195,6 +194,10 @@ begin
   {$ifdef LogMem} Log.Trace('After ColorPalette: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fGradientSelector:=TBDGradientSelector.Create;
   {$ifdef LogMem} Log.Trace('After GradientSelector: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
+  fDitherDialog:=TBDDitherDialog.Create;
+  {$ifdef LogMem} Log.Trace('After DitherDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
+  fBandingDialog:=TBDBandingDialog.Create;
+  {$ifdef LogMem} Log.Trace('After BandingDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fConfigureTintDialog:=TBDConfigureTintDialog.Create;
   {$ifdef LogMem} Log.Trace('After ConfigureTintDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fConfigureSoftenDialog:=TBDConfigureSoftenDialog.Create;
@@ -232,13 +235,14 @@ begin
   fImageResizeDialog.Free;
   fConfigureCircleDialog.Free;
   fConfigureSoftenDialog.Free;
-  if Assigned(fConfigureTintDialog) then fConfigureTintDialog.Free;
+  fConfigureTintDialog.Free;
+  fBandingDialog.Free;
+  fDitherDialog.Free;
   if Assigned(fGradientSelector) then fGradientSelector.Free;
   if Assigned(fColorPalette) then fColorPalette.Free;
   if Assigned(fGradientEditor) then fGradientEditor.Free;
   if Assigned(fCoordinateBox) then fCoordinateBox.Free;
   if Assigned(fConfigureRGradDialog) then fConfigureRGradDialog.Free;
-  if Assigned(fDitherDialog) then fDitherDialog.Free;
   if Assigned(fRotateDialog) then fRotateDialog.Free;
   if Assigned(fMagnifyDialog) then fMagnifyDialog.Free;
   if Assigned(fColorEditor) then fColorEditor.Free;
@@ -305,6 +309,7 @@ begin
         MSG_OPENABOUTDIALOG:           fAboutDialog.Show;
         MSG_QUIT:                      fQuit:=(msg.DataInt=1);
         MSG_OPENDITHERDIALOG:          fDitherDialog.Show;
+        MSG_OPENCONFIGUREBANDINGDIALOG:fBandingDialog.Show;
         MSG_OPENCONFIGURERGRADDIALOG:  fConfigureRGradDialog.Show;
         MSG_CONFIGRGRADCENTER:         ConfigRGradCenter;
         MSG_CONFIGRGRADCENTERRESP:     ConfigRGradCenterFinished;

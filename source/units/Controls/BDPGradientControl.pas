@@ -30,8 +30,8 @@ type
     fGradientTexture:TStreamingTexture;
     fAlphaBack:TTexture;
     fFont,fFont2:TFont;
-    fPingpongSwitchLeft,fReverseSwitchLeft,
-    fColorsLeft,fColorsWidth,fArrowLeft:integer;
+    fPingpongSwitchLeft,fReverseSwitchLeft,fDitherSwitchLeft,
+    fColorBandingSwitchLeft,fColorsLeft,fColorsWidth,fArrowLeft:integer;
     procedure fSetGradient(value:TGradient);
     procedure RecreateTexture(Sender:TObject);
   public
@@ -46,6 +46,8 @@ uses BDPShared, sdl2;
 const
   PINGPONGSWITCHWIDTH=27;
   REVERSESWITCHWIDTH=27;
+  DITHERSWITCHWIDTH=27;
+  COLORBANDINGSWITCHWIDTH=27;
   ARROWWIDTH=30;
 
 { TBDGradient }
@@ -66,7 +68,9 @@ begin
   fFont2:=MM.Fonts['Red'];
   fPingpongSwitchLeft:=8;
   fReverseSwitchLeft:=fPingpongSwitchLeft+PINGPONGSWITCHWIDTH+3;
-  fColorsLeft:=fReverseSwitchLeft+REVERSESWITCHWIDTH+3;
+  fDitherSwitchLeft:=fReverseSwitchLeft+REVERSESWITCHWIDTH+3;
+  fColorBandingSwitchLeft:=fDitherSwitchLeft+DITHERSWITCHWIDTH+3;
+  fColorsLeft:=fColorBandingSwitchLeft+COLORBANDINGSWITCHWIDTH+3;
   fArrowLeft:=Width-ARROWWIDTH-3;
   fColorsWidth:=fArrowLeft-fColorsLeft;
   fAlphaBack:=MM.Textures.ItemByName['AlphaBack'];
@@ -94,9 +98,27 @@ begin
       fGradient.PingPong:=not fGradient.PingPong;
       fNeedRedraw:=true;
     end else
-    if (x>=fReverseSwitchLeft) and (x<fColorsLeft) then begin
+    if (x>=fReverseSwitchLeft) and (x<fDitherSwitchLeft) then begin
       fGradient.Reversed:=not fGradient.Reversed;
       fNeedRedraw:=true;
+    end else
+    if (x>=fDitherSwitchLeft) and (x<fColorBandingSwitchLeft) then begin
+      if button=SDL_BUTTON_LEFT then begin
+        fGradient.Dithered:=not fGradient.Dithered;
+        fNeedRedraw:=true;
+      end else if button=SDL_BUTTON_RIGHT then begin
+        // Put gradient setting dialog calling here
+        MessageQueue.AddMessage(MSG_OPENDITHERDIALOG);
+      end;
+    end else
+    if (x>=fColorBandingSwitchLeft) and (x<fColorsLeft) then begin
+      if button=SDL_BUTTON_LEFT then begin
+        fGradient.ColorBanding:=not fGradient.ColorBanding;
+        fNeedRedraw:=true;
+      end else if button=SDL_BUTTON_RIGHT then begin
+        // Put gradient setting dialog calling here
+        MessageQueue.AddMessage(MSG_OPENCONFIGUREBANDINGDIALOG);
+      end;
     end else
     if (x>=fColorsLeft+3) and (x<fArrowLeft) then begin
       if button=SDL_BUTTON_LEFT then
@@ -133,6 +155,14 @@ begin
         Bar(fReverseSwitchLeft+3,3,REVERSESWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
       else
         Bar(fReverseSwitchLeft+3,3,REVERSESWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORMID]);
+      if fGradient.Dithered then
+        Bar(fDitherSwitchLeft+3,3,DITHERSWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
+      else
+        Bar(fDitherSwitchLeft+3,3,DITHERSWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORMID]);
+      if fGradient.ColorBanding then
+        Bar(fColorBandingSwitchLeft+3,3,COLORBANDINGSWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORLIGHT])
+      else
+        Bar(fColorBandingSwitchLeft+3,3,COLORBANDINGSWITCHWIDTH,Height-6,SystemPalette[SYSTEMCOLORMID]);
     end;
     Bar(fArrowLeft,0,ARROWWIDTH,Height,SystemPalette[SYSTEMCOLORMID]);
     // Outer border
@@ -143,6 +173,8 @@ begin
     // Vertical separator lines
     Bar(fPingpongSwitchLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
     Bar(fReverseSwitchLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(fDitherSwitchLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
+    Bar(fColorBandingSwitchLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
     Bar(fColorsLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
     Bar(fArrowLeft,3,3,Height-6,SystemPalette[SYSTEMCOLORDARK]);
     // Corners
@@ -165,6 +197,14 @@ begin
         fFont2.OutText(fImage,'R',fReverseSwitchLeft+REVERSESWITCHWIDTH div 2+3,fonttop,1)
       else
         fFont.OutText(fImage,'R',fReverseSwitchLeft+REVERSESWITCHWIDTH div 2+3,fonttop,1);
+      if (Assigned(fGradient) and fGradient.Dithered) then
+        fFont2.OutText(fImage,'D',fDitherSwitchLeft+DITHERSWITCHWIDTH div 2+3,fonttop,1)
+      else
+        fFont.OutText(fImage,'D',fDitherSwitchLeft+DITHERSWITCHWIDTH div 2+3,fonttop,1);
+      if (Assigned(fGradient) and fGradient.ColorBanding) then
+        fFont2.OutText(fImage,'B',fColorBandingSwitchLeft+COLORBANDINGSWITCHWIDTH div 2+3,fonttop,1)
+      else
+        fFont.OutText(fImage,'B',fColorBandingSwitchLeft+COLORBANDINGSWITCHWIDTH div 2+3,fonttop,1);
       fFont.OutText(fImage,#130,fArrowLeft+ARROWWIDTH div 2+1,fonttop,1);
     end;
   end;

@@ -24,7 +24,7 @@
         <Caption>Center</Caption>
         <Hint>Click on center then click to set radius</Hint>
         <Group>1</Group>
-        <SettingField>CircleMode</SettingField>
+        <SettingField>Settings.CircleMode</SettingField>
         <SettingValue>0</SettingValue>
       </Button>
       <Button>
@@ -32,7 +32,7 @@
         <Caption>Boxed</Caption>
         <Hint>Draw bounding box</Hint>
         <Group>1</Group>
-        <SettingField>CircleMode</SettingField>
+        <SettingField>Settings.CircleMode</SettingField>
         <SettingValue>1</SettingValue>
       </Button>
     </Split>

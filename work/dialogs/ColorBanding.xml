@@ -9,32 +9,38 @@
 
 <Dialog>
   <Head>
-    <Name>BDPConfigureSepDialog</Name>
-    <ClassName>TBDConfigureSepDialog</ClassName>
-    <Caption>Configure Separate colors parameters</Caption>
+    <Name>BDPBandingDialog</Name>
+    <ClassName>TBDBandingDialog</ClassName>
+    <Caption>Configure Banding parameters</Caption>
   </Head>
 
   <Controls>
-    <Label>
-      <Caption>Draw mode</Caption>
-    </Label>
     <CheckBox>
-      <Name>ConfSepBoxedCheckbox</Name>
-      <Caption>Boxed</Caption>
-      <Hint>Draw a box first and apply sep only inside.</Hint>
-      <SettingField>Settings.SepBoxed</SettingField>
+      <Name>ConfBandingBandCheckbox</Name>
+      <Caption>Use color banding</Caption>
+      <Hint>... or not</Hint>
+      <SettingField>Project.CurrentGradientList.ActiveGradient.ColorBanding</SettingField>
     </CheckBox>
+    <Label>
+      <Caption>Color band count</Caption>
+    </Label>
+    <HorizontalSlider>
+      <Name>ConfBandingBandSlider</Name>
+      <MinValue>2</MinValue>
+      <MaxValue>64</MaxValue>
+      <SettingField>Project.CurrentGradientList.ActiveGradient.ColorBandCount</SettingField>
+    </HorizontalSlider>
     <Divider/>
     <Split direction="Horizontal">
       <Button>
-        <Name>ConfSepOKButton</Name>
+        <Name>ConfBandingOKButton</Name>
         <Caption>OK</Caption>
         <Hint>Apply values</Hint>
         <Save>Y</Save>
         <Close>Y</Close>
       </Button>
       <Button>
-        <Name>ConfSepCancelButton</Name>
+        <Name>ConfBandingCancelButton</Name>
         <Caption>Cancel</Caption>
         <Hint>Close dialog</Hint>
         <Save>N</Save>

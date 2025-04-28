@@ -51,7 +51,7 @@ begin
       d:=180;
     end;
   end;
-  if Settings.DitherGradients then
+  if Project.CurrentGradientList.ActiveGradient.Dithered then
     Result:=Project.CurrentGradientList.ActiveGradient.GetColorAtDithered(((round((d+Settings.RGradRotation)*Settings.RGradRepetitions)) mod 360)/359)
   else
     Result:=Project.CurrentGradientList.ActiveGradient.GetColorAt(((round((d+Settings.RGradRotation)*Settings.RGradRepetitions)) mod 360)/359)
