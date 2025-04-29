@@ -55,7 +55,8 @@ type
     fOpenDialog:TOpenDialog;
     fSaveCELDialog,
     fSaveProjectDialog,
-    fSaveImageDialog:TSaveDialog;
+    fSaveImageDialog,
+    fExportImageDialog:TSaveDialog;
     procedure ProcessMessages;
     procedure HideMainControls;
     procedure ShowMainControls;
@@ -71,6 +72,7 @@ type
     procedure DuplicateImage;
     procedure OpenImage;
     procedure SaveImage;
+    procedure ExportImage;
     procedure RemoveImage;
     procedure ClearImage;
     procedure CropImage;
@@ -218,7 +220,8 @@ begin
 //  fOpenProjectDialog:=CreateOpenDialog('OpenProjectDialog','Open Project','Project files|*.bpprj');
   fSaveCELDialog:=CreateSaveDialog('SaveCELDialog','Save CEL','PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
   fSaveProjectDialog:=CreateSaveDialog('SaveProjectDialog','Save Project','Project files|*.bpprj');
-  fSaveImageDialog:=CreateSaveDialog('SaveImageDialog','Save Image','PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
+  fSaveImageDialog:=CreateSaveDialog('SaveImageDialog','Save Image','BurdockPaint image files|*.bpimg');
+  fExportImageDialog:=CreateSaveDialog('ExportImageDialog','Export Image','PNG files|*.png|TGA files|*.tga|BMP files|*.bmp');
   {$ifdef LogMem} Log.Trace('After FCL dialogs: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fQuit:=false;
 end;
@@ -230,6 +233,7 @@ begin
 //  if Assigned(fOpenProjectDialog) then fOpenProjectDialog.Free;
   if Assigned(fSaveProjectDialog) then fSaveProjectDialog.Free;
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
+  fExportImageDialog.Free;
 //  if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
   fConfigureSepDialog.Free;
   fImageResizeDialog.Free;
@@ -325,6 +329,7 @@ begin
         MSG_DUPLICATEIMAGE:            DuplicateImage;
         MSG_OPENIMAGE:                 OpenImage;
         MSG_SAVEIMAGE:                 SaveImage;
+        MSG_EXPORTIMAGE:               ExportImage;
         MSG_REMOVEIMAGE:               RemoveImage;
         MSG_CLEARIMAGE:                ClearImage;
         MSG_CROPIMAGE:                 CropImage;
@@ -542,20 +547,29 @@ begin
 end;
 
 procedure TMain.OpenImage;
-var i:integer;img:TBDImage;tmp:TARGBImage;
+var i:integer;img:TBDImage;tmp:TARGBImage;s:TStream;
 begin
-  fOpenDialog.Filter:='All supported formats|*.png;*.tga;*.bmp;*.gif|PNG files|*.png|TGA files|*.tga|BMP files|*.bmp|GIF files|*.gif';
+  fOpenDialog.Filter:='All supported formats|*.bpimg;*.png;*.tga;*.bmp;*.gif|BurdockPaint image files|*.bpimg|PNG files|*.png|TGA files|*.tga|BMP files|*.bmp|GIF files|*.gif';
   fOpenDialog.FilterIndex:=0;
   fOpenDialog.Title:='Open Image';
   if fOpenDialog.Execute then begin
     i:=MessageBox('OPEN IMAGE','Where to place opened image?','First;Last;Before;After;Cancel');
     if i in [0..3] then begin
-      tmp:=TARGBImage.Create(fOpenDialog.FileName);
-      try
-        img:=TBDImage.Create(tmp.Width,tmp.Height);
-        img.Region.PutImage(0,0,tmp);
-      finally
-        tmp.Free;
+      if uppercase(ExtractFileExt(fOpenDialog.FileName))='.BPIMG' then begin
+        S:=TFileStream.Create(fOpenDialog.FileName,fmOpenRead or fmShareDenyNone);
+        try
+          img:=TBDImage.CreateFromStream(S);
+        finally
+          S.Free;
+        end;
+      end else begin
+        tmp:=TARGBImage.Create(fOpenDialog.FileName);
+        try
+          img:=TBDImage.Create(tmp.Width,tmp.Height);
+          img.Region.PutImage(0,0,tmp);
+        finally
+          tmp.Free;
+        end;
       end;
 
       case i of
@@ -584,11 +598,32 @@ begin
 end;
 
 procedure TMain.SaveImage;
+var S:TStream;
 begin
   if fSaveImageDialog.Execute then begin
     try
-      Project.CurrentRegion.WriteFile(fSaveImageDialog.FileName,copy(ExtractFileExt(fSaveImageDialog.FileName),2));
-      MessageBox('INFORMATION','Image saved successfully.');
+      S:=TFileStream.Create(fSaveImageDialog.FileName,fmCreate);
+      try
+        Project.CurrentImage.SaveToStream(S);
+        MessageBox('INFORMATION','Image saved successfully.');
+      finally
+        S.Free;
+      end;
+    except
+      on e:Exception do begin
+        Log.LogError(e.message);
+        MessageBox('ERROR',e.Message);
+      end;
+    end;
+  end;
+end;
+
+procedure TMain.ExportImage;
+begin
+  if fExportImageDialog.Execute then begin
+    try
+      Project.CurrentRegion.WriteFile(fExportImageDialog.FileName,copy(ExtractFileExt(fExportImageDialog.FileName),2));
+      MessageBox('INFORMATION','Image exported successfully.');
     except
       on e:Exception do begin
         Log.LogError(e.message);

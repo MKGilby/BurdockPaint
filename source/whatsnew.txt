@@ -23,6 +23,13 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2025.04.29 - Build 69
+- Added IMAGE/EXPORT menu. It replaces IMAGE/SAVE, use it to export the image
+  to simple image formats (PNG, TGA and BMP currently).
+- IMAGE/SAVE now uses bpimg format, it contains not just the image, but  
+  information about gradients, palette and undo operations.
+- IMAGE/OPEN opens saved and exported formats too.  
+     
 2025.04.28 - Build 68
 - Dithering and ColorBanding settings are now stored for each gradient 
   and not in global settings.

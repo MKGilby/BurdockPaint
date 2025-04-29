@@ -2,8 +2,15 @@
 My AAT tribute
 
 Compiled binaries from current build with DLLs:
-[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.68.zip "Download x64 version") or
-[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.68.zip "Download x86 version").
+[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.69.zip "Download x64 version") or
+[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.69.zip "Download x86 version").
+
+## 2025.04.29 - Build 69
+- Added IMAGE/EXPORT menu. It replaces IMAGE/SAVE, use it to export the image
+  to simple image formats (PNG, TGA and BMP currently).
+- IMAGE/SAVE now uses bpimg format, it contains not just the image, but  
+  information about gradients, palette and undo operations.
+- IMAGE/OPEN opens saved and exported formats too.  
 
 ## 2025.04.28 - Build 68
 - Dithering and ColorBanding settings are now stored for each gradient 

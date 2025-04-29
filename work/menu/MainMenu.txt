@@ -50,7 +50,10 @@ Image
     Open image from file.
   Save
     SAVEIMAGE
-    Save image to file.
+    Save image to file with palette, gradients and undo data.
+  Export
+    EXPORTIMAGE
+    Export image to a simple image file.
   Duplicate
     DUPLICATEIMAGE
     Duplicate image.

@@ -391,21 +391,37 @@
 3.1. CEL file format (.png)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It is a simple PNG file. No need for special CEL file.
+  It is a simple PNG file. No need for special CEL file.
 
 
 3.2. Project file format (.bpprj)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It is a PRJ-block.
+  It is a PRJ-block.
+
+
+3.3. Image file format (.bpimg)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  It is an IMG-block, so beside image it also contains gradients, palette and 
+  undo data. The menu IMAGE/SAVE uses this format, use IMAGE/EXPORT to save to 
+  simple image formats (PNG, TGA and BMP currently).
+  
+  You can use it to move a whole image with all things between projects or 
+  for archiving purposes.
+
 
 -------------------------------------------------------------------------------
 
 Revision list:
   before 2025.04.24 no revision list existed.
+
   2025.04.24
     - Added GRD v2 (dither and color banding info) (2.1.3.2)
     - Deprecated GRD v1 (2.1.3.1)
     - Removed standalone image format (3.1)
     - Added current block version list (1.1)
+
+  2025.04.29
+    - Added back standalone image format. (3.3)  
     
