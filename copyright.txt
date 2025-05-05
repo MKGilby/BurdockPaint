@@ -1,4 +1,4 @@
-BurdockPaint - Copyright 2023-2024 MKSZTSZ
+BurdockPaint - Copyright 2023-2025 MKSZTSZ
 Written by Szabó "Gilby" Zsolt / MKSZTSZ
 
 BurdockPaint is free software: you can redistribute it and/or modify it
