@@ -33,6 +33,8 @@ type
     fTintStrength:integer;
     fRealTintStrength:double;
     fWindowWidth,fWindowHeight:integer;
+    fBackupIntervalTicks:uint64;  // in milliseconds
+    fBackupInterval:integer;
     procedure fSetZoom(value:integer);
     function fGetSelectedTool(index:integer):string;
     procedure fSetSelectedTool(index:integer;value:string);
@@ -42,6 +44,7 @@ type
     procedure fSetTintStrength(value:integer);
     procedure fSetWindowWidth(value:integer);
     procedure fSetWindowHeight(value:integer);
+    procedure fSetBackupInterval(value:integer);
   public
     ColorSelectorMainColor:uint32;
     ColorSelectorLeftColor:uint32;
@@ -54,7 +57,6 @@ type
     CGradCenterX,CGradCenterY,CGradRadius:integer;
     RGradCenterX,RGradCenterY,RGradRepetitions,RGradRotation:integer;
     TempRGradCenterX,TempRGradCenterY:integer;
-    BackupIntervalTicks:uint64;  // in milliseconds
     BackupFolderMaxSize:integer;  // in bytes, set 0 to disable size check
     BackupFolderRetentionTime:integer; // in seconds, set 0 to disable file age check
     BackupFolderMaxFileCount:integer;  // set 0 to disable file count check
@@ -75,6 +77,8 @@ type
     property RealTintStrength:double read fRealTintStrength;
     property WindowWidth:integer read fWindowWidth write fSetWindowWidth;
     property WindowHeight:integer read fWindowHeight write fSetWindowHeight;
+    property BackupIntervalTicks:uint64 read fBackupIntervalTicks;
+    property BackupInterval:integer read fBackupInterval write fSetBackupInterval;
   end;
 
 
@@ -121,7 +125,7 @@ begin
   RGradCenterY:=0;
   RGradRepetitions:=1;
   RGradRotation:=0;
-  BackupIntervalTicks:=60*1000;
+  BackupInterval:=60;
   BackupFolderMaxSize:=0;
   BackupFolderRetentionTime:=0;
   BackupFolderMaxFileCount:=0;
@@ -173,7 +177,7 @@ begin
     if WindowHeight<MINIMUMWINDOWHEIGHT then WindowHeight:=MINIMUMWINDOWHEIGHT;
     fShowSplash:=INI.ReadBool('Settings','ShowSplash',false);
     UndoLimit:=INI.ReadInteger('Settings','UndoLimit',16);
-    BackupIntervalTicks:=INI.ReadInteger('Settings','BackupInterval',60)*1000;
+    fBackupInterval:=INI.ReadInteger('Settings','BackupInterval',60);
     BackupFolderMaxSize:=INI.ReadInteger('Settings','BackupFolderMaxSize',16*1024*1024);
     BackupFolderRetentionTime:=INI.ReadInteger('Settings','BackupFolderRetentionTime',0);
     BackupFolderMaxFileCount:=INI.ReadInteger('Settings','BackupFolderMaxFileCount',0);
@@ -228,7 +232,7 @@ begin
     INI.WriteInteger('Settings','WindowHeight',fWindowHeight);
     INI.WriteBool('Settings','ShowSplash',fShowSplash);
     INI.WriteInteger('Settings','UndoLimit',UndoLimit);
-    INI.WriteInteger('Settings','BackupInterval',BackupIntervalTicks div 1000);
+    INI.WriteInteger('Settings','BackupInterval',fBackupInterval);
     INI.WriteInteger('Settings','BackupFolderMaxSize',BackupFolderMaxSize);
     INI.WriteInteger('Settings','BackupFolderRetentionTime',BackupFolderRetentionTime);
     INI.WriteInteger('Settings','BackupFolderMaxFileCount',BackupFolderMaxFileCount);
@@ -311,6 +315,16 @@ procedure TSettings.fSetWindowHeight(value: integer);
 begin
   if (value<>fWindowHeight) and (value>=MINIMUMWINDOWHEIGHT) then
     fWindowHeight:=value;
+end;
+
+procedure TSettings.fSetBackupInterval(value:integer);
+begin
+  if value<30 then value:=30
+  else if value>600 then value:=600;
+  if fBackupInterval<>value then begin
+    fBackupInterval:=value;
+    fBackupIntervalTicks:=value*1000;
+  end;
 end;
 
 procedure TSettings.fSetZoom(value:integer);

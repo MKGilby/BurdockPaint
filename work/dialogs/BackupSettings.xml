@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+ See DefaultControlSizes.txt for constants.
+
+ In this first version all the controls are put under each other leaving
+ CONTROLSPACING pixel distance beetween them. Also MARGINS pixel is left
+ from the borders of the dialog.
+-->
+
+<Dialog>
+  <Head>
+    <Name>BDPBackupSettingsDialog</Name>
+    <ClassName>TBDBackupSettingsDialog</ClassName>
+    <Caption>Backup settings</Caption>
+  </Head>
+
+  <Controls>
+    <Label>
+      <Caption>Backup interval (secs)</Caption>
+    </Label>
+    <HorizontalSlider>
+      <Name>BackupIntervalSlider</Name>
+      <MinValue>30</MinValue>
+      <MaxValue>600</MaxValue>
+      <SettingField>Settings.BackupInterval</SettingField>
+    </HorizontalSlider>
+    <Divider/>
+    <Split direction="Horizontal">
+      <Button>
+        <Name>BackupSettingsOKButton</Name>
+        <Caption>OK</Caption>
+        <Hint>Apply values</Hint>
+        <Save>Y</Save>
+        <Close>Y</Close>
+      </Button>
+      <Button>
+        <Name>BackupSettingsCancelButton</Name>
+        <Caption>Cancel</Caption>
+        <Hint>Close dialog</Hint>
+        <Save>N</Save>
+        <Close>Y</Close>
+      </Button>
+    </Split>
+  </Controls>
+</Dialog>

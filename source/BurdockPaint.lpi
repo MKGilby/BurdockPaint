@@ -19,7 +19,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="9"/>
-      <BuildNr Value="69"/>
+      <BuildNr Value="70"/>
       <Attributes pvaPreRelease="True"/>
       <StringTable CompanyName="MKSZTSZ" LegalCopyright="GPL3" ProductName="BurdockPaint"/>
     </VersionInfo>
@@ -389,6 +389,10 @@
       </Unit>
       <Unit>
         <Filename Value="BPDError.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="units\Dialogs\BDPGeneratedDialogs.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
     </Units>

@@ -3,7 +3,7 @@
   See "copyright.txt" for details.
 }
 
-// Generated on 2025.04.28
+// Generated on 2025.05.05
 
 unit BDPDitherDialog;
 

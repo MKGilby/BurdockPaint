@@ -11,13 +11,11 @@ unit BDPMain;
 
 interface
 
-uses SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu,
-  BDPControls, BDPDrawArea, BDPColorEditor, BDPMagnifyCELDialog,
-  BDPRotateCELDialog, BDPAboutDialog, BDPMessageBox, BDPDitherDialog,
-  BDPConfigureRGradDialog, BDPCoordinateBox, BDPGradientEditor, BDPColorPalette2,
-  BDPGradientSelector, BDPConfigureTintDialog, BDPConfigureSoftenDialog,
-  BDPConfigureCircleDialog, BDPImageResizeDialog, BDPConfigureSepDialog,
-  BDPBandingDialog;
+uses
+  SysUtils, mk_sdl2, Dialogs, FileBackup, BDPMessage, BDPMenu, BDPControls,
+  BDPDrawArea, BDPColorEditor, BDPMagnifyCELDialog, BDPRotateCELDialog,
+  BDPAboutDialog, BDPMessageBox, BDPConfigureRGradDialog, BDPCoordinateBox,
+  BDPGradientEditor, BDPColorPalette2, BDPGradientSelector;
 
 type
 
@@ -43,13 +41,6 @@ type
     fGradientEditor:TBDGradientEditor;
     fColorPalette:TBDColorPalette2;
     fGradientSelector:TBDGradientSelector;
-    fDitherDialog:TBDDitherDialog;
-    fBandingDialog:TBDBandingDialog;
-    fConfigureTintDialog:TBDConfigureTintDialog;
-    fConfigureSoftenDialog:TBDConfigureSoftenDialog;
-    fConfigureCircleDialog:TBDConfigureCircleDialog;
-    fImageResizeDialog:TBDImageResizeDialog;
-    fConfigureSepDialog:TBDConfigureSepDialog;
 
     fBackup:TFileBackup;
     fOpenDialog:TOpenDialog;
@@ -98,7 +89,7 @@ implementation
 
 uses Classes, SDL2, BDPShared, MKToolbox, MKStream, MKMouse2, Logger,
   MAD4MidLevelUnit, ParametersUnit, BDPKeyMapping, BDPSettings, BDPRegion,
-  BDPProject, ARGBImageUnit;
+  BDPProject, ARGBImageUnit, BDPGeneratedDialogs;
 
 
 { TMain }
@@ -196,20 +187,8 @@ begin
   {$ifdef LogMem} Log.Trace('After ColorPalette: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   fGradientSelector:=TBDGradientSelector.Create;
   {$ifdef LogMem} Log.Trace('After GradientSelector: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
-  fDitherDialog:=TBDDitherDialog.Create;
-  {$ifdef LogMem} Log.Trace('After DitherDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
-  fBandingDialog:=TBDBandingDialog.Create;
-  {$ifdef LogMem} Log.Trace('After BandingDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
-  fConfigureTintDialog:=TBDConfigureTintDialog.Create;
-  {$ifdef LogMem} Log.Trace('After ConfigureTintDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
-  fConfigureSoftenDialog:=TBDConfigureSoftenDialog.Create;
-  {$ifdef LogMem} Log.Trace('After ConfigureSoftenDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
-  fConfigureCircleDialog:=TBDConfigureCircleDialog.Create;
-  {$ifdef LogMem} Log.Trace('After ConfigureCircleDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
-  fImageResizeDialog:=TBDImageResizeDialog.Create;
-  {$ifdef LogMem} Log.Trace('After ImageResizeDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
-  fConfigureSepDialog:=TBDConfigureSepDialog.Create;
-  {$ifdef LogMem} Log.Trace('After ConfigureSepDialog: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
+  CreateDialogs;
+  {$ifdef LogMem} Log.Trace('After CreateDialogs: '+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   MouseObjects.List;
 
   Log.LogStatus('Creating FCL dialogs...');
@@ -235,13 +214,7 @@ begin
   if Assigned(fSaveCELDialog) then fSaveCELDialog.Free;
   fExportImageDialog.Free;
 //  if Assigned(fOpenCELDialog) then fOpenCELDialog.Free;
-  fConfigureSepDialog.Free;
-  fImageResizeDialog.Free;
-  fConfigureCircleDialog.Free;
-  fConfigureSoftenDialog.Free;
-  fConfigureTintDialog.Free;
-  fBandingDialog.Free;
-  fDitherDialog.Free;
+  DestroyDialogs;
   if Assigned(fGradientSelector) then fGradientSelector.Free;
   if Assigned(fColorPalette) then fColorPalette.Free;
   if Assigned(fGradientEditor) then fGradientEditor.Free;
@@ -359,6 +332,7 @@ begin
         MSG_ACTIVEIMAGECHANGED:        fColorPalette.Refresh;
         MSG_OPENGRADIENTSELECTOR:      fGradientSelector.Show;
         MSG_PALETTECHANGED:            fColorPalette.Refresh;
+        MSG_BACKUPSETTINGS:            fBackupSettingsDialog.Show;
       end;
   end;  // while MessageQueue.HasNewMessage
 end;

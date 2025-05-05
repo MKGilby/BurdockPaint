@@ -1,15 +1,21 @@
 program PreProcessDialogs;
 
-uses Classes, SysUtils, DOM, XmlRead, Logger, DialogTree, Lists;
+uses Classes, SysUtils, DOM, XmlRead, Logger, DialogTree, Lists, MKToolbox;
 
 type
 
   { TMain }
 
   TMain=class
+    constructor Create;
+    destructor Destroy; override;
     procedure Run;
   private
     fDialog:TDialog;
+    fUsesList,
+    fVarList,
+    fCreateDialogs,
+    fDestroyDialogs:TStringList;
     procedure ProcessFile(pFilename:string);
     procedure ProcessHead(pNode:TDomNode);
     procedure ProcessControls(pNode:TDOMNode;pParent:TDialogItem);
@@ -22,6 +28,67 @@ type
   end;
 
 { TMain }
+
+constructor TMain.Create;
+begin
+  fCreateDialogs:=TStringList.Create;
+  fCreateDialogs.Add('procedure CreateDialogs;');
+  fCreateDialogs.Add('begin');
+  fDestroyDialogs:=TStringList.Create;
+  fDestroyDialogs.Add('procedure DestroyDialogs;');
+  fDestroyDialogs.Add('begin');
+  fDestroyDialogs.Add('end;');
+  fDestroyDialogs.Add('');
+  fUsesList:=TStringList.Create;
+  fVarList:=TStringList.Create;
+end;
+
+destructor TMain.Destroy;
+var L:TStringList;s:string;i:integer;
+begin
+  fCreateDialogs.Add('end;');
+  fCreateDialogs.Add('');
+  L:=TStringList.Create;
+  L.LoadFromFile('..\base_copyright_notice.txt');
+  L.Add('// Generated on '+datetostr(now,FS));
+  L.Add('');
+  L.Add('unit BDPGeneratedDialogs;');
+  L.Add('');
+  L.Add('{$mode Delphi}');
+  L.Add('');
+  L.Add('interface');
+  L.Add('');
+  L.Add('uses');
+  s:='  ';
+  for i:=0 to fUsesList.Count-1 do begin
+    if length(s)+length(fUsesList[i])>80 then begin
+      L.Add(Rtrim(s));
+      s:='  ';
+    end;
+    s:=s+fUsesList[i];
+    if i<fUsesList.Count-1 then s:=s+', ' else s:=s+';';
+  end;
+  L.Add(s);
+  L.Add('');
+  L.Add('var');
+  L.AddStrings(fVarList);
+  L.Add('');
+  L.Add('procedure CreateDialogs;');
+  L.Add('procedure DestroyDialogs;');
+  L.Add('');
+  L.Add('implementation');
+  L.Add('');
+  L.AddStrings(fCreateDialogs);
+  L.AddStrings(fDestroyDialogs);
+  L.Add('end.');
+  L.SaveToFile('..\..\source\units\Dialogs\BDPGeneratedDialogs.pas');
+  L.Free;
+  fUsesList.Free;
+  fVarList.Free;
+  fDestroyDialogs.Free;
+  fCreateDialogs.Free;
+  inherited Destroy;
+end;
 
 procedure TMain.Run;
 var p1:string;SL:TFileSearchList;i:integer;
@@ -59,6 +126,10 @@ begin
     XML.Free;
   end;
   if Assigned(fDialog) then begin
+    fUsesList.Add(fDialog.Name);
+    fVarList.Add(Format('  f%s:%s;',[copy(fDialog.Name,4),fDialog.Class_Name]));
+    fCreateDialogs.Add(Format('  f%s:=%s.Create;',[copy(fDialog.Name,4),fDialog.Class_Name]));
+    fDestroyDialogs.Insert(2,Format('  f%s.Free;',[copy(fDialog.Name,4)]));
     fDialog.CalculatePositions(0,0);
     fDialog.Free;
   end;

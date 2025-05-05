@@ -23,6 +23,12 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2025.05.05 - Build 70
+- Moved generated dialog creating and destroying into a unit.
+- Backup interval setting is modified to be usable with generated dialog.
+- Added new menu SETTINGS/BACKUP. You can set backup interval here, 
+  no retention yet.
+
 2025.04.29 - Build 69
 - Added IMAGE/EXPORT menu. It replaces IMAGE/SAVE, use it to export the image
   to simple image formats (PNG, TGA and BMP currently).

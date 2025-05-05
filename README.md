@@ -2,8 +2,13 @@
 My AAT tribute
 
 Compiled binaries from current build with DLLs:
-[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.69.zip "Download x64 version") or
-[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.69.zip "Download x86 version").
+[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.70.zip "Download x64 version") or
+[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.70.zip "Download x86 version").
+
+## 2025.05.05 - Build 70
+- Moved generated dialog creating and destroying into a unit.
+- Backup interval setting is modified to be usable with generated dialog.
+- Added new menu SETTINGS/BACKUP. You can set backup interval here, no retention yet.
 
 ## 2025.04.29 - Build 69
 - Added IMAGE/EXPORT menu. It replaces IMAGE/SAVE, use it to export the image

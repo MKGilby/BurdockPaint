@@ -164,6 +164,11 @@ Inks
     Select Tint ink instead of selected one.
 
 ;------------------------------
+Settings
+  Backup
+    BACKUPSETTINGS
+    Set project backup interval and retention settings.
+;------------------------------
 About
   About
     OPENABOUTDIALOG
