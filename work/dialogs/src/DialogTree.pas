@@ -196,6 +196,7 @@ begin
   fCaption:=uppercase(PrepareStringLiteral(iCaption));
   fClassName:=iClassName;
   CodeGenerator:=TCodeGenerator.Create(Self);
+  GroupList.Clear;
   fLeft:=-1;
   fTop:=-1;
   fWidth:=-1;
@@ -441,11 +442,11 @@ begin
   CodeGenerator.UsesList.Add('BDPButton');
   CodeGenerator.OnClicks.Add(fName);
   CodeGenerator.Privates.Add(Format('f%s:TBDButton;',[fName]));
-//  *** Csinálj valami okosságot, hogy bonyolult settingsfield esetén is működjön!
   if (fSettingField<>'') then begin
     if CodeGenerator.TempVars.Values[fSettingField]='' then begin
       CodeGenerator.TempVars.Add(Format('%s=fTemp%.2d',[fSettingField,CodeGenerator.TempVars.Count+1]));
       CodeGenerator.Privates.Add(Format('fTemp%.2d:integer;',[CodeGenerator.TempVars.Count]));
+      CodeGenerator.ShowCode.Add(Format('  fTemp%.2d:=%s;',[CodeGenerator.TempVars.Count,fSettingField]));
     end;
   end;
   fWidth:=DefaultSizes['BUTTONWIDTH'];

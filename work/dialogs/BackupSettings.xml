@@ -15,6 +15,13 @@
   </Head>
 
   <Controls>
+  
+    <CheckBox>
+      <Name>BackupCheckbox</Name>
+      <Caption>Create project backups</Caption>
+      <Hint>Check to create periodic backups of the project file.</Hint>
+      <SettingField>Settings.CreateBackups</SettingField>
+    </CheckBox>
     <Label>
       <Caption>Backup interval (secs)</Caption>
     </Label>
@@ -25,6 +32,67 @@
       <SettingField>Settings.BackupInterval</SettingField>
     </HorizontalSlider>
     <Divider/>
+    
+    <CheckBox>
+      <Name>BackupLimitSize</Name>
+      <Caption>Limit backup folder size</Caption>
+      <Hint>Check to limit the size of the backup folder by removing oldest files.</Hint>
+      <SettingField>Settings.LimitBackupFolderMaxSize</SettingField>
+    </CheckBox>
+    <HorizontalSlider>
+      <Name>BackupMaxSizeSlider</Name>
+      <MinValue>1</MinValue>
+      <MaxValue>1024</MaxValue>
+      <SettingField>Settings.BackupFolderMaxSize</SettingField>
+    </HorizontalSlider>
+    <Split direction="Horizontal">
+      <Button>
+        <Name>BackupUnitKBButton</Name>
+        <Caption>KB</Caption>
+        <Hint>Backup limit size is in kilobytes.</Hint>
+        <Group>1</Group>
+        <SettingField>Settings.BackupUnitSize</SettingField>
+        <SettingValue>0</SettingValue>
+      </Button>
+      <Button>
+        <Name>BackupUnitMBButton</Name>
+        <Caption>MB</Caption>
+        <Hint>Backup limit size is in megabytes.</Hint>
+        <Group>1</Group>
+        <SettingField>Settings.BackupUnitSize</SettingField>
+        <SettingValue>1</SettingValue>
+      </Button>
+    </Split>
+    <Divider/>
+
+    <CheckBox>
+      <Name>BackupLimitDays</Name>
+      <Caption>Delete files older than (days)</Caption>
+      <Hint>Check to delete files older than the set days from backup.</Hint>
+      <SettingField>Settings.LimitBackupFolderRetentionTime</SettingField>
+    </CheckBox>
+    <HorizontalSlider>
+      <Name>BackupDaysSlider</Name>
+      <MinValue>1</MinValue>
+      <MaxValue>365</MaxValue>
+      <SettingField>Settings.BackupFolderRetentionTime</SettingField>
+    </HorizontalSlider>
+    <Divider/>
+
+    <CheckBox>
+      <Name>BackupLimitFileCount</Name>
+      <Caption>Limit max file count</Caption>
+      <Hint>Check to delete oldest files when file count exceeds set value.</Hint>
+      <SettingField>Settings.LimitBackupFolderMaxFileCount</SettingField>
+    </CheckBox>
+    <HorizontalSlider>
+      <Name>BackupFileCountSlider</Name>
+      <MinValue>1</MinValue>
+      <MaxValue>1024</MaxValue>
+      <SettingField>Settings.BackupFolderMaxFileCount</SettingField>
+    </HorizontalSlider>
+    <Divider/>
+
     <Split direction="Horizontal">
       <Button>
         <Name>BackupSettingsOKButton</Name>

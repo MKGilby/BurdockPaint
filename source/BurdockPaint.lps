@@ -16,11 +16,9 @@
       <Unit>
         <Filename Value="BDPMain.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="328"/>
-        <CursorPos X="66" Y="335"/>
-        <FoldState Value=" T3mO0W01317 pjTmW0Y038 picm504[94YjD081 PBA0@"/>
+        <TopLine Value="259"/>
+        <CursorPos X="20" Y="300"/>
         <UsageCount Value="204"/>
         <Loaded Value="True"/>
       </Unit>
@@ -68,9 +66,11 @@
       <Unit>
         <Filename Value="BDPSettings.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="6"/>
-        <TopLine Value="107"/>
-        <CursorPos X="10" Y="125"/>
+        <TopLine Value="94"/>
+        <CursorPos Y="462"/>
+        <FoldState Value=" T3k10p2 piXk40{23]AYkd08A Pi4iQ00"/>
         <UsageCount Value="203"/>
         <Loaded Value="True"/>
       </Unit>
@@ -537,7 +537,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="5"/>
-        <UsageCount Value="198"/>
+        <UsageCount Value="200"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -546,7 +546,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="145"/>
         <CursorPos Y="177"/>
-        <UsageCount Value="193"/>
+        <UsageCount Value="197"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -555,7 +555,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="5"/>
         <CursorPos X="21" Y="26"/>
-        <UsageCount Value="187"/>
+        <UsageCount Value="191"/>
       </Unit>
       <Unit>
         <Filename Value="units\Dialogs\BDPGradientSelector.pas"/>
@@ -563,14 +563,14 @@
         <EditorIndex Value="4"/>
         <TopLine Value="94"/>
         <CursorPos X="41" Y="124"/>
-        <UsageCount Value="176"/>
+        <UsageCount Value="180"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="units\Undo\BDPGradientSelectorUndo.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="166"/>
+        <UsageCount Value="170"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -579,7 +579,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="16"/>
         <CursorPos Y="5"/>
-        <UsageCount Value="154"/>
+        <UsageCount Value="158"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -588,7 +588,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="27"/>
         <CursorPos X="69" Y="37"/>
-        <UsageCount Value="133"/>
+        <UsageCount Value="137"/>
       </Unit>
       <Unit>
         <Filename Value="units\Dialogs\BDPConfigureTintDialog.pas"/>
@@ -596,7 +596,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="4"/>
         <CursorPos X="18" Y="18"/>
-        <UsageCount Value="109"/>
+        <UsageCount Value="113"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
       <Unit>
@@ -605,7 +605,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="28"/>
         <CursorPos X="10" Y="44"/>
-        <UsageCount Value="38"/>
+        <UsageCount Value="42"/>
       </Unit>
       <Unit>
         <Filename Value="units\Dialogs\BDPGeneratedDialogs.pas"/>
@@ -613,7 +613,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="5"/>
         <CursorPos X="8" Y="22"/>
-        <UsageCount Value="21"/>
+        <UsageCount Value="25"/>
       </Unit>
       <Unit>
         <Filename Value="units\Dialogs\BDPSelectColorClusterDialog.pas"/>
@@ -1225,107 +1225,15 @@
         <UsageCount Value="9"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit>
+      <Unit>
+        <Filename Value="units\Dialogs\BDPBackupSettingsDialog.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="122"/>
+        <CursorPos X="3" Y="164"/>
+        <UsageCount Value="10"/>
+      </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="BDPSettings.pas"/>
-        <Caret Line="244" TopLine="223"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPSettings.pas"/>
-        <Caret Line="298" TopLine="279"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPSettings.pas"/>
-        <Caret Line="42" TopLine="23"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPSettings.pas"/>
-        <Caret Line="296" TopLine="274"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPControls.pas"/>
-        <Caret Line="78" Column="16" TopLine="56"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPControls.pas"/>
-        <Caret Line="183" Column="29" TopLine="146"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPControls.pas"/>
-        <Caret Line="23" TopLine="23"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPControls.pas"/>
-        <Caret Line="538" TopLine="494"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPControls.pas"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPControls.pas"/>
-        <Caret Line="58" Column="21" TopLine="22"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPControls.pas"/>
-        <Caret Line="59" Column="20" TopLine="23"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPControls.pas"/>
-        <Caret Line="183" Column="29" TopLine="146"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPControls.pas"/>
-        <Caret Line="188" Column="22" TopLine="151"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPControls.pas"/>
-        <Caret Line="191" Column="43" TopLine="154"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPControls.pas"/>
-        <Caret Line="195" Column="28" TopLine="158"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPControls.pas"/>
-        <Caret Line="197" Column="33" TopLine="160"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPControls.pas"/>
-        <Caret Line="200" Column="22" TopLine="163"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPControls.pas"/>
-        <Caret Line="518" Column="40" TopLine="476"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPControls.pas"/>
-        <Caret Line="204" Column="6" TopLine="165"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPMain.pas"/>
-        <Caret Line="93" Column="5" TopLine="55"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPMain.pas"/>
-        <Caret Line="635" Column="29" TopLine="635"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPMain.pas"/>
-        <Caret Line="825" TopLine="790"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPMain.pas"/>
-        <Caret Line="314" Column="46" TopLine="107"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPMain.pas"/>
-        <Caret Line="93" TopLine="65"/>
-      </Position>
-      <Position>
-        <Filename Value="BDPMain.pas"/>
-        <Caret Line="818" TopLine="777"/>
-      </Position>
       <Position>
         <Filename Value="BDPMain.pas"/>
         <Caret Line="75" Column="7" TopLine="58"/>
@@ -1345,6 +1253,106 @@
       <Position>
         <Filename Value="BDPSettings.pas"/>
         <Caret Line="180" Column="69" TopLine="171"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="148" TopLine="129"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="23" Column="10" TopLine="8"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="143" Column="3" TopLine="143"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="48" Column="6" TopLine="5"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="149" TopLine="136"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="90" Column="49" TopLine="85"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="209" Column="3" TopLine="201"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="49" Column="9" TopLine="30"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="390" TopLine="359"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="50" Column="7" TopLine="34"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="306" TopLine="290"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="39" Column="25" TopLine="11"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="52" Column="8" TopLine="36"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="473" TopLine="430"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="421" TopLine="394"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="424" TopLine="400"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="42" TopLine="16"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="393" TopLine="93"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="50" TopLine="31"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="10"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="26" Column="13"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="187" Column="51" TopLine="84"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="248" Column="48" TopLine="211"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="332" Column="48" TopLine="295"/>
+      </Position>
+      <Position>
+        <Filename Value="BDPSettings.pas"/>
+        <Caret Line="26" Column="15"/>
       </Position>
     </JumpHistory>
     <RunParams>

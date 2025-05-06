@@ -2,8 +2,14 @@
 My AAT tribute
 
 Compiled binaries from current build with DLLs:
-[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.70.zip "Download x64 version") or
-[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.70.zip "Download x86 version").
+[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.71.zip "Download x64 version") or
+[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.71.zip "Download x86 version").
+
+## 2025.05.06 - Build 71
+- Expanded backup settings. Now every aspect of the backup can be set from 
+  SETTINGS/BACKUP.
+- Fixed a bug where Circle drawing setting was incorrectly saved as "Center" but
+  the dialog showed "Boxed".   
 
 ## 2025.05.05 - Build 70
 - Moved generated dialog creating and destroying into a unit.

@@ -23,6 +23,12 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2025.05.06 - Build 71
+- Expanded backup settings. Now every aspect of the backup can be set from 
+  SETTINGS/BACKUP.
+- Fixed a bug where Circle drawing setting was incorrectly saved as "Center" but
+  the dialog showed "Boxed".   
+  
 2025.05.05 - Build 70
 - Moved generated dialog creating and destroying into a unit.
 - Backup interval setting is modified to be usable with generated dialog.

@@ -3,7 +3,7 @@
   See "copyright.txt" for details.
 }
 
-// Generated on 2025.05.05
+// Generated on 2025.05.06
 
 unit BDPConfigureCircleDialog;
 
@@ -115,6 +115,7 @@ procedure TBDConfigureCircleDialog.Show(Sender:TObject);
 begin
   fConfCircleBXButton.Selected:=(Settings.CircleMode=1);
   fConfCircleCRButton.Selected:=(Settings.CircleMode=0);
+  fTemp01:=Settings.CircleMode;
 end;
 
 end.

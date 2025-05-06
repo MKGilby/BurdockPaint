@@ -144,7 +144,7 @@ begin
 
   Log.LogStatus('Creating project backup...');
   fBackup:=TFileBackup.Create(PROJECTBASEPATH+'\'+WORKFOLDERPATH);
-  fBackup.BackupMaxSize:=Settings.BackupFolderMaxSize;
+  fBackup.BackupMaxSize:=Settings.RealBackupFolderMaxSize;
   fBackup.BackupRetentionDays:=Settings.BackupFolderRetentionTime;
   fBackup.BackupMaxFileCount:=Settings.BackupFolderMaxFileCount;
   if (Parameters.Count=2) and (FileExists(Parameters[1])) then begin
@@ -262,7 +262,7 @@ begin
       keys[KeyMap[KEY_QUIT]]:=false;
       fQuit:=MessageBox('CONFIRM','EXIT BURDOCK PAINT?','^YES;^NO')=0
     end;
-    if GetTickCount64-PrevBackupTick>Settings.BackupIntervalTicks then begin
+    if Settings.CreateBackups and (GetTickCount64-PrevBackupTick>Settings.BackupIntervalTicks) then begin
       Project.SaveToFile(ProjectFilename);
       fBackup.BackupFile(ProjectFilename);
       PrevBackupTick:=GetTickCount64;
