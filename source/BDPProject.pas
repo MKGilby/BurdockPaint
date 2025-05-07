@@ -130,8 +130,10 @@ var Xs:TStream;
 begin
   fRegion:=TBDRegion.Create(iWidth,iHeight);
   fPalette:=TBDPalette.Create(256);
-  Xs:=TStringStream.Create(NTSCCOL);
+  Xs:=TMemoryStream.Create;
   try
+    Xs.Write(NTSCCOL[0],sizeof(NTSCCOL));
+    Xs.Position:=0;
     fPalette.LoadCOL(Xs,0);
   finally
     Xs.Free;

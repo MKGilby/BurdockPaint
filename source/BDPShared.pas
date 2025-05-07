@@ -228,8 +228,7 @@ implementation
 
 uses Classes, SysUtils, MKRFont2Unit, Logger, MKStream, MKToolbox;
 
-{$i includes\fonts.inc}
-{$i includes\burdock.inc}
+{$i includes\data.inc}
 
 const
   ArchModern=
@@ -313,8 +312,10 @@ end;
 function LoadSystemFontEx(pR,pG,pB:integer;pFlags:integer):TFont;
 var Xs:TStream;
 begin
-  Xs:=TStringStream.Create(bdpfont);
+  Xs:=TMemoryStream.Create;
   try
+    Xs.Write(BDPFont[0],sizeof(BDPFont));
+    Xs.Position:=0;
     Result:=TPNGFont.Create(Xs,pFlags);
     Result.LetterSpace:=3;
     Result.SpaceSpace:=15;
@@ -329,8 +330,10 @@ end;
 procedure LoadSystemFont(pR,pG,pB:integer;pName:string;pFlags:integer);
 var Xs:TStream;
 begin
-  Xs:=TStringStream.Create(bdpfont);
+  Xs:=TMemoryStream.Create;
   try
+    Xs.Write(BDPFont[0],sizeof(BDPFont));
+    Xs.Position:=0;
     MM.Fonts.Add(TPNGFont.Create(Xs,pFlags),pName);
     MM.Fonts[pName].LetterSpace:=3;
     MM.Fonts[pName].SpaceSpace:=15;
@@ -345,8 +348,10 @@ end;
 procedure LoadSmallFont(pR,pG,pB:integer;pName:string;pFlags:integer);
 var Xs:TStream;
 begin
-  Xs:=TStringStream.Create(SmallFont);
+  Xs:=TMemoryStream.Create;
   try
+    Xs.Write(SmallFont[0],sizeof(SmallFont));
+    Xs.Position:=0;
     MM.Fonts.Add(TPNGFont.Create(Xs,pFlags),pName);
     MM.Fonts[pName].LetterSpace:=2;
     MM.Fonts[pName].SpaceSpace:=12;
@@ -357,14 +362,31 @@ begin
   end;
 end;
 
-procedure LoadImage(incstring,name:string;pFlags:integer=0);
+procedure LoadLogofont;
 var Xs:TStream;atm:TARGBImage;
 begin
-  Xs:=TStringStream.Create(incstring);
   atm:=TARGBImage.Create;
+  Xs:=TMemoryStream.Create;
   try
+    Xs.Write(LogoFont[0],sizeof(LogoFont));
+    Xs.Position:=0;
     atm.ReadFile(Xs,'PNG');
-    MM.AddImage(atm,name,pFlags);
+    MM.AddImage(atm,'LogoFont',MM_DONTCREATETEXTUREFROMFONT);
+  finally
+    Xs.Free;
+  end;
+end;
+
+procedure LoadBurdock;
+var Xs:TStream;atm:TARGBImage;
+begin
+  atm:=TARGBImage.Create;
+  Xs:=TMemoryStream.Create;
+  try
+    Xs.Write(BurdockPNG[0],sizeof(BurdockPNG));
+    Xs.Position:=0;
+    atm.ReadFile(Xs,'PNG');
+    MM.AddImage(atm,'Burdock');
   finally
     Xs.Free;
   end;
@@ -404,9 +426,9 @@ begin
   LoadSmallFont($40,4,4,'SmallDarkRed',FONT_CREATE_BOTH);
   LoadSystemFont($9a,$9a,$9a,'LightGray',FONT_CREATE_ARGB);
   LoadSystemFont($40,$40,$40,'DarkGray',FONT_CREATE_ARGB);
-  LoadImage(LogoFont,'LogoFont',MM_DONTCREATETEXTUREFROMFONT);
+  LoadLogofont;
   MM.Fonts['LogoFont'].SetColorkey(0,0,0);
-  LoadImage(BurdockPNG,'Burdock');
+  LoadBurdock;
   MM.Images.ItemByName['Burdock'].Resize2x;
   {$ifdef LogMem}Log.Trace('...'+inttostr(GetHeapStatus.TotalAllocated));{$endif}
   Log.LogStatus('  Creating message queue...');
