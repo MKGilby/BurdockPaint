@@ -62,3 +62,5 @@ work/dialogs/PreProcessDialogs.exe
 *.zip
 *.exe
 /work/includes/not
+source/BurdockPaint.lps
+*.lps
