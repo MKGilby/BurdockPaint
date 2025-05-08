@@ -1,4 +1,4 @@
-unit BPDError;
+unit BDPError;
 
 {$mode Delphi}
 

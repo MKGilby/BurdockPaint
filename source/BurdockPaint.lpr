@@ -21,7 +21,7 @@ uses
   ARGBImageTGAWriterUnit,
   ARGBImageGIFReaderUnit,
   FileInfo,
-  winpeimagereader, BPDError;
+  winpeimagereader, BDPError;
 
 const
   BDATE={$i %DATE%};
