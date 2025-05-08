@@ -7,20 +7,26 @@ FreePascal (Lazarus 4.0.0 with FPC 3.2.2 Windows x64 or x86 version or cross-com
 
 ## Source codes
 SDL2 pascal headers (source\units\sdl2) is licensed under MPL or zlib license.
+
 GitHub for SDL2 pascal headers: [PascalGameDevelopment/SDL2-for-Pascal](https://github.com/PascalGameDevelopment/SDL2-for-Pascal)
 
 The rest of source code is licensed under GNU GPL v3 (or later).
 
 ## Tools
 PNGOut tool is by Ken Silverman [His homepage](http://advsys.net/ken)
+
 FontBuild2 tool was made by me.
 
 ## Compiling in windows environment
 1. Go into folder "work" and edit setenv.bat, set FPCDIR to point to the folder
 containing your fpc.exe
-2. Go into folder "source" and run BuildRelease_x64.bat (or x86 as you wish.)
-   You need Lazarus cross compiler libraries to be installed
-   to compile x64 on x86 systems and vice-versa.
+2. Go into folder "source" and run BuildRelease_x64.bat (or x86 as you wish).
+   You need Lazarus cross compiler libraries to be installed to compile x64 on x86 systems and vice-versa.
+   The .exe will be put into \release\x64 or x86 respectively.
+3. Download and extract the latest SDL2.dll into \release\x64 or x86 
+   (be aware of bitness!). The latest DLLs can be found on the [SDL releases page](https://github.com/libsdl-org/SDL/releases).
+   Scroll down to the latest 2.xx version, click assets and download file.
+   At the time of writing of this document the latest SDL2 version is 2.32.6.      
 
 ## Compiled binaries from current build with datafiles and DLLs
 [x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.71.zip "Download x64 version") or
