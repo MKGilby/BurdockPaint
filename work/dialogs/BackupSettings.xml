@@ -109,5 +109,12 @@
         <Close>Y</Close>
       </Button>
     </Split>
+    <Divider/>
+    <Label>
+      <Caption>These settings need an application</Caption>
+    </Label>
+    <Label>
+      <Caption>restart to take effect!</Caption>
+    </Label>
   </Controls>
 </Dialog>

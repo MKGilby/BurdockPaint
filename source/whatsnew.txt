@@ -8,8 +8,6 @@ Todo:
 - Add setup dialogs to Inks:
   - Darken
   - Brighten
-- Autosave:
-  - Add GUI for settings.
 - ColorEditor buttons:
   - "Undo" and "Redo" should undo/redo any changes made on the ColorEditor.
 - Add an option to make the current inks/tools property adjustable on the fly.
@@ -22,6 +20,10 @@ Todo:
     - Color picking mode from any source where color can be selected.
       (harder to implement, but I think it would be a better solution.)
 
+
+2025.05.08 - Build 72
+- Added a warning, that changing backup settings need an application restart to take effect!
+- Fixed a bug in backup retention time and max file count handling.
 
 2025.05.06 - Build 71
 - Expanded backup settings. Now every aspect of the backup can be set from 

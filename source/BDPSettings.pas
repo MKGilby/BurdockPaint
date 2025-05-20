@@ -47,8 +47,10 @@ type
     fBackupFolderMaxSize:integer;  // in kbytes or mbytes, depending on fBackupUnitSize (0/1)
     procedure fSetBackupInterval(value:integer);
     procedure fSetBackupUnitSize(value:integer);
-    function fGetRealBackupFolderMaxSize:integer;
     procedure fSetBackupFolderMaxSize(value:integer);
+    function fGetRealBackupFolderMaxSize:integer;
+    function fGetRealBackupFolderRetentionTime:integer;
+    function fGetRealBackupFolderMaxFileCount:integer;
   public
     CreateBackups:boolean;
     LimitBackupFolderMaxSize:boolean;
@@ -61,6 +63,8 @@ type
     property BackupUnitSize:integer read fBackupUnitSize write fSetBackupUnitSize;
     property BackupFolderMaxSize:integer read fBackupFolderMaxSize write fSetBackupFolderMaxSize;
     property RealBackupFolderMaxSize:integer read fGetRealBackupFolderMaxSize;
+    property RealBackupFolderRetentionTime:integer read fGetRealBackupFolderRetentionTime;
+    property RealBackupFolderMaxFileCount:integer read fGetRealBackupFolderMaxFileCount;
 
   // DrawArea settings
   private
@@ -449,6 +453,20 @@ begin
   if LimitBackupFolderMaxSize then begin
     Result:=fBackupFolderMaxSize*1024;
     if BackupUnitSize=1 then Result:=Result*1024;
+  end else Result:=0;
+end;
+
+function TSettings.fGetRealBackupFolderRetentionTime:integer;
+begin
+  if LimitBackupFolderRetentionTime then begin
+    Result:=BackupFolderRetentionTime;
+  end else Result:=0;
+end;
+
+function TSettings.fGetRealBackupFolderMaxFileCount:integer;
+begin
+  if LimitBackupFolderMaxFileCount then begin
+    Result:=BackupFolderMaxFileCount;
   end else Result:=0;
 end;
 

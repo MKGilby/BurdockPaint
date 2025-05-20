@@ -145,8 +145,8 @@ begin
   Log.LogStatus('Creating project backup...');
   fBackup:=TFileBackup.Create(PROJECTBASEPATH+'\'+WORKFOLDERPATH);
   fBackup.BackupMaxSize:=Settings.RealBackupFolderMaxSize;
-  fBackup.BackupRetentionDays:=Settings.BackupFolderRetentionTime;
-  fBackup.BackupMaxFileCount:=Settings.BackupFolderMaxFileCount;
+  fBackup.BackupRetentionDays:=Settings.RealBackupFolderRetentionTime;
+  fBackup.BackupMaxFileCount:=Settings.RealBackupFolderMaxFileCount;
   if (Parameters.Count=2) and (FileExists(Parameters[1])) then begin
     fBackup.BackupFile(ProjectFilename);
   end;

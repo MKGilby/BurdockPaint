@@ -34,6 +34,10 @@ containing your fpc.exe
 
 ## What's new
 
+### 2025.05.08 - Build 72
+- Added a warning, that changing backup settings need an application restart to take effect!
+- Fixed a bug in backup retention time and max file count handling.
+
 ### 2025.05.06 - Build 71
 - Expanded backup settings. Now every aspect of the backup can be set from
   SETTINGS/BACKUP.

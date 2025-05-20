@@ -37,6 +37,8 @@ type
     procedure RedoClick(Sender:TObject;x,y,button:integer);
     procedure AddClick(Sender:TObject;x,y,button:integer);
     procedure DeleteClick(Sender:TObject;x,y,button:integer);
+    procedure SaveClick(Sender:TObject;x,y,button:integer);
+    procedure LoadClick(Sender:TObject;x,y,button:integer);
     procedure ScrollBarChange(Sender:TObject;oldValue,newValue:integer);
     procedure RefreshUndoRedoButtons;
     procedure RefreshGradients;
@@ -122,6 +124,12 @@ begin
   CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*6+18,
     'REDO','REDO LAST GRADIENT OPERATION.','GDS Redo',RedoClick);
   fRedoButton:=TBDButton(fChildren.Items[fChildren.Count-1]);
+
+  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*7+24,
+    'SAVE','SAVE ALL GRADIENTS TO FILE.','GDS Save',SaveClick);
+
+  CreateButton(fLeft+BUTTONSLEFT,fTop+BUTTONSTOP+(NORMALBUTTONHEIGHT+3)*8+24,
+    'LOAD','LOAD GRADIENTS FROM FILE.','GDS Load',LoadClick);
 
   for i:=0 to min(Project.CurrentGradientList.Count-1,7) do
     CreateGradient(i,fLeft+3+9,fTop+GRADIENTSTOP+(GRADIENTHEIGHT+3)*i,Project.CurrentGradientList[i]);
@@ -234,6 +242,16 @@ begin
       Project.CurrentGradientList.ActiveIndex:=Project.CurrentGradientList.Count-1;
     fScrollBar.MaxValue:=max(Project.CurrentGradientList.Count-8,0);
   end;
+end;
+
+procedure TBDGradientSelector.SaveClick(Sender: TObject; x, y, button: integer);
+begin
+
+end;
+
+procedure TBDGradientSelector.LoadClick(Sender: TObject; x, y, button: integer);
+begin
+
 end;
 
 procedure TBDGradientSelector.ScrollBarChange(Sender:TObject;oldValue,newValue:integer);

@@ -3,7 +3,7 @@
   See "copyright.txt" for details.
 }
 
-// Generated on 2025.05.06
+// Generated on 2025.05.08
 
 unit BDPBackupSettingsDialog;
 
@@ -51,21 +51,21 @@ uses BDPShared, MKMouse2;
 
 constructor TBDBackupSettingsDialog.Create;
 begin
-  inherited Create(591,522);
+  inherited Create(627,594);
   fName:='BDPBackupSettingsDialog';
   fCaption:='BACKUP SETTINGS';
   OnShow:=Show;
   Visible:=false;
   MouseObjects.Add(Self);
 
-  BackupCheckbox:=TBDCheckBox.Create(fLeft+81,fTop+30,429,27,'CREATE PROJECT BACKUPS','CHECK TO CREATE PERIODIC BACKUPS OF THE PROJECT FILE.');
+  BackupCheckbox:=TBDCheckBox.Create(fLeft+99,fTop+30,429,27,'CREATE PROJECT BACKUPS','CHECK TO CREATE PERIODIC BACKUPS OF THE PROJECT FILE.');
   with BackupCheckbox do begin
     ZIndex:=MODALDIALOG_ZINDEX+1;
     Name:='BackupCheckbox';
   end;
   AddChild(BackupCheckbox);
 
-  BackupIntervalSlider:=TBDHorizontalSlider.Create(fLeft+135,fTop+93,320,33);
+  BackupIntervalSlider:=TBDHorizontalSlider.Create(fLeft+153,fTop+93,320,33);
   with BackupIntervalSlider do begin
     ZIndex:=MODALDIALOG_ZINDEX+1;
     Name:='BackupIntervalSlider';
@@ -75,14 +75,14 @@ begin
   end;
   AddChild(BackupIntervalSlider);
 
-  BackupLimitSize:=TBDCheckBox.Create(fLeft+63,fTop+153,465,27,'LIMIT BACKUP FOLDER SIZE','CHECK TO LIMIT THE SIZE OF THE BACKUP FOLDER BY REMOVING OLDEST FILES.');
+  BackupLimitSize:=TBDCheckBox.Create(fLeft+81,fTop+153,465,27,'LIMIT BACKUP FOLDER SIZE','CHECK TO LIMIT THE SIZE OF THE BACKUP FOLDER BY REMOVING OLDEST FILES.');
   with BackupLimitSize do begin
     ZIndex:=MODALDIALOG_ZINDEX+1;
     Name:='BackupLimitSize';
   end;
   AddChild(BackupLimitSize);
 
-  BackupMaxSizeSlider:=TBDHorizontalSlider.Create(fLeft+135,fTop+189,320,33);
+  BackupMaxSizeSlider:=TBDHorizontalSlider.Create(fLeft+153,fTop+189,320,33);
   with BackupMaxSizeSlider do begin
     ZIndex:=MODALDIALOG_ZINDEX+1;
     Name:='BackupMaxSizeSlider';
@@ -92,26 +92,26 @@ begin
   end;
   AddChild(BackupMaxSizeSlider);
 
-  fBackupUnitKBButton:=TBDButton.Create(fLeft+164,fTop+231,127,27,'KB','BACKUP LIMIT SIZE IS IN KILOBYTES.');
+  fBackupUnitKBButton:=TBDButton.Create(fLeft+182,fTop+231,127,27,'KB','BACKUP LIMIT SIZE IS IN KILOBYTES.');
   fBackupUnitKBButton.OnClick:=BackupUnitKBButtonClick;
   fBackupUnitKBButton.Name:='BackupUnitKBButton';
   fBackupUnitKBButton.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(fBackupUnitKBButton);
 
-  fBackupUnitMBButton:=TBDButton.Create(fLeft+300,fTop+231,127,27,'MB','BACKUP LIMIT SIZE IS IN MEGABYTES.');
+  fBackupUnitMBButton:=TBDButton.Create(fLeft+318,fTop+231,127,27,'MB','BACKUP LIMIT SIZE IS IN MEGABYTES.');
   fBackupUnitMBButton.OnClick:=BackupUnitMBButtonClick;
   fBackupUnitMBButton.Name:='BackupUnitMBButton';
   fBackupUnitMBButton.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(fBackupUnitMBButton);
 
-  BackupLimitDays:=TBDCheckBox.Create(fLeft+9,fTop+285,573,27,'DELETE FILES OLDER THAN (DAYS)','CHECK TO DELETE FILES OLDER THAN THE SET DAYS FROM BACKUP.');
+  BackupLimitDays:=TBDCheckBox.Create(fLeft+27,fTop+285,573,27,'DELETE FILES OLDER THAN (DAYS)','CHECK TO DELETE FILES OLDER THAN THE SET DAYS FROM BACKUP.');
   with BackupLimitDays do begin
     ZIndex:=MODALDIALOG_ZINDEX+1;
     Name:='BackupLimitDays';
   end;
   AddChild(BackupLimitDays);
 
-  BackupDaysSlider:=TBDHorizontalSlider.Create(fLeft+135,fTop+321,320,33);
+  BackupDaysSlider:=TBDHorizontalSlider.Create(fLeft+153,fTop+321,320,33);
   with BackupDaysSlider do begin
     ZIndex:=MODALDIALOG_ZINDEX+1;
     Name:='BackupDaysSlider';
@@ -121,14 +121,14 @@ begin
   end;
   AddChild(BackupDaysSlider);
 
-  BackupLimitFileCount:=TBDCheckBox.Create(fLeft+99,fTop+381,393,27,'LIMIT MAX FILE COUNT','CHECK TO DELETE OLDEST FILES WHEN FILE COUNT EXCEEDS SET VALUE.');
+  BackupLimitFileCount:=TBDCheckBox.Create(fLeft+117,fTop+381,393,27,'LIMIT MAX FILE COUNT','CHECK TO DELETE OLDEST FILES WHEN FILE COUNT EXCEEDS SET VALUE.');
   with BackupLimitFileCount do begin
     ZIndex:=MODALDIALOG_ZINDEX+1;
     Name:='BackupLimitFileCount';
   end;
   AddChild(BackupLimitFileCount);
 
-  BackupFileCountSlider:=TBDHorizontalSlider.Create(fLeft+135,fTop+417,320,33);
+  BackupFileCountSlider:=TBDHorizontalSlider.Create(fLeft+153,fTop+417,320,33);
   with BackupFileCountSlider do begin
     ZIndex:=MODALDIALOG_ZINDEX+1;
     Name:='BackupFileCountSlider';
@@ -138,13 +138,13 @@ begin
   end;
   AddChild(BackupFileCountSlider);
 
-  fBackupSettingsOKButton:=TBDButton.Create(fLeft+164,fTop+477,127,27,'OK','APPLY VALUES');
+  fBackupSettingsOKButton:=TBDButton.Create(fLeft+182,fTop+477,127,27,'OK','APPLY VALUES');
   fBackupSettingsOKButton.OnClick:=BackupSettingsOKButtonClick;
   fBackupSettingsOKButton.Name:='BackupSettingsOKButton';
   fBackupSettingsOKButton.ZIndex:=MODALDIALOG_ZINDEX+1;
   AddChild(fBackupSettingsOKButton);
 
-  fBackupSettingsCancelButton:=TBDButton.Create(fLeft+300,fTop+477,127,27,'CANCEL','CLOSE DIALOG');
+  fBackupSettingsCancelButton:=TBDButton.Create(fLeft+318,fTop+477,127,27,'CANCEL','CLOSE DIALOG');
   fBackupSettingsCancelButton.OnClick:=BackupSettingsCancelButtonClick;
   fBackupSettingsCancelButton.Name:='BackupSettingsCancelButton';
   fBackupSettingsCancelButton.ZIndex:=MODALDIALOG_ZINDEX+1;
@@ -154,7 +154,9 @@ end;
 procedure TBDBackupSettingsDialog.Redraw;
 begin
   inherited ReDraw;
-  MM.Fonts['Black'].OutText(fImage,'BACKUP INTERVAL (SECS)',295,66,1);
+  MM.Fonts['Black'].OutText(fImage,'BACKUP INTERVAL (SECS)',313,66,1);
+  MM.Fonts['Black'].OutText(fImage,'THESE SETTINGS NEED AN APPLICATION',313,531,1);
+  MM.Fonts['Black'].OutText(fImage,'RESTART TO TAKE EFFECT!',313,558,1);
 end;
 
 procedure TBDBackupSettingsDialog.SaveSettings;
