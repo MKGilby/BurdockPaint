@@ -46,7 +46,7 @@ implementation
 
 uses
   BDPShared, BDPInkOpaque, BDPInkHGrad, BDPInkLGrad, BDPInkVGrad, BDPInkCGrad,
-  BDPInkRandom, BDPInkSoften, BDPInkRGrad, BDPInkTint;
+  BDPInkRandom, BDPInkSoften, BDPInkRGrad, BDPInkTint, BDPInkGrayscale;
 
 { TBDInk }
 
@@ -145,6 +145,7 @@ begin
   AddObject('SOFTEN',TBDInkSoften.Create);
   AddObject('R GRAD',TBDInkRGrad.Create);
   AddObject('TINT',TBDInkTint.Create);
+  AddObject('GRAYSCALE',TBDInkGrayscale.Create);
 end;
 
 end.

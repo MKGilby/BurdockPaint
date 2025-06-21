@@ -21,6 +21,9 @@ Todo:
       (harder to implement, but I think it would be a better solution.)
 
 
+2025.06.21 - Build 73
+- Added Grayscale ink.
+
 2025.05.08 - Build 72
 - Added a warning, that changing backup settings need an application restart to take effect!
 - Fixed a bug in backup retention time and max file count handling.

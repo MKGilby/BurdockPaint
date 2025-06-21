@@ -162,6 +162,9 @@ Inks
   Tint
     INKTINT
     Select Tint ink instead of selected one.
+  Grayscale
+    INKGRAYSCALE
+    Select Grayscale ink instead of selected one.
 
 ;------------------------------
 Settings
