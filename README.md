@@ -29,10 +29,14 @@ containing your fpc.exe
    At the time of writing of this document the latest SDL2 version is 2.32.6.
 
 ## Compiled binaries from current build with datafiles and DLLs
-[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.73.zip "Download x64 version") or
-[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.73.zip "Download x86 version").
+[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.74.zip "Download x64 version") or
+[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.74.zip "Download x86 version").
 
 ## What's new
+
+### 2025.06.29 - Build 74
+- Bugfix: Grayscale ink internal name changed to GraySc to fit on button.
+- Removed "Save" and "Load" button from gradient selector.
 
 ### 2025.06.21 - Build 73
 - Added Grayscale ink.

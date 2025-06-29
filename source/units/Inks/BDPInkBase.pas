@@ -145,7 +145,7 @@ begin
   AddObject('SOFTEN',TBDInkSoften.Create);
   AddObject('R GRAD',TBDInkRGrad.Create);
   AddObject('TINT',TBDInkTint.Create);
-  AddObject('GRAYSCALE',TBDInkGrayscale.Create);
+  AddObject('GRAYSC',TBDInkGrayscale.Create);
 end;
 
 end.
