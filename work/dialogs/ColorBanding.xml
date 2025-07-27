@@ -38,6 +38,7 @@
         <Hint>Apply values</Hint>
         <Save>Y</Save>
         <Close>Y</Close>
+        <Message>MSG_ACTIVEGRADIENTCHANGED</Message>
       </Button>
       <Button>
         <Name>ConfBandingCancelButton</Name>

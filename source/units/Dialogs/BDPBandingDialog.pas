@@ -3,7 +3,7 @@
   See "copyright.txt" for details.
 }
 
-// Generated on 2025.05.08
+// Generated on 2025.07.27
 
 unit BDPBandingDialog;
 
@@ -92,6 +92,7 @@ end;
 procedure TBDBandingDialog.ConfBandingOKButtonClick(Sender:TObject;x,y,buttons:integer);
 begin
   SaveSettings;
+  MessageQueue.AddMessage(MSG_ACTIVEGRADIENTCHANGED);
   Hide;
 end;
 
