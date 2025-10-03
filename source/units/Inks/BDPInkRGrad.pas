@@ -37,7 +37,7 @@ begin
 end;
 
 function TBDInkRGrad.GetColorAt(pX,pY:integer):uint32;
-var d:integer;
+var d:integer;f:double;
 begin
   if (Settings.RGradCenterX>pX) then begin
     d:=trunc(arctan((Settings.RGradCenterY-pY)/(Settings.RGradCenterX-pX))*180/pi)+270;
@@ -51,10 +51,11 @@ begin
       d:=180;
     end;
   end;
+  f:=((d-Settings.RGradRotation+360)*Settings.RGradRepetitions) mod 360 / 360;
   if Project.CurrentGradientList.ActiveGradient.Dithered then
-    Result:=Project.CurrentGradientList.ActiveGradient.GetColorAtDithered(((round((d+Settings.RGradRotation)*Settings.RGradRepetitions)) mod 360)/359)
+    Result:=Project.CurrentGradientList.ActiveGradient.GetColorAtDithered(f)
   else
-    Result:=Project.CurrentGradientList.ActiveGradient.GetColorAt(((round((d+Settings.RGradRotation)*Settings.RGradRepetitions)) mod 360)/359)
+    Result:=Project.CurrentGradientList.ActiveGradient.GetColorAt(f)
 end;
 
 procedure TBDInkRGrad.Configure;

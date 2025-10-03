@@ -2,7 +2,7 @@
 My AAT tribute
 
 ## Programming language
-FreePascal (Lazarus 4.0.0 with FPC 3.2.2 Windows x64 or x86 version or cross-compiler to Win32 or Win64)
+FreePascal (Lazarus 4.2.0 with FPC 3.2.2 Windows x64 or x86 version or cross-compiler to Win32 or Win64)
 [Lazarus homepage](https://www.lazarus-ide.org/)
 
 ## Source codes
@@ -28,11 +28,13 @@ containing your fpc.exe
    Scroll down to the latest 2.xx version, click assets and download file.
    At the time of writing of this document the latest SDL2 version is 2.32.6.
 
-## Compiled binaries from current build with datafiles and DLLs
-[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.76.zip "Download x64 version") or
-[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_x86_0.9.0.76.zip "Download x86 version").
+## Compiled binary from current build for Windows (64-bit with DLLs):
+[here](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.77.zip "Download x64 version").
 
 ## What's new
+
+### 2025.10.03 - Build 77
+- Bugfix: R Grad rotation was bugged if rotated more than (360/repetitions).
 
 ### 2025.09.15 - Build 76
 - Bugfix: Selecting Grayscale ink makes the app crash.
