@@ -28,8 +28,9 @@ containing your fpc.exe
    Scroll down to the latest 2.xx version, click assets and download file.
    At the time of writing of this document the latest SDL2 version is 2.32.6.
 
-## Compiled binary from current build for Windows (64-bit with DLLs):
-[here](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.77.zip "Download x64 version").
+## Compiled binaries from current build for Windows (with DLLs):
+[x64](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.77.zip "Download x64 version") or
+[x86](https://mksztsz.hu/tmpfiles/BurdockPaint_0.9.0.77_x86.zip "Download x86 version").
 
 ## What's new
 
